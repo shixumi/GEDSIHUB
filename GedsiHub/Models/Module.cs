@@ -1,36 +1,33 @@
-﻿// File: Models/Module.cs
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GedsiHub.Models
 {
-    [Table("module_tbl")]
     public class Module
     {
         [Key]
-        [Column("module_id")]
         public int ModuleId { get; set; }
 
-        [Column("module_no")]
-        public int ModuleNumber { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string Title { get; set; } = string.Empty;
 
-        [Column("module_name")]
-        public string ModuleName { get; set; }
+        [Required]
+        public string Description { get; set; } = string.Empty;
 
-        [Column("description")]
-        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
-        [Column("created_at")]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        [Column("updated_at")]
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime? LastModifiedDate { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<UserProgress> UserProgresses { get; set; }
-        public virtual ICollection<Enrollment> Enrollments { get; set; }
-        public virtual ICollection<Quiz> Quizzes { get; set; }
+        public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+        public virtual ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
+        public virtual ICollection<CourseContent> CourseContents { get; set; } = new List<CourseContent>();
+        public virtual ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
+        public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
+
+        // **Added Navigation Property**
+        public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }

@@ -4,11 +4,21 @@ using GedsiHub.Seeders; // Include the namespace for RoleSeeder
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using GedsiHub.Models;
+using Serilog; // For logging
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure logging
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+// Configure Entity Framework and ApplicationDbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -16,12 +26,14 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 // Register the custom EmailSender service
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-// Configure Identity to use roles
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>() // Add this line to enable roles
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+// Configure Identity to use ApplicationUser and roles
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
+// Add services for controllers and views
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -37,7 +49,8 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Error occurred seeding the database: {ex.Message}");
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding roles.");
     }
 }
 
@@ -57,6 +70,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Ensure Authentication middleware is added
 app.UseAuthorization();
 
 app.MapControllerRoute(

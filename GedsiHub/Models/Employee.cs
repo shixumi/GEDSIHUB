@@ -1,5 +1,4 @@
-﻿// File: Models/Employee.cs
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GedsiHub.Models
@@ -11,21 +10,26 @@ namespace GedsiHub.Models
         [Column("employee_id")]
         public int EmployeeId { get; set; }
 
+        [Required]
         [ForeignKey("User")]
         [Column("user_id")]
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
-        [Column("emp_type")]
-        public string EmployeeType { get; set; }
+        [Required]
+        [Column("emp_type", TypeName = "VARCHAR(20)")]
+        public string EmployeeType { get; set; } = string.Empty;
 
-        [Column("sector")]
-        public string Sector { get; set; }
+        [Required]
+        [Column("sector", TypeName = "VARCHAR(100)")]
+        public string Sector { get; set; } = string.Empty;
 
-        [Column("emp_loc")]
-        public string Location { get; set; }
+        [Required]
+        [Column("emp_loc", TypeName = "VARCHAR(100)")]
+        public string Location { get; set; } = string.Empty;
 
-        [Column("position")]
-        public string Position { get; set; }
+        [Required]
+        [Column("position", TypeName = "VARCHAR(100)")]
+        public string Position { get; set; } = string.Empty;
     }
 }

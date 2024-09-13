@@ -16,7 +16,7 @@ namespace GedsiHub.Models
         public int QuestionId { get; set; }
         public Question Question { get; set; }
 
-        [Column("text")]
+        [Column("text", TypeName = "TEXT")]
         public string Text { get; set; }
 
         [Column("is_correct")]

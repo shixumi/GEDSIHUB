@@ -1,3 +1,4 @@
+// File: Models/ErrorViewModel.cs
 namespace GedsiHub.Models
 {
     public class ErrorViewModel
