@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Question.cs
+
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace GedsiHub.Models

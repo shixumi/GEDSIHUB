@@ -1,11 +1,11 @@
 using GedsiHub.Data;
-using GedsiHub.Services; // Include your custom services
-using GedsiHub.Seeders; // Include the namespace for RoleSeeder
+using GedsiHub.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using GedsiHub.Models;
-using Serilog; // For logging
+using Serilog;
+using GedsiHub.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,21 +15,22 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration);
 });
 
-// Add services to the container.
+// Configure database and Identity
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-// Configure Entity Framework and ApplicationDbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true; // Use built-in email confirmation
+    options.User.RequireUniqueEmail = true;
+})
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders(); // Use default token providers for email confirmation
+
 // Register the custom EmailSender service
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-
-// Configure Identity to use ApplicationUser and roles
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
 
 // Add services for controllers and views
 builder.Services.AddControllersWithViews();
@@ -45,7 +46,7 @@ using (var scope = app.Services.CreateScope())
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var roleSeeder = new RoleSeeder(roleManager);
-        await roleSeeder.SeedRolesAsync(); // Ensure roles are seeded
+        await roleSeeder.SeedRolesAsync();
     }
     catch (Exception ex)
     {
@@ -54,7 +55,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -70,7 +71,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Ensure Authentication middleware is added
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

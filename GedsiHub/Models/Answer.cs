@@ -1,4 +1,5 @@
 ﻿// File: Models/Answer.cs
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

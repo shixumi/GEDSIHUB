@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Module.cs
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
