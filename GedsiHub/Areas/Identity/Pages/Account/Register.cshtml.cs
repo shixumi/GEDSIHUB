@@ -1,4 +1,5 @@
-﻿using GedsiHub.Models;
+﻿using GedsiHub.Data;
+using GedsiHub.Models;
 using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -21,17 +22,20 @@ namespace GedsiHub.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+             ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         [BindProperty]
@@ -78,6 +82,40 @@ namespace GedsiHub.Areas.Identity.Pages.Account
 
                     // Assign the role (Student or Employee)
                     await _userManager.AddToRoleAsync(user, Input.Role);
+
+                    // Create corresponding Student or Employee record
+                    if (Input.Role.Equals("Student", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var student = new Student
+                        {
+                            UserId = user.Id,
+                            // Initialize other required fields if any, or leave them to be filled later
+                        };
+                        _context.Students.Add(student);
+                    }
+                    else if (Input.Role.Equals("Employee", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var employee = new Employee
+                        {
+                            UserId = user.Id,
+                            // Initialize other required fields if any, or leave them to be filled later
+                        };
+                        _context.Employees.Add(employee);
+                    }
+                    // If you have an Admin role, handle it similarly
+                    else if (Input.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var admin = new Admin
+                        {
+                            UserId = user.Id,
+                            // Initialize Admin-specific fields
+                            AdminName = $"{user.FirstName} {user.LastName}" // Example initialization
+                        };
+                        _context.Admins.Add(admin);
+                    }
+
+                    // Save changes to the database
+                    await _context.SaveChangesAsync();
 
                     // Generate the email confirmation token
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

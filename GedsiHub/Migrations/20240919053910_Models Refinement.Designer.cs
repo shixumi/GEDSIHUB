@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240919053910_Models Refinement")]
+    partial class ModelsRefinement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,17 +293,79 @@ namespace GedsiHub.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
+                    b.Property<DateTime?>("Birthday")
+                        .HasColumnType("DATE")
+                        .HasColumnName("birthday");
+
                     b.Property<string>("BranchOfficeSectionUnit")
+                        .IsRequired()
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("branch_office_section_unit");
 
+                    b.Property<string>("DifferentlyAbled")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("differently_abled");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("GenderIdentity")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("gender_identity");
+
+                    b.Property<string>("IndigenousCulturalCommunity")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("indigenous_cultural_community");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("last_name");
+
+                    b.Property<string>("LivedName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("lived_name");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("middle_name");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(15)")
+                        .HasColumnName("phone_number");
+
                     b.Property<string>("Position")
+                        .IsRequired()
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("position");
 
+                    b.Property<string>("PreferredPronoun")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("preferred_pronoun");
+
                     b.Property<string>("Sector")
+                        .IsRequired()
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("sector");
+
+                    b.Property<string>("Sex")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("sex");
+
+                    b.Property<string>("Suffix")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)")
+                        .HasColumnName("suffix");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -509,21 +574,83 @@ namespace GedsiHub.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
 
+                    b.Property<DateTime?>("Birthday")
+                        .HasColumnType("DATE")
+                        .HasColumnName("birthday");
+
                     b.Property<string>("College")
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("college");
 
                     b.Property<string>("CollegeDeptId")
+                        .IsRequired()
                         .HasColumnType("VARCHAR(30)")
                         .HasColumnName("college_dept_id");
 
+                    b.Property<string>("DifferentlyAbled")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("differently_abled");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("GenderIdentity")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("gender_identity");
+
+                    b.Property<string>("IndigenousCulturalCommunity")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("indigenous_cultural_community");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("last_name");
+
+                    b.Property<string>("LivedName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("lived_name");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("middle_name");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(15)")
+                        .HasColumnName("phone_number");
+
+                    b.Property<string>("PreferredPronoun")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("preferred_pronoun");
+
                     b.Property<string>("Program")
+                        .IsRequired()
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("program");
 
                     b.Property<string>("Section")
+                        .IsRequired()
                         .HasColumnType("VARCHAR(10)")
                         .HasColumnName("section");
+
+                    b.Property<string>("Sex")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnName("sex");
+
+                    b.Property<string>("Suffix")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(10)")
+                        .HasColumnName("suffix");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -856,7 +983,8 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.CollegeDepartment", "CollegeDepartment")
                         .WithMany("Students")
                         .HasForeignKey("CollegeDeptId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithOne("Student")

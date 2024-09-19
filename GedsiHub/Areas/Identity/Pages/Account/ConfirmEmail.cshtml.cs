@@ -1,4 +1,6 @@
-﻿using GedsiHub.Models;
+﻿// ConfirmEmail.cshtml.cs
+
+using GedsiHub.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +10,12 @@ using System.Text;
 public class ConfirmEmailModel : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public ConfirmEmailModel(UserManager<ApplicationUser> userManager)
+    public ConfirmEmailModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     [TempData]
@@ -40,7 +44,10 @@ public class ConfirmEmailModel : PageModel
 
         if (result.Succeeded)
         {
-            // Redirect to profile completion page after successful confirmation
+            // Sign in the user
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            // Redirect to profile completion page
             return RedirectToPage("/Account/CompleteProfile");
         }
         else
