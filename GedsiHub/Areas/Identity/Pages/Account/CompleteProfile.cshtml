@@ -1,5 +1,142 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@page
+@model CompleteProfileModel
 @{
+    ViewData["Title"] = "Complete Your Profile";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!-- General User Information -->
+    <section>
+        <h2>General Information</h2>
+
+        <div class="form-group">
+            <label asp-for="Input.FirstName" class="control-label"></label>
+            <input asp-for="Input.FirstName" class="form-control" />
+            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.LastName" class="control-label"></label>
+            <input asp-for="Input.LastName" class="form-control" />
+            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.DateOfBirth" class="control-label"></label>
+            <input asp-for="Input.DateOfBirth" class="form-control" type="date" />
+            <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.GenderIdentity" class="control-label"></label>
+            <input asp-for="Input.GenderIdentity" class="form-control" />
+            <span asp-validation-for="Input.GenderIdentity" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.Pronouns" class="control-label"></label>
+            <input asp-for="Input.Pronouns" class="form-control" />
+            <span asp-validation-for="Input.Pronouns" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-check">
+            <input asp-for="Input.IsMemberOfIndigenousCommunity" class="form-check-input" />
+            <label asp-for="Input.IsMemberOfIndigenousCommunity" class="form-check-label"></label>
+            <span asp-validation-for="Input.IsMemberOfIndigenousCommunity" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-check">
+            <input asp-for="Input.IsDisabled" class="form-check-input" />
+            <label asp-for="Input.IsDisabled" class="form-check-label"></label>
+            <span asp-validation-for="Input.IsDisabled" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.ProfilePicturePath" class="control-label"></label>
+            <input asp-for="Input.ProfilePicturePath" class="form-control" type="text" />
+            <span asp-validation-for="Input.ProfilePicturePath" class="text-danger"></span>
+            <!--
+                If you intend to allow file uploads for the profile picture,
+                consider changing the input type to "file" and handling the file upload in the PageModel.
+                Example:
+                <input asp-for="Input.ProfilePicturePath" class="form-control" type="file" />
+            -->
+        </div>
+    </section>
+
+    <!-- Student-Specific Information -->
+    @if (User.IsInRole("Student"))
+    {
+        <section>
+            <h2>Student Information</h2>
+
+            <div class="form-group">
+                <label asp-for="Input.College" class="control-label"></label>
+                <input asp-for="Input.College" class="form-control" />
+                <span asp-validation-for="Input.College" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.CollegeDeptId" class="control-label"></label>
+                <input asp-for="Input.CollegeDeptId" class="form-control" />
+                <span asp-validation-for="Input.CollegeDeptId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Program" class="control-label"></label>
+                <input asp-for="Input.Program" class="form-control" />
+                <span asp-validation-for="Input.Program" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Year" class="control-label"></label>
+                <input asp-for="Input.Year" class="form-control" type="number" min="1" />
+                <span asp-validation-for="Input.Year" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Section" class="control-label"></label>
+                <input asp-for="Input.Section" class="form-control" />
+                <span asp-validation-for="Input.Section" class="text-danger"></span>
+            </div>
+        </section>
+    }
+
+    <!-- Employee-Specific Information -->
+    @if (User.IsInRole("Employee"))
+    {
+        <section>
+            <h2>Employee Information</h2>
+
+            <div class="form-group">
+                <label asp-for="Input.BranchOfficeSectionUnit" class="control-label"></label>
+                <input asp-for="Input.BranchOfficeSectionUnit" class="form-control" />
+                <span asp-validation-for="Input.BranchOfficeSectionUnit" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Position" class="control-label"></label>
+                <input asp-for="Input.Position" class="form-control" />
+                <span asp-validation-for="Input.Position" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Sector" class="control-label"></label>
+                <input asp-for="Input.Sector" class="form-control" />
+                <span asp-validation-for="Input.Sector" class="text-danger"></span>
+            </div>
+        </section>
+    }
+
+    <button type="submit" class="btn btn-primary">Save Profile</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
