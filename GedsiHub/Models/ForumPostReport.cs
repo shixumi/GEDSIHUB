@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GedsiHub.Models
 {
-    [Table("post_report_tbl")] // Table for post reports
-    public class PostReport
+    [Table("forum_post_report_tbl")] // Table for post reports
+    public class ForumPostReport
     {
         [Key]
         [Column("report_id")]

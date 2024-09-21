@@ -15,6 +15,9 @@
 		<None Remove="Controllers\NewFile.txt" />
 		<None Remove="Models\NewFile.txt" />
 		<None Remove="Services\NewFile.txt" />
+		<None Remove="ViewModels\NewFile.txt" />
+		<None Remove="Views\ForumComment\NewFile.txt" />
+		<None Remove="Views\ForumPost\NewFile.txt" />
 	</ItemGroup>
 
 	<ItemGroup>

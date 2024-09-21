@@ -1,0 +1,54 @@
+﻿@model IEnumerable<GedsiHub.Models.ForumPost>
+
+@{
+    ViewData["Title"] = "Forum Posts";
+}
+
+<h2>All Forum Posts</h2>
+
+<!-- Show Success Message -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<!-- Show Error Message -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<!-- Button to Create a New Post -->
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create New Post</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Content Preview</th>
+            <th>Posted On</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var post in Model)
+        {
+            <tr>
+                <td>@post.Title</td>
+                <td>@(post.Content.Length > 100 ? post.Content.Substring(0, 100) + "..." : post.Content)</td>
+                <td>@post.CreatedAt.ToString("g")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@post.PostId" class="btn btn-primary">View Details</a>
+                    <a asp-action="Edit" asp-route-id="@post.PostId" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@post.PostId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

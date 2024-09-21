@@ -59,52 +59,46 @@
             <label asp-for="Input.ProfilePicturePath" class="control-label"></label>
             <input asp-for="Input.ProfilePicturePath" class="form-control" type="text" />
             <span asp-validation-for="Input.ProfilePicturePath" class="text-danger"></span>
-            <!--
-                If you intend to allow file uploads for the profile picture,
-                consider changing the input type to "file" and handling the file upload in the PageModel.
-                Example:
-                <input asp-for="Input.ProfilePicturePath" class="form-control" type="file" />
-            -->
+            <!-- If you intend to allow file uploads for the profile picture, you can use type="file" -->
+            <!-- <input asp-for="Input.ProfilePicturePath" class="form-control" type="file" /> -->
         </div>
     </section>
 
+    <!-- Student-Specific Information -->
     <!-- Student-Specific Information -->
     @if (User.IsInRole("Student"))
     {
         <section>
             <h2>Student Information</h2>
 
+            <!-- College Department Dropdown -->
             <div class="form-group">
-                <label asp-for="Input.College" class="control-label"></label>
-                <input asp-for="Input.College" class="form-control" />
-                <span asp-validation-for="Input.College" class="text-danger"></span>
+                <label asp-for="Input.StudentInfo.CollegeDeptId" class="control-label"></label>
+                <select asp-for="Input.StudentInfo.CollegeDeptId" class="form-control" asp-items="Model.CollegeDepartments"></select>
+                <span asp-validation-for="Input.StudentInfo.CollegeDeptId" class="text-danger"></span>
+            </div>
+
+            <!-- Course Dropdown -->
+            <div class="form-group">
+                <label asp-for="Input.StudentInfo.CourseId" class="control-label"></label>
+                <select asp-for="Input.StudentInfo.CourseId" class="form-control" asp-items="Model.Courses"></select>
+                <span asp-validation-for="Input.StudentInfo.CourseId" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Input.CollegeDeptId" class="control-label"></label>
-                <input asp-for="Input.CollegeDeptId" class="form-control" />
-                <span asp-validation-for="Input.CollegeDeptId" class="text-danger"></span>
+                <label asp-for="Input.StudentInfo.Year" class="control-label"></label>
+                <input asp-for="Input.StudentInfo.Year" class="form-control" type="number" min="1" />
+                <span asp-validation-for="Input.StudentInfo.Year" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Input.Program" class="control-label"></label>
-                <input asp-for="Input.Program" class="form-control" />
-                <span asp-validation-for="Input.Program" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.Year" class="control-label"></label>
-                <input asp-for="Input.Year" class="form-control" type="number" min="1" />
-                <span asp-validation-for="Input.Year" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.Section" class="control-label"></label>
-                <input asp-for="Input.Section" class="form-control" />
-                <span asp-validation-for="Input.Section" class="text-danger"></span>
+                <label asp-for="Input.StudentInfo.Section" class="control-label"></label>
+                <input asp-for="Input.StudentInfo.Section" class="form-control" />
+                <span asp-validation-for="Input.StudentInfo.Section" class="text-danger"></span>
             </div>
         </section>
     }
+
 
     <!-- Employee-Specific Information -->
     @if (User.IsInRole("Employee"))
@@ -113,21 +107,21 @@
             <h2>Employee Information</h2>
 
             <div class="form-group">
-                <label asp-for="Input.BranchOfficeSectionUnit" class="control-label"></label>
-                <input asp-for="Input.BranchOfficeSectionUnit" class="form-control" />
-                <span asp-validation-for="Input.BranchOfficeSectionUnit" class="text-danger"></span>
+                <label asp-for="Input.EmployeeInfo.BranchOfficeSectionUnit" class="control-label"></label>
+                <input asp-for="Input.EmployeeInfo.BranchOfficeSectionUnit" class="form-control" />
+                <span asp-validation-for="Input.EmployeeInfo.BranchOfficeSectionUnit" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Input.Position" class="control-label"></label>
-                <input asp-for="Input.Position" class="form-control" />
-                <span asp-validation-for="Input.Position" class="text-danger"></span>
+                <label asp-for="Input.EmployeeInfo.Position" class="control-label"></label>
+                <input asp-for="Input.EmployeeInfo.Position" class="form-control" />
+                <span asp-validation-for="Input.EmployeeInfo.Position" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Input.Sector" class="control-label"></label>
-                <input asp-for="Input.Sector" class="form-control" />
-                <span asp-validation-for="Input.Sector" class="text-danger"></span>
+                <label asp-for="Input.EmployeeInfo.Sector" class="control-label"></label>
+                <input asp-for="Input.EmployeeInfo.Sector" class="form-control" />
+                <span asp-validation-for="Input.EmployeeInfo.Sector" class="text-danger"></span>
             </div>
         </section>
     }

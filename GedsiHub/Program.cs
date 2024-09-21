@@ -1,11 +1,11 @@
 using GedsiHub.Data;
 using GedsiHub.Services;
+using GedsiHub.Models;
+using GedsiHub.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using GedsiHub.Models;
 using Serilog;
-using GedsiHub.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +38,7 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Seed roles when the application starts
+// Seed roles when the application starts using RoleSeeder.cs
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -46,7 +46,7 @@ using (var scope = app.Services.CreateScope())
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var roleSeeder = new RoleSeeder(roleManager);
-        await roleSeeder.SeedRolesAsync();
+        await roleSeeder.SeedRolesAsync(); // Use the RoleSeeder to seed roles
     }
     catch (Exception ex)
     {

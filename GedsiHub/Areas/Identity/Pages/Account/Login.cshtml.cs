@@ -123,9 +123,8 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                 // Fetch Student data from the database
                 var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.UserId == user.Id);
                 if (student == null ||
-                    string.IsNullOrEmpty(student.College) ||
-                    string.IsNullOrEmpty(student.CollegeDeptId) ||
-                    string.IsNullOrEmpty(student.Program) ||
+                    student.CollegeDepartment == default ||
+                    student.Course == default ||
                     student.Year == null ||
                     string.IsNullOrEmpty(student.Section))
                 {

@@ -1,0 +1,10 @@
+﻿@model GedsiHub.Models.ForumPost
+
+<tr>
+    <td>@Model.Title</td>
+    <td>@(Model.Content.Length > 100 ? Model.Content.Substring(0, 100) + "..." : Model.Content)</td>
+    <td>@Model.CreatedAt.ToString("g")</td>
+    <td>
+        <a asp-action="Details" asp-route-id="@Model.PostId" class="btn btn-primary">View Details</a>
+    </td>
+</tr>

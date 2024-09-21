@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240921101139_ForumPost Fix")]
+    partial class ForumPostFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,535 +24,6 @@ namespace GedsiHub.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CollegeDepartment", b =>
-                {
-                    b.Property<int>("CollegeDeptId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CollegeDeptId"));
-
-                    b.Property<string>("DepartmentName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("CollegeDeptId");
-
-                    b.ToTable("CollegeDepartments");
-
-                    b.HasData(
-                        new
-                        {
-                            CollegeDeptId = 1,
-                            DepartmentName = "College of Accountancy and Finance (CAF)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 2,
-                            DepartmentName = "College of Architecture, Design and the Built Environment (CADBE)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 3,
-                            DepartmentName = "College of Arts and Letters (CAL)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 4,
-                            DepartmentName = "College of Business Administration (CBA)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 5,
-                            DepartmentName = "College of Communication (COC)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 6,
-                            DepartmentName = "College of Computer and Information Sciences (CCIS)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 7,
-                            DepartmentName = "College of Education (COED)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 8,
-                            DepartmentName = "College of Engineering (CE)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 9,
-                            DepartmentName = "College of Human Kinetics (CHK)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 10,
-                            DepartmentName = "College of Law (CL)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 11,
-                            DepartmentName = "College of Political Science and Public Administration (CPSPA)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 12,
-                            DepartmentName = "College of Social Sciences and Development (CSSD)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 13,
-                            DepartmentName = "College of Science (CS)"
-                        },
-                        new
-                        {
-                            CollegeDeptId = 14,
-                            DepartmentName = "College of Tourism, Hospitality and Transportation Management (CTHTM)"
-                        });
-                });
-
-            modelBuilder.Entity("Course", b =>
-                {
-                    b.Property<int>("CourseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
-
-                    b.Property<int>("CollegeDeptId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("CourseId");
-
-                    b.HasIndex("CollegeDeptId");
-
-                    b.ToTable("Courses");
-
-                    b.HasData(
-                        new
-                        {
-                            CourseId = 1,
-                            CollegeDeptId = 1,
-                            CourseName = "Bachelor of Science in Accountancy (BSA)"
-                        },
-                        new
-                        {
-                            CourseId = 2,
-                            CollegeDeptId = 1,
-                            CourseName = "Bachelor of Science in Management Accounting (BSMA)"
-                        },
-                        new
-                        {
-                            CourseId = 3,
-                            CollegeDeptId = 1,
-                            CourseName = "Bachelor of Science in Business Administration Major in Financial Management (BSBAFM)"
-                        },
-                        new
-                        {
-                            CourseId = 4,
-                            CollegeDeptId = 2,
-                            CourseName = "Bachelor of Science in Architecture (BS-ARCH)"
-                        },
-                        new
-                        {
-                            CourseId = 5,
-                            CollegeDeptId = 2,
-                            CourseName = "Bachelor of Science in Interior Design (BSID)"
-                        },
-                        new
-                        {
-                            CourseId = 6,
-                            CollegeDeptId = 2,
-                            CourseName = "Bachelor of Science in Environmental Planning (BSEP)"
-                        },
-                        new
-                        {
-                            CourseId = 7,
-                            CollegeDeptId = 3,
-                            CourseName = "Bachelor of Arts in English Language Studies (ABELS)"
-                        },
-                        new
-                        {
-                            CourseId = 8,
-                            CollegeDeptId = 3,
-                            CourseName = "Bachelor of Arts in Filipinology (ABF)"
-                        },
-                        new
-                        {
-                            CourseId = 9,
-                            CollegeDeptId = 3,
-                            CourseName = "Bachelor of Arts in Literary and Cultural Studies (ABLCS)"
-                        },
-                        new
-                        {
-                            CourseId = 10,
-                            CollegeDeptId = 3,
-                            CourseName = "Bachelor of Arts in Philosophy (AB-PHILO)"
-                        },
-                        new
-                        {
-                            CourseId = 11,
-                            CollegeDeptId = 3,
-                            CourseName = "Bachelor of Performing Arts major in Theater Arts (BPEA)"
-                        },
-                        new
-                        {
-                            CourseId = 12,
-                            CollegeDeptId = 4,
-                            CourseName = "Doctor in Business Administration (DBA)"
-                        },
-                        new
-                        {
-                            CourseId = 13,
-                            CollegeDeptId = 4,
-                            CourseName = "Master in Business Administration (MBA)"
-                        },
-                        new
-                        {
-                            CourseId = 14,
-                            CollegeDeptId = 4,
-                            CourseName = "Bachelor of Science in Business Administration major in Human Resource Management (BSBAHRM)"
-                        },
-                        new
-                        {
-                            CourseId = 15,
-                            CollegeDeptId = 4,
-                            CourseName = "Bachelor of Science in Business Administration major in Marketing Management (BSBA-MM)"
-                        },
-                        new
-                        {
-                            CourseId = 16,
-                            CollegeDeptId = 4,
-                            CourseName = "Bachelor of Science in Entrepreneurship (BSENTREP)"
-                        },
-                        new
-                        {
-                            CourseId = 17,
-                            CollegeDeptId = 4,
-                            CourseName = "Bachelor of Science in Office Administration (BSOA)"
-                        },
-                        new
-                        {
-                            CourseId = 18,
-                            CollegeDeptId = 5,
-                            CourseName = "Bachelor in Advertising and Public Relations (BADPR)"
-                        },
-                        new
-                        {
-                            CourseId = 19,
-                            CollegeDeptId = 5,
-                            CourseName = "Bachelor of Arts in Broadcasting (BA Broadcasting)"
-                        },
-                        new
-                        {
-                            CourseId = 20,
-                            CollegeDeptId = 5,
-                            CourseName = "Bachelor of Arts in Communication Research (BACR)"
-                        },
-                        new
-                        {
-                            CourseId = 21,
-                            CollegeDeptId = 5,
-                            CourseName = "Bachelor of Arts in Journalism (BAJ)"
-                        },
-                        new
-                        {
-                            CourseId = 22,
-                            CollegeDeptId = 6,
-                            CourseName = "Bachelor of Science in Computer Science (BSCS)"
-                        },
-                        new
-                        {
-                            CourseId = 23,
-                            CollegeDeptId = 6,
-                            CourseName = "Bachelor of Science in Information Technology (BSIT)"
-                        },
-                        new
-                        {
-                            CourseId = 24,
-                            CollegeDeptId = 7,
-                            CourseName = "Doctor of Philsophy in Education Management (PhDEM)"
-                        },
-                        new
-                        {
-                            CourseId = 25,
-                            CollegeDeptId = 7,
-                            CourseName = "Master of Arts in Education Management (MAEM) with Specialization in: Educational Leadership, Instructional Leadership"
-                        },
-                        new
-                        {
-                            CourseId = 26,
-                            CollegeDeptId = 7,
-                            CourseName = "Master in Business Education (MBE)"
-                        },
-                        new
-                        {
-                            CourseId = 27,
-                            CollegeDeptId = 7,
-                            CourseName = "Master in Library and Information Science (MLIS)"
-                        },
-                        new
-                        {
-                            CourseId = 28,
-                            CollegeDeptId = 7,
-                            CourseName = "Master of Arts in English Language Teaching (MAELT)"
-                        },
-                        new
-                        {
-                            CourseId = 29,
-                            CollegeDeptId = 7,
-                            CourseName = "Master of Arts in Education major in Mathematics Education (MAEd-ME)"
-                        },
-                        new
-                        {
-                            CourseId = 30,
-                            CollegeDeptId = 7,
-                            CourseName = "Master of Arts in Physical Education and Sports (MAPES)"
-                        },
-                        new
-                        {
-                            CourseId = 31,
-                            CollegeDeptId = 7,
-                            CourseName = "Master of Arts in Education major in Teaching in the Challenged Areas (MAED-TCA)"
-                        },
-                        new
-                        {
-                            CourseId = 32,
-                            CollegeDeptId = 7,
-                            CourseName = "Post-Baccalaureate Diploma in Education (PBDE)"
-                        },
-                        new
-                        {
-                            CourseId = 33,
-                            CollegeDeptId = 7,
-                            CourseName = "Bachelor of Technology and Livelihood Education (BTLEd) major in: Home Economics, Industrial Arts, Information and Communication Technology"
-                        },
-                        new
-                        {
-                            CourseId = 34,
-                            CollegeDeptId = 7,
-                            CourseName = "Bachelor of Library and Information Science (BLIS)"
-                        },
-                        new
-                        {
-                            CourseId = 35,
-                            CollegeDeptId = 7,
-                            CourseName = "Bachelor of Secondary Education (BSEd) major in: English, Mathematics, Science, Filipino, Social Studies"
-                        },
-                        new
-                        {
-                            CourseId = 36,
-                            CollegeDeptId = 7,
-                            CourseName = "Bachelor of Elementary Education (BEEd)"
-                        },
-                        new
-                        {
-                            CourseId = 37,
-                            CollegeDeptId = 7,
-                            CourseName = "Bachelor of Early Childhood Education (BECEd)"
-                        },
-                        new
-                        {
-                            CourseId = 38,
-                            CollegeDeptId = 8,
-                            CourseName = "Bachelor of Science in Civil Engineering (BSCE)"
-                        },
-                        new
-                        {
-                            CourseId = 39,
-                            CollegeDeptId = 8,
-                            CourseName = "Bachelor of Science in Computer Engineering (BSCpE)"
-                        },
-                        new
-                        {
-                            CourseId = 40,
-                            CollegeDeptId = 8,
-                            CourseName = "Bachelor of Science in Electrical Engineering (BSEE)"
-                        },
-                        new
-                        {
-                            CourseId = 41,
-                            CollegeDeptId = 8,
-                            CourseName = "Bachelor of Science in Electronics Engineering (BSECE)"
-                        },
-                        new
-                        {
-                            CourseId = 42,
-                            CollegeDeptId = 8,
-                            CourseName = "Bachelor of Science in Industrial Engineering (BSIE)"
-                        },
-                        new
-                        {
-                            CourseId = 43,
-                            CollegeDeptId = 8,
-                            CourseName = "Bachelor of Science in Mechanical Engineering (BSME)"
-                        },
-                        new
-                        {
-                            CourseId = 44,
-                            CollegeDeptId = 8,
-                            CourseName = "Bachelor of Science in Railway Engineering (BSRE)"
-                        },
-                        new
-                        {
-                            CourseId = 45,
-                            CollegeDeptId = 9,
-                            CourseName = "Bachelor of Physical Education (BPE)"
-                        },
-                        new
-                        {
-                            CourseId = 46,
-                            CollegeDeptId = 9,
-                            CourseName = "Bachelor of Science in Exercises and Sports (BSESS)"
-                        },
-                        new
-                        {
-                            CourseId = 47,
-                            CollegeDeptId = 10,
-                            CourseName = "Juris Doctor (JD)"
-                        },
-                        new
-                        {
-                            CourseId = 48,
-                            CollegeDeptId = 11,
-                            CourseName = "Doctor in Public Administration (DPA)"
-                        },
-                        new
-                        {
-                            CourseId = 49,
-                            CollegeDeptId = 11,
-                            CourseName = "Master in Public Administration (MPA)"
-                        },
-                        new
-                        {
-                            CourseId = 50,
-                            CollegeDeptId = 11,
-                            CourseName = "Bachelor of Public Administration (BPA)"
-                        },
-                        new
-                        {
-                            CourseId = 51,
-                            CollegeDeptId = 11,
-                            CourseName = "Bachelor of Arts in International Studies (BAIS)"
-                        },
-                        new
-                        {
-                            CourseId = 52,
-                            CollegeDeptId = 11,
-                            CourseName = "Bachelor of Arts in Political Economy (BAPE)"
-                        },
-                        new
-                        {
-                            CourseId = 53,
-                            CollegeDeptId = 11,
-                            CourseName = "Bachelor of Arts in Political Science (BAPS)"
-                        },
-                        new
-                        {
-                            CourseId = 54,
-                            CollegeDeptId = 12,
-                            CourseName = "Bachelor of Arts in History (BAH)"
-                        },
-                        new
-                        {
-                            CourseId = 55,
-                            CollegeDeptId = 12,
-                            CourseName = "Bachelor of Arts in Sociology (BAS)"
-                        },
-                        new
-                        {
-                            CourseId = 56,
-                            CollegeDeptId = 12,
-                            CourseName = "Bachelor of Science in Cooperatives (BSC)"
-                        },
-                        new
-                        {
-                            CourseId = 57,
-                            CollegeDeptId = 12,
-                            CourseName = "Bachelor of Science in Economics (BSE)"
-                        },
-                        new
-                        {
-                            CourseId = 58,
-                            CollegeDeptId = 12,
-                            CourseName = "Bachelor of Science in Psychology (BSPSY)"
-                        },
-                        new
-                        {
-                            CourseId = 59,
-                            CollegeDeptId = 13,
-                            CourseName = "Bachelor of Science Food Technology (BSFT)"
-                        },
-                        new
-                        {
-                            CourseId = 60,
-                            CollegeDeptId = 13,
-                            CourseName = "Bachelor of Science in Applied Mathematics (BSAPMATH)"
-                        },
-                        new
-                        {
-                            CourseId = 61,
-                            CollegeDeptId = 13,
-                            CourseName = "Bachelor of Science in Biology (BSBIO)"
-                        },
-                        new
-                        {
-                            CourseId = 62,
-                            CollegeDeptId = 13,
-                            CourseName = "Bachelor of Science in Chemistry (BSCHEM)"
-                        },
-                        new
-                        {
-                            CourseId = 63,
-                            CollegeDeptId = 13,
-                            CourseName = "Bachelor of Science in Mathematics (BSMATH)"
-                        },
-                        new
-                        {
-                            CourseId = 64,
-                            CollegeDeptId = 13,
-                            CourseName = "Bachelor of Science in Nutrition and Dietetics (BSND)"
-                        },
-                        new
-                        {
-                            CourseId = 65,
-                            CollegeDeptId = 13,
-                            CourseName = "Bachelor of Science in Physics (BSPHY)"
-                        },
-                        new
-                        {
-                            CourseId = 66,
-                            CollegeDeptId = 13,
-                            CourseName = "Bachelor of Science in Statistics (BSSTAT)"
-                        },
-                        new
-                        {
-                            CourseId = 67,
-                            CollegeDeptId = 14,
-                            CourseName = "Bachelor of Science in Hospitality Management (BSHM)"
-                        },
-                        new
-                        {
-                            CourseId = 68,
-                            CollegeDeptId = 14,
-                            CourseName = "Bachelor of Science in Tourism Management (BSTM)"
-                        },
-                        new
-                        {
-                            CourseId = 69,
-                            CollegeDeptId = 14,
-                            CourseName = "Bachelor of Science in Transportation Management (BSTRM)"
-                        });
-                });
 
             modelBuilder.Entity("GedsiHub.Models.Admin", b =>
                 {
@@ -758,6 +232,22 @@ namespace GedsiHub.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("certificate_tbl");
+                });
+
+            modelBuilder.Entity("GedsiHub.Models.CollegeDepartment", b =>
+                {
+                    b.Property<string>("CollegeDeptId")
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("college_dept_id");
+
+                    b.Property<string>("CollegeName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("college_name");
+
+                    b.HasKey("CollegeDeptId");
+
+                    b.ToTable("college_dept_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.CourseContent", b =>
@@ -1141,13 +631,17 @@ namespace GedsiHub.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
 
-                    b.Property<int?>("CollegeDeptId")
-                        .HasColumnType("int")
+                    b.Property<string>("College")
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("college");
+
+                    b.Property<string>("CollegeDeptId")
+                        .HasColumnType("VARCHAR(30)")
                         .HasColumnName("college_dept_id");
 
-                    b.Property<int?>("CourseId")
-                        .HasColumnType("int")
-                        .HasColumnName("course_id");
+                    b.Property<string>("Program")
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("program");
 
                     b.Property<string>("Section")
                         .HasColumnType("VARCHAR(10)")
@@ -1165,8 +659,6 @@ namespace GedsiHub.Migrations
                     b.HasKey("StudentId");
 
                     b.HasIndex("CollegeDeptId");
-
-                    b.HasIndex("CourseId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -1341,17 +833,6 @@ namespace GedsiHub.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("user_token_tbl", (string)null);
-                });
-
-            modelBuilder.Entity("Course", b =>
-                {
-                    b.HasOne("CollegeDepartment", "CollegeDepartment")
-                        .WithMany("Courses")
-                        .HasForeignKey("CollegeDeptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CollegeDepartment");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Admin", b =>
@@ -1532,14 +1013,10 @@ namespace GedsiHub.Migrations
 
             modelBuilder.Entity("GedsiHub.Models.Student", b =>
                 {
-                    b.HasOne("CollegeDepartment", "CollegeDepartment")
+                    b.HasOne("GedsiHub.Models.CollegeDepartment", "CollegeDepartment")
                         .WithMany("Students")
                         .HasForeignKey("CollegeDeptId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId");
 
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithOne("Student")
@@ -1548,8 +1025,6 @@ namespace GedsiHub.Migrations
                         .IsRequired();
 
                     b.Navigation("CollegeDepartment");
-
-                    b.Navigation("Course");
 
                     b.Navigation("User");
                 });
@@ -1624,13 +1099,6 @@ namespace GedsiHub.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CollegeDepartment", b =>
-                {
-                    b.Navigation("Courses");
-
-                    b.Navigation("Students");
-                });
-
             modelBuilder.Entity("GedsiHub.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Admin")
@@ -1655,6 +1123,11 @@ namespace GedsiHub.Migrations
                         .IsRequired();
 
                     b.Navigation("UserProgresses");
+                });
+
+            modelBuilder.Entity("GedsiHub.Models.CollegeDepartment", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumComment", b =>

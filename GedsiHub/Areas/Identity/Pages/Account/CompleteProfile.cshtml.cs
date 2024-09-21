@@ -1,4 +1,6 @@
-﻿using GedsiHub.Data;
+﻿// CompleteProfile.cshtml.cs
+
+using GedsiHub.Data;
 using GedsiHub.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +9,8 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GedsiHub.Areas.Identity.Pages.Account
 {
@@ -25,10 +29,41 @@ namespace GedsiHub.Areas.Identity.Pages.Account
         [BindProperty]
         public ProfileInputModel Input { get; set; }
 
+        // List of available College Departments and Courses
+        public List<SelectListItem> CollegeDepartments { get; set; }
+        public List<SelectListItem> Courses { get; set; }
+
+        public class StudentInputModel
+        {
+            [Display(Name = "College Department")]
+            public int? CollegeDeptId { get; set; } // This should be an int for CollegeDeptId
+
+            [Display(Name = "Course")]
+            public int? CourseId { get; set; } // This is now CourseId directly
+
+            [Display(Name = "Year of Study")]
+            public int? Year { get; set; }
+
+            [Display(Name = "Section")]
+            public string? Section { get; set; }
+        }
+
+
+        public class EmployeeInputModel
+        {
+            [Display(Name = "Branch Office/Section/Unit")]
+            public string? BranchOfficeSectionUnit { get; set; }
+
+            [Display(Name = "Position")]
+            public string? Position { get; set; }
+
+            [Display(Name = "Sector/Department")]
+            public string? Sector { get; set; }
+        }
+
         public class ProfileInputModel
         {
-            // **General User Information**
-
+            // General User Information
             [Required(ErrorMessage = "First Name is required.")]
             [StringLength(50, ErrorMessage = "First Name cannot exceed 50 characters.")]
             [Display(Name = "First Name")]
@@ -61,36 +96,13 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             public bool IsDisabled { get; set; }
 
             [Display(Name = "Profile Picture Path")]
-            public string ProfilePicturePath { get; set; }
+            public string? ProfilePicturePath { get; set; }
 
-            // **Student-Specific Information**
-
-            [Display(Name = "College")]
-            public string College { get; set; }
-
-            [Display(Name = "College Department ID")]
-            public string CollegeDeptId { get; set; }
-
-            [Display(Name = "Program")]
-            public string Program { get; set; }
-
-            [Display(Name = "Year of Study")]
-            public int? Year { get; set; }
-
-            [Display(Name = "Section")]
-            public string Section { get; set; }
-
-            // **Employee-Specific Information**
-
-            [Display(Name = "Branch Office/Section/Unit")]
-            public string BranchOfficeSectionUnit { get; set; }
-
-            [Display(Name = "Position")]
-            public string Position { get; set; }
-
-            [Display(Name = "Sector/Department")]
-            public string Sector { get; set; }
+            // Role-specific Information
+            public StudentInputModel? StudentInfo { get; set; }
+            public EmployeeInputModel? EmployeeInfo { get; set; }
         }
+
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -99,6 +111,23 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             {
                 return NotFound("Unable to load user.");
             }
+
+            CollegeDepartments = await _dbContext.CollegeDepartments
+                .Select(cd => new SelectListItem
+                {
+                    Value = cd.CollegeDeptId.ToString(),
+                    Text = cd.DepartmentName
+                })
+                .ToListAsync();
+
+            Courses = await _dbContext.Courses
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CourseId.ToString(),
+                    Text = c.CourseName
+                })
+                .ToListAsync();
+
 
             // Initialize Input model with existing data
             Input = new ProfileInputModel
@@ -124,11 +153,13 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                 var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.UserId == user.Id);
                 if (student != null)
                 {
-                    Input.College = student.College;
-                    Input.CollegeDeptId = student.CollegeDeptId;
-                    Input.Program = student.Program;
-                    Input.Year = student.Year;
-                    Input.Section = student.Section;
+                    Input.StudentInfo = new StudentInputModel
+                    {
+                        CollegeDeptId = student.CollegeDeptId,
+                        CourseId = student.CourseId, 
+                        Year = student.Year,
+                        Section = student.Section
+                    };
                 }
             }
             else if (await _userManager.IsInRoleAsync(user, "Employee"))
@@ -136,21 +167,69 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                 var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.UserId == user.Id);
                 if (employee != null)
                 {
-                    Input.BranchOfficeSectionUnit = employee.BranchOfficeSectionUnit;
-                    Input.Position = employee.Position;
-                    Input.Sector = employee.Sector;
+                    Input.EmployeeInfo = new EmployeeInputModel
+                    {
+                        BranchOfficeSectionUnit = employee.BranchOfficeSectionUnit,
+                        Position = employee.Position,
+                        Sector = employee.Sector
+                    };
                 }
             }
 
+
             return Page();
         }
-
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                // Log or output validation errors
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.ErrorMessage);
+                    }
+                }
+
+                // Reload the dropdowns if the form is invalid
+                CollegeDepartments = await _dbContext.CollegeDepartments
+                    .Select(cd => new SelectListItem
+                    {
+                        Value = cd.CollegeDeptId.ToString(),
+                        Text = cd.DepartmentName
+                    })
+                    .ToListAsync();
+
+                Courses = await _dbContext.Courses
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.CourseId.ToString(),
+                        Text = c.CourseName
+                    })
+                    .ToListAsync();
+                return Page(); // Redisplay the form with errors
+            }
+
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 return NotFound("Unable to load user.");
+            }
+
+            // Pass the user to the validation context for role-based validation
+            var validationContext = new ValidationContext(Input, serviceProvider: null, items: new Dictionary<object, object> { { "User", User } });
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(Input, validationContext, results, true);
+
+            if (!isValid)
+            {
+                foreach (var validationResult in results)
+                {
+                    ModelState.AddModelError(string.Empty, validationResult.ErrorMessage);
+                }
+                return Page();
             }
 
             if (ModelState.IsValid)
@@ -181,17 +260,14 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                     var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.UserId == user.Id);
                     if (student == null)
                     {
-                        // Optionally, create a Student record if it doesn't exist
                         student = new Student { UserId = user.Id };
                         _dbContext.Students.Add(student);
                     }
 
-                    // Update Student-specific fields
-                    student.College = Input.College;
-                    student.CollegeDeptId = Input.CollegeDeptId;
-                    student.Program = Input.Program;
-                    student.Year = Input.Year;
-                    student.Section = Input.Section;
+                    student.CollegeDeptId = Input.StudentInfo?.CollegeDeptId ?? 0;
+                    student.CourseId = Input.StudentInfo?.CourseId ?? 0; // Store the CourseId directly
+                    student.Year = Input.StudentInfo?.Year;
+                    student.Section = Input.StudentInfo?.Section;
 
                     _dbContext.Students.Update(student);
                 }
@@ -200,32 +276,19 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                     var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.UserId == user.Id);
                     if (employee == null)
                     {
-                        // Optionally, create an Employee record if it doesn't exist
                         employee = new Employee { UserId = user.Id };
                         _dbContext.Employees.Add(employee);
                     }
 
-                    // Update Employee-specific fields
-                    employee.BranchOfficeSectionUnit = Input.BranchOfficeSectionUnit;
-                    employee.Position = Input.Position;
-                    employee.Sector = Input.Sector;
+                    employee.BranchOfficeSectionUnit = Input.EmployeeInfo?.BranchOfficeSectionUnit;
+                    employee.Position = Input.EmployeeInfo?.Position;
+                    employee.Sector = Input.EmployeeInfo?.Sector;
 
                     _dbContext.Employees.Update(employee);
                 }
 
-                // **Save Changes to the Database**
-                try
-                {
-                    await _dbContext.SaveChangesAsync();
-                }
-                catch (DbUpdateException)
-                {
-                    // Log the error (you can log the exception details here)
-                    ModelState.AddModelError(string.Empty, "An error occurred while updating your profile. Please try again.");
-                    return Page();
-                }
 
-                // **Redirect Upon Successful Update**
+                await _dbContext.SaveChangesAsync();
                 return RedirectToPage("/Account/Manage");
             }
 

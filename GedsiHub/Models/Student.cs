@@ -1,4 +1,4 @@
-﻿// Student.cs
+﻿// Models/Student.cs
 
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -19,23 +19,20 @@ namespace GedsiHub.Models
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
-        [Column("college", TypeName = "VARCHAR(100)")]
-        public string? College { get; set; } // Choice field for College (CollegeChoices)
+        [ForeignKey("CollegeDepartment")] // Foreign key for CollegeDepartment
+        [Column("college_dept_id")]
+        public int? CollegeDeptId { get; set; } // Foreign key for College Department
+        public virtual CollegeDepartment CollegeDepartment { get; set; } // Navigation property
 
-        [Column("college_dept_id", TypeName = "VARCHAR(30)")]
-        public string? CollegeDeptId { get; set; }
-
-        [Column("program", TypeName = "VARCHAR(100)")]
-        public string? Program { get; set; } // Program or course
+        [ForeignKey("Course")] // Foreign key for Course
+        [Column("course_id")]
+        public int? CourseId { get; set; } // Foreign key for the Course
+        public virtual Course Course { get; set; } // Navigation property
 
         [Column("year")]
         public int? Year { get; set; } // Year of study
 
         [Column("section", TypeName = "VARCHAR(10)")]
         public string? Section { get; set; } // Section
-
-
-        // Navigation property for college department
-        public virtual CollegeDepartment CollegeDepartment { get; set; }
     }
 }

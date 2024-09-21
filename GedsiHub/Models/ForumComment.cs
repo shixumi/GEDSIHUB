@@ -30,7 +30,14 @@ namespace GedsiHub.Models
         [Column("content", TypeName = "TEXT")]
         public string Content { get; set; } = string.Empty;
 
+        // Field for image upload
+        [Column("image_path", TypeName = "VARCHAR(255)")]
+        public string? ImagePath { get; set; }  // Stores the file path for uploaded image
+
         [Column("created_at", TypeName = "TIMESTAMP")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation property for comment reports
+        public virtual ICollection<ForumCommentReport> CommentReports { get; set; } = new List<ForumCommentReport>();
     }
 }

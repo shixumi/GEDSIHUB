@@ -89,6 +89,8 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                         var student = new Student
                         {
                             UserId = user.Id,
+                            CollegeDeptId = null,
+                            Course = null
                             // Initialize other required fields if any, or leave them to be filled later
                         };
                         _context.Students.Add(student);

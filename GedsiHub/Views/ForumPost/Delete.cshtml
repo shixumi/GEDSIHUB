@@ -1,0 +1,17 @@
+﻿@model GedsiHub.Models.ForumPost
+
+@{
+    ViewData["Title"] = "Delete Post";
+}
+
+<h2>Delete Post</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete the post titled "<strong>@Model.Title</strong>"?
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="PostId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

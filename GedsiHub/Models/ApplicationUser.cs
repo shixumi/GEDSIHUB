@@ -60,5 +60,7 @@ namespace GedsiHub.Models
         public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
         public virtual ICollection<ForumPost> ForumPosts { get; set; } = new List<ForumPost>();
         public virtual ICollection<ForumComment> ForumComments { get; set; } = new List<ForumComment>();
+        public virtual ICollection<ForumPostReport> ForumPostReports { get; set; } = new List<ForumPostReport>();
+        public virtual ICollection<ForumCommentReport> ForumCommentReports { get; set; } = new List<ForumCommentReport>();
     }
 }

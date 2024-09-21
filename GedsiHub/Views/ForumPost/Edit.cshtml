@@ -1,0 +1,47 @@
+﻿@model GedsiHub.ViewModels.ForumPostViewModel
+
+@{
+    ViewData["Title"] = "Edit Post";
+}
+
+<h2>Edit Post</h2>
+
+<!-- Show Error Message (TempData) -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<!-- Display validation errors -->
+<form asp-action="Edit" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label">Post Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Content" class="control-label">Post Content</label>
+        <textarea asp-for="Content" class="form-control"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="pollOptions">Poll Options (comma-separated, optional)</label>
+        <input asp-for="PollOptions" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="imageFile">Upload Image (optional)</label>
+        <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Post</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
