@@ -1,0 +1,198 @@
+/* Full-Width Responsiveness */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    position: relative; /* Added for background image placement */
+    margin-top: 80px;
+    font-family: Poppins, sans-serif;
+    color: #464040;
+}
+
+.navbar-brand {
+    padding-left: 65px;
+    font-size: 30px;
+    font-family: Staatliches, serif;
+    color: var(--bs-secondary-text-emphasis);
+    margin-left: 0;
+    background: url("/images/gadologo.png") left / contain no-repeat;
+}
+
+.navbar {
+    box-shadow: 0px 0px 10px rgba(33, 37, 41, 0.6);
+    padding-left: 2%;
+}
+
+.container {
+    font-family: Poppins, sans-serif;
+}
+
+.row h2 {
+    margin-bottom: 0px;
+    font-size: 29px;
+}
+
+.form-control {
+    border-radius: 10px;
+    font-size: 18px;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    max-width: 100%;
+}
+
+.login-card {
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(33, 37, 41, 0.33);
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.submit-btn {
+    padding: 15px;
+    border-radius: 10px;
+    background: #660000;
+    color: #ffffff;
+    border-style: none;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.cancel-btn {
+    padding: 15px;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #464040;
+    font-size: 18px;
+    border: 1px solid #464040;
+    text-decoration: none;
+}
+
+.login-sec h2 {
+    font-size: 25px;
+    margin-bottom: 0px;
+    color: #464040;
+}
+
+.login-btn:hover {
+    color: #ffffff;
+    background-color: #c81b1b;
+}
+
+.cancel-btn:hover {
+    color: #464040;
+    background-color: #ffffff;
+}
+
+.login-btn:active {
+    color: #ffffff;
+    background-color: #c81b1b;
+}
+
+.cancel-btn:active {
+    color: #464040;
+    background-color: rgb(255, 255, 255);
+}
+
+.input-lbl {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #464040;
+    font-weight: 500;
+}
+
+/* Login Form Container */
+.form-con {
+    width: 40%; /* Adjust this percentage as needed */
+    max-width: 600px;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px rgba(33, 37, 41, 0.33);
+    padding-top: 50px;
+    padding-left: 40px;
+    padding-bottom: 50px;
+    padding-right: 40px;
+    border-radius: 20px;
+}
+
+.log-main h2 {
+    margin-bottom: 35px;
+    margin-top: 35px;
+}
+
+/* Background image placement */
+#main::before {
+    content: '';
+    background: url("/path-to-your-image.jpg") center / cover no-repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%; /* Adjust width */
+    height: 100%;
+    z-index: -1;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 500px) {
+    .form-con {
+        background: rgba(255, 255, 255, 0);
+        box-shadow: 0px 0px;
+        padding: 45px 40px;
+        padding-top: 10px;
+        margin-top: -15px;
+        width: 80%;
+    }
+
+    .log-main h2 {
+        font-size: 25px;
+        font-weight: 600;
+        margin-bottom: 14px;
+    }
+
+    #main {
+        margin-top: 70px;
+        height: 100%;
+    }
+
+        #main::before {
+            width: 0; /* Hide the background image on small screens */
+        }
+
+    .reset-p {
+        padding-right: 35px;
+        padding-left: 35px;
+    }
+
+    .input-form {
+        margin-top: -30px;
+    }
+}
+
+.reset-p {
+    display: flex;
+    justify-content: center;
+}
+
+.modal-title {
+    margin-left: 15px;
+}
+
+/* Adjustments for larger screens */
+@media (min-width: 768px) {
+    .form-con {
+        width: 60%;
+        padding: 50px 40px;
+    }
+}
