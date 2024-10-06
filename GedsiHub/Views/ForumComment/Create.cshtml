@@ -1,13 +1,9 @@
-﻿@model GedsiHub.Models.ForumComment
-
-@{
-    ViewData["Title"] = "Add Comment";
-}
+﻿@model GedsiHub.ViewModels.ForumCommentViewModel
 
 <h2>Add a Comment</h2>
 
 <form asp-action="Create" enctype="multipart/form-data">
-    <input type="hidden" asp-for="PostId" />
+    @Html.AntiForgeryToken()
 
     <div class="form-group">
         <label asp-for="Content" class="control-label">Comment Content</label>
@@ -16,13 +12,12 @@
     </div>
 
     <div class="form-group">
-        <label for="imageFile">Upload Image</label>
-        <input type="file" class="form-control" id="imageFile" name="imageFile" />
+        <label asp-for="ImageFile" class="control-label">Upload Image</label>
+        <input asp-for="ImageFile" type="file" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Add Comment</button>
-</form>
+    <input type="hidden" asp-for="PostId" />
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+    <button type="submit" class="btn btn-primary">Submit Comment</button>
+</form>

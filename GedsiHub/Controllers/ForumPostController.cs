@@ -20,6 +20,23 @@ namespace GedsiHub.Controllers
             _context = context;
         }
 
+        // GET: ForumPost/Index - Display all posts
+        public async Task<IActionResult> Index()
+        {
+            var posts = await _context.ForumPosts
+                .Select(post => new ForumPostViewModel
+                {
+                    PostId = post.PostId,
+                    Title = post.Title,
+                    Content = post.Content,
+                    CreatedAt = post.CreatedAt.ToLocalTime(),  // Convert UTC to local time
+                    PollOptions = post.PollOptions,
+                })
+                .ToListAsync();
+
+            return View(posts);
+        }
+
         // GET: ForumPost/Details/{id} - Display post with comments
         public async Task<IActionResult> Details(int id)
         {
@@ -61,7 +78,6 @@ namespace GedsiHub.Controllers
                 UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
             };
 
-            // Handle optional image upload
             if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
             {
                 var supportedTypes = new[] { "jpg", "jpeg", "png", "gif" };
@@ -76,7 +92,6 @@ namespace GedsiHub.Controllers
                 var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
                 var imagePath = Path.Combine("wwwroot/images/comments", fileName);
 
-                // Ensure directory exists
                 Directory.CreateDirectory(Path.Combine("wwwroot/images/comments"));
 
                 using (var stream = new FileStream(imagePath, FileMode.Create))
@@ -98,6 +113,209 @@ namespace GedsiHub.Controllers
             }
 
             return RedirectToAction(nameof(Details), new { id = viewModel.PostId });
+        }
+
+        // GET: ForumPost/Create - Display form to create a new post
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: ForumPost/Create - Handle form submission for creating a new post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ForumPostViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please correct the errors in the form.";
+                return View(viewModel);
+            }
+
+            // Get the current user's ID
+            var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["ErrorMessage"] = "You must be logged in to create a post.";
+                return View(viewModel);
+            }
+
+            var newPost = new ForumPost
+            {
+                Title = viewModel.Title,
+                Content = viewModel.Content,
+                CreatedAt = DateTime.UtcNow,
+                PollOptions = string.IsNullOrWhiteSpace(viewModel.PollOptions) ? null : viewModel.PollOptions,
+                UserId = userId
+            };
+
+            // Handle optional image upload
+            if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+            {
+                var supportedTypes = new[] { "jpg", "jpeg", "png", "gif" };
+                var fileExt = Path.GetExtension(viewModel.ImageFile.FileName).Substring(1).ToLower();
+
+                if (!supportedTypes.Contains(fileExt))
+                {
+                    TempData["ErrorMessage"] = "Invalid image format. Please upload a JPG, PNG, or GIF file.";
+                    return View(viewModel);
+                }
+
+                var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
+                var imagePath = Path.Combine("wwwroot/images/posts", fileName);
+
+                Directory.CreateDirectory(Path.Combine("wwwroot/images/posts"));
+
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await viewModel.ImageFile.CopyToAsync(stream);
+                }
+
+                newPost.ImagePath = "/images/posts/" + fileName;
+            }
+
+            try
+            {
+                _context.ForumPosts.Add(newPost);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Post created successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                var exceptionMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                TempData["ErrorMessage"] = "An error occurred while creating the post: " + exceptionMessage;
+                return View(viewModel);
+            }
+        }
+
+        // GET: ForumPost/Edit/{id} - Load the edit page for a specific post
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var post = await _context.ForumPosts.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            // Populate the ForumPostViewModel from the ForumPost model
+            var viewModel = new ForumPostViewModel
+            {
+                PostId = post.PostId,
+                Title = post.Title,
+                Content = post.Content,
+                PollOptions = post.PollOptions,
+                CreatedAt = post.CreatedAt
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: ForumPost/Edit - Handle form submission for editing a post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(ForumPostViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var post = await _context.ForumPosts.FindAsync(viewModel.PostId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Title = viewModel.Title;
+            post.Content = viewModel.Content;
+            post.PollOptions = string.IsNullOrWhiteSpace(viewModel.PollOptions) ? null : viewModel.PollOptions;
+
+            // Handle optional image upload
+            if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+            {
+                var supportedTypes = new[] { "jpg", "jpeg", "png", "gif" };
+                var fileExt = Path.GetExtension(viewModel.ImageFile.FileName).Substring(1).ToLower();
+
+                if (!supportedTypes.Contains(fileExt))
+                {
+                    TempData["ErrorMessage"] = "Invalid image format. Please upload a JPG, PNG, or GIF file.";
+                    return View(viewModel);
+                }
+
+                var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
+                var imagePath = Path.Combine("wwwroot/images/posts", fileName);
+
+                Directory.CreateDirectory(Path.Combine("wwwroot/images/posts"));
+
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await viewModel.ImageFile.CopyToAsync(stream);
+                }
+
+                post.ImagePath = "/images/posts/" + fileName;
+            }
+
+            try
+            {
+                _context.ForumPosts.Update(post);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Post updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                var exceptionMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                TempData["ErrorMessage"] = "An error occurred while updating the post: " + exceptionMessage;
+                return View(viewModel);
+            }
+        }
+
+        // GET: ForumPost/Delete/{id} - Show the delete confirmation page
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var post = await _context.ForumPosts.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return View(post);  // Pass the post to the view, including the PostId
+        }
+
+        // POST: ForumPost/DeleteConfirmed/{id} - Handle post deletion
+        [HttpPost, ActionName("DeleteConfirmed")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (id == 0)
+            {
+                TempData["ErrorMessage"] = "Invalid Post ID.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var post = await _context.ForumPosts.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();  // If the post is not found, return 404
+            }
+
+            try
+            {
+                _context.ForumPosts.Remove(post);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Post deleted successfully!";
+            }
+            catch
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the post.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

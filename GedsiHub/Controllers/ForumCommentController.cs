@@ -1,9 +1,8 @@
-﻿// ForumCommentController.cs
-
-using GedsiHub.Data;
+﻿using GedsiHub.Data;
 using GedsiHub.Models;
-using Microsoft.AspNetCore.Mvc;
+using GedsiHub.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.IO;
 using System.Threading.Tasks;
@@ -23,58 +22,105 @@ namespace GedsiHub.Controllers
         // GET: Create a new comment
         public IActionResult Create(int postId)
         {
-            ViewBag.PostId = postId;
-            return View();
+            var viewModel = new ForumCommentViewModel
+            {
+                PostId = postId
+            };
+            return View(viewModel);
         }
 
         // POST: Create a new comment with an optional image
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ForumComment comment, IFormFile imageFile)
+        public async Task<IActionResult> Create(ForumCommentViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                comment.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get current user ID
-
-                // Handle image upload if provided
-                if (imageFile != null && imageFile.Length > 0)
+                var comment = new ForumComment
                 {
-                    var imagePath = Path.Combine("wwwroot/images", imageFile.FileName);
+                    Content = viewModel.Content,
+                    PostId = viewModel.PostId,  // Make sure to pass the PostId correctly
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+                {
+                    var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
+                    var imagePath = Path.Combine("wwwroot/images/comments", fileName);
+
+                    Directory.CreateDirectory(Path.Combine("wwwroot/images/comments"));
+
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
-                        await imageFile.CopyToAsync(stream);
+                        await viewModel.ImageFile.CopyToAsync(stream);
                     }
-                    comment.ImagePath = "/images/" + imageFile.FileName; // Store the image path
+
+                    comment.ImagePath = "/images/comments/" + fileName;
                 }
 
-                _context.Add(comment);
+                _context.ForumComments.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "ForumPost", new { id = comment.PostId });
+                TempData["SuccessMessage"] = "Comment added successfully!";
+                return RedirectToAction("Details", "ForumPost", new { id = viewModel.PostId });
             }
-            return View(comment);
+
+            return View(viewModel);  // Return the view model if validation fails
         }
 
-        // GET: Report a comment
+        // POST: Delete a comment
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var comment = await _context.ForumComments.FindAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            if (comment.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier) && !User.IsInRole("Admin"))
+            {
+                return Forbid(); // Ensure the user is either the comment owner or an admin
+            }
+
+            _context.ForumComments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Comment deleted successfully!";
+            return RedirectToAction("Details", "ForumPost", new { id = comment.PostId });
+        }
+
+        // POST: Report a comment
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Report(int commentId, string reason)
         {
             var comment = await _context.ForumComments.FindAsync(commentId);
-            if (comment == null) return NotFound();
+            if (comment == null)
+            {
+                return NotFound();
+            }
 
             var report = new ForumCommentReport
             {
                 CommentId = commentId,
-                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier), // Get current user ID
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 Reason = reason,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = System.DateTime.UtcNow
             };
 
             _context.ForumCommentReports.Add(report);
             await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Comment reported successfully!";
             return RedirectToAction("Details", "ForumPost", new { id = comment.PostId });
         }
 
-        // Other actions like Index, Edit, Delete, etc.
+        // Helper: Check if the user is authorized to delete a comment
+        private bool IsUserAuthorizedToDeleteComment(ForumComment comment)
+        {
+            return comment.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin");
+        }
     }
 }

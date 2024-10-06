@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GedsiHub.Models.ForumPost>
+﻿@model IEnumerable<GedsiHub.ViewModels.ForumPostViewModel>
 
 @{
     ViewData["Title"] = "Forum Posts";
@@ -6,7 +6,6 @@
 
 <h2>All Forum Posts</h2>
 
-<!-- Show Success Message -->
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
@@ -14,7 +13,6 @@
     </div>
 }
 
-<!-- Show Error Message -->
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">
@@ -22,7 +20,6 @@
     </div>
 }
 
-<!-- Button to Create a New Post -->
 <div class="mb-3">
     <a asp-action="Create" class="btn btn-primary">Create New Post</a>
 </div>

@@ -1,5 +1,4 @@
 ﻿// ForumComment.cs
-
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -34,7 +33,7 @@ namespace GedsiHub.Models
         [Column("image_path", TypeName = "VARCHAR(255)")]
         public string? ImagePath { get; set; }  // Stores the file path for uploaded image
 
-        [Column("created_at", TypeName = "TIMESTAMP")]
+        [Column("created_at", TypeName = "DATETIME")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation property for comment reports

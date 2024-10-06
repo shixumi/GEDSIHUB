@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿// ForumCommentViewModel.cs
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace GedsiHub.ViewModels
@@ -6,7 +7,7 @@ namespace GedsiHub.ViewModels
     public class ForumCommentViewModel
     {
         [Required(ErrorMessage = "Comment content is required.")]
-        [StringLength(1000, ErrorMessage = "Comment cannot be more than 1000 characters.")]
+        [StringLength(1000, ErrorMessage = "Comment cannot exceed 1000 characters.")]
         public string Content { get; set; } = string.Empty;
 
         public IFormFile? ImageFile { get; set; }  // Optional image for the comment

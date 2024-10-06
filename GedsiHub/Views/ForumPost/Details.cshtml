@@ -5,10 +5,10 @@
     ViewData["Title"] = Model.ForumPost.Title;
 }
 
+<!-- Display the forum post -->
 <h2>@Model.ForumPost.Title</h2>
 <p>@Model.ForumPost.Content</p>
 
-<!-- Display Post Image -->
 @if (Model.ForumPost.ImagePath != null)
 {
     <div>
@@ -16,9 +16,9 @@
     </div>
 }
 
+<!-- Display comments -->
 <h3>Comments</h3>
 
-<!-- Display existing comments -->
 @if (Model.ForumPost.ForumComments.Any())
 {
     <ul class="list-group">
@@ -27,15 +27,20 @@
             <li class="list-group-item">
                 <strong>@comment.User.FirstName @comment.User.LastName:</strong>
                 <p>@comment.Content</p>
+
+                <!-- Display comment image if available -->
                 @if (comment.ImagePath != null)
                 {
                     <img src="@comment.ImagePath" alt="Comment Image" class="img-thumbnail" />
                 }
+
                 <small class="text-muted">Posted on @comment.CreatedAt.ToString("g")</small>
 
+                <!-- Delete comment button (only visible for comment owner or admins) -->
                 @if (comment.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
                 {
-                    <form asp-action="DeleteComment" asp-route-id="@comment.CommentId" method="post">
+                    <form asp-action="DeleteComment" asp-controller="ForumComment" asp-route-id="@comment.CommentId" method="post">
+                        @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 }
@@ -45,24 +50,35 @@
 }
 else
 {
-    <p>No comments yet.</p>
+    <p>No comments yet. Be the first to comment!</p>
 }
 
+<!-- Form to add a new comment -->
 <h3>Leave a Comment</h3>
-<form asp-action="AddComment" enctype="multipart/form-data" method="post">
-    <input type="hidden" asp-for="CommentViewModel.PostId" value="@Model.CommentViewModel.PostId" />
+<form asp-action="Create" asp-controller="ForumComment" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <!-- Hidden field for PostId -->
+    <input type="hidden" name="PostId" value="@Model.CommentViewModel.PostId" />
+
+    <!-- Comment content -->
     <div class="form-group">
-        <textarea asp-for="CommentViewModel.Content" class="form-control" rows="3" placeholder="Write your comment here"></textarea>
+        <textarea name="Content" class="form-control" rows="3" placeholder="Write your comment here"></textarea>
         <span asp-validation-for="CommentViewModel.Content" class="text-danger"></span>
     </div>
+
+    <!-- Image upload (optional) -->
     <div class="form-group">
         <label for="ImageFile">Upload Image (optional)</label>
-        <input asp-for="CommentViewModel.ImageFile" type="file" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
+        <input type="file" name="ImageFile" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
         <span asp-validation-for="CommentViewModel.ImageFile" class="text-danger"></span>
     </div>
+
+    <!-- Submit button to post the comment -->
     <button type="submit" class="btn btn-primary">Submit Comment</button>
 </form>
 
+<!-- Include client-side validation scripts -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
