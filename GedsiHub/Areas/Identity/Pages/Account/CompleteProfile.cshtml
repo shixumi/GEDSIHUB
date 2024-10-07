@@ -1,6 +1,7 @@
 ﻿@page
 @model CompleteProfileModel
 @{
+    Layout = "_Layout";
     ViewData["Title"] = "Complete Your Profile";
 }
 
@@ -10,9 +11,19 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <!-- General User Information -->
-    <section>
-        <h2>General Information</h2>
+    <section id="suf-main">
+        <div class="text-center heading-suf">
+            <h2 class="fw-semibold">Welcome to GEDSI Hub!</h2>
+            <p>Please complete the following information to proceed.</p>
+        </div>
 
+        <section id="step1" class="step active">
+            <div class="container form-con" style="padding-top: 30px; padding-bottom:30px">
+                <form>
+            </div>
+        </section>
+        <h2>General Information</h2>
+        
         <div class="form-group">
             <label asp-for="Input.FirstName" class="control-label"></label>
             <input asp-for="Input.FirstName" class="form-control" />
