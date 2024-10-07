@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241006134000_ForumPost Changes")]
-    partial class ForumPostChanges
+    [Migration("20241007041718_Forum Test")]
+    partial class ForumTest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -903,9 +903,8 @@ namespace GedsiHub.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("content");
 
-                    b.Property<byte[]>("CreatedAt")
-                        .IsRequired()
-                        .HasColumnType("TIMESTAMP")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("DATETIME")
                         .HasColumnName("created_at");
 
                     b.Property<string>("ImagePath")
@@ -982,8 +981,10 @@ namespace GedsiHub.Migrations
                         .HasColumnName("content");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("created_at");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("VARCHAR(255)")

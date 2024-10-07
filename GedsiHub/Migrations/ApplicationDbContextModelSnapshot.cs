@@ -978,8 +978,10 @@ namespace GedsiHub.Migrations
                         .HasColumnName("content");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("created_at");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATETIME2")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("VARCHAR(255)")

@@ -35,10 +35,10 @@ namespace GedsiHub.Models
         [Column("image_path", TypeName = "VARCHAR(255)")]
         public string? ImagePath { get; set; }
 
-        [Column("poll_options", TypeName = "TEXT")]
+        [Column("poll_options", TypeName = "TEXT")] 
         public string? PollOptions { get; set; }
 
-        [Column("created_at", TypeName = "DATETIME")]
+        [Column("created_at", TypeName = "DATETIME2")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public virtual ICollection<ForumComment> ForumComments { get; set; } = new List<ForumComment>();

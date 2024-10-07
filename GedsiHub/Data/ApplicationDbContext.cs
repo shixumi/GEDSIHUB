@@ -232,6 +232,12 @@ namespace GedsiHub.Data
                       .OnDelete(DeleteBehavior.Cascade); // Allow cascade delete from ForumPost
             });
 
+            // **Configure ForumPost created_at column with default GETDATE()**
+            builder.Entity<ForumPost>()
+                .Property(fp => fp.CreatedAt)
+                .HasDefaultValueSql("GETDATE()")
+                .ValueGeneratedOnAdd();
+
             // **Configure ForumPost relationships**
             builder.Entity<ForumPost>(entity =>
             {
