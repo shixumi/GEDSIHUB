@@ -1,48 +1,23 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html data-bs-theme="light" lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - GedsiHub</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900|Staatliches&display=swap&subset=latin-ext">
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - GEDSI Hub</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/styles.css" />
-    <link rel="stylesheet" href="~/css/login.css" />
-    <link rel="stylesheet" href="~/css/register.css" />
-    <link rel="stylesheet" href="~/css/emailsent-fp.css" />
-    <link rel="stylesheet" href="~/css/signup-form.css" />
-
-
-  
+    <link rel="stylesheet" href="~/GedsiHub.styles.css" asp-append-version="true" />
     
-    
+    <!-- Added from Bootstrap Studio -->
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
 
 
 </head>
 <body>
-
-
- @*
-     -- This is the original header --
-    <header>
-        -- Conditional rendering of navbars based on authentication --
-        -- Conditional rendering of navbars based on authentication --
-        @if (User.Identity != null && User.Identity.IsAuthenticated)
-        {
-            @await Html.PartialAsync("_NavbarApplication")
-        }
-        else
-        {
-            @await Html.PartialAsync("_NavbarPublic")
-        }
-    </header>
- *@
     <header>
         <nav class="navbar navbar-expand-md fixed-top" style="background: #ffffff">
             <div class="container-fluid">
-                <a class="navbar-brand login" asp-area="" asp-controller="Home" asp-action="Index">GEDSI HUB</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GedsiHub</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -63,27 +38,24 @@
                 </div>
             </div>
         </nav>
-    </header>   
-    <div>
-        @RenderBody()
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
 
-
-@*
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2024 - GedsiHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-*@
-
-    <!-- Added from Bootstrap Studio -->
-    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
-    <script src="~/assets/js/bs-init.js"></script>
-    <script src="~/js/script.js"></script>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Added from Bootstrap Studio -->
+    <script src="~/lib/bootstrap/js/bootstrap.min.js></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

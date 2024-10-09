@@ -1,132 +1,298 @@
 ﻿@page
 @model CompleteProfileModel
 @{
+    Layout = "_Layout";
     ViewData["Title"] = "Complete Your Profile";
 }
-
-<h1>@ViewData["Title"]</h1>
 
 <form method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <!-- General User Information -->
-    <section>
-        <h2>General Information</h2>
-
-        <div class="form-group">
-            <label asp-for="Input.FirstName" class="control-label"></label>
-            <input asp-for="Input.FirstName" class="form-control" />
-            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+    <section id="suf-main">
+        <div class="text-center heading-suf">
+            <h2 class="fw-semibold">Welcome to GEDSI Hub!</h2>
+            <p>Please complete the following information to proceed.</p>
         </div>
 
-        <div class="form-group">
-            <label asp-for="Input.LastName" class="control-label"></label>
-            <input asp-for="Input.LastName" class="form-control" />
-            <span asp-validation-for="Input.LastName" class="text-danger"></span>
-        </div>
+        <!-- Step 1 Page -->
+        <section id="step1" class="step active">
+            <div class="container form-con" style="padding-top: 30px; padding-bottom:30px">
+                <h4 class="fw-semibold">General Information</h4>
+                <form class="text-center input-form" id="form-1" method="post">
+                    <div class="mb-3">
+                        <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Full Legal Name</label>
+                        <!-- Full Name -->
+                        <div class="input-fln">
+                            <input asp-for="Input.FirstName" class="form-control full-leg-name s-form" placeholder="First Name" required />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
 
-        <div class="form-group">
-            <label asp-for="Input.DateOfBirth" class="control-label"></label>
-            <input asp-for="Input.DateOfBirth" class="form-control" type="date" />
-            <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
-        </div>
+                            <!--asp-for="Input.MiddleName" can be place below, we just need to setup the backend-->
+                            <input class="form-control full-leg-name s-form" placeholder="Middle Name" required />
+                            <!-- <span asp-validation-for="Input.MiddleName" class="text-danger"></span> -->
 
-        <div class="form-group">
-            <label asp-for="Input.GenderIdentity" class="control-label"></label>
-            <input asp-for="Input.GenderIdentity" class="form-control" />
-            <span asp-validation-for="Input.GenderIdentity" class="text-danger"></span>
-        </div>
+                            <input asp-for="Input.LastName" class="form-control full-leg-name s-form" placeholder="Last Name" required />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
 
-        <div class="form-group">
-            <label asp-for="Input.Pronouns" class="control-label"></label>
-            <input asp-for="Input.Pronouns" class="form-control" />
-            <span asp-validation-for="Input.Pronouns" class="text-danger"></span>
-        </div>
+                            <!--asp-for="Input.Suffix" can be place below, we just neet to setup the backend-->
+                            <input class="form-control full-leg-name s-form" placeholder="Suffix" />
+                            <!-- <span asp-validation-for="Input.Suffix" class="text-danger"> </span> -->
+                        </div>
 
-        <div class="form-group form-check">
-            <input asp-for="Input.IsMemberOfIndigenousCommunity" class="form-check-input" />
-            <label asp-for="Input.IsMemberOfIndigenousCommunity" class="form-check-label"></label>
-            <span asp-validation-for="Input.IsMemberOfIndigenousCommunity" class="text-danger"></span>
-        </div>
+                        <!-- Lived Name -->
+                        <!-- Need to setup in the backend -->
+                        <div class="mb-3">
+                            <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Lived Name <span style="color: rgb(156, 156, 156);">(Optional)</span></label>
+                            <input class="form-control s-form" type="text" name="livedname" placeholder="Lived Name">
+                        </div>
 
-        <div class="form-group form-check">
-            <input asp-for="Input.IsDisabled" class="form-check-input" />
-            <label asp-for="Input.IsDisabled" class="form-check-label"></label>
-            <span asp-validation-for="Input.IsDisabled" class="text-danger"></span>
-        </div>
+                        <!-- Birthday -->
+                        <div class="mb-3">
+                            <label asp-for="Input.DateOfBirth" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Birthday</label>
+                            <input asp-for="Input.DateOfBirth" class="form-control s-form" id="birthday" type="date" name="birthday" />
+                            <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+                        </div>
 
-        <div class="form-group">
-            <label asp-for="Input.ProfilePicturePath" class="control-label"></label>
-            <input asp-for="Input.ProfilePicturePath" class="form-control" type="text" />
-            <span asp-validation-for="Input.ProfilePicturePath" class="text-danger"></span>
-            <!-- If you intend to allow file uploads for the profile picture, you can use type="file" -->
-            <!-- <input asp-for="Input.ProfilePicturePath" class="form-control" type="file" /> -->
-        </div>
+                        <!-- Phone Number -->
+                        <!-- Need to setup the backend: asp-for="Input.PhoneNumber"  -->
+                        <div class="mb-3">
+                            <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Phone Number</label>
+                            <input class="form-control s-form" placeholder="09XXXXXXXX" required maxlength="11" pattern="[0-9]*" />
+                            <!-- <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span> -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Next button -->
+            <div class="container d-flex justify-content-end nav-button">
+                <button class="next-btn" type="button" onclick="nextStep(2)">Next</button>
+            </div>
+        </section>
+
+        <!-- Step 2 Page -->
+        <section id="step2" class="step">
+            <div class="container form-con" style="padding-top: 30px; padding-bottom:30px">
+                <form class="text-center input-form" id="form2" method="post">
+
+                    <!-- Sex -->
+                    <!-- Need to verify in the back end -->
+                    <div class="mb-3">
+                        <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Sex</label>
+                        <select id="sex" class="form-select s-form" name="sex" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Intersex">Intersex</option>
+                        </select>
+                    </div>
+
+                    <!-- Gender -->
+                    <!-- Need to verify in the back end -->
+                    <div class="mb-3">
+                        <label class="form-label d-flex justify-content-start input-lbl">Gender</label>
+                        <select asp-for="Input.GenderIdentity" class="form-select s-form" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="Cisgender">Cisgender</option>
+                            <option value="Transgender">Transgender</option>
+                            <option value="Agender">Agender</option>
+                            <option value="Gender Fluid">Gender Fluid</option>
+                            <option value="Gender Queer">Gender Queer</option>
+                        </select>
+                        <span asp-validation-for="Input.GenderIdentity" class="text-danger"></span>
+                    </div>
+
+                    <!-- Pronouns -->
+                    <!-- Need to verify in the back end -->
+                    <div class="mb-3">
+                        <label asp-for="Input.Pronouns" class="form-label d-flex justify-content-start input-lbl">Pronouns</label>
+                        <select asp-for="Input.Pronouns" class="form-select s-form" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="She/her">She/her</option>
+                            <option value="He/him">He/him</option>
+                            <option value="They/them">They/them</option>
+                        </select>
+                        <span asp-validation-for="Input.Pronouns" class="text-danger"></span>
+                    </div>
+
+                    <!-- Honorifics -->
+                    <!-- Need to verify in the back end -->
+                    <div class="mb-3">
+                        <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Honorifics <span style="color: rgb(156, 156, 156);">(Optional)</span></label>
+                        <input class="form-control s-form" type="text" name="honorifics" placeholder="Enter preferred honorifics" />
+                    </div>
+
+                    <!-- Profile Path -->
+                    <div class="form-group">
+                        <label asp-for="Input.ProfilePicturePath" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
+                        <input asp-for="Input.ProfilePicturePath" class="form-control" type="text" />
+                        <span asp-validation-for="Input.ProfilePicturePath" class="text-danger"></span>
+                        <!-- If you intend to allow file uploads for the profile picture, you can use type="file" -->
+                        <!-- <input asp-for="Input.ProfilePicturePath" class="form-control" type="file" /> -->
+                    </div>
+                </form>
+            </div>
+            <div class="container d-flex justify-content-between nav-button">
+                <button class="back-btn" type="button" onclick="prevStep(1)">Back</button>
+                <button class="next-btn" type="button" onclick="nextStep(3)">Next</button>
+            </div>
+        </section>
+
+        <!-- Step 3 Page -->
+        <section id="step3" class="step">
+            <div class="container form-con" style="padding-top: 30px; padding-bottom:30px">
+                <form class="text-center input-form" id="form3" method="post">
+
+                    <!-- Member of Indigenous Community -->
+                    <!-- Need to verify in the back end -->
+                    <div class="mb-3">
+                        <label class="form-label text-start d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Are you a member of any indigenous cultural community?</label>
+                        <select asp-for="Input.IsMemberOfIndigenousCommunity" class="form-select s-form" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                        <span asp-validation-for="Input.IsMemberOfIndigenousCommunity" class="text-danger"></span>
+                    </div>
+
+                    <!-- Disabled Person? -->
+                    <!-- Need to verify in the back end -->
+                    <div class="mb-3">
+                        <label class="form-label text-start d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Do you identify yourself as a differently abled person?</label>
+                        <select asp-for="Input.IsDisabled" class="form-select s-form" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                        <span asp-validation-for="Input.IsDisabled" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="container d-flex justify-content-between nav-button">
+                <button class="back-btn" type="button" onclick="prevStep(2)">Back</button>
+                <button class="next-btn" type="button" onclick="nextStep(4)">Next</button>
+            </div>
+
+        </section>
+
+        <!-- Step 4 Page -->
+        <section id="step4" class="step">
+            <div class="container form-con" style="padding-top: 30px; padding-bottom:30px">
+
+                <form class="text-center input-form" id="form4" method="post">
+                    <!-- Student-Specific Information -->
+                    @if (User.IsInRole("Student"))
+                    {
+                        <h4 class="fw-semibold d-flex d-lg-flex justify-content-start justify-content-lg-start">Student Information</h4>
+                        <!-- College Department Dropdown -->
+                        <div class="mb-3">
+                            <label asp-for="Input.StudentInfo.CollegeDeptId" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
+                            <select asp-for="Input.StudentInfo.CollegeDeptId" class="form-control" asp-items="Model.CollegeDepartments"></select>
+                            <span asp-validation-for="Input.StudentInfo.CollegeDeptId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Course Dropdown -->
+                        <!-- Add validations to only display the available course for each department -->
+                        <div class="mb-3">
+                            <label asp-for="Input.StudentInfo.CourseId" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
+                            <select asp-for="Input.StudentInfo.CourseId" class="form-control" asp-items="Model.Courses"></select>
+                            <span asp-validation-for="Input.StudentInfo.CourseId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Student Year -->
+                        <div class="mb-3">
+                            <label asp-for="Input.StudentInfo.Year" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
+                            <input asp-for="Input.StudentInfo.Year" class="form-control" type="number" min="1" />
+                            <span asp-validation-for="Input.StudentInfo.Year" class="text-danger"></span>
+                        </div>
+
+                        <!-- Student Section -->
+                        <div class="mb-3">
+                            <label asp-for="Input.StudentInfo.Section" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
+                            <input asp-for="Input.StudentInfo.Section" class="form-control" />
+                            <span asp-validation-for="Input.StudentInfo.Section" class="text-danger"></span>
+                        </div>
+                    }
+
+                    <!-- Employee-Specific Information -->
+                    @if (User.IsInRole("Employee"))
+                    {
+                        <h4 class="fw-semibold d-flex d-lg-flex justify-content-start justify-content-lg-start">Employee Information</h4>
+
+                        
+                        <div id="employee-fields" class="conditional-fields">
+
+                            <!-- Employee Type -->
+                            <div class="mb-3">
+                                <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Employee Type</label>
+                                <select id="emptype" class="form-select s-form" name="emptype" required>
+                                    <option value="" disabled selected>Select employee type</option>
+                                    <option value="Faculty">Faculty</option>
+                                    <option value="Administrative Staff">Administrative Staff</option>
+                                    <option value="Designee">Designee</option>
+                                </select>
+                            </div>
+
+                            <!-- Employment Status -->
+                            <div class="mb-3">
+                                <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Employment Status</label>
+                                <select id="indigenous" class="form-select s-form" name="indigenous" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="Permanent">Permanent</option>
+                                    <option value="Casual">Casual</option>
+                                    <option value="Contract of Service">Contract of Service</option>
+                                    <option value="Job Order">Job Order</option>
+                                    <option value="Temporary">Temporary</option>
+                                    <option value="Part-time">Part-time</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Sector -->
+                            <div class="mb-3">
+                                <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Sector</label>
+                                <select id="sector" class="form-select s-form" name="sector" onchange="showBranchOptions()" required>
+                                    <option value="" disabled selected>Select your sector</option>
+                                    <option value="OEVP">Office of the Executive Vice President</option>
+                                    <option value="OVPAA">Office of the Vice President for Academic Affairs</option>
+                                    <option value="OVPF">Office of the Vice President for Planning and Finance</option>
+                                    <option value="OVPSAS">Office of the Vice President for Student Affairs and Services</option>
+                                    <option value="OVPA">Office of the Vice President for Administration</option>
+                                    <option value="OVPC">Office of the Vice President for Campuses</option>
+                                    <option value="OVPRED">Office of the Vice President for Research, Extension, and Development</option>
+                                    <option value="OPRES">Office of the President</option>
+                                </select>
+                            </div>
+
+                            <!-- Branch/Office/Section/Unit -->
+                            <div id="branch-office-container" class="mb-3">
+                                <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Branch/Office/Section/Unit</label>
+                                <select id="branch-office" class="form-select s-form" required>
+                                    <option value="" disabled selected>Select Branch-Office-Section-Unit</option>
+                                </select>
+                            </div>
+
+                            <!-- Position/Designation -->
+                            <div class="mb-3">
+                                <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Position/Designation</label>
+                                <input class="form-control s-form" type="text" placeholder="Enter Position/Designation" required maxlength="11" pattern="[0-9]*" name="position">
+                            </div>
+                        </div>
+                    }
+
+
+                </form>
+            </div>
+            <!-- Buttons -->
+            <div class="container d-flex justify-content-between nav-button">
+                <button class="back-btn" type="button" onclick="prevStep(3)">Back</button>
+                <button class="next-btn" type="submit" onclick="submitForm()">Save Profile</button>
+                
+            </div>
+        </section>
+
     </section>
-
-    <!-- Student-Specific Information -->
-    <!-- Student-Specific Information -->
-    @if (User.IsInRole("Student"))
-    {
-        <section>
-            <h2>Student Information</h2>
-
-            <!-- College Department Dropdown -->
-            <div class="form-group">
-                <label asp-for="Input.StudentInfo.CollegeDeptId" class="control-label"></label>
-                <select asp-for="Input.StudentInfo.CollegeDeptId" class="form-control" asp-items="Model.CollegeDepartments"></select>
-                <span asp-validation-for="Input.StudentInfo.CollegeDeptId" class="text-danger"></span>
-            </div>
-
-            <!-- Course Dropdown -->
-            <div class="form-group">
-                <label asp-for="Input.StudentInfo.CourseId" class="control-label"></label>
-                <select asp-for="Input.StudentInfo.CourseId" class="form-control" asp-items="Model.Courses"></select>
-                <span asp-validation-for="Input.StudentInfo.CourseId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.StudentInfo.Year" class="control-label"></label>
-                <input asp-for="Input.StudentInfo.Year" class="form-control" type="number" min="1" />
-                <span asp-validation-for="Input.StudentInfo.Year" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.StudentInfo.Section" class="control-label"></label>
-                <input asp-for="Input.StudentInfo.Section" class="form-control" />
-                <span asp-validation-for="Input.StudentInfo.Section" class="text-danger"></span>
-            </div>
-        </section>
-    }
-
-
-    <!-- Employee-Specific Information -->
-    @if (User.IsInRole("Employee"))
-    {
-        <section>
-            <h2>Employee Information</h2>
-
-            <div class="form-group">
-                <label asp-for="Input.EmployeeInfo.BranchOfficeSectionUnit" class="control-label"></label>
-                <input asp-for="Input.EmployeeInfo.BranchOfficeSectionUnit" class="form-control" />
-                <span asp-validation-for="Input.EmployeeInfo.BranchOfficeSectionUnit" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.EmployeeInfo.Position" class="control-label"></label>
-                <input asp-for="Input.EmployeeInfo.Position" class="form-control" />
-                <span asp-validation-for="Input.EmployeeInfo.Position" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.EmployeeInfo.Sector" class="control-label"></label>
-                <input asp-for="Input.EmployeeInfo.Sector" class="form-control" />
-                <span asp-validation-for="Input.EmployeeInfo.Sector" class="text-danger"></span>
-            </div>
-        </section>
-    }
-
-    <button type="submit" class="btn btn-primary">Save Profile</button>
+    
 </form>
 
 @section Scripts {

@@ -1,0 +1,47 @@
+#reg-main {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    font-family: Poppins, sans-serif;
+    background: url("/images/login-bg.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    color: #464040;
+}
+
+.select-role {
+    height: 59px;
+    border-radius: 10px;
+    color: #464040;
+    font-size: 18px;
+}
+
+select:invalid, select[value=""] {
+  color: #595c69;
+}
+
+.reg-con {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  margin-right: 0px;
+  height: 100%;
+  max-width: 596px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0px 0px 10px rgba(33,37,41,0.33);
+  padding: 150px 40px;
+  overflow: hidden;
+}
+
+.reg-con p {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #464040;
+}
+
+.reg-con button {
+  margin-top: 35px;
+}
+

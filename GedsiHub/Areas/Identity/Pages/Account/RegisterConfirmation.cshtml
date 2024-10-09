@@ -1,23 +1,39 @@
 ﻿@page
 @model RegisterConfirmationModel
 @{
+    Layout = "_Layout";
     ViewData["Title"] = "Register confirmation";
 }
 
 <h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
-    }
-    else
-    {
-<p>
-        Please check your email to confirm your account.
-</p>
-    }
-}
 
+@if (@Model.DisplayConfirmAccountLink)
+{
+    <p>
+        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
+        Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
+    </p>
+}
+else
+{
+    <section class="flex-sm-column flex-md-column flex-lg-column flex-xxl-column" id="e-main">
+        <div>
+            <h2 class="fw-semibold text-center">Email Sent</h2>
+        </div>
+        <!-- Email sent text -->
+        <div class="container emailsent-con">
+            <div class="email-body">
+                <div class="e-body">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-mail-check text-center d-flex justify-content-center m-auto justify-content-sm-center email-icon">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M11 19h-6a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v6"></path>
+                        <path d="M3 7l9 6l9 -6"></path>
+                        <path d="M15 19l2 2l4 -4"></path>
+                    </svg>
+                    
+                    <p class="text-center">Check your inbox and click the <strong>activation link</strong> to finalize your registration. Your account is almost ready!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+}
