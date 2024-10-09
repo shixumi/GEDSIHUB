@@ -27,13 +27,14 @@
 
 .login-con text-danger {
     align-items: flex-start;
+
 }
 
-    .login-con p {
-        margin-top: 20px;
-        font-size: 18px;
-        color: #464040;
-    }
+.login-con p {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #464040;
+}
 
 .login-ftr {
     font-size: 15px;

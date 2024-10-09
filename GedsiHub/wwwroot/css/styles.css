@@ -19,6 +19,14 @@ body, html {
     color: #464040;
 }
 
+#rpw-main {
+    width: 100%;
+    height: 100vh;
+    margin-top: 120px;
+    font-family: Poppins, sans-serif;
+    color: #464040;
+}
+
 .navbar-brand {
     padding-left: 65px;
     font-size: 30px;
@@ -137,7 +145,7 @@ body, html {
 /* Background image placement */
 #main::before {
     content: '';
-    background: url("/path-to-your-image.jpg") center / cover no-repeat;
+    background: url("~/images/login-bg.jpeg") center / cover no-repeat;
     position: absolute;
     top: 0;
     left: 0;
