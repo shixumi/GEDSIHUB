@@ -24,6 +24,8 @@ namespace GedsiHub.Data
         public DbSet<UserProgress> UserProgresses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<Lesson> Lessons { get; set; } 
+        public DbSet<LessonContent> LessonContents { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
@@ -362,14 +364,19 @@ namespace GedsiHub.Data
                       .OnDelete(DeleteBehavior.Cascade); // Allow cascade delete from Module
             });
 
-            // **Configure CourseContent relationships**
-            builder.Entity<CourseContent>(entity =>
-            {
-                entity.HasOne(cc => cc.Module)
-                      .WithMany(m => m.CourseContents)
-                      .HasForeignKey(cc => cc.ModuleId)
-                      .OnDelete(DeleteBehavior.Cascade); // Allow cascade delete from Module
-            });
+            // Module - Lesson relationship
+            builder.Entity<Module>()
+                .HasMany(m => m.Lessons)
+                .WithOne(l => l.Module)
+                .HasForeignKey(l => l.ModuleId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete Lesson when Module is deleted
+
+            // Lesson - LessonContent relationship
+            builder.Entity<Lesson>()
+                .HasMany(l => l.LessonContents)
+                .WithOne(lc => lc.Lesson)
+                .HasForeignKey(lc => lc.LessonId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete LessonContent when Lesson is deleted
 
             // **Configure Module relationships**
             builder.Entity<Module>(entity =>

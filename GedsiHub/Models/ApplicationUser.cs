@@ -21,6 +21,26 @@ namespace GedsiHub.Models
         [Column("last_name")]
         public string LastName { get; set; } = string.Empty; // Last Name
 
+        [StringLength(50)]
+        [Column("middle_name")]
+        public string MiddleName { get; set; } = string.Empty; // Middle Name
+
+        [StringLength(10)]
+        [Column("suffix")]
+        public string Suffix { get; set; } = string.Empty; //  Suffix
+
+        [StringLength(10)]
+        [Column("honorifics")]
+        public string Honorifics { get; set; } = string.Empty; //  Honorifics
+
+        [StringLength(50)]
+        [Column("lived_name")]
+        public string LivedName { get; set; } = string.Empty; // Lived Name
+
+        [StringLength(10)]
+        [Column("sex")]
+        public string Sex { get; set; } = string.Empty; // Sex
+
         [StringLength(30)]
         [Column("gender_identity", TypeName = "VARCHAR(30)")]
         public string GenderIdentity { get; set; } = string.Empty; // Gender Identity (Cisgender, Transgender, etc.)

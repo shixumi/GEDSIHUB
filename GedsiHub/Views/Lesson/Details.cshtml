@@ -1,0 +1,51 @@
+﻿@model GedsiHub.Models.Lesson
+
+<h2>Lesson Details</h2>
+
+<!-- Lesson Details Section -->
+<div>
+    <h3>Title: @Model.Title</h3>
+    <p><strong>Lesson Number:</strong> @Model.LessonNumber</p>
+    <p><strong>Overview:</strong> @Model.Overview</p>
+</div>
+
+<!-- Lesson Content Section -->
+<h3>Lesson Contents</h3>
+
+<p>
+    <a asp-action="Create" asp-controller="LessonContent" asp-route-lessonId="@Model.LessonId" class="btn btn-primary">Add New Content</a>
+</p>
+
+@if (Model.LessonContents != null && Model.LessonContents.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Content Type</th>
+                <th>Content Path</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var content in Model.LessonContents)
+            {
+                <tr>
+                    <td>@content.ContentType</td>
+                    <td>@content.ContentPath</td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="LessonContent" asp-route-id="@content.ContentId" class="btn btn-warning">Edit</a> |
+                        <a asp-action="Delete" asp-controller="LessonContent" asp-route-id="@content.ContentId" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No content available for this lesson.</p>
+}
+
+<p>
+    <a asp-action="Index" asp-controller="Lesson" class="btn btn-secondary">Back to Lesson List</a>
+</p>

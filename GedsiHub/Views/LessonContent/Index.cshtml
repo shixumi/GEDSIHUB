@@ -1,0 +1,34 @@
+﻿@model IEnumerable<GedsiHub.Models.LessonContent>
+
+<h2>Contents for Lesson: @ViewBag.LessonTitle</h2>
+
+<p>
+    <a asp-action="Create" asp-route-lessonId="@ViewBag.LessonId" class="btn btn-primary">Add New Content</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Content Type</th>
+            <th>Content Path</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var content in Model)
+        {
+            <tr>
+                <td>@content.ContentType</td>
+                <td>@content.ContentPath</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@content.ContentId" class="btn btn-warning">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@content.ContentId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="Index" asp-controller="Lesson" asp-route-moduleId="@ViewBag.LessonId" class="btn btn-secondary">Back to Lessons</a>
+</p>

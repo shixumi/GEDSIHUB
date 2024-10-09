@@ -19,6 +19,12 @@ namespace GedsiHub.Models
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
+        [Column("employee_type", TypeName = "VARCHAR(100)")]
+        public string? EmployeeType { get; set; } // Employee Type
+
+        [Column("employment_status", TypeName = "VARCHAR(100)")]
+        public string? EmploymentStatus { get; set; } // Employment Status
+
         [Column("branch_office_section_unit", TypeName = "VARCHAR(100)")]
         public string? BranchOfficeSectionUnit { get; set; } // Employee's specific work unit
 

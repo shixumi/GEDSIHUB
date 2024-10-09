@@ -1,6 +1,4 @@
-﻿// Module.cs
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -23,13 +21,12 @@ namespace GedsiHub.Models
         public DateTime? LastModifiedDate { get; set; }
 
         // Navigation Properties
+        public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>(); // Added Lessons
         public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
         public virtual ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
-        public virtual ICollection<CourseContent> CourseContents { get; set; } = new List<CourseContent>();
         public virtual ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
         public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
 
-        // **Added Navigation Property**
         public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }

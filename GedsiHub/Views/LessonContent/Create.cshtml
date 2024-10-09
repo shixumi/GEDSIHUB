@@ -1,0 +1,24 @@
+﻿@model GedsiHub.Models.LessonContent
+
+<h2>Add Lesson Content</h2>
+
+<form asp-action="Create">
+    <input type="hidden" asp-for="LessonId" value="@ViewBag.LessonId" />
+    <div class="form-group">
+        <label asp-for="ContentType"></label>
+        <input class="form-control" asp-for="ContentType" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentPath"></label>
+        <input class="form-control" asp-for="ContentPath" />
+    </div>
+    <div class="form-group">
+        <label asp-for="H5PId"></label>
+        <input class="form-control" asp-for="H5PId" />
+    </div>
+    <div class="form-group">
+        <label asp-for="H5PMetadata"></label>
+        <textarea class="form-control" asp-for="H5PMetadata"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Content</button>
+</form>
