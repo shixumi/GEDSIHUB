@@ -200,12 +200,14 @@
                             <span asp-validation-for="Input.StudentInfo.CourseId" class="text-danger"></span>
                         </div>
 
+                        <!-- Student Year -->
                         <div class="mb-3">
                             <label asp-for="Input.StudentInfo.Year" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
                             <input asp-for="Input.StudentInfo.Year" class="form-control" type="number" min="1" />
                             <span asp-validation-for="Input.StudentInfo.Year" class="text-danger"></span>
                         </div>
 
+                        <!-- Student Section -->
                         <div class="mb-3">
                             <label asp-for="Input.StudentInfo.Section" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
                             <input asp-for="Input.StudentInfo.Section" class="form-control" />
@@ -281,6 +283,7 @@
 
                 </form>
             </div>
+            <!-- Buttons -->
             <div class="container d-flex justify-content-between nav-button">
                 <button class="back-btn" type="button" onclick="prevStep(3)">Back</button>
                 <button class="next-btn" type="submit" onclick="submitForm()">Save Profile</button>
