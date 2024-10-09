@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GedsiHub.Areas.Identity.Pages.Account
 {
@@ -59,6 +60,10 @@ namespace GedsiHub.Areas.Identity.Pages.Account
 
             [Display(Name = "Sector/Department")]
             public string? Sector { get; set; }
+
+            public string? EmployeeType { get; set; } 
+
+            public string? EmploymentStatus { get; set; }
         }
 
         public class ProfileInputModel
@@ -73,6 +78,23 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             [StringLength(50, ErrorMessage = "Last Name cannot exceed 50 characters.")]
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
+
+            [StringLength(50)]
+            public string? MiddleName { get; set; }
+
+            [StringLength(10)]
+            public string? Suffix { get; set; }
+
+            [StringLength(10)]
+            public string? Honorifics { get; set; }
+
+            [StringLength(50)]
+            public string? LivedName { get; set; }
+
+            [StringLength(10)]
+            public string Sex { get; set; }
+
+            public string PhoneNumber { get; set; }
 
             [Required(ErrorMessage = "Date of Birth is required.")]
             [DataType(DataType.Date)]
@@ -135,6 +157,12 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                 // **General User Information**
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                MiddleName = user.MiddleName,
+                Suffix = user.Suffix,
+                Honorifics = user.Honorifics,
+                LivedName = user.LivedName,
+                PhoneNumber = user.PhoneNumber,
+                Sex = user.Sex,
                 DateOfBirth = user.DateOfBirth,
                 GenderIdentity = user.GenderIdentity,
                 Pronouns = user.Pronouns,
@@ -171,7 +199,9 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                     {
                         BranchOfficeSectionUnit = employee.BranchOfficeSectionUnit,
                         Position = employee.Position,
-                        Sector = employee.Sector
+                        Sector = employee.Sector,
+                        EmployeeType = employee.EmployeeType,
+                        EmploymentStatus = employee.EmploymentStatus
                     };
                 }
             }
@@ -184,12 +214,10 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             if (!ModelState.IsValid)
             {
                 // Log or output validation errors
-                foreach (var modelState in ModelState.Values)
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
                 {
-                    foreach (var error in modelState.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.ErrorMessage);
-                    }
+                    Console.WriteLine(error.ErrorMessage);
                 }
 
                 // Reload the dropdowns if the form is invalid
@@ -237,6 +265,12 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                 // **Update General User Information**
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.MiddleName = Input.MiddleName;
+                user.Suffix = Input.Suffix;
+                user.Honorifics = Input.Honorifics;
+                user.LivedName = Input.LivedName;
+                user.Sex = Input.Sex;
+                user.PhoneNumber = Input.PhoneNumber;
                 user.DateOfBirth = Input.DateOfBirth;
                 user.GenderIdentity = Input.GenderIdentity;
                 user.Pronouns = Input.Pronouns;
@@ -280,9 +314,11 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                         _dbContext.Employees.Add(employee);
                     }
 
-                    employee.BranchOfficeSectionUnit = Input.EmployeeInfo?.BranchOfficeSectionUnit;
-                    employee.Position = Input.EmployeeInfo?.Position;
-                    employee.Sector = Input.EmployeeInfo?.Sector;
+                    employee.BranchOfficeSectionUnit = Input.EmployeeInfo.BranchOfficeSectionUnit;
+                    employee.Position = Input.EmployeeInfo.Position;
+                    employee.Sector = Input.EmployeeInfo.Sector;
+                    employee.EmployeeType = Input.EmployeeInfo.EmployeeType;
+                    employee.EmploymentStatus = Input.EmployeeInfo.EmploymentStatus;
 
                     _dbContext.Employees.Update(employee);
                 }

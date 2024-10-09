@@ -18,24 +18,21 @@ namespace GedsiHub.Migrations
                 table: "user_tbl",
                 type: "nvarchar(10)",
                 maxLength: 10,
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "lived_name",
                 table: "user_tbl",
                 type: "nvarchar(50)",
                 maxLength: 50,
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "middle_name",
                 table: "user_tbl",
                 type: "nvarchar(50)",
                 maxLength: 50,
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "sex",
@@ -50,8 +47,7 @@ namespace GedsiHub.Migrations
                 table: "user_tbl",
                 type: "nvarchar(10)",
                 maxLength: 10,
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "employee_type",

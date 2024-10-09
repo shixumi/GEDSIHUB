@@ -642,7 +642,6 @@ namespace GedsiHub.Migrations
                         .HasColumnName("gender_identity");
 
                     b.Property<string>("Honorifics")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
                         .HasColumnName("honorifics");
@@ -666,7 +665,6 @@ namespace GedsiHub.Migrations
                         .HasColumnName("last_name");
 
                     b.Property<string>("LivedName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("lived_name");
@@ -678,7 +676,6 @@ namespace GedsiHub.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("middle_name");
@@ -725,7 +722,6 @@ namespace GedsiHub.Migrations
                         .HasColumnName("sex");
 
                     b.Property<string>("Suffix")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
                         .HasColumnName("suffix");

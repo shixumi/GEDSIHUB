@@ -23,19 +23,19 @@ namespace GedsiHub.Models
 
         [StringLength(50)]
         [Column("middle_name")]
-        public string MiddleName { get; set; } = string.Empty; // Middle Name
+        public string? MiddleName { get; set; } = string.Empty; // Middle Name
 
         [StringLength(10)]
         [Column("suffix")]
-        public string Suffix { get; set; } = string.Empty; //  Suffix
+        public string? Suffix { get; set; } = string.Empty; //  Suffix
 
         [StringLength(10)]
         [Column("honorifics")]
-        public string Honorifics { get; set; } = string.Empty; //  Honorifics
+        public string? Honorifics { get; set; } = string.Empty; //  Honorifics
 
         [StringLength(50)]
         [Column("lived_name")]
-        public string LivedName { get; set; } = string.Empty; // Lived Name
+        public string? LivedName { get; set; } = string.Empty; // Lived Name
 
         [StringLength(10)]
         [Column("sex")]
