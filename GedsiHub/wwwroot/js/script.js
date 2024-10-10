@@ -1,10 +1,12 @@
 function nextStep(stepNumber) {
-    // Hide all steps
-    const steps = document.querySelectorAll('section.step');
-    steps.forEach(step => step.classList.remove('active'));
+    if (validateStep(stepNumber - 1)) {
+        // Hide all steps
+        const steps = document.querySelectorAll('section.step');
+        steps.forEach(step => step.classList.remove('active'));
 
-    // Show the next step
-    document.getElementById('step' + stepNumber).classList.add('active');
+        // Show the next step
+        document.getElementById('step' + stepNumber).classList.add('active');
+    }
 }
 
 function prevStep(stepNumber) {
@@ -15,6 +17,7 @@ function prevStep(stepNumber) {
     // Show the previous step
     document.getElementById('step' + stepNumber).classList.add('active');
 }
+
 
 function submitForm() {
     // Validate form data and submit the form
