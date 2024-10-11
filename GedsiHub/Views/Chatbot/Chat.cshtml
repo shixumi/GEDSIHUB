@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Chatbot Test";
+}
+
+<!-- Add custom styles specific to the Chat page -->
+<style>
+    body {
+        padding-top: 100px; /* Increase padding to ensure content is not hidden under the fixed navbar */
+    }
+
+    .navbar {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+        margin-right: 20px;
+    }
+
+    .navbar-nav .nav-item {
+        margin-left: 20px;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-collapse {
+        justify-content: space-between;
+    }
+
+    .navbar-toggler {
+        margin-right: 10px;
+    }
+</style>
+
+<h2>Chatbot Test Page</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form id="chatForm">
+                <div class="form-group">
+                    <label for="questionInput">Ask a Question:</label>
+                    <input type="text" class="form-control" id="questionInput" placeholder="Type your question...">
+                </div>
+                <button type="button" class="btn btn-primary mt-2" onclick="askChatbot()">Submit</button>
+            </form>
+
+            <div id="responseArea" class="mt-4">
+                <h4>Response:</h4>
+                <p id="chatbotResponse"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('chatForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            askChatbot();
+        });
+
+        async function askChatbot() {
+            var question = document.getElementById('questionInput').value;
+            if (question === '') {
+                alert('Please enter a question.');
+                return;
+            }
+
+            try {
+                // Make a POST request to the chatbot API
+                const response = await fetch('/api/chatbot/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(question)
+                });
+
+                // Check if response is ok (status 200-299)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Ensure response is not empty
+                const responseText = await response.text();
+                if (!responseText) {
+                    throw new Error('Empty response from the server.');
+                }
+
+                // Try parsing the JSON response
+                let data;
+                try {
+                    data = JSON.parse(responseText); // Parse the response text to JSON
+                } catch (e) {
+                    throw new Error('Failed to parse JSON response.');
+                }
+
+                document.getElementById('chatbotResponse').textContent = data.response;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('chatbotResponse').textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
+}

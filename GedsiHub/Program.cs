@@ -33,7 +33,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 // Add services for controllers and views
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();  // Ensures controllers with views and APIs are added
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -74,10 +74,14 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Map controller routes
+// Map controller routes for views
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"); // Ensure the default route pattern is correct
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Ensure API controllers are mapped
+app.MapControllers();  // Add this line to map API controllers
+
 app.MapRazorPages();
 
 app.Run();
