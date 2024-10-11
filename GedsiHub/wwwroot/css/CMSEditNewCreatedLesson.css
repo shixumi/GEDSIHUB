@@ -1,0 +1,175 @@
+.tinymce_textarea {
+  width: 100%;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  position: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.Upload_Container {
+  background: #EFF0F4;
+  width: 699px;
+  margin-top: 22px;
+  border-radius: 20px;
+  height: 257px;
+  margin-left: 0;
+  border-radius: 8px;
+  width: 823px;
+  margin-top: 14px;
+  display: inline-block;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  padding: 20px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.uploadButtonLabel {
+  padding: 10px 30px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 30px;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: rgba(255,255,255,0);
+  height: 43px;
+}
+
+.uploadButtonLabel:hover {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.or_text {
+  display: block;
+  justify-self: center;
+  color: #464040;
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.url_input {
+  display: block;
+  border-radius: 9px;
+  height: 49.6px;
+  width: 100%;
+  border-width: 1px;
+  border: 1px solid #9C9C9C;
+  padding: 15px;
+}
+
+.url_input::placeholder {
+  color: #9C9C9C;
+}
+
+.cms_white_base_container {
+  background-color: white;
+  padding: 40px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+  border-radius: 25px;
+  width: 904px;
+  align-items: center;
+}
+
+.upload_icon {
+  width: 55px;
+}
+
+.upload_text {
+  font-size: 14px;
+  color: #404646;
+}
+
+.cms_lesson_title span {
+  margin-right: 4px;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.edit_maroon {
+  width: 32px;
+  margin-top: -3px;
+}
+
+.lesson_content_text {
+  color: #464040;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.cancelLessonContentButton {
+  background: rgba(10,88,202,0);
+  color: #464040;
+  border: 1px solid #464040;
+  border-radius: 50px;
+  width: 220px;
+  font-weight: 900;
+  height: 55px;
+  font-size: 20px;
+  transition: all 0.2s ease;
+}
+
+.cancelLessonContentButton:hover {
+  border: 2px solid #464040;
+  border-radius: 50px;
+  color: #464040;
+}
+
+.cancelLessonContentButton:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.SaveButton {
+  background: #660000;
+  color: #fff;
+  border-radius: 50px;
+  width: 220px;
+  font-weight: 900;
+  height: 55px;
+  font-size: 20px;
+  transition: all 0.2s ease;
+  border-style: none;
+  float: right;
+}
+
+.SaveButton:hover {
+  background-color: #920000;
+}
+
+.SaveButton:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  background-color: #920000;
+  border-style: none;
+}
+
+#cms_modules_container {
+  height: 100%;
+}
+
+#Media_Upload_Container-1, .url_input, .lesson_content_text, #Media_Upload_Container, .tinymce_textarea {
+  margin-bottom: 20px;
+}
+
+#edit_lesson_title_button:hover {
+  transform: scale(1.1);
+  opacity: 1;
+  filter: brightness(1.7);
+}
+
+#edit_lesson_title_button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+

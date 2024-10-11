@@ -9,60 +9,125 @@
     <link rel="stylesheet" href="~/css/nav_styles.css" />
     <link rel="stylesheet" href="~/css/addNewModule.css" />
     <link rel="stylesheet" href="~/css/animate.min.css" />
-
+    <link rel="stylesheet" href="~/css/CMSEditNewCreatedLesson.css" />
+    <link rel="stylesheet" href="~/css/createNewLesson.css" />
+    <link rel="stylesheet" href="~/css/editNewAddedModule.css" />
+    <link rel="stylesheet" href="~/css/editNewCreatedModule.css" />
+    <link rel="stylesheet" href="~/css/modules.css" />
+    <link rel="stylesheet" href="~/css/nav_styles.css" />
+    <link rel="stylesheet" href="~/css/Navbar-Centered-Links-icons.css" />
+    <link rel="stylesheet" href="~/css/sidebar.css" />
     
 
 </head>
 <body>
 
-
- 
-     -- This is the original header --
     <header>
-        -- Conditional rendering of navbars based on authentication --
-        -- Conditional rendering of navbars based on authentication --
-        @if (User.Identity != null && User.Identity.IsAuthenticated)
-        {
-            @await Html.PartialAsync("_NavbarApplication")
-        }
-        else
-        {
-            @await Html.PartialAsync("_NavbarPublic")
-        }
-    </header>
- 
-
- @*
-    <header>
-        <nav class="navbar navbar-expand-md fixed-top" style="background: #ffffff">
+        <nav class="navbar navbar-expand-md sticky-top bg-body navbar">
             <div class="container-fluid">
-                <a class="navbar-brand login" asp-area="" asp-controller="Home" asp-action="Index">GEDSI HUB</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand d-flex align-items-center navbar_brand" asp-page="/" style="font-family: Staatliches, serif;">
+                    <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon" style="background: rgba(13,110,253,0);width: 30px;">
+                        <img class="GAD_Logo" src="~/images/GADO_Logo_w-Border.png" alt="Logo" />
+                    </span>
+                    <span class="gedsihub_name" style="color: rgb(70,64,64);font-size: 30px;">GEDSI Hub</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navcol-3" aria-controls="navcol-3" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="visually-hidden">Toggle navigation</span>
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ForumPost" asp-action="Index">Forum Posts</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
+                <div class="collapse navbar-collapse d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-end justify-content-lg-end justify-content-xl-end justify-content-xxl-end" id="navcol-3">
+                    <img class="search_icon" src="~/images/Search.png" alt="Search Icon" />
+                    <input type="search" class="navbar_search" placeholder="Search for anything" />
+                    <span class="navbar-text notification_icon_span" style="margin-right: 4px;">
+                        <img class="notification_icon" src="~/images/Notification.png" alt="Notification Icon" />
+                    </span>
+                    <span class="d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center navbar-text profile_icon_span">
+                        <img class="d-xxl-flex profile_icon" src="~/images/Account.png" alt="Profile Icon" />
+                    </span>
                 </div>
             </div>
         </nav>
-    </header>   
- *@
+
+
+
+    </header>
 
     <div>
         @RenderBody()
     </div>
+
+    <div class="sidebar_container" style="width: 350px;height: 700px;">
+        <div class="sidebar" style="width: 300px;">
+            <div class="d-xxl-flex align-items-xxl-center dashboard_container" id="SidebarButton_Dashboard">
+                <div class="col-xxl-5 d-xxl-flex justify-content-xxl-center" style="width: 90px;">
+                    <img id="sidebar_icons" class="dashboard_icon" src="~/images/Dashboard_Dark.png" style="width: 43px;" />
+                </div>
+                <div class="col">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Dashboard
+                    </span>
+                </div>
+            </div>
+
+            <div id="SidebarButton_Modules" class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" style="color: #464040;">
+                <div class="col-xxl-5 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Modules_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Modules
+                    </span>
+                </div>
+            </div>
+
+            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Leaderboard" style="color: #464040;">
+                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Leaderboard_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Leaderboard
+                    </span>
+                </div>
+            </div>
+
+            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Forum" style="color: #464040;">
+                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Forum_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Forum
+                    </span>
+                </div>
+            </div>
+
+            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Feedback" style="color: #464040;">
+                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Feedback_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Feedback
+                    </span>
+                </div>
+            </div>
+
+            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Logout" style="color: #464040;">
+                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Logout_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Logout
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+      
+
+
 
 
 
@@ -76,8 +141,18 @@
 
     <!-- Added from Bootstrap Studio -->
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
-    <script src="~/assets/js/bs-init.js"></script>
-    <script src="~/js/script.js"></script>
+    <script src="~/js/bs-init.js"></script>
+    <script src="~/js/breadcrumb.js>"></script>
+    <script src="~/js/CMS.js"></script>
+    <script src="~/js/createLesson.js"></script>
+    <script src="~/js/DeleteLesson.js"></script>
+    <script src="~/js/EditLesson.js"></script>
+    <script src="~/js/Modules_CardAdd.js"></script>
+    <script src="~/js/PublishUnpublishLessontoggle.js"></script>
+    <script src="~/js/Sidebar.js"></script>
+    <script src="~/js/tinymce-init.js"></script>
+
+       
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

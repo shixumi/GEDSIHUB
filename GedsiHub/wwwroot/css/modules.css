@@ -1,0 +1,433 @@
+.modules_container {
+  height: 100vh;
+  position: absolute;
+  margin-left: 307px;
+  width: 1230px;
+  background: #EFF0F4;
+  margin-top: -40px;
+  border-top-left-radius: 40px;
+  border-color: #464040;
+  padding-left: 70px;
+  padding-right: 70px;
+  padding-bottom: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.modules_title {
+  margin-top: 30px;
+  margin-left: 0px;
+  font-size: 25px;
+}
+
+.break_title {
+  height: 1px;
+  width: 100%;
+  background: #B7BAC7;
+  margin-left: 0px;
+  position: static;
+  margin-top: 0px;
+}
+
+.moduleCards_container {
+  margin-top: 52px;
+  width: 1140px;
+  margin-left: 45px;
+  position: relative;
+  border-style: none;
+}
+
+#moduleCardsContainer {
+  display: flex;
+  gap: 45px;
+  margin-top: 60px;
+  width: 1100px;
+}
+
+.module_card {
+  height: 230px;
+  background: #ffffff;
+  border-radius: 40px;
+  width: 235px;
+  border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.module_card:hover {
+  transform: scale(1.03);
+}
+
+.secondRow_modules {
+  margin-top: 48px;
+}
+
+.column_moduleCards {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.moduleIcon_container {
+  width: 55px;
+  height: 55px;
+  background: #d9d9d9;
+  border-radius: 50px;
+  margin-top: -27px;
+  margin-left: 28px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.add_icon {
+  width: 80px;
+  margin-left: 64px;
+  padding-bottom: 5px;
+}
+
+.add-new-module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 235px;
+  height: 230px;
+  border-radius: 40px;
+  border: 2px solid #464040;
+  background: rgba(10,88,202,0);
+  color: #464040;
+  font-size: 18px;
+  font-weight: 500;
+  transition: transform 0.3s ease, border 0.1s ease, box-shadow 0.3s ease;
+}
+
+.add-new-module:hover {
+  transform: scale(1.03);
+  color: #464040;
+  border: 3px solid #464040;
+  box-shadow: inset 0 0 18px rgba(124,124,124,0.2);
+}
+
+.add-new-module:active {
+  transform: scale(0.99);
+  transition: transform 0.3s ease;
+  box-shadow: inset 0 0 18px rgba(124,124,124,0.2);
+}
+
+.add-new-module img {
+  transition: transform 0.3s ease;
+  margin-bottom: 10px;
+  margin-right: 62px;
+}
+
+.add-new-module:hover img {
+  transform: scale(1.08);
+}
+
+.ModuleTitle {
+  font-weight: lighter;
+  position: static;
+  margin-top: 12px;
+  margin-left: 0px;
+  font-size: 16px;
+  font-weight: 600 !important;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  line-height: 1.2;
+  max-height: calc(1.2em * 2);
+}
+
+.LessonIcon {
+  position: static;
+  margin-top: 2px;
+  margin-left: 0px;
+  width: 13px;
+  height: 12px;
+}
+
+.LessonsText, .NumberOfLessons {
+  position: absolute;
+  margin-top: 76px;
+  margin-left: -25px;
+  font-size: 12px;
+  color: #737373;
+}
+
+#NumberOfLessons {
+  margin-left: 0px;
+  position: static;
+  margin-top: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+#NumberOfLessonsContainer {
+  width: 80px;
+  margin-top: -3px;
+  margin-left: 0px;
+}
+
+#DeleteModule, #EditModule {
+  margin-bottom: 30px;
+}
+
+.Delete {
+  width: 22px;
+  height: 22px;
+  transition: all 0.3s ease;
+}
+
+#DeleteModule:hover {
+  transform: scale(1.1);
+  opacity: 1;
+  filter: brightness(1.7);
+}
+
+#DeleteModule:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.Edit {
+  width: 20px;
+  margin-top: 2px;
+  margin-right: 7px;
+  height: 20px;
+  transition: all 0.3s ease;
+}
+
+#EditModule:hover {
+  transform: scale(1.1);
+  filter: brightness(0.5);
+}
+
+#EditModule:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ModuleCard_LineBreak {
+  height: 1px;
+  background: #d9d9d9;
+  border-radius: 10px;
+  margin-top: 40px;
+}
+
+.ColorInput {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 0;
+  outline: none;
+}
+
+.ColorInput::-webkit-color-swatch {
+  border-radius: 50%;
+  border: none;
+}
+
+.ColorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 50%;
+}
+
+.ColorInput:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Smooth transition when a module is dragged */
+
+.sortable-chosen {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0.6;
+}
+
+/* Smooth transition during reordering */
+
+.sortable-ghost {
+  opacity: 0.4;
+  transform: scale(1.02);
+}
+
+/* Placeholder during drag-and-drop */
+
+.ghost {
+  opacity: 0.6;
+  background-color: #f0f0f0;
+}
+
+#ModulesHeader {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+}
+
+#addModuleTopButton {
+  background: #660000;
+  color: #fff;
+  border-radius: 50px;
+  width: 167px;
+  font-weight: 500;
+  height: 35px;
+  font-size: 13px;
+  margin-top: 15px;
+  transition: all 0.2s ease;
+  border-style: none;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 15px;
+  padding-right: 15px;
+  justify-self: end;
+}
+
+#addModuleTopAddIcon {
+  width: 20px;
+}
+
+#addModuleTopButton:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  background-color: #920000;
+  border-style: none;
+}
+
+#addModuleTopButton:hover {
+  background-color: #920000;
+}
+
+#SearchModule {
+  border-style: none;
+  border-radius: 50px;
+  width: 340px;
+  height: 35px;
+  margin-top: 15px;
+  justify-self: end;
+  margin-right: 20px;
+  color: #464040;
+  padding-left: 20px;
+  padding-right: 40px;
+  font-size: 13px;
+}
+
+#SearchModule::placeholder {
+  font-size: 13px;
+  color: #9c9c9c;
+  font-weight: 200;
+}
+
+#SearchModule:focus {
+  outline: none;
+}
+
+.SearchModule_Icon {
+  justify-self: end;
+  width: 14px;
+  margin-right: 206px;
+  margin-top: 16px;
+}
+
+.publishButton, .unpublishButton {
+  position: absolute;
+  margin-top: 179px;
+  border-style: none;
+  background: rgba(255,255,255,0);
+  color: #464040;
+  width: 122.7875px;
+  font-size: 14px;
+  display: none;
+  padding-left: 0px;
+}
+
+.publishButton:first-of-type {
+  display: block;
+}
+
+.PublishIcon {
+  width: 28px;
+  padding-right: 8px;
+}
+
+.publishButton:hover, .unpublishButton:hover {
+  color: #000;
+  opacity: 0.8;
+}
+
+.unpublishButton .PublishIcon {
+  filter: grayscale(100%) brightness(0.8);
+}
+
+.LikeViewContainer {
+  position: absolute;
+  margin-top: 137px;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+}
+
+#ViewCount, #LikeCount {
+  margin-left: 5px;
+  font-size: 12px;
+  color: #9c9c9c;
+}
+
+#ViewCount {
+  white-space: nowrap;
+  color: #9c9c9c;
+  font-size: 13px;
+  text-align: left;
+}
+
+.LikeIcon, .ViewIcon {
+  width: 17px;
+}
+
+.ViewOnlyContainer {
+  position: absolute;
+  left: 0;
+  max-width: 30px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+  margin-left: 152px;
+  height: 24px;
+}
+
+.LikeOnlyContainer {
+  position: absolute;
+  max-width: 30px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  height: 24px;
+}
+
+.ModuleTempIcon {
+  position: absolute;
+  width: 42px;
+  margin-left: 7px;
+  margin-top: 4px;
+  pointer-events: none;
+}
+
+.module_card {
+  user-select: none;
+}
+

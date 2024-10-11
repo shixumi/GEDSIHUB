@@ -6,6 +6,34 @@
 
 
 
+
+
+<div id="modules_container" class="modules_container">
+    <h1 id="addNewModule_HeaderTitle" class="modules_title" style="color: #464040;">Add a New Module</h1>
+    <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
+    <div class="container AddModuleDataContainer" id="moduleCards_container">
+        <div class="row">
+            <div class="col-md-6 col-xl-5 col-xxl-4">
+                <h1 style="color: #464040;font-size: 20px;">Number</h1><input type="text" id="AddModule_NumberInput" class="InputBox" placeholder="Enter Module Number" style="width: 332px;" required="">
+            </div>
+            <div class="col" style="padding-left: 35px;">
+                <h1 style="color: #464040;font-size: 20px;">Title</h1><input type="text" id="AddModule_TitleInput" class="InputBox" placeholder="Enter Module Title" required="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-xxl-2 AddModule_Icon">
+                <h1 style="color: #464040;font-size: 20px;">Module Icon</h1>
+                <h1 id="AddModule_Icon_Guidelines" style="color: #464040;font-size: 20px;"></h1>
+                <div style="width: 121px;height: 127px;background: #EFF0F4;border-radius: 10px;"></div>
+            </div>
+            <div class="col" style="padding-left: 0px;padding-top: 64px;color: #464040;">
+                <p class="AddModule_Icon_Guidelines"><span style="color: rgb(110, 116, 133);">Select an icon that best represents and symbolizes the content of this module. This icon will be used to visually identify the module within the GEDSI Hub.</span><br><br></p><button class="btn AddIcon_Button" type="button">Choose an Icon&nbsp;&nbsp;<img class="chooseIcon" src="assets/img/Choose.png"></button>
+            </div>
+        </div><button id="cancelButton" class="btn fw-bolder cancelButton" type="button" onclick="window.location.href='modules.html';">Cancel</button><button id="AddModuleButton" class="fw-bolder SubmitButton" type="button" onclick="saveModuleData()">Add Module</button>
+    </div>
+</div>
+@*
+
 <h2>Modules</h2>
 
 <p>
@@ -34,6 +62,8 @@
                     <a asp-action="Delete" asp-route-id="@module.ModuleId" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
+
         }
     </tbody>
 </table>
+*@

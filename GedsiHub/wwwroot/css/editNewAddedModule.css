@@ -1,0 +1,217 @@
+.EditLessonContainer {
+  border-radius: 25px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+  background: #ffffff;
+  width: 650px;
+  margin-top: 22px;
+  border-radius: 18px;
+  height: 234px;
+  align-content: flex-start;
+  justify-content: flex-start;
+}
+
+#edit_new_lesson_container {
+  background: #ffffff;
+  height: 100%;
+  width: 100%;
+  border-radius: 25px;
+  padding: 18px;
+  padding-top: 27px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 30px;
+  padding-left: 30px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+  min-height: 33vh;
+}
+
+#go_to_lesson_button {
+  background: #660000;
+  color: #fff;
+  border-radius: 50px;
+  width: 167px;
+  font-weight: 500;
+  line-height: 17px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border-style: none;
+  height: 34px;
+  margin-left: 169px;
+}
+
+#go_to_lesson_button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  background-color: #920000;
+  border-style: none;
+}
+
+#go_to_lesson_button:hover {
+  background-color: #920000;
+}
+
+.lessonNo_title_container span {
+  margin-right: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #464040;
+}
+
+.lessonNo_title_container {
+  width: 100%;
+  align-self: flex-start;
+}
+
+.lesson_con_linebreak {
+  height: 0.5px;
+  width: 100%;
+  background: #d9d9d9;
+  position: relative;
+  margin-top: 12px;
+}
+
+.lesson_brief_overview {
+  align-self: flex-start;
+  font-size: 13px;
+  color: #737373;
+  margin-top: 0;
+}
+
+.button_container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 149px;
+  position: absolute;
+  justify-content: space-between;
+}
+
+.button_container div {
+  margin-right: 24px;
+}
+
+.button_container span {
+  font-size: 12px;
+  color: #464040;
+}
+
+#Lesson_Delete {
+  margin-right: 6px;
+}
+
+.addNewLesson {
+  border-radius: 25px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0);
+  width: 700px;
+  margin-top: 22px;
+  border: 1.5px solid #464040;
+  height: 234px;
+  float: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: transform 0.3s ease, border 0.1s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.addNewLesson div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.addNewLesson:hover {
+  transform: scale(1.01);
+  color: #464040;
+  border: 3px solid #464040;
+  box-shadow: inset 0 0 18px rgba(124,124,124,0.2);
+}
+
+.addNewLesson:active {
+  color: #464040;
+  transform: scale(0.99);
+  transition: transform 0.3s ease;
+  box-shadow: inset 0 0 18px rgba(124,124,124,0.2);
+}
+
+.add_icon_lesson {
+  width: 80px;
+}
+
+#addNewLesson span {
+  font-size: 17px;
+  margin-top: 9px;
+}
+
+.create_assessment_button {
+  background: rgba(10,88,202,0);
+  color: #464040;
+  border: 1px solid #464040;
+  border-radius: 50px;
+  width: 180px;
+  height: 29px;
+  font-size: 14px;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: absolute;
+  margin-top: -1125px;
+  margin-left: 522px;
+  transition: transform 0.3s ease, border 0.1s ease, box-shadow 0.3s ease;
+}
+
+.create_assessment_button:hover {
+  transform: scale(1.03);
+  color: #464040;
+  border: 2px solid #464040;
+  box-shadow: inset 0 0 18px rgba(124,124,124,0.2);
+}
+
+.create_assessment_button:active {
+  color: #464040;
+  transform: scale(0.99);
+  transition: transform 0.3s ease;
+  box-shadow: inset 0 0 18px rgba(124,124,124,0.2);
+}
+
+.button_container div {
+  cursor: pointer;
+  user-select: none;
+  margin-right: 30px;
+}
+
+.button_container div:hover {
+  transform: scale(1.03);
+}
+
+.button_container div:active {
+  transform: scale(0.99);
+  transition: transform 0.3s ease;
+}
+
+#toggleButtonPublishUnpublish {
+  width: 100px;
+  position: relative;
+  justify-content: start;
+  align-items: center;
+  height: 33px;
+}
+
+.toggle-content {
+  position: absolute;
+  display: flex;
+}
+
+.PublishIcon {
+  display: inline-block;
+  width: 32px;
+}
+
+#publishLesson, #unpublishLesson {
+  align-items: center;
+}
+
