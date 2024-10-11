@@ -2,39 +2,6 @@
     ViewData["Title"] = "Chatbot Test";
 }
 
-<!-- Add custom styles specific to the Chat page -->
-<style>
-    body {
-        padding-top: 100px; /* Increase padding to ensure content is not hidden under the fixed navbar */
-    }
-
-    .navbar {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    }
-
-    .navbar-brand {
-        font-size: 1.5rem;
-        margin-right: 20px;
-    }
-
-    .navbar-nav .nav-item {
-        margin-left: 20px;
-    }
-
-    .navbar-nav .nav-link {
-        padding: 0.5rem 1rem;
-    }
-
-    .navbar-collapse {
-        justify-content: space-between;
-    }
-
-    .navbar-toggler {
-        margin-right: 10px;
-    }
-</style>
-
 <h2>Chatbot Test Page</h2>
 
 <div class="container">
@@ -83,20 +50,8 @@
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
-                // Ensure response is not empty
-                const responseText = await response.text();
-                if (!responseText) {
-                    throw new Error('Empty response from the server.');
-                }
-
-                // Try parsing the JSON response
-                let data;
-                try {
-                    data = JSON.parse(responseText); // Parse the response text to JSON
-                } catch (e) {
-                    throw new Error('Failed to parse JSON response.');
-                }
-
+                // Parse the JSON response
+                const data = await response.json();
                 document.getElementById('chatbotResponse').textContent = data.response;
             } catch (error) {
                 console.error('Error:', error);
