@@ -1,5 +1,12 @@
 ﻿@model GedsiHub.ViewModels.ForumCommentViewModel
 
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Create Post";
+}
+
+
+
 <h2>Add a Comment</h2>
 
 <form asp-action="Create" enctype="multipart/form-data">

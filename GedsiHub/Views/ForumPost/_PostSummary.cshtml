@@ -1,5 +1,11 @@
 ﻿@model GedsiHub.Models.ForumPost
 
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Create Post";
+}
+
+
 <tr>
     <td>@Model.Title</td>
     <td>@(Model.Content.Length > 100 ? Model.Content.Substring(0, 100) + "..." : Model.Content)</td>
