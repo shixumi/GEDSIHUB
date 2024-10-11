@@ -5011,7 +5011,7 @@
     Carousel,
     Collapse,
     Dropdown,
-    Modal,
+    Modal,  
     Offcanvas,
     Popover,
     ScrollSpy,

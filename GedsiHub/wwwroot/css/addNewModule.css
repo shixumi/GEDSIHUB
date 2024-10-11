@@ -1,0 +1,146 @@
+.addModuleDataContainer {
+  margin-top: 50px;
+  height: 302px;
+}
+
+.AddModuleDataContainer {
+  background: #ffffff;
+  height: 475px;
+  padding-top: 40px;
+  padding-right: 40px;
+  margin-top: 34px;
+  padding-left: 40px;
+  margin-left: 0px;
+  border-radius: 30px;
+  box-shadow: 0px 4px 5px rgba(0,0,0,0.25);
+  width: 1072px;
+}
+
+.InputBox {
+  height: 59.2px;
+  border: 1px solid #464040;
+  border-width: 1px;
+  box-shadow: inset 0px 3px 4px #d9d9d9;
+  border-radius: 15px;
+  width: 628px;
+  padding-left: 20px;
+  transition: border-color 0.3s ease, border-width 0.3s ease;
+  outline: none;
+  color: #464040;
+}
+
+.InputBox::placeholder {
+  font-family: 'Poppins';
+  color: #9c9c9c;
+  font-size: 20px;
+  font-weight: 200;
+}
+
+.AddModule_InputBox:focus {
+  border-color: #464040;
+  border-width: 2px;
+  outline: none;
+}
+
+#AddModule_Title {
+  width: 645px;
+}
+
+.AddModule_Icon {
+  padding-top: 34px;
+  padding-bottom: 30px;
+  width: 154.825px;
+}
+
+.AddModule_ImageContainer {
+  border-radius: 10px;
+}
+
+.AddModule_Icon_Guidelines {
+  font-size: 10px;
+  color: #6E7485;
+  width: 188.75px;
+  text-align: justify;
+  line-height: 1.5;
+}
+
+.AddIcon_Button {
+  padding-top: 0px;
+  margin-top: -33px;
+  background: rgba(255,255,255,0);
+  color: #464040;
+  border: 1px solid #464040;
+  border-radius: 20px;
+  font-size: 12px;
+  width: 189.412px;
+  height: 39.6px;
+  padding-bottom: 0px;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.AddIcon_Button:hover {
+  border: 2px solid #464040;
+  border-radius: 20px;
+}
+
+.AddIcon_Button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chooseIcon {
+  width: 20px;
+  height: 18px;
+}
+
+.cancelButton {
+  background: rgba(10,88,202,0);
+  color: #464040;
+  border: 1px solid #464040;
+  border-radius: 50px;
+  width: 220px;
+  font-weight: 900;
+  height: 55px;
+  font-size: 20px;
+  margin-top: -1px;
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+  border: 2px solid #464040;
+  border-radius: 50px;
+  color: #464040;
+}
+
+.cancelButton:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.SubmitButton {
+  background: #660000;
+  color: #fff;
+  border-radius: 50px;
+  width: 220px;
+  font-weight: 900;
+  height: 55px;
+  font-size: 20px;
+  margin-top: 23px;
+  transition: all 0.2s ease;
+  margin-left: 552px;
+  border-style: none;
+}
+
+.SubmitButton:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  background-color: #920000;
+  border-style: none;
+}
+
+.SubmitButton:hover {
+  background-color: #920000;
+}
+

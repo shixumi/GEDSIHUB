@@ -1,0 +1,127 @@
+.GAD_Logo {
+  width: 60px;
+}
+
+.notification_icon {
+  width: 35px;
+  margin-right: 12px;
+}
+
+.profile_icon {
+  width: 35px;
+  height: 35px;
+}
+
+.profile_icon_span {
+  background: #d9d9d9;
+  width: 42px;
+  height: 42px;
+  border-radius: 50px;
+}
+
+.gedsihub_name {
+  margin-left: 14px;
+}
+
+.navbar_search {
+  border-radius: 30px;
+  margin-right: 54px;
+  width: 472.8px;
+  height: 45.2px;
+  border-width: 0.6px;
+  border-color: rgb(70,64,64);
+  padding-left: 56px;
+  padding-right: 18px;
+  font-size: 18px;
+  color: #464040;
+  font-weight: 200;
+}
+
+.navbar_search:focus {
+  outline: none;
+}
+
+.navbar_search::placeholder {
+  font-family: 'Poppins';
+  color: #9c9c9c;
+  font-weight: 200;
+}
+
+.search_icon {
+  position: absolute;
+  width: 25px;
+  margin-right: 573px;
+}
+
+.dashboard_container {
+  color: #660000;
+  width: 267px;
+  height: 63px;
+  margin-top: 28px;
+  border-radius: 10px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  width: 250px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dashboard_container:hover {
+  background-color: #660000;
+}
+
+.dashboard_container.active {
+  background-color: #660000;
+}
+
+.dashboard_container:hover span {
+  color: #ffffff !important;
+  transition: color 0.3s ease;
+}
+
+.dashboard_container.active span {
+  color: #ffffff !important;
+  transition: color 0.3s ease;
+}
+
+.dashboard_container:active {
+  background-color: #550000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transform: scale(0.98);
+  transition: none;
+}
+
+.dashboard_container:hover img {
+  transition: color 0.5s ease;
+  filter: invert(1) brightness(2) contrast(200%);
+}
+
+.dashboard_container.active img {
+  transition: color 0.5s ease;
+  filter: invert(1) brightness(2) contrast(200%);
+}
+
+.sidebar_container {
+  margin-left: 0px;
+  padding-left: 0px;
+  margin-top: 61px;
+  position: static;
+}
+
+.sidebar {
+  height: 730px;
+  margin-top: -39px;
+  position: absolute;
+  padding-top: 18px;
+  padding-right: 0px;
+  padding-left: 29px;
+}
+
+.sidebar_label {
+  padding-left: 10px;
+}
+
+.sidebar {
+  position: fixed;
+}
+

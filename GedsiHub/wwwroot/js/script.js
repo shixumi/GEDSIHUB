@@ -1,3 +1,170 @@
+function validateStep(stepNumber) {
+    let isValid = true;
+
+    if (stepNumber === 1) {
+        // Validate Step 1
+        const firstName = document.querySelector('input[name="Input.FirstName"]');
+        const middleName = document.querySelector('input[name="Input.MiddleName"]');
+        const lastName = document.querySelector('input[name="Input.LastName"]');
+        const dateOfBirth = document.querySelector('input[name="Input.DateOfBirth"]');
+        const phoneNumber = document.querySelector('input[name="Input.PhoneNumber"]');
+
+        if (!firstName.value.trim()) {
+            isValid = false;
+            firstName.classList.add('is-invalid');
+        } else {
+            firstName.classList.remove('is-invalid');
+        }
+
+        if (!lastName.value.trim()) {
+            isValid = false;
+            lastName.classList.add('is-invalid');
+        } else {
+            lastName.classList.remove('is-invalid');
+        }
+
+        if (!dateOfBirth.value.trim()) {
+            isValid = false;
+            dateOfBirth.classList.add('is-invalid');
+        } else {
+            dateOfBirth.classList.remove('is-invalid');
+        }
+
+        const phonePattern = /^[0-9]{11}$/;
+        if (!phonePattern.test(phoneNumber.value.trim())) {
+            isValid = false;
+            phoneNumber.classList.add('is-invalid');
+        } else {
+            phoneNumber.classList.remove('is-invalid');
+        }
+    } else if (stepNumber === 2) {
+        // Validate Step 2
+        const sex = document.querySelector('select[name="Input.Sex"]');
+        const genderIdentity = document.querySelector('select[name="Input.GenderIdentity"]');
+        const pronouns = document.querySelector('select[name="Input.Pronouns"]');
+
+        if (!sex.value) {
+            isValid = false;
+            sex.classList.add('is-invalid');
+        } else {
+            sex.classList.remove('is-invalid');
+        }
+
+        if (!genderIdentity.value) {
+            isValid = false;
+            genderIdentity.classList.add('is-invalid');
+        } else {
+            genderIdentity.classList.remove('is-invalid');
+        }
+
+        if (!pronouns.value) {
+            isValid = false;
+            pronouns.classList.add('is-invalid');
+        } else {
+            pronouns.classList.remove('is-invalid');
+        }
+    } else if (stepNumber === 3) {
+        // Validate Step 3
+        const isMemberOfIndigenousCommunity = document.querySelector('select[name="Input.IsMemberOfIndigenousCommunity"]');
+        const isDisabled = document.querySelector('select[name="Input.IsDisabled"]');
+
+        if (!isMemberOfIndigenousCommunity.value) {
+            isValid = false;
+            isMemberOfIndigenousCommunity.classList.add('is-invalid');
+        } else {
+            isMemberOfIndigenousCommunity.classList.remove('is-invalid');
+        }
+
+        if (!isDisabled.value) {
+            isValid = false;
+            isDisabled.classList.add('is-invalid');
+        } else {
+            isDisabled.classList.remove('is-invalid');
+        }
+    } else if (stepNumber === 4) {
+        // Validate Step 4
+        if (document.querySelector('input[name="Input.StudentInfo.CollegeDeptId"]')) {
+            // Student-specific validations
+            const collegeDeptId = document.querySelector('select[name="Input.StudentInfo.CollegeDeptId"]');
+            const courseId = document.querySelector('select[name="Input.StudentInfo.CourseId"]');
+            const year = document.querySelector('input[name="Input.StudentInfo.Year"]');
+            const section = document.querySelector('input[name="Input.StudentInfo.Section"]');
+
+            if (!collegeDeptId.value) {
+                isValid = false;
+                collegeDeptId.classList.add('is-invalid');
+            } else {
+                collegeDeptId.classList.remove('is-invalid');
+            }
+
+            if (!courseId.value) {
+                isValid = false;
+                courseId.classList.add('is-invalid');
+            } else {
+                courseId.classList.remove('is-invalid');
+            }
+
+            if (!year.value || year.value < 1) {
+                isValid = false;
+                year.classList.add('is-invalid');
+            } else {
+                year.classList.remove('is-invalid');
+            }
+
+            if (!section.value.trim()) {
+                isValid = false;
+                section.classList.add('is-invalid');
+            } else {
+                section.classList.remove('is-invalid');
+            }
+        } else if (document.querySelector('input[name="Input.EmployeeInfo.EmployeeType"]')) {
+            // Employee-specific validations
+            const employeeType = document.querySelector('select[name="Input.EmployeeInfo.EmployeeType"]');
+            const employmentStatus = document.querySelector('select[name="Input.EmployeeInfo.EmploymentStatus"]');
+            const sector = document.querySelector('select[name="Input.EmployeeInfo.Sector"]');
+            const branchOffice = document.querySelector('select[name="Input.EmployeeInfo.BranchOfficeSectionUnit"]');
+            const position = document.querySelector('input[name="Input.EmployeeInfo.Position"]');
+
+            if (!employeeType.value) {
+                isValid = false;
+                employeeType.classList.add('is-invalid');
+            } else {
+                employeeType.classList.remove('is-invalid');
+            }
+
+            if (!employmentStatus.value) {
+                isValid = false;
+                employmentStatus.classList.add('is-invalid');
+            } else {
+                employmentStatus.classList.remove('is-invalid');
+            }
+
+            if (!sector.value) {
+                isValid = false;
+                sector.classList.add('is-invalid');
+            } else {
+                sector.classList.remove('is-invalid');
+            }
+
+            if (!branchOffice.value) {
+                isValid = false;
+                branchOffice.classList.add('is-invalid');
+            } else {
+                branchOffice.classList.remove('is-invalid');
+            }
+
+            if (!position.value.trim()) {
+                isValid = false;
+                position.classList.add('is-invalid');
+            } else {
+                position.classList.remove('is-invalid');
+            }
+        }
+    }
+
+    return isValid;
+}
+
 function nextStep(stepNumber) {
     if (validateStep(stepNumber - 1)) {
         // Hide all steps
