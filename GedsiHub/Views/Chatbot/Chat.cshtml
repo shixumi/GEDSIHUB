@@ -1,62 +1,171 @@
 ﻿@{
-    ViewData["Title"] = "Chatbot Test";
+    ViewData["Title"] = "Chatbot";
 }
 
-<h2>Chatbot Test Page</h2>
+<div class="container mt-5">
+    <h2>Chatbot Interface</h2>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form id="chatForm">
-                <div class="form-group">
-                    <label for="questionInput">Ask a Question:</label>
-                    <input type="text" class="form-control" id="questionInput" placeholder="Type your question...">
-                </div>
-                <button type="button" class="btn btn-primary mt-2" onclick="askChatbot()">Submit</button>
-            </form>
+    <div id="chatOptions">
+        <p>Select an option:</p>
+        <ul>
+            <li><button id="faqButton" class="btn btn-primary mb-2">FAQs</button></li>
+            <li><button id="modulesButton" class="btn btn-primary mb-2">Modules</button></li>
+            <li><button id="contactButton" class="btn btn-primary mb-2">Contact</button></li>
+        </ul>
+    </div>
 
-            <div id="responseArea" class="mt-4">
-                <h4>Response:</h4>
-                <p id="chatbotResponse"></p>
-            </div>
-        </div>
+    <!-- FAQ Section -->
+    <div id="faqSection" class="mt-4" style="display: none;">
+        <h3>Frequently Asked Questions</h3>
+        <ul id="faqList" class="list-group"></ul>
+    </div>
+
+    <!-- Modules Section -->
+    <div id="modulesSection" class="mt-4" style="display: none;">
+        <h3>Available Modules</h3>
+        <ul id="modulesList" class="list-group"></ul>
+    </div>
+
+    <!-- Contact Section -->
+    <div id="contactSection" class="mt-4" style="display: none;">
+        <h3>Contact Information</h3>
+        <div id="contactInfo">Fetching contact info...</div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        document.getElementById('chatForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            askChatbot();
-        });
+        console.log("JavaScript Loaded: Starting to fetch data...");
 
-        async function askChatbot() {
-            var question = document.getElementById('questionInput').value;
-            if (question === '') {
-                alert('Please enter a question.');
-                return;
-            }
-
+        // Function to fetch contact information
+        async function loadContactInfo() {
             try {
-                // Make a POST request to the chatbot API
-                const response = await fetch('/api/chatbot/ask', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(question)
+                console.log("Fetching contact info...");
+                const response = await fetch('/api/chatbot/contact', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
                 });
 
-                // Check if response is ok (status 200-299)
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
-                // Parse the JSON response
                 const data = await response.json();
-                document.getElementById('chatbotResponse').textContent = data.response;
+                console.log("Contact Info Response Data:", data);
+
+                // Access contactInfo object correctly
+                const contact = data.contactInfo;
+                document.getElementById('contactInfo').innerHTML = `
+                    <p><strong>Email:</strong> ${contact.supportEmail ?? 'N/A'}</p>
+                    <p><strong>Phone:</strong> ${contact.phoneNumber ?? 'N/A'}</p>
+                    <p><strong>Facebook:</strong> <a href="${contact.facebook}" target="_blank">Facebook</a></p>
+                    <p><strong>TikTok:</strong> <a href="${contact.tikTok}" target="_blank">TikTok</a></p>
+                    <p><strong>Instagram:</strong> <a href="${contact.instagram}" target="_blank">Instagram</a></p>
+                    <p><strong>X (Twitter):</strong> <a href="${contact.x}" target="_blank">Twitter</a></p>
+                    <p><strong>Website:</strong> <a href="${contact.website}" target="_blank">Website</a></p>
+                `;
             } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('chatbotResponse').textContent = `Error: ${error.message}`;
+                console.error('Error fetching contact info:', error);
+                document.getElementById('contactInfo').innerText = 'Error fetching contact info';
             }
         }
+
+        // Function to fetch FAQs
+        async function loadFAQs() {
+            try {
+                console.log("Fetching FAQs...");
+                const response = await fetch('/api/chatbot/faqs', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("FAQs Response Data:", data);
+
+                const faqList = document.getElementById('faqList');
+                faqList.innerHTML = ''; // Clear previous data
+                data.faqs.forEach(faq => {
+                    const li = document.createElement('li');
+                    li.classList.add('list-group-item');
+                    const answer = faq.answer ? faq.answer.replace(/'/g, "\\'") : "Answer not available";
+                    li.innerHTML = `
+                        <button class="btn btn-link" onclick="alert('Answer: ${answer}')">
+                            ${faq.question}
+                        </button>
+                    `;
+                    faqList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error fetching FAQs:', error);
+                document.getElementById('faqList').innerText = 'Error fetching FAQs';
+            }
+        }
+
+        // Function to fetch Modules
+        async function loadModules() {
+            try {
+                console.log("Fetching Modules...");
+                const response = await fetch('/api/chatbot/modules', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Modules Response Data:", data);
+
+                const modulesList = document.getElementById('modulesList');
+                modulesList.innerHTML = ''; // Clear previous data
+                data.modules.forEach(module => {
+                    const li = document.createElement('li');
+                    li.classList.add('list-group-item');
+                    li.innerHTML = `<button class="btn btn-link">${module.title}</button>`;
+                    modulesList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error fetching Modules:', error);
+                document.getElementById('modulesList').innerText = 'Error fetching Modules';
+            }
+        }
+
+        // Function to initialize event listeners and setup
+        function initializeEventListeners() {
+            // Event Listeners for buttons
+            document.getElementById('faqButton').addEventListener('click', function () {
+                document.getElementById('faqSection').style.display = 'block';
+                document.getElementById('modulesSection').style.display = 'none';
+                document.getElementById('contactSection').style.display = 'none';
+                loadFAQs();
+            });
+
+            document.getElementById('modulesButton').addEventListener('click', function () {
+                document.getElementById('faqSection').style.display = 'none';
+                document.getElementById('modulesSection').style.display = 'block';
+                document.getElementById('contactSection').style.display = 'none';
+                loadModules();
+            });
+
+            document.getElementById('contactButton').addEventListener('click', function () {
+                document.getElementById('faqSection').style.display = 'none';
+                document.getElementById('modulesSection').style.display = 'none';
+                document.getElementById('contactSection').style.display = 'block';
+                loadContactInfo();
+            });
+
+            // Initially hide sections
+            document.getElementById('faqSection').style.display = 'none';
+            document.getElementById('modulesSection').style.display = 'none';
+            document.getElementById('contactSection').style.display = 'none';
+        }
+
+        // Ensure the DOM is fully loaded before running the script
+        document.addEventListener('DOMContentLoaded', initializeEventListeners);
     </script>
 }
