@@ -1,3 +1,10 @@
+/* styles.css */
+.text-danger {
+    color: red; /* Change the text color */
+    font-weight: 400; /* Make the text bold */
+    font-size: 16px; /* Adjust the font size */
+}
+
 /* Full-Width Responsiveness */
 body, html {
     margin: 0;
@@ -59,7 +66,12 @@ body, html {
     padding-bottom: 15px;
     padding-right: 15px;
     padding-top: 15px;
+    margin-bottom: 5px;
     max-width: 100%;
+}
+
+.input-box {
+    margin-bottom: 10px;
 }
 
 .login-card {
@@ -206,3 +218,5 @@ body, html {
         padding: 50px 40px;
     }
 }
+
+

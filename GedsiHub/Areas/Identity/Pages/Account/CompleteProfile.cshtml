@@ -29,7 +29,7 @@
 
                         <!-- Middle Name Input -->
                         <input asp-for="Input.MiddleName" class="form-control full-leg-name s-form" placeholder="Middle Name (Optional)" required />
-                        <span asp-validation-for="Input.MiddleName" class="text-danger"></span>
+                        <!-- <span asp-validation-for="Input.MiddleName" class="text-danger"></span> -->
 
                         <!-- Last Name Input -->
                         <input asp-for="Input.LastName" class="form-control full-leg-name s-form" placeholder="Last Name" required />
@@ -78,19 +78,20 @@
                 <!-- Need to verify in the back end -->
                 <div class="mb-3">
                     <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Sex</label>
-                    <select asp-for="Input.Sex" class="form-select s-form" required>
+                    <select asp-for="Input.Sex" class="form-control form-select s-form" required>
                         <option value="" disabled selected>Select</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Intersex">Intersex</option>
                     </select>
+                    <span asp-validation-for="Input.Sex" class="text-danger"></span>
                 </div>
 
                 <!-- Gender -->
                 <!-- Need to verify in the back end -->
                 <div class="mb-3">
                     <label class="form-label d-flex justify-content-start input-lbl">Gender</label>
-                    <select asp-for="Input.GenderIdentity" class="form-select s-form" required>
+                    <select asp-for="Input.GenderIdentity" class="form-control form-select s-form" required>
                         <option value="" disabled selected>Select</option>
                         <option value="Cisgender">Cisgender</option>
                         <option value="Transgender">Transgender</option>
@@ -105,7 +106,7 @@
                 <!-- Need to verify in the back end -->
                 <div class="mb-3">
                     <label asp-for="Input.Pronouns" class="form-label d-flex justify-content-start input-lbl">Pronouns</label>
-                    <select asp-for="Input.Pronouns" class="form-select s-form" required>
+                    <select asp-for="Input.Pronouns" class="form-control form-select s-form" required>
                         <option value="" disabled selected>Select</option>
                         <option value="She/her">She/her</option>
                         <option value="He/him">He/him</option>
@@ -183,7 +184,9 @@
                     <!-- College Department Dropdown -->
                     <div class="mb-3">
                         <label asp-for="Input.StudentInfo.CollegeDeptId" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
-                        <select asp-for="Input.StudentInfo.CollegeDeptId" class="form-control" asp-items="Model.CollegeDepartments"></select>
+                        <select asp-for="Input.StudentInfo.CollegeDeptId" class="form-control" asp-items="Model.CollegeDepartments">
+                            <option value="" disabled selected>Select</option>
+                        </select>
                         <span asp-validation-for="Input.StudentInfo.CollegeDeptId" class="text-danger"></span>
                     </div>
 
@@ -191,21 +194,23 @@
                     <!-- Add validations to only display the available course for each department -->
                     <div class="mb-3">
                         <label asp-for="Input.StudentInfo.CourseId" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
-                        <select asp-for="Input.StudentInfo.CourseId" class="form-control" asp-items="Model.Courses"></select>
+                        <select asp-for="Input.StudentInfo.CourseId" class="form-control" asp-items="Model.Courses">
+                            <option value="" disabled selected>Select</option>
+                        </select>
                         <span asp-validation-for="Input.StudentInfo.CourseId" class="text-danger"></span>
                     </div>
 
                     <!-- Student Year -->
                     <div class="mb-3">
                         <label asp-for="Input.StudentInfo.Year" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
-                        <input asp-for="Input.StudentInfo.Year" class="form-control" type="number" min="1" />
+                        <input asp-for="Input.StudentInfo.Year" class="form-control" type="number" min="1" placholder="Please enter year of study."/>
                         <span asp-validation-for="Input.StudentInfo.Year" class="text-danger"></span>
                     </div>
 
                     <!-- Student Section -->
                     <div class="mb-3">
                         <label asp-for="Input.StudentInfo.Section" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
-                        <input asp-for="Input.StudentInfo.Section" class="form-control" />
+                        <input asp-for="Input.StudentInfo.Section" class="form-control" placeholder="Please enter section" />
                         <span asp-validation-for="Input.StudentInfo.Section" class="text-danger"></span>
                     </div>
                 }
@@ -221,7 +226,7 @@
                         <!-- Employee Type -->
                         <div asp-for="" class="mb-3">
                             <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Employee Type</label>
-                            <select asp-for="Input.EmployeeInfo.EmployeeType" class="form-select s-form" required>
+                            <select asp-for="Input.EmployeeInfo.EmployeeType" class="form-control form-select s-form" required>
                                 <option value="" disabled selected>Select employee type</option>
                                 <option value="Faculty">Faculty</option>
                                 <option value="Administrative Staff">Administrative Staff</option>
@@ -232,7 +237,7 @@
                         <!-- Employment Status -->
                         <div class="mb-3">
                             <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Employment Status</label>
-                            <select asp-for="Input.EmployeeInfo.EmploymentStatus" class="form-select s-form" required>
+                            <select asp-for="Input.EmployeeInfo.EmploymentStatus" class="form-control form-select s-form" required>
                                 <option value="" disabled selected>Select</option>
                                 <option value="Permanent">Permanent</option>
                                 <option value="Casual">Casual</option>
@@ -246,7 +251,7 @@
                         <!-- Sector -->
                         <div class="mb-3">
                             <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Sector</label>
-                            <select id="sector" asp-for="Input.EmployeeInfo.Sector" class="form-select s-form" onchange="showBranchOptions()" required>
+                            <select id="sector" asp-for="Input.EmployeeInfo.Sector" class="form-control form-select s-form" onchange="showBranchOptions()" required>
                                 <option value="" disabled selected>Select your sector</option>
                                 <option value="OEVP">Office of the Executive Vice President</option>
                                 <option value="OVPAA">Office of the Vice President for Academic Affairs</option>
@@ -262,7 +267,7 @@
                         <!-- Branch/Office/Section/Unit -->
                         <div id="branch-office-container" class="mb-3">
                             <label class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Branch/Office/Section/Unit</label>
-                            <select id="branch-office" asp-for="Input.EmployeeInfo.BranchOfficeSectionUnit" class="form-select s-form"  required>
+                            <select id="branch-office" asp-for="Input.EmployeeInfo.BranchOfficeSectionUnit" class="form-control form-select s-form"  required>
                                 <option value="" disabled selected>Select Branch-Office-Section-Unit</option>
                             </select>
                         </div>
@@ -279,7 +284,7 @@
             <!-- Buttons -->
             <div class="container d-flex justify-content-between nav-button">
                 <button class="back-btn" type="button" onclick="prevStep(3)">Back</button>
-                <button class="next-btn" type="submit">Save Profile</button>
+                <button class="next-btn" type="submit" onclick="submitForm">Save Profile</button>
                 
             </div>
         </section>
@@ -288,8 +293,7 @@
     
 </form>
 
+
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

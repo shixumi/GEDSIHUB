@@ -22,14 +22,14 @@
 
             <!-- Email Input -->
             <div class="mb-3">
-                <input asp-for="Input.Email" class="focus-ring focus-ring-light form-control d-flex justify-content-center align-items-center" autocomplete="username" type="email" placeholder="Webmail" aria-required="true" required="" pattern="^[a-zA-Z0-9._%+-]+@@.+\.(pup|edu|com)$" />
+                <input asp-for="Input.Email" class="focus-ring focus-ring-light form-control d-flex justify-content-center align-items-center input-box" autocomplete="username" type="email" placeholder="Webmail" aria-required="true" required="" pattern="^[a-zA-Z0-9._%+-]+@@.+\.(pup|edu|com)$" />
 
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
             <!-- Password Input -->
             <div class="mb-3">
-                <input asp-for="Input.Password" class="focus-ring focus-ring-light form-control d-flex justify-content-center align-items-center" autocomplete="current-password" type="password" placeholder="Password" aria-required="true" required="" />
+                <input asp-for="Input.Password" class="focus-ring focus-ring-light form-control d-flex justify-content-center align-items-center input-box" autocomplete="current-password" type="password" placeholder="Password" aria-required="true" required="" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 

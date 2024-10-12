@@ -94,6 +94,10 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             [StringLength(10)]
             public string Sex { get; set; }
 
+
+            [Required(ErrorMessage = "Phone Number is required.")]
+            [StringLength(11, ErrorMessage = "Phone number cannot exceed 11 numbers.")]
+            [Display(Name = "Phone Number")]
             public string PhoneNumber { get; set; }
 
             [Required(ErrorMessage = "Date of Birth is required.")]
@@ -111,9 +115,11 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             [Display(Name = "Pronouns")]
             public string Pronouns { get; set; }
 
+            [Required(ErrorMessage = "Indigenous Community Status is required.")]
             [Display(Name = "Member of Indigenous Community")]
             public bool IsMemberOfIndigenousCommunity { get; set; }
 
+            [Required(ErrorMessage = "Differently Abled Status is required.")]
             [Display(Name = "Differently Abled")]
             public bool IsDisabled { get; set; }
 
