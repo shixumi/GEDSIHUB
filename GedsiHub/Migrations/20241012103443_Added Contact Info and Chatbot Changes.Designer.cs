@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241012103443_Added Contact Info and Chatbot Changes")]
+    partial class AddedContactInfoandChatbotChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1277,49 +1280,49 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 1,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7449),
+                            CreatedDate = new DateTime(2024, 10, 12, 10, 34, 42, 642, DateTimeKind.Utc).AddTicks(3542),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             Title = "Introduction to Gender Equality"
                         },
                         new
                         {
                             ModuleId = 2,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7451),
+                            CreatedDate = new DateTime(2024, 10, 12, 10, 34, 42, 642, DateTimeKind.Utc).AddTicks(3544),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             Title = "Understanding Gender Identities"
                         },
                         new
                         {
                             ModuleId = 3,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7453),
+                            CreatedDate = new DateTime(2024, 10, 12, 10, 34, 42, 642, DateTimeKind.Utc).AddTicks(3546),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             Title = "Diversity and Inclusion in the Workplace"
                         },
                         new
                         {
                             ModuleId = 4,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7455),
+                            CreatedDate = new DateTime(2024, 10, 12, 10, 34, 42, 642, DateTimeKind.Utc).AddTicks(3548),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             Title = "Gender and Development: Global Perspectives"
                         },
                         new
                         {
                             ModuleId = 5,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7457),
+                            CreatedDate = new DateTime(2024, 10, 12, 10, 34, 42, 642, DateTimeKind.Utc).AddTicks(3549),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             Title = "Social Inclusion Strategies"
                         },
                         new
                         {
                             ModuleId = 6,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7459),
+                            CreatedDate = new DateTime(2024, 10, 12, 10, 34, 42, 642, DateTimeKind.Utc).AddTicks(3551),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             Title = "Final Condensed Learning Module"
                         },
                         new
                         {
                             ModuleId = 7,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7460),
+                            CreatedDate = new DateTime(2024, 10, 12, 10, 34, 42, 642, DateTimeKind.Utc).AddTicks(3553),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             Title = "Gender-Based Violence and Prevention"
                         });

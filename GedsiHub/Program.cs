@@ -23,22 +23,19 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true; // Use built-in email confirmation
+    options.SignIn.RequireConfirmedAccount = true;
     options.User.RequireUniqueEmail = true;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders(); // Use default token providers for email confirmation
+    .AddDefaultTokenProviders();
 
-// Register the custom EmailSender service
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-// Add services for controllers and views
-builder.Services.AddControllersWithViews();  // Ensures controllers with views and APIs are added
+builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Seed roles when the application starts using RoleSeeder.cs
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -46,7 +43,7 @@ using (var scope = app.Services.CreateScope())
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var roleSeeder = new RoleSeeder(roleManager);
-        await roleSeeder.SeedRolesAsync(); // Use the RoleSeeder to seed roles
+        await roleSeeder.SeedRolesAsync();
     }
     catch (Exception ex)
     {
@@ -55,7 +52,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -74,14 +70,16 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Map controller routes for views
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Ensure API controllers are mapped
-app.MapControllers();  // Add this line to map API controllers
+app.MapControllerRoute(
+    name: "chatbot",
+    pattern: "Chatbot",
+    defaults: new { controller = "Chatbot", action = "Index" });
 
+app.MapControllers();
 app.MapRazorPages();
 
 app.Run();

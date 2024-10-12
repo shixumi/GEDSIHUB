@@ -1,72 +1,118 @@
 ﻿using GedsiHub.Data;
 using GedsiHub.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using System.Linq;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ChatbotController : Controller
+namespace GedsiHub.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public ChatbotController(ApplicationDbContext context)
+    public class ChatbotController : Controller
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    // GET: /Chatbot
-    [HttpGet("/Chatbot")]
-    public IActionResult Index()
-    {
-        return View("Chat"); // Return the Chat.cshtml view
-    }
-
-    // POST: /api/chatbot/ask
-    [HttpPost("ask")]
-    public IActionResult Ask([FromBody] string userQuestion)
-    {
-        if (string.IsNullOrEmpty(userQuestion))
+        public ChatbotController(ApplicationDbContext context)
         {
-            return BadRequest(new { response = "Question cannot be empty." });
+            _context = context;
         }
 
-        // First check if there's a relevant FAQ
-        var faqAnswer = FindFAQ(userQuestion);
-        if (faqAnswer != null)
+        public IActionResult Index()
         {
-            return Ok(new { response = faqAnswer });
+            return View("Chat");
         }
 
-        // If no FAQ found, check for a relevant module
-        var recommendedModule = FindRelevantModule(userQuestion);
-        if (recommendedModule != null)
+        // Fetch available modules
+        [HttpGet("api/chatbot/modules")]
+        public async Task<IActionResult> GetModules()
         {
-            var response = $"I recommend checking out the module '{recommendedModule.Title}', which covers relevant topics.";
-            return Ok(new { response });
+            var modules = await _context.Modules
+                .Select(m => new { m.Title })  // Select only the title for simplicity
+                .ToListAsync();
+
+            return Ok(new { modules });
         }
 
-        // Default response if nothing matches
-        var defaultResponse = "Sorry, I couldn't find any relevant information. Please try rephrasing your question.";
-        return Ok(new { response = defaultResponse });
-    }
+        // Fetch FAQs
+        [HttpGet("api/chatbot/faqs")]
+        public async Task<IActionResult> GetFAQs()
+        {
+            var faqs = await _context.FAQs
+                .Select(f => new { f.Id, f.Question, f.Answer })  // Return both Question and Answer
+                .ToListAsync();
 
-    // Search for an FAQ match based on the user's question
-    private string FindFAQ(string question)
-    {
-        var keywords = question.Split(' ').Select(k => k.ToLower()).ToList();
-        var relevantFAQ = _context.FAQs
-            .FirstOrDefault(f => keywords.Any(k => f.Question.ToLower().Contains(k)));
+            return Ok(new { faqs });
+        }
 
-        return relevantFAQ?.Answer; // Return the FAQ answer if found, otherwise null
-    }
+        // Fetch FAQ answer by ID
+        [HttpGet("api/chatbot/faq/{id}")]
+        public async Task<IActionResult> GetFaqAnswer(int id)
+        {
+            var faq = await _context.FAQs
+                .Where(f => f.Id == id)
+                .Select(f => new { f.Answer })
+                .FirstOrDefaultAsync();
 
-    // Search for a relevant module based on the user's question
-    private Module FindRelevantModule(string question)
-    {
-        var keywords = question.Split(' ').Select(k => k.ToLower()).ToList();
-        var relevantModule = _context.Modules
-            .FirstOrDefault(m => keywords.Any(k => m.Title.ToLower().Contains(k) || m.Description.ToLower().Contains(k)));
+            if (faq == null)
+            {
+                return NotFound();
+            }
 
-        return relevantModule; // Return the first matching module or null
+            return Ok(faq);
+        }
+
+        // Fetch module details by ID
+        [HttpGet("api/chatbot/module/{id}")]
+        public async Task<IActionResult> GetModuleDetails(int id)
+        {
+            var module = await _context.Modules
+                .Where(m => m.ModuleId == id)
+                .Select(m => new { m.Description })
+                .FirstOrDefaultAsync();
+
+            if (module == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { details = module.Description });
+        }
+
+        // Fetch Contact Info
+        [HttpGet("api/chatbot/contact")]
+        public async Task<IActionResult> GetContact()
+        {
+            var contact = await _context.ContactInfos
+                .Select(c => new
+                {
+                    c.SupportEmail,
+                    c.PhoneNumber,
+                    c.Facebook,
+                    c.TikTok,
+                    c.Instagram,
+                    c.X,
+                    c.Website
+                })
+                .FirstOrDefaultAsync();
+
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+            // Return the contact info with camelCase property names to match the frontend expectations
+            return Ok(new
+            {
+                contactInfo = new
+                {
+                    supportEmail = contact.SupportEmail,
+                    phoneNumber = contact.PhoneNumber,
+                    facebook = contact.Facebook,
+                    tikTok = contact.TikTok,
+                    instagram = contact.Instagram,
+                    x = contact.X,
+                    website = contact.Website
+                }
+            });
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace GedsiHub.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<ContactInfo> ContactInfos { get; set; }
         public DbSet<CollegeDepartment> CollegeDepartments { get; set; }
         public DbSet<Course> Courses { get; set; }
 
@@ -42,7 +43,6 @@ namespace GedsiHub.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
 
             // Seed College Departments
             builder.Entity<CollegeDepartment>().HasData(
@@ -160,6 +160,88 @@ namespace GedsiHub.Data
                 new Course { CourseId = 67, CollegeDeptId = 14, CourseName = "Bachelor of Science in Hospitality Management (BSHM)" },
                 new Course { CourseId = 68, CollegeDeptId = 14, CourseName = "Bachelor of Science in Tourism Management (BSTM)" },
                 new Course { CourseId = 69, CollegeDeptId = 14, CourseName = "Bachelor of Science in Transportation Management (BSTRM)" }
+            );
+
+            // Seed test FAQs
+            builder.Entity<FAQ>().HasData(
+                new FAQ { Id = 1, Category = "General", Question = "What is GEDSI?", Answer = "GEDSI stands for Gender Equality, Diversity, and Social Inclusion. It focuses on promoting equality and inclusivity in various sectors." },
+                new FAQ { Id = 2, Category = "Courses", Question = "How do I enroll in a course?", Answer = "To enroll in a course, simply navigate to the course catalog and click 'Enroll' on the course you're interested in." },
+                new FAQ { Id = 3, Category = "Account", Question = "How do I reset my password?", Answer = "You can reset your password by clicking on 'Forgot Password' on the login page and following the instructions." },
+                new FAQ { Id = 4, Category = "Technical Support", Question = "Why can't I log in?", Answer = "If you're having trouble logging in, please check your credentials or reset your password. If the issue persists, contact technical support." },
+                new FAQ { Id = 5, Category = "Certificates", Question = "How do I get a certificate after completing a course?", Answer = "Once you've completed all the required modules and assessments, your certificate will be automatically generated and available for download in your profile." },
+                new FAQ { Id = 6, Category = "Analytics", Question = "How can I view my course progress?", Answer = "You can view your course progress by going to the 'My Courses' section, where detailed analytics on your module completions will be displayed." },
+                new FAQ { Id = 7, Category = "Security", Question = "How is my data protected?", Answer = "Your data is protected by our use of ASP.NET Core Data Protection, ensuring encryption at rest and in transit." },
+                new FAQ { Id = 8, Category = "Modules", Question = "Can I access the final module directly?", Answer = "No, you need to complete all previous modules before accessing the final condensed learning module." },
+                new FAQ { Id = 9, Category = "Forum", Question = "How can I participate in forum discussions?", Answer = "You can participate in forum discussions by navigating to the relevant course module and selecting the 'Forum' tab. Choose a topic and contribute to the discussion." },
+                new FAQ { Id = 10, Category = "Courses", Question = "Can I retake a quiz if I fail?", Answer = "Yes, you can retake a quiz up to three times. After that, please contact your course administrator for further assistance." }
+            );
+
+            // Seed test Modules
+            builder.Entity<Module>().HasData(
+                new Module
+                {
+                    ModuleId = 1,
+                    Title = "Introduction to Gender Equality",
+                    Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
+                    CreatedDate = DateTime.UtcNow
+                },
+                new Module
+                {
+                    ModuleId = 2,
+                    Title = "Understanding Gender Identities",
+                    Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
+                    CreatedDate = DateTime.UtcNow
+                },
+                new Module
+                {
+                    ModuleId = 3,
+                    Title = "Diversity and Inclusion in the Workplace",
+                    Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
+                    CreatedDate = DateTime.UtcNow
+                },
+                new Module
+                {
+                    ModuleId = 4,
+                    Title = "Gender and Development: Global Perspectives",
+                    Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
+                    CreatedDate = DateTime.UtcNow
+                },
+                new Module
+                {
+                    ModuleId = 5,
+                    Title = "Social Inclusion Strategies",
+                    Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
+                    CreatedDate = DateTime.UtcNow
+                },
+                new Module
+                {
+                    ModuleId = 6,
+                    Title = "Final Condensed Learning Module",
+                    Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
+                    CreatedDate = DateTime.UtcNow
+                },
+                new Module
+                {
+                    ModuleId = 7,
+                    Title = "Gender-Based Violence and Prevention",
+                    Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
+                    CreatedDate = DateTime.UtcNow
+                }
+            );
+
+            // Seed default contact information with social media and website links
+            builder.Entity<ContactInfo>().HasData(
+                new ContactInfo
+                {
+                    Id = 1,
+                    SupportEmail = "dev.gedsihub@gmail.com",
+                    PhoneNumber = "+1-800-123-4567",
+                    Facebook = "https://www.facebook.com/gadpup",
+                    TikTok = "https://www.tiktok.com/@yourprofile",
+                    Instagram = "https://www.instagram.com/pupgadofficial",
+                    X = "https://x.com/PUPGADO",
+                    Website = "https://www.pup.edu.ph/research/gado/"
+                }
             );
 
             // Map Identity tables to custom names
@@ -396,7 +478,7 @@ namespace GedsiHub.Data
                       .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
             });
 
-            // **Add configurations for other entities as necessary**
+            
         }
     }
 }

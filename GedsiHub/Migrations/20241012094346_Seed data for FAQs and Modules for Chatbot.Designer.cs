@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241012094346_Seed data for FAQs and Modules for Chatbot")]
+    partial class SeeddataforFAQsandModulesforChatbot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -786,67 +789,6 @@ namespace GedsiHub.Migrations
                     b.ToTable("certificate_tbl");
                 });
 
-            modelBuilder.Entity("GedsiHub.Models.ContactInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Facebook")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Instagram")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("SupportEmail")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("TikTok")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Website")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("X")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContactInfos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Facebook = "https://www.facebook.com/gadpup",
-                            Instagram = "https://www.instagram.com/pupgadofficial",
-                            PhoneNumber = "+1-800-123-4567",
-                            SupportEmail = "dev.gedsihub@gmail.com",
-                            TikTok = "https://www.tiktok.com/@yourprofile",
-                            Website = "https://www.pup.edu.ph/research/gado/",
-                            X = "https://x.com/PUPGADO"
-                        });
-                });
-
             modelBuilder.Entity("GedsiHub.Models.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
@@ -1277,49 +1219,49 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 1,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7449),
+                            CreatedDate = new DateTime(2024, 10, 12, 9, 43, 45, 802, DateTimeKind.Utc).AddTicks(551),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             Title = "Introduction to Gender Equality"
                         },
                         new
                         {
                             ModuleId = 2,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7451),
+                            CreatedDate = new DateTime(2024, 10, 12, 9, 43, 45, 802, DateTimeKind.Utc).AddTicks(553),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             Title = "Understanding Gender Identities"
                         },
                         new
                         {
                             ModuleId = 3,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7453),
+                            CreatedDate = new DateTime(2024, 10, 12, 9, 43, 45, 802, DateTimeKind.Utc).AddTicks(555),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             Title = "Diversity and Inclusion in the Workplace"
                         },
                         new
                         {
                             ModuleId = 4,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7455),
+                            CreatedDate = new DateTime(2024, 10, 12, 9, 43, 45, 802, DateTimeKind.Utc).AddTicks(578),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             Title = "Gender and Development: Global Perspectives"
                         },
                         new
                         {
                             ModuleId = 5,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7457),
+                            CreatedDate = new DateTime(2024, 10, 12, 9, 43, 45, 802, DateTimeKind.Utc).AddTicks(579),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             Title = "Social Inclusion Strategies"
                         },
                         new
                         {
                             ModuleId = 6,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7459),
+                            CreatedDate = new DateTime(2024, 10, 12, 9, 43, 45, 802, DateTimeKind.Utc).AddTicks(581),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             Title = "Final Condensed Learning Module"
                         },
                         new
                         {
                             ModuleId = 7,
-                            CreatedDate = new DateTime(2024, 10, 12, 13, 6, 17, 954, DateTimeKind.Utc).AddTicks(7460),
+                            CreatedDate = new DateTime(2024, 10, 12, 9, 43, 45, 802, DateTimeKind.Utc).AddTicks(583),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             Title = "Gender-Based Violence and Prevention"
                         });
