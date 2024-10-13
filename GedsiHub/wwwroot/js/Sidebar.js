@@ -4,11 +4,11 @@ function setActiveSidebar() {
 
   // Map each page to its corresponding sidebar button ID
   const pageMapping = {
-    'index.html': 'SidebarButton_Dashboard',
-    'modules.html': 'SidebarButton_Modules',
+    '/Dashboard': 'SidebarButton_Dashboard',
+    '/Module': 'SidebarButton_Modules',
     'addNewModule.html': 'SidebarButton_Modules',
     'leaderboard.html': 'SidebarButton_Leaderboard',
-    'forum.html': 'SidebarButton_Forum',
+    '/ForumPost': 'SidebarButton_Forum',
     'feedback.html': 'SidebarButton_Feedback'
   };
 
@@ -24,10 +24,10 @@ function setActiveSidebar() {
 // Function to handle redirection for sidebar buttons
 function setupSidebarButtonActions() {
   const buttonActions = {
-    'SidebarButton_Dashboard': 'index.html',
-    'SidebarButton_Modules': 'modules.html',
+    'SidebarButton_Dashboard': '/Dashboard',
+    'SidebarButton_Modules': '/Module',
     'SidebarButton_Leaderboard': 'leaderboard.html',
-    'SidebarButton_Forum': 'forum.html',
+    'SidebarButton_Forum': '/ForumPost',
     'SidebarButton_Feedback': 'feedback.html'
   };
 
