@@ -1,0 +1,68 @@
+.app_container {
+  height: 100vh;
+  position: absolute;
+  margin-left: 307px;
+  width: 100%;
+  background: #EFF0F4;
+  margin-top: -40px;
+  border-top-left-radius: 40px;
+  border-color: #464040;
+  padding-left: 70px;
+  padding-right: 70px;
+  padding-bottom: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.background {
+    height: 100vh;
+    position: absolute;
+    margin-left: 307px;
+    width: calc(100% - 307px);
+    background: #EFF0F4;
+    margin-top: -40px;
+    border-top-left-radius: 40px;
+    border-color: #464040;
+    padding-left: 70px;
+    padding-right: 70px;
+    padding-bottom: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    flex: 1 0 auto;
+
+}
+
+.container {
+    max-width: 70%;
+}
+
+
+
+
+
+.timeline-post {
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Responsive Behavior */
+@media (max-width: 768px) {
+    .sidebar_container {
+        width: 100%;
+        height: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+}

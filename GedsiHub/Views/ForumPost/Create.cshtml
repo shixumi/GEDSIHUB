@@ -5,42 +5,47 @@
     ViewData["Title"] = "Create Post";
 }
 
-<h2>Create a New Post</h2>
+<div class="background">
+    <div class="container">
+        <h2>Create a New Post</h2>
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <label asp-for="Title" class="control-label">Post Title</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Content" class="control-label">Post Content</label>
+                <textarea asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PollOptions" class="control-label">Poll Options (Optional)</label>
+                <input asp-for="PollOptions" class="form-control" />
+                <span asp-validation-for="PollOptions" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label">Upload Image (Optional)</label>
+                <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create Post</button>
+        </form>
+
     </div>
-}
-
-<form asp-action="Create" enctype="multipart/form-data" method="post">
-    <div class="form-group">
-        <label asp-for="Title" class="control-label">Post Title</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Content" class="control-label">Post Content</label>
-        <textarea asp-for="Content" class="form-control"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="PollOptions" class="control-label">Poll Options (Optional)</label>
-        <input asp-for="PollOptions" class="form-control" />
-        <span asp-validation-for="PollOptions" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ImageFile" class="control-label">Upload Image (Optional)</label>
-        <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
-        <span asp-validation-for="ImageFile" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Create Post</button>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -64,4 +64,11 @@
 		<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.2" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="wwwroot\css\app_container.css">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
+
 </Project>

@@ -1,0 +1,194 @@
+.h7 {
+    font-size: 0.8rem;
+}
+
+.gedf-wrapper {
+    margin-top: 0.97rem;
+}
+
+@media (min-width: 992px) {
+    .gedf-main {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+
+    .gedf-card {
+        margin-bottom: 1.9rem;
+        border-radius: 25px;
+        background: #fff;
+        box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
+    }
+    .card-body {
+        padding: 0px 25px 0px 25px;
+    }
+    .card-header {
+        background-color: rgba(0,0,0,0);
+        border-bottom: none;
+        padding: 25px 25px;
+    }
+    .card-footer {
+        background-color: rgba(0,0,0,0);
+        border-top: none;
+        padding: 25px 25px;
+    }
+
+    .ml-2 {
+        margin-left: 20px;
+    }
+    .card-header .h5 {
+        color: #464040;
+        font-weight: 600;
+    }
+
+    .card-header .h7 {
+        color: #9C9C9C;
+        font-size: 14px;
+
+    }
+
+    .badge {
+        font-size: 10px;
+        margin-bottom: 10px;
+        padding: .70em 1em;
+        font-weight: 500;
+    }
+    .card-title {
+        margin-bottom: 18px;
+    }
+    .card-link {
+        margin-right: -5px;
+        border-radius: 10px;
+        border: 1px solid #9c9c9c;
+        background: #fff;
+        padding: 5px 10px;
+    }
+    
+    .f-icon {
+        font-size: 25px !important;
+        color: #464040;
+        margin-right: 10px;
+    }
+
+    .card-footer .a {
+        margin-right: 2px;
+    }
+
+    .card-text {
+        color: #464040;
+        font-weight: 400;
+        background: #fff;
+    }
+
+    /* Container styling */
+    .top-container {
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    /* Select dropdown styling */
+    .custom-select {
+        border-radius: 30px;
+        padding: 10px 20px;
+        border: none;
+        font-size: 16px;
+        outline: none;
+        max-width: 200px;
+        background-color: #ffffff;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10);
+    }
+    /* Search input group styling */
+    .input-group {
+        width: 40%;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10); /* Add box-shadow to the whole search bar */
+        border-radius: 30px; /* Ensure smooth corners for the whole bar */
+        background-color: #ffffff; /* Background for the entire group */
+    }
+
+
+    /* Search input field styling */
+    .custom-search-input {
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        padding: 10px 15px 10px 0px;
+        font-size: 16px;
+        outline: none;
+        background-color: #ffffff;
+        border: none; /* Remove the border */
+        box-shadow: none; /* Remove individual box-shadow */
+    }
+
+    /* Search icon (left part of input) */
+    .input-group-text {
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        background-color: #ffffff;
+        padding: 10px 20px;
+        font-size: 18px;
+        outline: none;
+        border: none; /* Remove the border */
+        box-shadow: none; /* Remove individual box-shadow */
+    }
+
+    /* Adjust the search icon */
+    .input-group-text i {
+        color: #464040; /* Icon color */
+    }
+
+    /* Remove focus outline */
+    .custom-search-input:focus,
+    .input-group-text:focus, .custom-select:focus {
+        border-color: transparent; /* Ensure no borders appear on focus */
+        box-shadow: none; /* No individual shadow on focus */
+    }
+
+    /* Style for the horizontal line */
+    .custom-hr {
+        border: 2px solid #a6a7ab; /* Light gray line */
+        margin-top: 10px; /* Space between the search container and line */
+        margin-bottom: 18px; /* Space after the line */
+        width: 100%; /* Full width of the container */
+    }
+
+    .create-btn {
+        background: #660000;
+        color: #ffffff;
+        border-radius: 50px;
+        max-width: 200px;
+        font-weight: 500;
+        height: 40px;
+        font-size: 14px;
+        margin-top: 15px;
+        border-style: none;
+        align-items: center;
+        padding: 10px 15px;
+    }
+
+    .addIcon {
+        width: 20px;
+        margin-right: 10px;
+    }
+
+    .create-btn:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        background-color: #920000;
+        border-style: none;
+    }
+
+    .create-btn:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }
+
+
+
+
+
+}
+
+/**Reset Bootstrap*/
+.dropdown-toggle::after {
+    content: none;
+    display: none;
+}

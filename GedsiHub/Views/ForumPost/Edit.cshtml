@@ -5,48 +5,53 @@
     ViewData["Title"] = "Edit Post";
 }
 
-<h2>Edit Post</h2>
+<div class="background">
+    <div class ="background">
+        <h2>Edit Post</h2>
 
-<!-- Show error message if present in TempData -->
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
+        <!-- Show error message if present in TempData -->
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <!-- Post editing form -->
+        <form asp-action="Edit" enctype="multipart/form-data" method="post">
+            <!-- Post title -->
+            <div class="form-group">
+                <label asp-for="Title" class="control-label">Post Title</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <!-- Post content -->
+            <div class="form-group">
+                <label asp-for="Content" class="control-label">Post Content</label>
+                <textarea asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <!-- Poll options -->
+            <div class="form-group">
+                <label for="pollOptions">Poll Options (comma-separated, optional)</label>
+                <input asp-for="PollOptions" class="form-control" />
+            </div>
+
+            <!-- Image upload (optional) -->
+            <div class="form-group">
+                <label for="imageFile">Upload Image (optional)</label>
+                <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary">Update Post</button>
+        </form>
+
     </div>
-}
-
-<!-- Post editing form -->
-<form asp-action="Edit" enctype="multipart/form-data" method="post">
-    <!-- Post title -->
-    <div class="form-group">
-        <label asp-for="Title" class="control-label">Post Title</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
-
-    <!-- Post content -->
-    <div class="form-group">
-        <label asp-for="Content" class="control-label">Post Content</label>
-        <textarea asp-for="Content" class="form-control"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
-    </div>
-
-    <!-- Poll options -->
-    <div class="form-group">
-        <label for="pollOptions">Poll Options (comma-separated, optional)</label>
-        <input asp-for="PollOptions" class="form-control" />
-    </div>
-
-    <!-- Image upload (optional) -->
-    <div class="form-group">
-        <label for="imageFile">Upload Image (optional)</label>
-        <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
-        <span asp-validation-for="ImageFile" class="text-danger"></span>
-    </div>
-
-    <!-- Submit button -->
-    <button type="submit" class="btn btn-primary">Update Post</button>
-</form>
+</div>
 
 <!-- Include validation scripts for client-side validation -->
 @section Scripts {

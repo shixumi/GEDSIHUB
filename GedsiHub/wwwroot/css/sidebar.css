@@ -24,6 +24,11 @@ a, a:hover, a:focus {
   transition: all 0.3s ease;
 }
 
+.wrapper {
+    display: flex;
+    height: 100vh; /* Ensure full height */
+    overflow: hidden; /* Prevent overflow */
+}
 /* Navbar Styles */
 
 .navbar {

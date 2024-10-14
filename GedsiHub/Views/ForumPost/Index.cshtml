@@ -6,52 +6,113 @@
 }
 
 
-<div id="modules_container" class="modules_container">
-    <h2>All Forum Posts</h2>
+<div class="background">
+    <div class="container forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
+ 
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
+        @* <h2>Community Forum</h2> *@
+
+        <!-- Top Container -->
+        <div class="d-flex justify-content-between align-items-center top-container">
+            
+            <!-- Category Selector -->
+            <select class="focus-ring focus-ring-light form-select custom-select">
+                <option selected>All</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+
+            <!-- Search box with icon -->
+            <div class="input-group custom-search">
+                <span class="input-group-text">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="search" class="form-control custom-search-input" placeholder="Search for discussions...">
+            </div>
         </div>
-    }
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
+        <!-- Horizontal Line -->
+        <hr class="custom-hr">
+
+
+        <!-- Notification prompt -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <!-- Create New Post Button-->
+        <div class="mb-3">
+            <a asp-action="Create" class="d-flex create-btn">
+                <img class="addIcon" src="~/images/Add_White.png" />
+                Create New Post
+            </a>
         </div>
-    }
 
-    <div class="mb-3">
-        <a asp-action="Create" class="btn btn-primary">Create New Post</a>
+        <!-- Loop to display each post available in the database -->
+        @foreach (var post in Model)
+        {
+            <!--- Card Posts -->
+            <div class="card gedf-card">
+
+                <!-- Card Header -->
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="mr-2">
+                                <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                            </div>
+                            <div class="ml-2">
+                                <div class="h5 m-0">LeeCross</div>
+                                <div class="text-muted h7 ">@post.CreatedAt.ToString("g")</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+        
+                <div class="card-body">
+                    <span class="badge rounded-pill text-bg-primary">Announcement</span>
+                    <!-- Card Title -->
+                    <a asp-action="Details" asp-route-id="@post.PostId">
+                        <h4 class="card-title">@post.Title</h4>
+                    </a>
+
+                    <!-- Card Text -->
+                    <p class="card-text">
+                        @(post.Content.Length > 200 ? post.Content.Substring(0, 100) + "..." : post.Content)
+                    </p>
+                </div>
+
+                <!-- Card Footer Buttons -->
+                <div class="d-flex align-items-center card-footer">
+                    <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>2</a>
+                    <a asp-action="Edit" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-edit"></i> Edit</a>
+                    <a asp-action="Delete" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-trash"></i> Delete</a>
+
+                </div>
+
+            </div>
+        }
+       
+    </div>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Content Preview</th>
-                <th>Posted On</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var post in Model)
-            {
-                <tr>
-                    <td>@post.Title</td>
-                    <td>@(post.Content.Length > 100 ? post.Content.Substring(0, 100) + "..." : post.Content)</td>
-                    <td>@post.CreatedAt.ToString("g")</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@post.PostId" class="btn btn-primary">View Details</a>
-                        <a asp-action="Edit" asp-route-id="@post.PostId" class="btn btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@post.PostId" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 
-</div>
+
+
+
+
 
