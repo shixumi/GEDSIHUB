@@ -475,3 +475,4 @@ function showBranchOptions() {
     // Show the branch/office field
     branchOfficeContainer.style.display = 'block';
 }
+

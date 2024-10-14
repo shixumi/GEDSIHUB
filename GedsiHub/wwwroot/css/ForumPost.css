@@ -7,148 +7,10 @@
 }
 
 @media (min-width: 992px) {
-    .gedf-main {
-        padding-left: 4rem;
-        padding-right: 4rem;
-    }
 
-    .gedf-card {
-        margin-bottom: 1.9rem;
-        border-radius: 25px;
-        background: #fff;
-        box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
-    }
-    .card-body {
-        padding: 0px 25px 0px 25px;
-    }
-    .card-header {
-        background-color: rgba(0,0,0,0);
-        border-bottom: none;
-        padding: 25px 25px;
-    }
-    .card-footer {
-        background-color: rgba(0,0,0,0);
-        border-top: none;
-        padding: 25px 25px;
-    }
-
-    .ml-2 {
-        margin-left: 20px;
-    }
-    .card-header .h5 {
-        color: #464040;
-        font-weight: 600;
-    }
-
-    .card-header .h7 {
-        color: #9C9C9C;
-        font-size: 14px;
-
-    }
-
-    .badge {
-        font-size: 10px;
-        margin-bottom: 10px;
-        padding: .70em 1em;
-        font-weight: 500;
-    }
-    .card-title {
-        margin-bottom: 18px;
-    }
-    .card-link {
-        margin-right: -5px;
-        border-radius: 10px;
-        border: 1px solid #9c9c9c;
-        background: #fff;
-        padding: 5px 10px;
-    }
     
-    .f-icon {
-        font-size: 25px !important;
-        color: #464040;
-        margin-right: 10px;
-    }
 
-    .card-footer .a {
-        margin-right: 2px;
-    }
-
-    .card-text {
-        color: #464040;
-        font-weight: 400;
-        background: #fff;
-    }
-
-    /* Container styling */
-    .top-container {
-        width: 100%;
-        padding: 10px 0;
-    }
-
-    /* Select dropdown styling */
-    .custom-select {
-        border-radius: 30px;
-        padding: 10px 20px;
-        border: none;
-        font-size: 16px;
-        outline: none;
-        max-width: 200px;
-        background-color: #ffffff;
-        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10);
-    }
-    /* Search input group styling */
-    .input-group {
-        width: 40%;
-        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10); /* Add box-shadow to the whole search bar */
-        border-radius: 30px; /* Ensure smooth corners for the whole bar */
-        background-color: #ffffff; /* Background for the entire group */
-    }
-
-
-    /* Search input field styling */
-    .custom-search-input {
-        border-top-right-radius: 30px;
-        border-bottom-right-radius: 30px;
-        padding: 10px 15px 10px 0px;
-        font-size: 16px;
-        outline: none;
-        background-color: #ffffff;
-        border: none; /* Remove the border */
-        box-shadow: none; /* Remove individual box-shadow */
-    }
-
-    /* Search icon (left part of input) */
-    .input-group-text {
-        border-top-left-radius: 30px;
-        border-bottom-left-radius: 30px;
-        background-color: #ffffff;
-        padding: 10px 20px;
-        font-size: 18px;
-        outline: none;
-        border: none; /* Remove the border */
-        box-shadow: none; /* Remove individual box-shadow */
-    }
-
-    /* Adjust the search icon */
-    .input-group-text i {
-        color: #464040; /* Icon color */
-    }
-
-    /* Remove focus outline */
-    .custom-search-input:focus,
-    .input-group-text:focus, .custom-select:focus {
-        border-color: transparent; /* Ensure no borders appear on focus */
-        box-shadow: none; /* No individual shadow on focus */
-    }
-
-    /* Style for the horizontal line */
-    .custom-hr {
-        border: 2px solid #a6a7ab; /* Light gray line */
-        margin-top: 10px; /* Space between the search container and line */
-        margin-bottom: 18px; /* Space after the line */
-        width: 100%; /* Full width of the container */
-    }
-
+    /* Create New Post Button */
     .create-btn {
         background: #660000;
         color: #ffffff;
@@ -181,11 +43,447 @@
         color: #ffffff;
     }
 
+    /* Top Container Styling */
+    .top-container {
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    /* Category Selection */
+    .custom-select {
+        border-radius: 30px;
+        padding: 10px 20px;
+        border: none;
+        font-size: 16px;
+        outline: none;
+        max-width: 200px;
+        background-color: #ffffff;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10);
+    }
+    /* Search Discussion Group */
+    .input-group {
+        width: 40%;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.10); 
+        border-radius: 30px;
+        background-color: #ffffff;
+    }
 
 
+    /* Search Input */
+    .custom-search-input {
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        padding: 10px 15px 10px 0px;
+        font-size: 16px;
+        outline: none;
+        background-color: #ffffff;
+        border: none; /* Remove the border */
+        box-shadow: none; /* Remove individual box-shadow */
+    }
+
+    /* Search Icon (left part of input) */
+    .input-group-text {
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        background-color: #ffffff;
+        padding: 10px 20px;
+        font-size: 18px;
+        outline: none;
+        border: none; /* Remove the border */
+        box-shadow: none; /* Remove individual box-shadow */
+    }
+
+    /* Adjust the search icon */
+    .input-group-text i {
+        color: #464040; /* Icon color */
+    }
 
 
-}
+    /* Remove focus outline */
+    .custom-search-input:focus,
+    .input-group-text:focus, .custom-select:focus {
+        border-color: transparent;
+        box-shadow: none; 
+    }
+
+    /* Horizontal Line Style */
+    .custom-hr {
+        border: 1.5px solid #a6a7ab; /* Light gray line */
+        margin-top: 10px; /* Space between the search container and line */
+        margin-bottom: 18px; /* Space after the line */
+        width: 100%; /* Full width of the container */
+    }
+
+    /* Card Posts */
+    .gedf-main {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+
+    .gedf-card {
+        margin-top: rem;
+        margin-bottom: 1.9rem;
+        border-radius: 25px;
+        background: #fff;
+        box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
+    }
+
+    .card-header {
+        background-color: rgba(0,0,0,0);
+        border-bottom: none;
+        padding: 25px 25px;
+    }
+
+    .card-body {
+        padding: 0px 25px 0px 25px;
+    }
+    
+    .card-footer {
+        background-color: rgba(0,0,0,0);
+        border-top: none;
+        padding: 25px 25px;
+    }
+
+    .ml-2 {
+        margin-left: 20px;
+    }
+
+    /* Username of Poster */
+    .card-header .h5 {
+        color: #464040;
+        font-weight: 600;
+    }
+
+    /* Date Posted */
+    .card-header .h7 {
+        color: #9C9C9C;
+        font-size: 14px;
+
+    }
+
+    .badge {
+        font-size: 10px;
+        margin-bottom: 10px;
+        padding: .70em 1em;
+        font-weight: 500;
+    }
+
+
+    /* Card Title */
+    .card-title {
+        margin-bottom: 18px;
+    }
+
+    .card-text {
+        color: #464040;
+        font-weight: 400;
+        background: #fff;
+    }
+
+    /* Card */
+    .card-link {
+        margin-right: -5px;
+        border-radius: 10px;
+        border: 1px solid #9c9c9c;
+        background: #fff;
+        padding: 5px 10px;
+    }
+    
+    .f-icon {
+        font-size: 25px !important;
+        color: #464040;
+        margin-right: 10px;
+    }
+
+    .card-footer .a {
+        margin-right: 2px;
+    }
+
+    /* Post Button */
+    .post-btn {
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        padding: 10px 40px;
+        border-radius: 30px;
+        font-size: 16px;
+        color: #ffffff;
+        background: #660000;
+        max-width: 200px;
+        font-weight: 500;
+        height: 40px;
+        border-style: none;
+        cursor: pointer;
+    }
+
+
+    .post-btn:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        background-color: #920000;
+        border-style: none;
+    }
+
+    .post-btn:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }
+
+
+    
+    .create-input {
+        border-radius: 12px;
+        color: #464040;
+        font-size: 18px;
+        padding: 15px;
+        margin-bottom: 5px;
+        max-width: 100%;
+        height: 50px;
+    }
+
+    .create-input-ta {
+        border-radius: 12px;
+        color: #464040;
+        font-size: 18px;
+        padding: 15px;
+        margin-bottom: 5px;
+        max-width: 100%;
+    }
+
+    .input-lbl {
+        font-size: 18px;
+        margin-bottom: 5px;
+        color: #464040;
+        font-weight: 500;
+    }
+
+    /* General card header tab adjustments */
+    .card-header-tabs {
+        margin: 2px;
+    }
+
+    /* Removing default Bootstrap border from nav-tabs */
+    .nav-tabs {
+        border: none;
+        padding-bottom: 10px; /* Adds space between tabs and content */
+    }
+
+        /* Styling individual tabs */
+        .nav-tabs .nav-link {
+            color: #555; /* Default tab text color */
+            border: 1px solid transparent; /* Transparent border for clean spacing */
+            border-radius: 10px;
+            font-weight: 500;
+            padding: 10px 15px; /* Custom padding for a larger clickable area */
+            transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+        }
+
+            /* Styling active and hover state */
+            .nav-tabs .nav-link.active,
+            .nav-tabs .nav-link:hover {
+                color: #660000; /* Highlight the active or hovered tab */
+                background-color: #f8f9fa; /* Light background for active/hover tab */
+                border-color: #dee2e6 #dee2e6 #f8f9fa; /* Active tab bottom border */
+            }
+
+    /* Override default active border color */
+    #myTab {
+        border: none;
+    }
+
+    /* Custom tab item spacing and hover effect */
+    .nav-item {
+        margin-right: 5px; /* Adds spacing between tabs */
+    }
+
+
+    /* Button Styling */
+    .btn-secondary {
+        border-radius: 30px;
+        background-color: #A7A5A5;
+        border: none;
+    }
+
+
+    .modal-footer .btn-secondary:hover {
+        background-color: #464040;
+    }
+
+    .modal-footer .btn-primary {
+        border-radius: 30px;
+        color: #ffffff;
+        background-color: #660000;
+        border: none;
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    .modal-footer .btn-primary:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }
+
+    /* Modal Styling */
+    .modal-content {
+        background-color: #fff;
+        border-radius: 25px;
+    }
+
+    /* Flair Radio Buttons */
+    .flair-options .flair-label {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 25px;
+        color: #ffffff;
+        cursor: pointer;
+        margin-right: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .flair-radio {
+        display: none; /* Hide the actual radio button */
+    }
+
+    /* Flair Styles */
+    .flair-discussion {
+        background-color: #00aaff;
+    }
+
+    .flair-advice {
+        background-color: #28a745;
+    }
+
+    .flair-unsolicited {
+        background-color: #ffc107;
+    }
+
+    .flair-meme {
+        background-color: #ff4d4f;
+    }
+
+    /* Add hover effect */
+    .flair-options .flair-label:hover {
+        opacity: 0.9;
+    }
+
+    /* When the radio is checked, make the flair more prominent */
+    .flair-radio:checked + .flair-label {
+        border: 1px solid #464040;
+    }
+
+    /* Search Bar Styling */
+    #flairSearch {
+        background-color: #1f1f1f;
+        border: 1px solid #444;
+        color: white;
+    }
+
+    /* Toggle switches for tags */
+    .form-check-input {
+        background-color: #fff;
+        border-color: #555;
+        height: 20px;
+        width: 30px;
+        
+    }
+
+    .form-check-input:checked {
+        background-color: #660000;
+        border-color: #660000;
+    }
+
+    .form-check-label {
+        color: #464040;
+        font-weight: 400;
+        margin-left: 10px;
+    }
+
+    .form-label {
+        color: #464040;
+        font-weight: 500;
+    }
+
+    .text-muted {
+        color: #999 !important;
+        margin-left: 10px;
+    }
+
+    .modal-header {
+        padding: 15px 20px;
+    }
+
+    .modal-body {
+        padding: 15px 20px;
+    }
+
+    .modal-footer {
+        padding: 8px 15px;
+    
+    }
+
+    /* General breadcrumb styling */
+    .breadcrumb {
+        padding: 0;
+        margin-bottom: 20px;
+        font-size: 16px; /* Slightly larger font for modern look */
+    }
+
+    /* Styling individual breadcrumb items */
+    .breadcrumb-item a {
+        color: #9c9c9c; 
+        text-decoration: none; 
+        font-weight: 400; 
+    }
+
+    .breadcrumb-item a:hover {
+        color: #464040; 
+    }
+
+    /* Active breadcrumb item */
+    .breadcrumb-item.active {
+        color: #464040; /* Gray color for active breadcrumb (current page) */
+        font-weight: 500; /* Slightly bolder font for the active breadcrumb */
+    }
+
+    /* Custom breadcrumb divider */
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: '>'; /* Simple arrow as divider */
+        color: #464040; /* Gray color for the divider */
+        padding: 0 8px; /* Spacing around the divider */
+    }
+
+
+    /* Style for the custom file input label */
+    #fileLabel {
+        font-weight: 500;
+        color: #464040;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+    /* Styling the file input */
+    input[type="file"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 3em;
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ced4da;
+        border-radius: 10px;
+        background-color: #fff;
+    }
+
+    input[type="file"]:hover {
+        background-color: #fff;
+    }
+
+     .img-input {
+         display: 
+     }
+
 
 /**Reset Bootstrap*/
 .dropdown-toggle::after {

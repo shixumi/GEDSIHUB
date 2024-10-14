@@ -62,10 +62,7 @@ body, html {
 .form-control {
     border-radius: 10px;
     font-size: 18px;
-    padding-left: 15px;
-    padding-bottom: 15px;
-    padding-right: 15px;
-    padding-top: 15px;
+    padding: 15px;
     margin-bottom: 5px;
     max-width: 100%;
 }
