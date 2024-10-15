@@ -21,5 +21,9 @@ namespace GedsiHub.ViewModels
         public string? PollOptions { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Add user's first and last name properties
+        public string? UserFirstName { get; set; }
+        public string? UserLastName { get; set; }
     }
 }
