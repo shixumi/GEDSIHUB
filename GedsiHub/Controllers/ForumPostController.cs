@@ -24,6 +24,7 @@ namespace GedsiHub.Controllers
         public async Task<IActionResult> Index()
         {
             var posts = await _context.ForumPosts
+                .Include(post => post.User)
                 .Select(post => new ForumPostViewModel
                 {
                     PostId = post.PostId,
@@ -31,6 +32,8 @@ namespace GedsiHub.Controllers
                     Content = post.Content,
                     CreatedAt = post.CreatedAt.ToLocalTime(),  // Convert UTC to local time
                     PollOptions = post.PollOptions,
+                    UserFirstName = post.User.FirstName,  // Fetch the user's first name
+                    UserLastName = post.User.LastName     // Fetch the user's last name
                 })
                 .ToListAsync();
 
@@ -41,6 +44,7 @@ namespace GedsiHub.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var post = await _context.ForumPosts
+                                     .Include(p => p.User)
                                      .Include(p => p.ForumComments)
                                      .ThenInclude(c => c.User)
                                      .FirstOrDefaultAsync(p => p.PostId == id);
@@ -53,7 +57,9 @@ namespace GedsiHub.Controllers
             var viewModel = new ForumPostDetailsViewModel
             {
                 ForumPost = post,
-                CommentViewModel = new ForumCommentViewModel { PostId = post.PostId }
+                CommentViewModel = new ForumCommentViewModel { PostId = post.PostId },
+                UserFirstName = post.User.FirstName,  // Pass the user's first name
+                UserLastName = post.User.LastName    // Pass the user's last name
             };
 
             return View(viewModel);
@@ -142,13 +148,24 @@ namespace GedsiHub.Controllers
                 return View(viewModel);
             }
 
+            // Retrieve the current user's details from the database
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return View(viewModel);
+            }
+
             var newPost = new ForumPost
             {
                 Title = viewModel.Title,
                 Content = viewModel.Content,
                 CreatedAt = DateTime.UtcNow,
                 PollOptions = string.IsNullOrWhiteSpace(viewModel.PollOptions) ? null : viewModel.PollOptions,
-                UserId = userId
+                UserId = userId,   // Store the user ID
+                User = user        // Set the navigation property to the current user
             };
 
             // Handle optional image upload
@@ -195,7 +212,9 @@ namespace GedsiHub.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var post = await _context.ForumPosts.FindAsync(id);
+            var post = await _context.ForumPosts
+            .Include(p => p.User)  // If user data is needed
+            .FirstOrDefaultAsync(p => p.PostId == id);
             if (post == null)
             {
                 return NotFound();
@@ -208,7 +227,9 @@ namespace GedsiHub.Controllers
                 Title = post.Title,
                 Content = post.Content,
                 PollOptions = post.PollOptions,
-                CreatedAt = post.CreatedAt
+                CreatedAt = post.CreatedAt,
+                UserFirstName = post.User.FirstName,  // Pass the user's first name if needed
+                UserLastName = post.User.LastName     // Pass the user's last name if needed
             };
 
             return View(viewModel);

@@ -22,7 +22,7 @@ namespace GedsiHub.Models
         [ForeignKey("User")]
         [Column("user_id")]
         public string UserId { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; } = null!;
 
         [Required]
         [Column("content", TypeName = "TEXT")]
