@@ -1,7 +1,157 @@
 @media (min-width: 992px) {
-    .detail-shadow {
-        -moz-box-shadow: inherit;
-        -webkit-box-shadow: inherit;
-        box-shadow: inherit;
+
+    /* Comment Section Styling */
+    .comments-section .list-group-item {
+        border: none;
+        background-color: #1a1a1b; /* Reddit/Discord like dark background */
+        color: #d7dadc;
     }
+
+    .list-group-item {
+        border: none;
+    }
+
+    .comment-profile-pic img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .comment-user-info {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+    }
+
+    .comment-username {
+        font-size: 14px;
+        font-weight: 600;
+        color: #464040;
+    }
+
+    .comment-date {
+        font-size: 13px;
+        color: #999 !important;
+        font-weight: 400;
+        margin-left: 5px;
+
+    }
+
+    .comment-content {
+        color: #d7dadc; /* Light text for comment content */
+        margin-top: 10px;
+        margin-left: 40px;
+        margin-bottom: 10px;
+        font-size: 15px;
+        color: #464040;
+        font-weight: 400;
+        background: #fff;
+    }
+
+    .comment-icon {
+        font-size: 25px !important;
+        color: #464040;
+        margin: 0px;
+    }
+
+
+    .comment-icon:active {
+        color: #b72f17;
+    }
+
+    .c-delete-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.5rem;
+        height: 2rem;
+        padding: 2px;
+        border-radius: 6px;
+        border: none;
+        margin: 10px;
+    }
+
+
+    .c-delete-btn:hover {
+        background-color: #f3d1d1;
+    
+        border-radius: 6px;
+        border: none;
+    }
+
+    .c-delete-btn:hover .comment-icon {
+        color: #b72f17;
+    }
+
+    .c-delete-btn:active {
+        background-color: #f3d1d1 !important;
+        padding: 2px;
+        border-radius: 6px;
+        border: none;
+    }
+
+    .c-delete-btn:active .comment-icon {
+        color: #b72f17;
+    }
+
+    .modal-del-btn {
+        margin-left: 5px;
+    }
+    
+    /* Optional: Add some spacing between the comments */
+    .list-group-item {
+        margin-bottom: 10px;
+    }
+
+    /* Comment Image Styling */
+    .img-thumbnail {
+        margin-top: 10px;
+        border-radius: 8px;
+        max-width: 100%;
+    }
+
+    /* Button Styling */
+
+
+    .comment-footer{
+        background-color: rgba(0,0,0,0);
+    }
+
+    .comment-footer p {
+        padding-right: 25px;
+    }
+
+    .comment-footer h5 {
+        margin: 15px 25px;
+    }
+
+    .comment-img {
+        max-width: 300px; /* Maximum width of 600px, adjust to your layout */
+        width: 100%; /* Image takes up full width of its container */
+        height: auto; /* Maintain aspect ratio */
+        display: block;
+        margin: 10px auto;
+        margin-left: 40px;
+        border-radius: 5px;
+    }
+
+
+    /* Post Button */
+    .comment-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 40px;
+        border-radius: 30px;
+        font-size: 16px;
+        color: #ffffff;
+        background: #660000;
+        max-width: 200px;
+        font-weight: 500;
+        height: 40px;
+        border-style: none;
+        cursor: pointer;
+    }
+
 }

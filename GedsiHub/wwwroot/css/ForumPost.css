@@ -15,9 +15,9 @@
         background: #660000;
         color: #ffffff;
         border-radius: 50px;
-        max-width: 200px;
         font-weight: 500;
         height: 40px;
+        max-width: 180px;
         font-size: 14px;
         margin-top: 15px;
         border-style: none;
@@ -313,6 +313,39 @@
         border: none;
     }
 
+    /* Modal Title */
+    .modal-title {
+        font-size: 20px;
+        font-weight: 500;
+        color: #464040;
+        margin: 0; /* Remove extra margin */
+        padding: 0;
+        text-align: left; /* Left-align the title */
+        flex-grow: 1;
+    }
+
+    /* Modal Header */
+    .modal-header {
+        display: flex;
+        justify-content: flex-start; 
+        align-items: center;
+        padding: 15px 20px; 
+        border: none;
+    }
+
+    /* Modal Body */
+    .modal-body {
+        padding: 15px 20px;
+    }
+
+
+    .modal-footer {
+        display: flex;
+        justify-content: end;
+        padding: 5px 5px;
+        border: none;
+
+    }
 
     .modal-footer .btn-secondary:hover {
         background-color: #464040;
@@ -334,8 +367,9 @@
 
     /* Modal Styling */
     .modal-content {
-        background-color: #fff;
+        background-color: #ffffff;
         border-radius: 25px;
+        padding: 5px;
     }
 
     /* Flair Radio Buttons */
@@ -413,18 +447,9 @@
     }
 
 
-    .modal-header {
-        padding: 15px 20px;
-    }
 
-    .modal-body {
-        padding: 15px 20px;
-    }
 
-    .modal-footer {
-        padding: 8px 15px;
     
-    }
 
     /* General breadcrumb styling */
     .breadcrumb {
@@ -484,78 +509,8 @@
         background-color: #fff;
     }
 
-     .img-input {
-         display: 
-     }
 
 
-    /* Comment Section Styling */
-    .comments-section .list-group-item {
-        border: none;
-        padding: 15px;
-        background-color: #1a1a1b; /* Reddit/Discord like dark background */
-        color: #d7dadc;
-    }
-
-    .comment-profile-pic img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-    }
-
-    .comment-user-info {
-        display: flex;
-        flex-direction: column;
-        margin-left: 10px;
-    }
-
-    .comment-username {
-        font-weight: bold;
-        color: #d7dadc; /* Slightly light text for username */
-    }
-
-    .comment-date {
-        font-size: 12px;
-        color: #818384; /* Grey text for comment date */
-    }
-
-    .comment-content {
-        color: #d7dadc; /* Light text for comment content */
-        margin-top: 5px;
-    }
-
-    /* Optional: Add some spacing between the comments */
-    .list-group-item {
-        margin-bottom: 10px;
-    }
-
-    /* Comment Image Styling */
-    .img-thumbnail {
-        margin-top: 10px;
-        border-radius: 8px;
-        max-width: 100%;
-    }
-
-    /* Button Styling */
-    .comments-section .btn-danger {
-        background-color: #ff4500;
-        border: none;
-        padding: 5px 10px;
-    }
-
-        .comments-section .btn-danger:hover {
-            background-color: #d7391f;
-        }
-
-    /* Input fields and buttons for comment form */
-    .card-footer .btn-primary {
-        background-color: #0079d3;
-        border-radius: 30px;
-    }
-
-        .card-footer .btn-primary:hover {
-            background-color: #0060a9;
-        }
 
 
 /**Reset Bootstrap*/

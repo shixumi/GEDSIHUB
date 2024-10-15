@@ -122,14 +122,15 @@
                     <input asp-for="Input.Honorifics" class="form-control s-form" type="text" placeholder="Enter preferred honorifics" />
                 </div>
 
-                <!-- Profile Path -->
+                @* <!-- Profile Path -->
                 <div class="form-group">
                     <label asp-for="Input.ProfilePicturePath" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
                     <input asp-for="Input.ProfilePicturePath" class="form-control" type="text" />
                     <span asp-validation-for="Input.ProfilePicturePath" class="text-danger"></span>
                     <!-- If you intend to allow file uploads for the profile picture, you can use type="file" -->
                     <!-- <input asp-for="Input.ProfilePicturePath" class="form-control" type="file" /> -->
-                </div>
+                </div> *@
+
             </div>
             <div class="container d-flex justify-content-between nav-button">
                 <button class="back-btn" type="button" onclick="prevStep(1)">Back</button>
