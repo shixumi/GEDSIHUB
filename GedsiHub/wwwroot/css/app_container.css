@@ -31,14 +31,12 @@
     overflow-x: hidden;
     scroll-behavior: smooth;
     flex: 1 0 auto;
-
 }
 
 .container {
     max-width: 70%;
+    
 }
-
-
 
 
 

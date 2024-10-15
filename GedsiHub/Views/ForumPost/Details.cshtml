@@ -7,20 +7,136 @@
 }
 
 <div class="background">
-    <div class="container">
-        <!-- Display the forum post -->
-        <h2>@Model.ForumPost.Title</h2>
-        <p>@Model.ForumPost.Content</p>
+    <div class="container forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
 
-        @if (Model.ForumPost.ImagePath != null)
-        {
-            <div>
-                <img src="@Model.ForumPost.ImagePath" alt="Post Image" class="img-fluid" />
+        <!-- Breadcrumbs -->
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb forum">
+                <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.ForumPost.Title</li>
+            </ol>
+        </nav>
+
+
+        <!--- Card Posts -->
+        <div class="card gedf-card">
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="mr-2">
+                            <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                        </div>
+                        <div class="ml-2">
+                            <div class="h5 m-0">LeeCross</div>
+                            <div class="h7">@Model.ForumPost.CreatedAt.ToString("g")</div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
-        }
 
-        <!-- Display comments -->
-        <h3>Comments</h3>
+            <div class="card-body">
+                <span class="badge rounded-pill text-bg-primary">Announcement</span>
+                <!-- Card Title -->
+                <h4 class="card-title">@Model.ForumPost.Title</h4>
+
+                <!-- Card Text -->
+                <p class="card-text">
+                    @Model.ForumPost.Content
+                </p>
+
+                @if (Model.ForumPost.ImagePath != null)
+                {
+                    <div>
+                        <img src="@Model.ForumPost.ImagePath" alt="Post Image" class="img-fluid" />
+                    </div>
+                }
+            </div>
+
+
+            <!-- Card Footer Buttons -->
+            <div class="d-flex align-items-center card-footer detail-shadow">
+                <a asp-action="Details" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>@Model.ForumPost.ForumComments.Count()</a>
+                <a asp-action="Edit" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-edit"></i> Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-trash"></i> Delete</a>
+
+            </div>
+
+   
+            <!-- Comments -->
+            <div class="d-flex align-items-center card-footer">
+                <h4>@Model.ForumPost.ForumComments.Count() Comments</h4>
+
+                @if (Model.ForumPost.ForumComments.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var comment in Model.ForumPost.ForumComments)
+                        {
+                            <li class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="comment-profile-pic">
+                                        <!-- Profile Picture -->
+                                        <img class="rounded-circle" src="https://picsum.photos/50/50" alt="Profile Picture" width="40">
+                                    </div>
+                                    <div class="comment-user-info ml-2">
+                                        <!-- Commenter's Name and Date -->
+                                        <div class="d-flex align-items-center">
+                                            <strong class="comment-username">@comment.User.FirstName @comment.User.LastName</strong>
+                                            <small class="comment-date text-muted ml-2">• @comment.CreatedAt.ToString("d")</small>
+                                        </div>
+                                        <!-- Comment Content -->
+                                        <p class="comment-content">@comment.Content</p>
+                                    </div>
+                                </div>
+
+                                @if (comment.ImagePath != null)
+                                {
+                                    <img src="@comment.ImagePath" alt="Comment Image" class="img-thumbnail" />
+                                }
+
+                                <!-- Comment Actions (e.g. Delete button) -->
+                                @if (comment.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
+                                {
+                                    <form asp-action="DeleteComment" asp-controller="ForumComment" asp-route-id="@comment.CommentId" method="post" class="mt-2">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No comments yet. Be the first to comment!</p>
+                }
+
+                <!-- Comment Form -->
+                <div class="card-footer">
+                    <h3>Leave a Comment</h3>
+                    <form asp-action="Create" asp-controller="ForumComment" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="PostId" value="@Model.CommentViewModel.PostId" />
+                        <div class="form-group">
+                            <textarea name="Content" class="form-control" rows="3" placeholder="Write your comment here"></textarea>
+                            <span asp-validation-for="CommentViewModel.Content" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="ImageFile">Upload Image (optional)</label>
+                            <input type="file" name="ImageFile" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
+                            <span asp-validation-for="CommentViewModel.ImageFile" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Comment</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+        
 
         @if (Model.ForumPost.ForumComments.Any())
         {

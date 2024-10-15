@@ -1,0 +1,7 @@
+@media (min-width: 992px) {
+    .detail-shadow {
+        -moz-box-shadow: inherit;
+        -webkit-box-shadow: inherit;
+        box-shadow: inherit;
+    }
+}
