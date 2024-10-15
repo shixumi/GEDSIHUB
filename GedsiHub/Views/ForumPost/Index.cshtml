@@ -74,7 +74,7 @@
                             </div>
                             <div class="ml-2">
                                 <div class="h5 m-0">@post.UserFirstName @post.UserLastName</div>
-                                <div class="h7">@post.CreatedAt.ToString("g")</div>
+                                <div class="h7">@post.RelativeCreatedAt</div>
                             </div>
                         </div>
 
@@ -98,7 +98,7 @@
 
                 <!-- Card Footer Buttons -->
                 <div class="d-flex align-items-center card-footer">
-                    <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>2</a>
+                    <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>@post.CommentCount</a>
                     <a asp-action="Edit" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-edit"></i> Edit</a>
                     <a asp-action="Delete" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-trash"></i> Delete</a>
 

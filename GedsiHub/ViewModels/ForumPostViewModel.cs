@@ -25,5 +25,11 @@ namespace GedsiHub.ViewModels
         // Add user's first and last name properties
         public string? UserFirstName { get; set; }
         public string? UserLastName { get; set; }
+
+        // Add a property to store the number of comments
+        public int CommentCount { get; set; }
+
+        // Add a new property to store the relative time string
+        public string RelativeCreatedAt { get; set; } = string.Empty;
     }
 }

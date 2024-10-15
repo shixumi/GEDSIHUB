@@ -1,5 +1,6 @@
 ﻿using GedsiHub.Data;
 using GedsiHub.Models;
+using GedsiHub.Helpers;
 using GedsiHub.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace GedsiHub.Controllers
         {
             var posts = await _context.ForumPosts
                 .Include(post => post.User)
+                .Include(post => post.ForumComments)
                 .Select(post => new ForumPostViewModel
                 {
                     PostId = post.PostId,
@@ -33,7 +35,9 @@ namespace GedsiHub.Controllers
                     CreatedAt = post.CreatedAt.ToLocalTime(),  // Convert UTC to local time
                     PollOptions = post.PollOptions,
                     UserFirstName = post.User.FirstName,  // Fetch the user's first name
-                    UserLastName = post.User.LastName     // Fetch the user's last name
+                    UserLastName = post.User.LastName,     // Fetch the user's last name
+                    CommentCount = post.ForumComments.Count,
+                    RelativeCreatedAt = DateTimeHelper.GetRelativeTime(post.CreatedAt)
                 })
                 .ToListAsync();
 
