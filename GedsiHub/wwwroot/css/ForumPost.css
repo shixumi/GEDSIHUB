@@ -168,7 +168,9 @@
         font-size: 10px;
         margin-bottom: 10px;
         padding: .70em 1em;
-        font-weight: 500;
+        font-weight: 600;
+        background-color: #ffdc4c;
+        color: #464040;
     }
 
 
