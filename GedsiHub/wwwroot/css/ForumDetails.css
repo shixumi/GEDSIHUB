@@ -11,6 +11,17 @@
         border: none;
     }
 
+
+    .post-img {
+        max-width: 100%;
+        max-height: 30rem;
+        display: block;
+        margin: 0 auto;
+        border-radius: 15px;
+    }
+
+
+
     .comment-profile-pic img {
         width: 30px;
         height: 30px;
@@ -50,7 +61,7 @@
     }
 
     .comment-icon {
-        font-size: 20px !important;
+        font-size: 25px !important;
         color: #464040;
         margin: 0px;
     }
@@ -64,8 +75,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 2rem;
-        height: 1.5rem;
+        width: 2.5rem;
+        height: 2rem;
         padding: 2px;
         border-radius: 6px;
         border: none;
@@ -75,7 +86,6 @@
 
     .c-delete-btn:hover {
         background-color: #f3d1d1;
-    
         border-radius: 6px;
         border: none;
     }
@@ -118,6 +128,7 @@
 
     .comment-footer{
         background-color: rgba(0,0,0,0);
+
     }
 
     .comment-footer p {
@@ -129,7 +140,7 @@
     }
 
     .comment-footer h6 {
-        margin: 0px 25px;
+        margin: 10px 25px;
     }
     .comment-img {
         max-width: 300px; /* Maximum width of 600px, adjust to your layout */

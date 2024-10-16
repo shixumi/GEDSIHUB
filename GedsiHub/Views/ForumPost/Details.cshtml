@@ -49,8 +49,8 @@
 
                 @if (Model.ForumPost.ImagePath != null)
                 {
-                    <div>
-                        <img src="@Model.ForumPost.ImagePath" alt="Post Image" class="img-fluid" />
+                    <div class="post-img-container">
+                        <img src="@Model.ForumPost.ImagePath" alt="Post Image" class="post-img" />
                     </div>
                 }
             </div>
@@ -60,7 +60,9 @@
             <div class="d-flex align-items-center card-footer">
                 <a asp-action="Details" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>@Model.ForumPost.ForumComments.Count()</a>
                 <a asp-action="Edit" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-edit"></i> Edit</a>
-                <a asp-action="Delete" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-trash"></i> Delete</a>
+                <a class="card-link d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@Model.ForumPost.PostId">
+                    <i class="f-icon la la-trash"></i> Delete
+                </a>
 
             </div>
 
@@ -191,69 +193,32 @@
                 
         </div>
 
+        <!-- Modal Structure for Deleting Post -->
+        <div class="modal fade" id="confirmDeleteModal-@Model.ForumPost.PostId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@Model.ForumPost.PostId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel-@Model.ForumPost.PostId">Delete post?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the post titled "<strong>@Model.ForumPost.Title</strong>"?
+                    </div>
+                    <div class="modal-footer">
+                        <form asp-action="DeleteConfirmed" method="post">
+                            @Html.AntiForgeryToken() <!-- Anti-forgery token to secure the POST request -->
+                            <input type="hidden" name="id" value="@Model.ForumPost.PostId" />
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        
 
-        @if (Model.ForumPost.ForumComments.Any())
-        {
-            <ul class="list-group">
-                @foreach (var comment in Model.ForumPost.ForumComments)
-                {
-                    <li class="list-group-item">
-                        <strong>@comment.User.FirstName @comment.User.LastName:</strong>
-                        <p>@comment.Content</p>
-
-                        <!-- Display comment image if available -->
-                        @if (comment.ImagePath != null)
-                        {
-                            <img src="@comment.ImagePath" alt="Comment Image" class="img-thumbnail" />
-                        }
-
-                        <small class="text-muted">Posted on @comment.CreatedAt.ToString("g")</small>
-
-                        <!-- Delete comment button (only visible for comment owner or admins) -->
-                        @if (comment.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
-                        {
-                            <form asp-action="DeleteComment" asp-controller="ForumComment" asp-route-id="@comment.CommentId" method="post">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        }
-                    </li>
-                }
-            </ul>
-        }
-        else
-        {
-            <p>No comments yet. Be the first to comment!</p>
-        }
-
-        <!-- Form to add a new comment -->
-        <h3>Leave a Comment</h3>
-        <form asp-action="Create" asp-controller="ForumComment" method="post" enctype="multipart/form-data">
-            @Html.AntiForgeryToken()
-
-            <!-- Hidden field for PostId -->
-            <input type="hidden" name="PostId" value="@Model.CommentViewModel.PostId" />
-
-            <!-- Comment content -->
-            <div class="form-group">
-                <textarea name="Content" class="form-control" rows="3" placeholder="Write your comment here"></textarea>
-                <span asp-validation-for="CommentViewModel.Content" class="text-danger"></span>
-            </div>
-
-            <!-- Image upload (optional) -->
-            <div class="form-group">
-                <label for="ImageFile">Upload Image (optional)</label>
-                <input type="file" name="ImageFile" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
-                <span asp-validation-for="CommentViewModel.ImageFile" class="text-danger"></span>
-            </div>
-
-            <!-- Submit button to post the comment -->
-            <button type="submit" class="btn btn-primary">Submit Comment</button>
-        </form>
     </div>
+
 </div>
 
 

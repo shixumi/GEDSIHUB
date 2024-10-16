@@ -142,7 +142,12 @@
     .card-footer {
         background-color: rgba(0,0,0,0);
         border-top: none;
-        padding: 25px 25px;
+        padding: 20px 25px;
+    }
+
+    .card-footer.edit {
+        display: flex;
+        justify-content: end;
     }
 
     .ml-2 {
@@ -195,6 +200,7 @@
         border: 1px solid #9c9c9c;
         background: #fff;
         padding: 5px 10px;
+        cursor: pointer;
     }
     
     .f-icon {
@@ -205,6 +211,31 @@
 
     .card-footer .a {
         margin-right: 2px;
+    }
+
+    .card-footer-btn {
+        display: flex;
+        justify-content: space-between;
+        max-width: 100rem;
+    }
+
+    .btn-submit {
+        border-radius: 30px;
+        color: #ffffff;
+        background-color: #660000;
+        border: none;
+        padding: 6px 25px;
+        margin-left: .5rem;
+    }
+
+    .btn-submit:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }
+
+
+    .card-footer .btn-secondary:hover {
+        background-color: #464040;
     }
 
     /* Post Button */
@@ -268,7 +299,7 @@
 
     /* General card header tab adjustments */
     .card-header-tabs {
-        margin: 2px;
+        margin: 0px;
     }
 
     /* Removing default Bootstrap border from nav-tabs */
@@ -336,6 +367,9 @@
     /* Modal Body */
     .modal-body {
         padding: 15px 20px;
+        color: #464040;
+        font-weight: 400;
+        background: #fff;
     }
 
 
@@ -509,7 +543,13 @@
         background-color: #fff;
     }
 
-
+    .modal-body .alert {
+        margin: 0px;
+    }
+    
+    .alert-warning {
+        border-radius: 6px;    
+    }
 
 
 

@@ -100,11 +100,39 @@
                 <div class="d-flex align-items-center card-footer">
                     <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>@post.CommentCount</a>
                     <a asp-action="Edit" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-edit"></i> Edit</a>
-                    <a asp-action="Delete" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-trash"></i> Delete</a>
+                    <a class="card-link d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@post.PostId">
+                        <i class="f-icon la la-trash"></i> Delete
+                    </a>
 
                 </div>
             </div>
         }
+
+        <!-- Modal Structure -->
+        @foreach (var post in Model)
+        {
+            <div class="modal fade" id="confirmDeleteModal-@post.PostId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@post.PostId" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmDeleteModalLabel-@post.PostId">Delete post?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete the post titled "<strong>@post.Title</strong>"?
+                        </div>
+                        <div class="modal-footer">
+                            <form asp-action="DeleteConfirmed" method="post">
+                                @Html.AntiForgeryToken()  <!-- Anti-forgery token to secure the POST request -->
+                                <input type="hidden" name="id" value="@post.PostId" />
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
        
-    </div>
-    </div>

@@ -8,6 +8,14 @@
 <div class="background">
     <div class="container forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
 
+        <!-- Breadcrumbs -->
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb forum">
+                <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit - @Model.Title</li>
+            </ol>
+        </nav>
+
         <h2>Edit Post</h2>
 
         <!-- Display validation errors if any -->
@@ -18,45 +26,162 @@
             </div>
         }
 
-        <!-- Form to edit the post -->
-        <form asp-action="Edit" method="post" enctype="multipart/form-data">
-            @Html.AntiForgeryToken()
+        <!--- Card Posts -->
+        <div class="card gedf-card">
+            <!-- Form to edit the post -->
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
 
-            <!-- Hidden field for Post ID -->
-            <input type="hidden" asp-for="PostId" />
+                <!-- Hidden field for Post ID -->
+                <input type="hidden" asp-for="PostId" />
 
-            <!-- Title -->
-            <div class="mb-3">
-                <label asp-for="Title" class="form-label">Title</label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">
+                                Text
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="images-tab" data-bs-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false">
+                                Images & Video
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="card-body">
+                    <div class="tab-content" id="myTabContent">
+                        <!-- Posts Tab Content -->
+                        <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+
+                            <!-- Title -->
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">
+                                    Title
+                                    <span style="color: #dd3025; margin-left: 5px;">*</span>
+                                </label>
+                                <input asp-for="Title" class="form-control create-input" placeholder="Enter your title here..." />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <!-- Add Flair and Tags Button -->
+                            <div class="mb-3 d-flex justify-content-start">
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#flairModal">
+                                    Add Flair and Tags
+                                    <span style="color: #dd3025;">*</span>
+                                </button>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="mb-3">
+                                <label asp-for="Content" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">
+                                    Content
+                                    <span style="color: #dd3025; margin-left: 5px;">*</span>
+                                </label>
+                                <textarea asp-for="Content" class="form-control create-input-ta" rows="3" placeholder="Enter your content here..."></textarea>
+                                <span asp-validation-for="Content" class="text-danger"></span>
+                            </div>
+
+                            <!-- Poll Options -->
+                            <div class="form-group">
+                                <label asp-for="PollOptions" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Poll Options (Optional)</label>
+                                <input asp-for="PollOptions" class="form-control create-input" />
+                                <span asp-validation-for="PollOptions" class="text-danger"></span>
+                            </div>
+
+
+                        </div>
+
+                        <!-- Images Tab Content -->
+                        <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
+                            <div class="form-group">
+                                <label asp-for="ImageFile" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Upload Image (Optional)</label>
+                                <div class="custom-file">
+                                    <input asp-for="ImageFile" type="file" class="form-control img-input" id="imageUpload" accept=".jpg, .jpeg, .png, .gif" />
+                                    <label class="form-label mt-2" id="fileLabel">No file chosen</label> <!-- Label for file name -->
+                                </div>
+                                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            </div>
+                            <div class="py-4"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Card Footer Buttons -->
+                <div class="d-flex align-items-center card-footer edit">
+                    <div class="card-footer-btn">
+                        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-submit">Save</button>
+                    </div>
+                    
+                </div>
+            </form>
+
+        </div>
+
+
+        <!-- Modal for Adding Flairs and Tags -->
+        <div class="modal fade" id="flairModal" tabindex="-1" aria-labelledby="flairModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="flairModalLabel">Add Flair and Tags</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <!-- Input for Flair -->
+                        <div class="mb-3">
+                            <label for="flair" class="form-label">Select Flair</label>
+                            <div class="flair-options d-flex flex-wrap">
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input flair-radio" type="radio" name="flair" id="flair1" value="Discussion">
+                                    <label class="form-check-label flair-label flair-discussion" for="flair1">Discussion</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input flair-radio" type="radio" name="flair" id="flair2" value="Need Advice">
+                                    <label class="form-check-label flair-label flair-advice" for="flair2">Need Advice</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input flair-radio" type="radio" name="flair" id="flair3" value="Unsolicited Advice">
+                                    <label class="form-check-label flair-label flair-unsolicited" for="flair3">Unsolicited Advice</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input flair-radio" type="radio" name="flair" id="flair4" value="Meme">
+                                    <label class="form-check-label flair-label flair-meme" for="flair4">Meme</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Input for Tags with Toggles -->
+                        <div class="mb-3">
+                            <label for="tags" class="form-label">Tags</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="nsfwTag">
+                                <label class="form-check-label" for="nsfwTag">Not Safe For Work (NSFW)</label>
+                                <small class="text-muted d-block">Contains mature or adult content</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="spoilerTag">
+                                <label class="form-check-label" for="spoilerTag">Spoiler</label>
+                                <small class="text-muted d-block">May ruin a surprise</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="affiliateTag">
+                                <label class="form-check-label" for="affiliateTag">Brand affiliate</label>
+                                <small class="text-muted d-block">Made for a brand or business</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Add</button>
+                    </div>
+                </div>
             </div>
-
-            <!-- Content -->
-            <div class="mb-3">
-                <label asp-for="Content" class="form-label">Content</label>
-                <textarea asp-for="Content" class="form-control" rows="5"></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-
-            <!-- Poll Options -->
-            <div class="mb-3">
-                <label asp-for="PollOptions" class="form-label">Poll Options (Optional)</label>
-                <input asp-for="PollOptions" class="form-control" />
-                <span asp-validation-for="PollOptions" class="text-danger"></span>
-            </div>
-
-            <!-- Image Upload -->
-            <div class="mb-3">
-                <label asp-for="ImageFile" class="form-label">Upload Image</label>
-                <input asp-for="ImageFile" type="file" class="form-control" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-
-            <!-- Submit and Cancel buttons -->
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </form>
+        </div>
+        
 
     </div>
 </div>

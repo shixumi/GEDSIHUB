@@ -52,3 +52,23 @@ const removeImage = () => {
 }
 
 
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const img = document.querySelector('.post-img');
+    const container = document.querySelector('.post-img-container');
+
+    img.onload = function () {
+        const imgWidth = img.naturalWidth;
+        const imgHeight = img.naturalHeight;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        // Check if the image fits inside the container
+        if (imgWidth <= containerWidth && imgHeight <= containerHeight) {
+            container.classList.add('rounded-corners');
+        } else {
+            container.classList.remove('rounded-corners');
+        }
+    };
+});
