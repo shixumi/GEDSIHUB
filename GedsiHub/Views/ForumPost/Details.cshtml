@@ -65,7 +65,7 @@
             </div>
 
    
-            <!-- Comments -->
+            <!-- Comments List -->
             <div class="d-flex flex-column comment-footer">
                 <h5>@Model.ForumPost.ForumComments.Count() Comments</h5>
 
@@ -103,7 +103,7 @@
 
                                 @if (comment.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
                                 {
-                                    <div class="mb-3 d-flex justify-content-end">
+                                    <div class="d-flex justify-content-end">
                                         <!-- Delete Button -->
                                         <button type="button" class="btn c-delete-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@comment.CommentId">
                                             <i class="comment-icon la la-trash"></i>
@@ -146,27 +146,50 @@
                     <p class="comment-content">No comments yet. Be the first to comment!</p>
                 }
 
-                <!-- Comment Form -->
-                <div class="card-footer">
-                    <h5>Leave a Comment</h5>
-                    <form asp-action="Create" asp-controller="ForumComment" method="post" enctype="multipart/form-data">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="PostId" value="@Model.CommentViewModel.PostId" />
-                        <div class="form-group">
-                            <textarea name="Content" class="form-control create-input-ta" rows="3" placeholder="Write your comment here"></textarea>
-                            <span asp-validation-for="CommentViewModel.Content" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="ImageFile">Upload Image (optional)</label>
-                            <input type="file" name="ImageFile" class="form-control" accept=".jpg, .jpeg, .png, .gif" />
-                            <span asp-validation-for="CommentViewModel.ImageFile" class="text-danger"></span>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit Comment</button
-                        <button type="submit" class="ms-auto comment-btn">Comment</button>
-                    </form>
-                </div>
+                
             </div>
+            <!-- Comment Form -->
+            <div class="comment-footer">
+                <h6>Leave a Comment</h6>
+                <form asp-action="Create" asp-controller="ForumComment" method="post" enctype="multipart/form-data" class="comment-form">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="PostId" value="@Model.CommentViewModel.PostId" />
+
+                    <!-- Textarea for comment content -->
+                    <div class="form-group">
+                        <textarea name="Content" class="form-control comment-input-ta" rows="3" placeholder="Write your comment here"></textarea>
+                        <span asp-validation-for="CommentViewModel.Content" class="text-danger"></span>
+                    </div>
+
+                    <!-- Camera icon and image preview -->
+                    <div class="form-group">
+                        <!-- Camera icon to trigger file upload -->
+                        <label for="ImageFile" class="image-icon-label">
+                            <svg class="bi bi-image" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"></path>
+                                <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12"></path>
+                            </svg>
+                        </label>
+                        <input type="file" name="ImageFile" class="form-control visually-hidden" id="ImageFile" accept=".jpg, .jpeg, .png, .gif" onchange="loadFile(event)"/>
+                        <span asp-validation-for="CommentViewModel.ImageFile" class="text-danger"></span>
+                        
+                       
+                        <!-- Image preview -->
+                        <div id="imagePreview" class="imagePreview">
+                            <img src="https://picsum.photos/50/50" alt="Comment Image Preview">
+                            <span onclick="removeImage()">&times;</span>
+                            <!-- Preview image will be inserted dynamically here -->
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="submit" class="ms-auto comment-btn">Comment</button>
+                </form>
+
             </div>
+                
+                
+        </div>
 
         </div>
 
