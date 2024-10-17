@@ -6,26 +6,23 @@
 }
 
 
-<div class="background">
-    <div class="container">
-        <h2>Delete Post</h2>
+<h2>Delete Post</h2>
 
-        <div class="alert alert-warning">
-            Are you sure you want to delete the post titled "<strong>@Model.Title</strong>"?
-        </div>
-
-        <!-- Form to submit the deletion -->
-        <form asp-action="DeleteConfirmed" method="post">
-            @Html.AntiForgeryToken()  <!-- Anti-forgery token to secure the POST request -->
-            <!-- Hidden input to pass the PostId -->
-            <input type="hidden" name="id" value="@Model.PostId" />
-
-            <!-- Submit button to delete the post -->
-            <button type="submit" class="btn btn-danger">Delete</button>
-
-            <!-- Cancel button to go back to the Index page without deleting -->
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </form>
-
-    </div>
+<div class="alert alert-warning">
+    Are you sure you want to delete the post titled "<strong>@Model.Title</strong>"?
 </div>
+
+<!-- Form to submit the deletion -->
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()  <!-- Anti-forgery token to secure the POST request -->
+    <!-- Hidden input to pass the PostId -->
+    <input type="hidden" name="id" value="@Model.PostId" />
+
+    <!-- Submit button to delete the post -->
+    <button type="submit" class="btn btn-danger">Delete</button>
+
+    <!-- Cancel button to go back to the Index page without deleting -->
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+

@@ -6,133 +6,131 @@
 }
 
 
-<div class="background">
-    <div class="container forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
- 
+<div class="container forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
 
-        @* <h2>Community Forum</h2> *@
+    @* <h2>Community Forum</h2> *@
 
-        <!-- Top Container -->
-        <div class="d-flex justify-content-between align-items-center top-container">
-            
-            <!-- Category Selector -->
-            <select class="focus-ring focus-ring-light form-select custom-select">
-                <option selected>All</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-            </select>
-
-            <!-- Search box with icon -->
-            <div class="input-group custom-search">
-                <span class="input-group-text">
-                    <i class="fa fa-search"></i>
-                </span>
-                <input type="search" class="form-control custom-search-input" placeholder="Search for discussions...">
-            </div>
-        </div>
-
-        <!-- Horizontal Line -->
-        <hr class="custom-hr">
-
-
-        <!-- Notification prompt -->
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success">
-                @TempData["SuccessMessage"]
-            </div>
-        }
-
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["ErrorMessage"]
-            </div>
-        }
-
-        <!-- Create New Post Button-->
-        <div class="mb-3">
-            <a asp-action="Create" class="d-flex create-btn">
-                <img class="addIcon" src="~/images/Add_White.png" />
-                Create New Post
-            </a>
-        </div>
-
-        <!-- Loop to display each post available in the database -->
-        @foreach (var post in Model)
-        {
-            <!--- Card Posts -->
-            <div class="card gedf-card">
-
-                <!-- Card Header -->
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="mr-2">
-                                <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
-                            </div>
-                            <div class="ml-2">
-                                <div class="h5 m-0">@post.UserFirstName @post.UserLastName</div>
-                                <div class="h7">@post.RelativeCreatedAt</div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
+    <!-- Top Container -->
+    <div class="d-flex justify-content-between align-items-center top-container">
         
-                <div class="card-body">
-                    <span class="badge rounded-pill">Announcement</span>
-                    <!-- Card Title -->
-                    <a asp-action="Details" asp-route-id="@post.PostId">
-                        <h4 class="card-title">@post.Title</h4>
-                    </a>
+        <!-- Category Selector -->
+        <select class="focus-ring focus-ring-light form-select custom-select">
+            <option selected>All</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
 
-                    <!-- Card Text -->
-                    <p class="card-text">
-                        @(post.Content.Length > 200 ? post.Content.Substring(0, 100) + "..." : post.Content)
-                    </p>
+        <!-- Search box with icon -->
+        <div class="input-group custom-search">
+            <span class="input-group-text">
+                <i class="fa fa-search"></i>
+            </span>
+            <input type="search" class="form-control custom-search-input" placeholder="Search for discussions...">
+        </div>
+    </div>
+
+    <!-- Horizontal Line -->
+    <hr class="custom-hr">
+
+
+    <!-- Notification prompt -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Create New Post Button-->
+    <div class="mb-3">
+        <a asp-action="Create" class="d-flex create-btn">
+            <img class="addIcon" src="~/images/Add_White.png" />
+            Create New Post
+        </a>
+    </div>
+
+    <!-- Loop to display each post available in the database -->
+    @foreach (var post in Model)
+    {
+        <!--- Card Posts -->
+        <div class="card gedf-card">
+
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="mr-2">
+                            <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                        </div>
+                        <div class="ml-2">
+                            <div class="h5 m-0">@post.UserFirstName @post.UserLastName</div>
+                            <div class="h7">@post.RelativeCreatedAt</div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!-- Card Footer Buttons -->
-                <div class="d-flex align-items-center card-footer">
-                    <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>@post.CommentCount</a>
-                    <a asp-action="Edit" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-edit"></i> Edit</a>
-                    <a class="card-link d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@post.PostId">
-                        <i class="f-icon la la-trash"></i> Delete
-                    </a>
-
-                </div>
             </div>
-        }
 
-        <!-- Modal Structure -->
-        @foreach (var post in Model)
-        {
-            <div class="modal fade" id="confirmDeleteModal-@post.PostId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@post.PostId" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmDeleteModalLabel-@post.PostId">Delete post?</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Are you sure you want to delete the post titled "<strong>@post.Title</strong>"?
-                        </div>
-                        <div class="modal-footer">
-                            <form asp-action="DeleteConfirmed" method="post">
-                                @Html.AntiForgeryToken()  <!-- Anti-forgery token to secure the POST request -->
-                                <input type="hidden" name="id" value="@post.PostId" />
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
-                            </form>
-                        </div>
+    
+            <div class="card-body">
+                <span class="badge rounded-pill">Announcement</span>
+                <!-- Card Title -->
+                <a asp-action="Details" asp-route-id="@post.PostId">
+                    <h4 class="card-title">@post.Title</h4>
+                </a>
+
+                <!-- Card Text -->
+                <p class="card-text">
+                    @(post.Content.Length > 200 ? post.Content.Substring(0, 100) + "..." : post.Content)
+                </p>
+            </div>
+
+            <!-- Card Footer Buttons -->
+            <div class="d-flex align-items-center card-footer">
+                <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>@post.CommentCount</a>
+                <a asp-action="Edit" asp-route-id="@post.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-edit"></i> Edit</a>
+                <a class="card-link d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@post.PostId">
+                    <i class="f-icon la la-trash"></i> Delete
+                </a>
+
+            </div>
+        </div>
+    }
+
+    <!-- Modal Structure -->
+    @foreach (var post in Model)
+    {
+        <div class="modal fade" id="confirmDeleteModal-@post.PostId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@post.PostId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel-@post.PostId">Delete post?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the post titled "<strong>@post.Title</strong>"?
+                    </div>
+                    <div class="modal-footer">
+                        <form asp-action="DeleteConfirmed" method="post">
+                            @Html.AntiForgeryToken()  <!-- Anti-forgery token to secure the POST request -->
+                            <input type="hidden" name="id" value="@post.PostId" />
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
+
        

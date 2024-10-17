@@ -139,11 +139,10 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                         <meta charset=""UTF-8"">
                         <title>Welcome to GEDSI Hub</title>
                         <!-- Include Google Fonts Poppins -->
-                        <link href=""https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"" rel=""stylesheet"">
                         <style>
                             /* Use a modern sans-serif font */
                             body {{
-                                font-family: 'Poppins', sans-serif;
+                                font-family: 'Helvetica', sans-serif;
                                 line-height: 1.6;
                                 color: #333;
                                 background-color: #f4f4f4;
