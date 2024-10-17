@@ -36,7 +36,7 @@ function saveModuleData(event) {
 
             // Redirect back to modules.html after editing
             localStorage.setItem('modules', JSON.stringify(modules));
-            window.location.href = 'modules.html';
+            window.location.href = '/Module/Index';
             return;
         } else {
             console.error('Invalid module index for editing.');
@@ -64,7 +64,7 @@ function saveModuleData(event) {
     console.log('Saved Module:', moduleTitle, 'Number:', moduleNumber); // Log the data for verification
 
     // Redirect to editNewCreatedModule.html after adding a new module
-    window.location.href = 'editNewCreatedModule.html';
+    window.location.href = '/Module/LessonsOverview';
 }
 
 
@@ -107,7 +107,7 @@ function hexToRGBA(hex, opacity) {
     return `rgba(${+r}, ${+g}, ${+b}, ${opacity})`;
 }
 
-// Display all modules on modules.html
+// Function to display all modules on modules.html
 function addAllModules() {
     const modules = JSON.parse(localStorage.getItem('modules')) || [];
     if (modules.length === 0) return;
@@ -160,7 +160,7 @@ function addAllModules() {
         // Handle edit button click
         document.getElementById(`EditModule-${index}`).addEventListener('click', function () {
             localStorage.setItem('editModuleIndex', index);  // Store index of module to edit
-            window.location.href = 'addNewModule.html';      // Redirect to add/edit page
+            window.location.href = '/Module/Create';      // Redirect to add/edit page
         });
 
         // Add event listener to the ModuleTitle span for navigation
@@ -169,10 +169,16 @@ function addAllModules() {
             localStorage.setItem('newModuleTitle', moduleData.title);
             localStorage.setItem('module_number', moduleData.number);
             // Redirect to editNewCreatedModule.html
-            window.location.href = 'editNewCreatedModule.html';
+            window.location.href = '/Module/LessonsOverview';
         });
     });
 }
+
+// Add this event listener after the addAllModules function
+document.querySelector('.add-new-module').addEventListener('click', function () {
+    window.location.href = '/Modules/Index';  // Redirect to /Modules/Index
+});
+
 
 // Apply color shadow dynamically when the page is loaded or color is changed
 function applyColorShadowAndPicker(index, color) {
@@ -209,14 +215,14 @@ function initializeAddModuleButtons() {
     if (addModuleTopButton) {
         addModuleTopButton.addEventListener('click', function () {
             localStorage.removeItem('editModuleIndex'); // Clear edit mode
-            window.location.href = 'addNewModule.html';  // Go to add module mode
+            window.location.href = '/Module/Create';  // Go to add module mode
         });
     }
 
     addNewModuleButtons.forEach(button => {
         button.addEventListener('click', function () {
             localStorage.removeItem('editModuleIndex'); // Clear edit mode
-            window.location.href = 'addNewModule.html';  // Go to add module mode
+            window.location.href = '/Module/Create';  // Go to add module mode
         });
     });
 }
@@ -271,14 +277,14 @@ window.onload = function () {
     // Check the current page and perform actions accordingly
     const pathname = window.location.pathname;
 
-    if (pathname.includes('modules.html')) {
+    if (pathname.includes('/Module/Index')) {
         // Handle module display on the modules page
         addAllModules();
         initializeAddModuleButtons();
-    } else if (pathname.includes('addNewModule.html')) {
+    } else if (pathname.includes('/Module/Create')) {
         // Handle the add/edit module page
         initializeEditModule();
-    } else if (pathname.includes('editNewCreatedModule.html')) {
+    } else if (pathname.includes('/Module/LessonsOverview')) {
         // Handle editNewCreatedModule page
         const newModuleTitle = localStorage.getItem('newModuleTitle');
         const moduleNumber = localStorage.getItem('module_number');

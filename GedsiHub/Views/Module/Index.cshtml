@@ -11,7 +11,7 @@
 
 <div>
     <div id="ModulesHeader">
-        <h1 class="modules_title" style="color: #464040;margin-left: 0px;">Modules</h1>
+        <h1 class="modules_title" style="color: #464040;">Modules</h1>
         <input type="search" id="SearchModule" class="SearchModule" placeholder="Search for modules">
         <img id="SearchModuleButton" class="SearchModule_Icon" src="~/images/Search_Small.png" style="position: absolute;">
         <button asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton" type="button">
@@ -23,13 +23,15 @@
 
 
     <div class="align-items-end flex-wrap ModuleCards_Container" id="moduleCardsContainer">
-        <button class="btn add-new-module" type="button" onclick="window.location.href='addNewModule.html'">
+        <button class="btn add-new-module" type="button" onclick="window.location.href='/Module/Create'">
             <img class="d-xxl-flex add_icon" src="~/images/Add.png" />Add New Module
         </button>
     </div>
 
     <div class="align-items-end flex-wrap ModuleCards_Container" id="SearchResults"></div>
 </div>
+
+
 
 <h2>Modules</h2>
 

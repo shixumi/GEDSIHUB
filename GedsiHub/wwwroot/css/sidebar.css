@@ -197,6 +197,19 @@ a.article, a.article:hover {
   color: #fff !important;
 }
 
+.col .logout-lbl {
+    padding-left: 10px;
+}
+
+.logout-btn {
+    text-align: right;
+    font-size: 18px !important;
+    color: #464040;
+    background: none;
+    border: none;
+    padding: 0;
+    text-decoration: none;
+}
 /* Media Queries */
 
 @media (max-width: 768px) {
@@ -281,6 +294,5 @@ a.article, a.article:hover {
   }
 }
 
-.dashboard_container {
-}
+
 

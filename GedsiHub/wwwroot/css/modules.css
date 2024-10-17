@@ -1,58 +1,58 @@
 .modules_container {
     height: 100vh;
     position: absolute;
-    margin-left: 307px;
-    width: calc(100% - 307px);
+    margin-left: 23.9875rem; /* 19.19rem * 1.25 */
+    width: calc(100% - 23.9875rem); /* 19.19rem * 1.25 */
     background: #EFF0F4;
-    border-top-left-radius: 40px;
+    border-top-left-radius: 3.125rem; /* 2.5rem * 1.25 */
     border-color: #464040;
-    padding-left: 70px;
-    padding-right: 70px;
-    padding-bottom: 200px;
+    padding-left: 5.46875rem; /* 4.375rem * 1.25 */
+    padding-right: 5.46875rem; /* 4.375rem * 1.25 */
+    padding-bottom: 15.625rem; /* 12.5rem * 1.25 */
     overflow-y: auto;
     overflow-x: hidden;
     scroll-behavior: smooth;
     flex: 1 0 auto;
-    top: 70px;
+    top: 5.46875rem; /* 4.375rem * 1.25 */
 }
 
 .modules_title {
-    margin-top: 30px;
-    margin-left: 0px;
-    font-size: 2rem;
+    margin-top: 2.34375rem; /* 1.875rem * 1.25 */
+    margin-left: 0;
+    font-size: 1.953125rem; /* 1.5625rem * 1.25 */
 }
 
 .break_title {
-    height: 1px;
-    max-width: 1080px;
+    height: 0.078125rem; /* 0.0625rem * 1.25 */
+    width: 100%;
     background: #B7BAC7;
-    margin-left: 0px;
+    margin-left: 0;
     position: static;
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .moduleCards_container {
-    margin-top: 52px;
-    width: 1140px;
-    margin-left: 45px;
+    margin-top: 4.0625rem; /* 3.25rem * 1.25 */
+    width: 89.0625rem; /* 71.25rem * 1.25 */
+    margin-left: 3.515625rem; /* 2.8125rem * 1.25 */
     position: relative;
     border-style: none;
 }
 
 #moduleCardsContainer {
     display: flex;
-    gap: 45px;
-    margin-top: 60px;
-    width: 1100px;
+    gap: 3.515625rem; /* 2.8125rem * 1.25 */
+    margin-top: 4.6875rem; /* 3.75rem * 1.25 */
+    width: 85.9375rem; /* 68.75rem * 1.25 */
 }
 
 .module_card {
-    height: 230px;
+    height: 17.96875rem; /* 14.375rem * 1.25 */
     background: #ffffff;
-    border-radius: 40px;
-    width: 235px;
+    border-radius: 3.125rem; /* 2.5rem * 1.25 */
+    width: 18.359375rem; /* 14.6875rem * 1.25 */
     border-color: rgba(0,0,0,0.1);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.15625rem 0.78125rem rgba(0, 0, 0, 0.1); /* 0.125rem * 1.25 and 0.625rem * 1.25 */
     cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s ease;
     display: flex;
@@ -65,30 +65,30 @@
     }
 
 .secondRow_modules {
-    margin-top: 48px;
+    margin-top: 3.75rem; /* 3rem * 1.25 */
 }
 
 .column_moduleCards {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .moduleIcon_container {
-    width: 55px;
-    height: 55px;
+    width: 4.296875rem; /* 3.4375rem * 1.25 */
+    height: 4.296875rem; /* 3.4375rem * 1.25 */
     background: #d9d9d9;
-    border-radius: 50px;
-    margin-top: -27px;
-    margin-left: 28px;
+    border-radius: 50%;
+    margin-top: -2.109375rem; /* -1.6875rem * 1.25 */
+    margin-left: 2.1875rem; /* 1.75rem * 1.25 */
     justify-content: center;
     align-items: center;
     position: relative;
 }
 
 .add_icon {
-    width: 80px;
-    margin-left: 64px;
-    padding-bottom: 5px;
+    width: 6.25rem; /* 5rem * 1.25 */
+    margin-left: 5rem; /* 4rem * 1.25 */
+    padding-bottom: 0.390625rem; /* 0.3125rem * 1.25 */
 }
 
 .add-new-module {
@@ -96,13 +96,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 235px;
-    height: 230px;
-    border-radius: 40px;
-    border: 2px solid #464040;
+    width: 18.359375rem; /* 14.6875rem * 1.25 */
+    height: 17.96875rem; /* 14.375rem * 1.25 */
+    border-radius: 3.125rem; /* 2.5rem * 1.25 */
+    border: 0.15625rem solid #464040; /* 0.125rem * 1.25 */
     background: rgba(10,88,202,0);
     color: #464040;
-    font-size: 18px;
+    font-size: 1.40625rem; /* 1.125rem * 1.25 */
     font-weight: 500;
     transition: transform 0.3s ease, border 0.1s ease, box-shadow 0.3s ease;
 }
@@ -110,20 +110,20 @@
     .add-new-module:hover {
         transform: scale(1.03);
         color: #464040;
-        border: 3px solid #464040;
-        box-shadow: inset 0 0 18px rgba(124,124,124,0.2);
+        border: 0.234375rem solid #464040; /* 0.1875rem * 1.25 */
+        box-shadow: inset 0 0 1.40625rem rgba(124,124,124,0.2); /* 1.125rem * 1.25 */
     }
 
     .add-new-module:active {
         transform: scale(0.99);
         transition: transform 0.3s ease;
-        box-shadow: inset 0 0 18px rgba(124,124,124,0.2);
+        box-shadow: inset 0 0 1.40625rem rgba(124,124,124,0.2); /* 1.125rem * 1.25 */
     }
 
     .add-new-module img {
         transition: transform 0.3s ease;
-        margin-bottom: 10px;
-        margin-right: 62px;
+        margin-bottom: 0.78125rem; /* 0.625rem * 1.25 */
+        margin-right: 4.84375rem; /* 3.875rem * 1.25 */
     }
 
     .add-new-module:hover img {
@@ -133,9 +133,9 @@
 .ModuleTitle {
     font-weight: lighter;
     position: static;
-    margin-top: 12px;
-    margin-left: 0px;
-    font-size: 16px;
+    margin-top: 0.9375rem; /* 0.75rem * 1.25 */
+    margin-left: 0;
+    font-size: 1.25rem; /* 1rem * 1.25 */
     font-weight: 600 !important;
     width: 100%;
     display: -webkit-box;
@@ -150,41 +150,41 @@
 
 .LessonIcon {
     position: static;
-    margin-top: 2px;
-    margin-left: 0px;
-    width: 13px;
-    height: 12px;
+    margin-top: 0.15625rem; /* 0.125rem * 1.25 */
+    margin-left: 0;
+    width: 1.015625rem; /* 0.8125rem * 1.25 */
+    height: 0.9375rem; /* 0.75rem * 1.25 */
 }
 
 .LessonsText, .NumberOfLessons {
     position: absolute;
-    margin-top: 76px;
-    margin-left: -25px;
-    font-size: 12px;
+    margin-top: 5.9375rem; /* 4.75rem * 1.25 */
+    margin-left: -1.953125rem; /* -1.5625rem * 1.25 */
+    font-size: 0.9375rem; /* 0.75rem * 1.25 */
     color: #737373;
 }
 
 #NumberOfLessons {
-    margin-left: 0px;
+    margin-left: 0;
     position: static;
-    margin-top: 0px;
-    padding-right: 5px;
-    padding-left: 5px;
+    margin-top: 0;
+    padding-right: 0.390625rem; /* 0.3125rem * 1.25 */
+    padding-left: 0.390625rem; /* 0.3125rem * 1.25 */
 }
 
 #NumberOfLessonsContainer {
-    width: 80px;
-    margin-top: -3px;
-    margin-left: 0px;
+    width: 6.25rem; /* 5rem * 1.25 */
+    margin-top: -0.234375rem; /* -0.1875rem * 1.25 */
+    margin-left: 0;
 }
 
 #DeleteModule, #EditModule {
-    margin-bottom: 30px;
+    margin-bottom: 2.34375rem; /* 1.875rem * 1.25 */
 }
 
 .Delete {
-    width: 22px;
-    height: 22px;
+    width: 1.71875rem; /* 1.375rem * 1.25 */
+    height: 1.71875rem; /* 1.375rem * 1.25 */
     transition: all 0.3s ease;
 }
 
@@ -196,14 +196,14 @@
 
 #DeleteModule:active {
     transform: scale(0.95);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.15625rem 0.78125rem rgba(0, 0, 0, 0.1); /* 0.125rem * 1.25 and 0.625rem * 1.25 */
 }
 
 .Edit {
-    width: 20px;
-    margin-top: 2px;
-    margin-right: 7px;
-    height: 20px;
+    width: 1.5625rem; /* 1.25rem * 1.25 */
+    margin-top: 0.15625rem; /* 0.125rem * 1.25 */
+    margin-right: 0.546875rem; /* 0.4375rem * 1.25 */
+    height: 1.5625rem; /* 1.25rem * 1.25 */
     transition: all 0.3s ease;
 }
 
@@ -214,21 +214,21 @@
 
 #EditModule:active {
     transform: scale(0.95);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.15625rem 0.78125rem rgba(0, 0, 0, 0.1); /* 0.125rem * 1.25 and 0.625rem * 1.25 */
 }
 
 .ModuleCard_LineBreak {
-    height: 1px;
+    height: 0.078125rem; /* 0.0625rem * 1.25 */
     background: #d9d9d9;
-    border-radius: 10px;
-    margin-top: 40px;
+    border-radius: 0.78125rem; /* 0.625rem * 1.25 */
+    margin-top: 3.125rem; /* 2.5rem * 1.25 */
 }
 
 .ColorInput {
     appearance: none;
     -webkit-appearance: none;
-    width: 55px;
-    height: 55px;
+    width: 4.296875rem; /* 3.4375rem * 1.25 */
+    height: 4.296875rem; /* 3.4375rem * 1.25 */
     border-radius: 50%;
     border: none;
     cursor: pointer;
@@ -237,35 +237,19 @@
     outline: none;
 }
 
-    .ColorInput::-webkit-color-swatch {
-        border-radius: 50%;
-        border: none;
-    }
-
-    .ColorInput::-webkit-color-swatch-wrapper {
-        padding: 0;
-        border-radius: 50%;
-    }
-
     .ColorInput:hover {
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 0.390625rem rgba(0, 0, 0, 0.2); /* 0.3125rem * 1.25 */
     }
-
-/* Smooth transition when a module is dragged */
 
 .sortable-chosen {
     transition: opacity 0.3s ease, transform 0.3s ease;
     opacity: 0.6;
 }
 
-/* Smooth transition during reordering */
-
 .sortable-ghost {
     opacity: 0.4;
-    transform: scale(1.02);
+    transform: scale(1.25);
 }
-
-/* Placeholder during drag-and-drop */
 
 .ghost {
     opacity: 0.6;
@@ -276,38 +260,38 @@
     align-items: center;
     display: grid;
     grid-template-columns: 1fr auto auto;
-    gap: 10px;
+    gap: 0.78125rem; /* 0.625rem * 1.25 */
     width: 100%;
-    padding-right: 20px;
+    padding-right: 1.5625rem; /* 1.25rem * 1.25 */
 }
 
 #addModuleTopButton {
     background: #660000;
     color: #fff;
-    border-radius: 50px;
-    width: 167px;
+    border-radius: 3.90625rem; /* 3.125rem * 1.25 */
+    width: 13.046875rem; /* 10.4375rem * 1.25 */
     font-weight: 500;
-    height: 35px;
-    font-size: 13px;
-    margin-top: 15px;
+    height: 2.734375rem; /* 2.1875rem * 1.25 */
+    font-size: 1.015625rem; /* 0.8125rem * 1.25 */
+    margin-top: 1.171875rem; /* 0.9375rem * 1.25 */
     transition: all 0.2s ease;
     border-style: none;
     align-items: center;
     justify-content: space-between;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 1.171875rem; /* 0.9375rem * 1.25 */
+    padding-right: 1.171875rem; /* 0.9375rem * 1.25 */
     justify-self: end;
-    min-width: 167px;
-    margin-right: -20px;
+    min-width: 13.046875rem; /* 10.4375rem * 1.25 */
+    margin-right: -1.5625rem; /* 1.25rem * 1.25 */
 }
 
 #addModuleTopAddIcon {
-    width: 20px;
+    width: 1.5625rem; /* 1.25rem * 1.25 */
 }
 
 #addModuleTopButton:active {
     transform: scale(0.95);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.15625rem 0.78125rem rgba(0, 0, 0, 0.1); /* 0.125rem * 1.25 and 0.625rem * 1.25 */
     color: #ffffff;
     background-color: #920000;
     border-style: none;
@@ -319,34 +303,30 @@
 
 #SearchModule {
     border-style: none;
-    border-radius: 50px;
-    width: 340px;
-    height: 35px;
-    margin-top: 15px;
+    border-radius: 3.90625rem; /* 3.125rem * 1.25 */
+    width: 26.5625rem; /* 21.25rem * 1.25 */
+    height: 2.734375rem; /* 2.1875rem * 1.25 */
+    margin-top: 1.171875rem; /* 0.9375rem * 1.25 */
     justify-self: end;
-    margin-right: 10px;
+    margin-right: 0.78125rem; /* 0.625rem * 1.25 */
     color: #464040;
-    padding-left: 20px;
-    padding-right: 40px;
-    font-size: 13px;
-    min-width: 340px;
+    padding-left: 1.5625rem; /* 1.25rem * 1.25 */
+    padding-right: 3.125rem; /* 2.5rem * 1.25 */
+    font-size: 1.015625rem; /* 0.8125rem * 1.25 */
+    min-width: 26.5625rem; /* 21.25rem * 1.25 */
 }
 
     #SearchModule::placeholder {
-        font-size: 13px;
+        font-size: 1.015625rem; /* 0.8125rem * 1.25 */
         color: #9c9c9c;
         font-weight: 200;
     }
 
-    #SearchModule:focus {
-        outline: none;
-    }
-
 .SearchModule_Icon {
     justify-self: end;
-    width: 14px;
-    margin-right: 185px;
-    margin-top: 16px;
+    width: 1.09375rem; /* 0.875rem * 1.25 */
+    margin-right: 14.453125rem; /* 11.5625rem * 1.25 */
+    margin-top: 1.25rem; /* 1rem * 1.25 */
     transition: transform 0.3s ease;
 }
 
@@ -354,21 +334,16 @@
         transform: scale(1.03);
     }
 
-    .SearchModule_Icon:active {
-        transform: scale(1.002);
-        opacity: 0.8;
-    }
-
 .publishButton, .unpublishButton {
     position: absolute;
-    margin-top: 179px;
+    margin-top: 13.984375rem; /* 11.1875rem * 1.25 */
     border-style: none;
     background: rgba(255,255,255,0);
     color: #464040;
-    width: 122.7875px;
-    font-size: 14px;
+    width: 9.5927734375rem; /* 7.67421875rem * 1.25 */
+    font-size: 1.09375rem; /* 0.875rem * 1.25 */
     display: none;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
     .publishButton:first-of-type {
@@ -376,71 +351,55 @@
     }
 
 .PublishIcon {
-    width: 28px;
-    padding-right: 8px;
-}
-
-.publishButton:hover, .unpublishButton:hover {
-    color: #000;
-    opacity: 0.8;
-}
-
-.unpublishButton .PublishIcon {
-    filter: grayscale(100%) brightness(0.8);
+    width: 2.1875rem; /* 1.75rem * 1.25 */
+    padding-right: 0.625rem; /* 0.5rem * 1.25 */
 }
 
 .LikeViewContainer {
     position: absolute;
-    margin-top: 137px;
+    margin-top: 10.703125rem; /* 8.5625rem * 1.25 */
     justify-content: space-between;
     display: flex;
     align-items: center;
 }
 
 #ViewCount, #LikeCount {
-    margin-left: 5px;
-    font-size: 12px;
+    margin-left: 0.390625rem; /* 0.3125rem * 1.25 */
+    font-size: 0.9375rem; /* 0.75rem * 1.25 */
     color: #9c9c9c;
-}
-
-#ViewCount {
-    white-space: nowrap;
-    color: #9c9c9c;
-    font-size: 13px;
-    text-align: left;
 }
 
 .LikeIcon, .ViewIcon {
-    width: 17px;
+    width: 1.328125rem; /* 1.0625rem * 1.25 */
 }
 
 .ViewOnlyContainer {
     position: absolute;
     left: 0;
-    max-width: 30px;
+    max-width: 2.34375rem; /* 1.875rem * 1.25 */
     display: flex;
     justify-content: flex-end;
     align-items: center;
     align-content: center;
-    margin-left: 152px;
-    height: 24px;
+    margin-left: 11.875rem; /* 9.5rem * 1.25 */
+    height: 1.875rem; /* 1.5rem * 1.25 */
 }
 
 .LikeOnlyContainer {
     position: absolute;
-    max-width: 30px;
+    max-width: 2.34375rem; /* 1.875rem * 1.25 */
     display: flex;
     justify-content: flex-start;
     align-items: center;
     align-content: center;
-    height: 24px;
+    height: 1.875rem; /* 1.5rem * 1.25 */
 }
 
 .ModuleTempIcon {
     position: absolute;
-    width: 42px;
-    margin-left: 7px;
-    margin-top: 4px;
+    width: 3.28125rem; /* 2.625rem * 1.25 */
+    margin-left: 0.546875rem; /* 0.4375rem * 1.25 */
+    margin-top: 0.3125rem; /* 0.25rem * 1.25 */
     pointer-events: none;
 }
 
@@ -452,32 +411,23 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 45px;
-    padding-top: 55px;
+    gap: 3.515625rem; /* 2.8125rem * 1.25 */
+    padding-top: 4.296875rem; /* 3.4375rem * 1.25 */
     justify-content: flex-start;
 }
-
-/* Styling for the ghost item */
 
 .ghost {
     opacity: 0.4;
     background-color: #eee;
-    border: 2px dashed #ccc;
+    border: 0.15625rem dashed #ccc; /* 0.125rem * 1.25 */
 }
-
-/* Styling for the item being dragged */
 
 .dragging {
     opacity: 0.7;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0.3125rem 0.78125rem rgba(0, 0, 0, 0.2); /* 0.25rem * 1.25 and 0.625rem * 1.25 */
 }
-
-/* Styling for the chosen item */
 
 .chosen {
     background-color: #f0f0f0;
-    border: 1px solid #ccc;
-}
-
-#moduleCardsContainer {
+    border: 0.078125rem solid #ccc; /* 0.0625rem * 1.25 */
 }

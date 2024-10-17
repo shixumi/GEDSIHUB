@@ -42,6 +42,8 @@ function setupSidebarButtonActions() {
   }
 }
 
+
+
 // Initialize everything when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
   setActiveSidebar();

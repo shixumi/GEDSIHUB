@@ -120,19 +120,46 @@
                 </div>
             </div>
 
-            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Logout" style="color: #464040;">
-                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
-                    <img src="~/images/Logout_Dark.png" style="width: 43px;color: #464040;" />
-                </div>
-                <div class="col" style="color: #464040;">
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+
+            <!-- Logout button with modal trigger -->
+            <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#logoutModal" style="text-decoration: none; background: none; border: none;">
+                <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Logout" style="color: #464040; cursor: pointer;">
+                    <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                        <img src="~/images/Logout_Dark.png" style="width: 43px;color: #464040;" />
+                    </div>
+                    <div class="col logout-lbl" style="color: #464040;">
                         <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
                             Logout
-                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                <button type="submit">None</button>
-                            </form>
                         </span>
-                    </form>
+                    </div>
+                </div>
+            </button>
+
+
+
+            
+            
+        </div>
+
+        <!-- Logout Confirmation Modal -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to log out?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <!-- Logout form inside modal -->
+                        <form class="form-inline logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                            <button type="submit" class="btn btn-primary">Yes</button>
+                        </form>
+                        
+                    </div>
                 </div>
             </div>
         </div>

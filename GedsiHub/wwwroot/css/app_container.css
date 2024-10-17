@@ -33,9 +33,10 @@
     flex: 1 0 auto;
 }
 
-.container.forum{
+.container-forum{
     max-width: 65%;
-    margin-right: 40%;
+    margin: 0 auto;
+    margin-right: 30%;
     
 }
 

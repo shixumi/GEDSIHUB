@@ -76,9 +76,9 @@
         justify-content: center;
         align-items: center;
         width: 2.5rem;
-        height: 2rem;
-        padding: 2px;
-        border-radius: 6px;
+        height: 2.5rem;
+        padding: 0px;
+        border-radius: 50%;
         border: none;
         margin: 10px;
     }
@@ -86,7 +86,7 @@
 
     .c-delete-btn:hover {
         background-color: #f3d1d1;
-        border-radius: 6px;
+        border-radius: 50%;
         border: none;
     }
 
@@ -96,8 +96,8 @@
 
     .c-delete-btn:active {
         background-color: #f3d1d1 !important;
-        padding: 2px;
-        border-radius: 6px;
+        padding: 0px;
+        border-radius: 50%;
         border: none;
     }
 
