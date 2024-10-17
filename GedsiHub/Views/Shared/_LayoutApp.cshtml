@@ -125,9 +125,14 @@
                     <img src="~/images/Logout_Dark.png" style="width: 43px;color: #464040;" />
                 </div>
                 <div class="col" style="color: #464040;">
-                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
-                        Logout
-                    </span>
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                            Logout
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit">None</button>
+                            </form>
+                        </span>
+                    </form>
                 </div>
             </div>
         </div>

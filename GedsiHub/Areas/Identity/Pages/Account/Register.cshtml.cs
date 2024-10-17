@@ -136,38 +136,103 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                     <!DOCTYPE html>
                     <html>
                     <head>
-                        <meta charset='UTF-8'>
+                        <meta charset=""UTF-8"">
                         <title>Welcome to GEDSI Hub</title>
+                        <!-- Include Google Fonts Poppins -->
+                        <link href=""https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"" rel=""stylesheet"">
                         <style>
-                            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; padding: 20px; }}
-                            .container {{ background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 600px; margin: 0 auto; }}
-                            .header {{ background-color: #3B5998; padding: 20px; border-radius: 5px 5px 0 0; color: white; text-align: center; }}
-                            .button {{ display: inline-block; padding: 10px 20px; margin: 20px 0; color: #ffffff; background-color: #3B5998; text-decoration: none; border-radius: 5px; font-weight: bold; }}
-                            .footer {{ margin-top: 20px; font-size: 0.8em; text-align: center; color: #777; }}
+                            /* Use a modern sans-serif font */
+                            body {{
+                                font-family: 'Poppins', sans-serif;
+                                line-height: 1.6;
+                                color: #333;
+                                background-color: #f4f4f4;
+                                padding: 20px;
+                            }}
+
+                            .container {{
+                                background-color: #ffffff;
+                                padding: 20px;
+                                border-radius: 20px;
+                                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                                max-width: 600px;
+                                margin: 0 auto;
+                            }}
+
+                            /* Use deep red for header background */
+                            .header {{
+                                background-color: #880000; /* Dark Red */
+                                padding: 1px;
+                                border-radius: 10px;
+                                color: white;
+                                text-align: center;
+                                margin-bottom: 20px;
+                                font-weight: 600;
+                                font-size: 1.5em;
+                            }}
+
+                            .activate-btn {{
+                                text-align: center;
+                            }}
+                            /* Styling buttons to be rounded with a deep red background */
+                            .button {{
+                                display: inline-block;
+                                justify-content: center;
+                                align-items: center;
+                                padding: 12px 25px;
+                                margin: 20px 0;
+                                color: #ffffff;
+                                background-color: #880000;
+                                text-decoration: none;
+                                border-radius: 10px;
+                                font-weight: 600;
+                                transition: background-color 0.3s ease;
+                            }}
+
+                            /* Change button color on hover */
+                            .button:hover {{
+                                background-color: #a50000;
+                            }}
+
+                            /* Footer with light gray color and modern font size */
+                            .footer {{
+                                margin-top: 20px;
+                                font-size: 0.85em;
+                                text-align: center;
+                                color: #777;
+                            }}
+
+                            /* Adding gold accent for special text */
+                            .highlight {{
+                                color: #daa520; /* Gold */
+                                font-weight: bold;
+                            }}
+        
                         </style>
                     </head>
                     <body>
-                        <div class='container'>
-                            <div class='header'>
-                                <h1>Welcome to GEDSI Hub!</h1>
+                        <div class=""container"">
+                            <div class=""header"">
+                                <p>Welcome to GEDSI HUB!</p>
                             </div>
-                            <p>Dear {HtmlEncoder.Default.Encode(user.UserName)},</p>
-                            <p>Thank you for joining the GEDSI Hub! We are excited to have you as part of our community. The GEDSI Hub is designed to provide an inclusive and engaging learning experience on gender equality, diversity, and inclusion.</p>
+                            <strong>Greetings!</strong>
+                            <p>Thank you for joining the GEDSI HUB! We are excited to have you as part of our community. The GEDSI HUB is designed to provide an inclusive and engaging learning experience on gender equality, diversity, and inclusion.</p>
                             <p>To complete your registration, please confirm your email by clicking the button below. This will verify your email address and redirect you to the profile completion page, where you can provide additional details to enhance your experience.</p>
-                    
-                            <p><a href='{HtmlEncoder.Default.Encode(callbackUrl)}' class='button'>Activate Your Account</a></p>
 
-                            <p>If you have any questions or need assistance, feel free to contact our support team at <a href='mailto:support@gedsihub.com'>support@gedsihub.com</a>.</p>
+                            <div class=""activate-btn"">
+                                <a href=""{{HtmlEncoder.Default.Encode(callbackUrl)}}"" class=""button"">Activate Your Account</a>
+                            </div>
+
+                            <p>If you have any questions or need assistance, feel free to contact our support team at <a href=""mailto:support.gedsihub@gmail.com"">support.gedsihub@gmail.com</a>.</p>
 
                             <p>We look forward to helping you achieve your learning goals and build a more inclusive future together!</p>
-
-                            <p>Warm regards,<br>The GEDSI Hub Team</p>
-
-                            <div class='footer'>
-                                <p>GEDSI Hub | Committed to Gender Equality, Diversity, and Inclusion</p>
-                                <p>&copy; 2024 GEDSI Hub. All rights reserved.</p>
-                            </div>
+                            <br>
+                            <p>Warm regards,<br>GEDSI HUB Team</p>
                         </div>
+                        <footer class=""footer"">
+                            <p>GEDSI Hub | Committed to Gender Equality, Diversity, and Inclusion</p>
+                            <p>&copy; 2024 GEDSI HUB. All rights reserved.</p>
+                        </footer>
                     </body>
                     </html>";
 
