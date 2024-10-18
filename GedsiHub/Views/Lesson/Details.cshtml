@@ -1,4 +1,57 @@
 ﻿@model GedsiHub.Models.Lesson
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Module";
+}
+
+
+<div>
+    <ol class="breadcrumb" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="modules.html"><span>Modules</span></a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href=""><span>Module<span id="module_number" class="module_number">0</span></span></a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="CMSEditNewCreatedLesson.html"><span id="cms_lesson_breadcrumb">Lesson<span id="lesson_number" class="module_number">0</span></span></a>
+        </li>
+    </ol>
+    <span id="added_module_title" class="added_module_title">Newly Added Title Goes Here</span>
+    <div class="cms_white_base_container">
+        <div class="cms_lesson_title">
+            <span>Lesson</span>
+            <span id="lesson_number_inwcon">0.</span>
+            <span id="lesson_title">Title of New Created Lesson</span>
+        </div>
+        <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
+            <img class="upload_icon" src="~/images/Upload.png" />
+            <span class="upload_text">Drag and Drop Files or Click to Upload Media</span>
+            <input type="file" id="uploadMedia" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
+            <label for="uploadMedia" class="uploadButtonLabel"> Upload</label>
+            <div id="MediaPreviewContainer"></div>
+        </div>
+        <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
+        <input type="url" class="url_input" placeholder="Paste H5P link here" />
+        <span class="lesson_content_text">Lesson Content</span>
+        <textarea id="tinymce_textarea" class="tinymce_textarea"></textarea>
+        <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
+        <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Lesson_Content_Upload_Container">
+            <img class="upload_icon" src="~/images/Upload.png" />
+            <span class="upload_text">Drag and Drop Files or Click to Upload Text or Images</span>
+            <input type="file" id="uploadText" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
+            <label for="uploadText" class="uploadButtonLabel"> Upload</label>
+        </div>
+        <div id="cancel_save_con">
+            <button id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton" type="button" onclick="window.location.href='editNewCreatedModule.html'">Cancel</button>
+            <button id="PreviewLessonContentButton" class="fw-bolder SaveButton" type="button">Preview</button>
+        </div>
+    </div>
+    <div class="CMS_Container"></div>
+</div>
+
+
+
 
 <h2>Lesson Details</h2>
 
@@ -18,6 +71,7 @@
 
 @if (Model.LessonContents != null && Model.LessonContents.Any())
 {
+
     <table class="table">
         <thead>
             <tr>

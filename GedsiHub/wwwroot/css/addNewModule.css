@@ -1,24 +1,23 @@
 .AddModuleDataContainer {
     background: #ffffff;
-    height: 37.109375rem; /* 475px * 1.25 / 16 */
-    padding-top: 3.125rem; /* 40px * 1.25 / 16 */
-    padding-right: 3.125rem; /* 40px * 1.25 / 16 */
-    margin-top: 2.65625rem; /* 34px * 1.25 / 16 */
-    padding-left: 3.125rem; /* 40px * 1.25 / 16 */
-    border-radius: 1.875rem; /* 30px * 1.25 / 16 */
-    box-shadow: 0rem 0.3125rem 0.390625rem rgba(0, 0, 0, 0.25); /* 0px 4px 5px * 1.25 / 16 */
-    max-width: 100% !important; /* 1072px * 1.25 as a percentage of 1600px container */
- 
+    height: 37.109375rem;
+    padding-top: 3.125rem;
+    padding-right: 3.125rem;
+    margin-top: 2.65625rem;
+    padding-left: 3.125rem;
+    border-radius: 1.875rem;
+    box-shadow: 0rem 0.3125rem 0.390625rem rgba(0, 0, 0, 0.25);
+    max-width: 100% !important;
 }
 
 .InputBox {
     font-size: 1.5625rem;
-    height: 4.625rem; /* 59.2px * 1.25 / 16 */
-    border: 0.078125rem solid #464040; /* 1px * 1.25 / 16 */
-    box-shadow: inset 0rem 0.234375rem 0.3125rem #d9d9d9; /* 0px 3px 4px * 1.25 / 16 */
-    border-radius: 0.9375rem; /* 15px * 1.25 / 16 */
-    width: 100%; /* Make input take up 100% of its parent column */
-    padding-left: 1.5625rem; /* 20px * 1.25 / 16 */
+    height: 4.625rem;
+    border: 0.078125rem solid #464040;
+    box-shadow: inset 0rem 0.234375rem 0.3125rem #d9d9d9;
+    border-radius: 0.9375rem;
+    width: 100%;
+    padding-left: 1.5625rem;
     transition: border-color 0.3s ease, border-width 0.3s ease;
     outline: none;
     color: #464040;
@@ -27,119 +26,113 @@
     .InputBox::placeholder {
         font-family: 'Poppins';
         color: #9c9c9c;
-         /* 20px * 1.25 / 16 */
         font-weight: 200;
     }
 
 .AddModule_InputBox:focus {
     border-color: #464040;
-    border-width: 0.15625rem; /* 2px * 1.25 / 16 */
+    border-width: 0.15625rem;
     outline: none;
 }
 
-
 #AddModule_Title {
-    width: 50.390625rem; /* 645px * 1.25 / 16 */
+    width: 50.390625rem;
 }
 
 .AddModule_Icon {
-    padding-top: 2.65625rem; /* 34px * 1.25 / 16 */
-    padding-bottom: 2.34375rem; /* 30px * 1.25 / 16 */
-    width: 10rem; /* 154.825px * 1.25 / 16 */
+    padding-top: 2.65625rem;
+    padding-bottom: 2.34375rem;
+    width: 11.5rem;
 }
 
 .AddModule_ImageContainer {
-    border-radius: 0.78125rem; /* 10px * 1.25 / 16 */
+    border-radius: 0.78125rem;
 }
 
 .AddModule_Icon_Guidelines {
-    font-size: 0.78125rem; /* 10px * 1.25 / 16 */
+    font-size: 0.78125rem;
     color: #6E7485;
-    width: 15rem; /* 188.75px * 1.25 / 16 */
+    width: 15rem;
     text-align: justify;
     line-height: 1.4;
 }
 
 .AddIcon_Button {
     padding-top: 0;
-    margin-top: -2.578125rem; /* -33px * 1.25 / 16 */
+    margin-top: -2.578125rem;
     background: rgba(255,255,255,0);
     color: #464040;
-    border: 0.078125rem solid #464040; /* 1px * 1.25 / 16 */
-    border-radius: 1.5625rem; /* 20px * 1.25 / 16 */
-    font-size: 0.9375rem; /* 12px * 1.25 / 16 */
-    width: 15rem; /* 189.412px * 1.25 / 16 */
-    height: 2.5rem; /* 39.6px * 1.25 / 16 */
+    border: 0.078125rem solid #464040;
+    border-radius: 1.5625rem;
+    font-size: 0.9375rem;
+    width: 15rem;
+    height: 2.5rem;
     padding-bottom: 0;
     transition: all 0.2s ease;
     font-weight: 600;
 }
 
     .AddIcon_Button:hover {
-        border: 0.15625rem solid #464040; /* 2px * 1.25 / 16 */
-        border-radius: 1.5625rem; /* 20px * 1.25 / 16 */
+        border: 0.15625rem solid #464040;
+        border-radius: 1.5625rem;
     }
 
     .AddIcon_Button:active {
         transform: scale(0.95);
-        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1); /* 0 2px 10px * 1.25 / 16 */
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
     }
 
 .chooseIcon {
-    width: 1.5625rem; /* 20px * 1.25 / 16 */
-    height: 1.40625rem; /* 18px * 1.25 / 16 */
+    width: 1.5625rem;
+    height: 1.40625rem;
 }
 
 .button-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; /* Ensure it takes up full width of the parent container */
+    width: 100%;
     padding-top: 3rem;
 }
 
 .cancelButton {
     background: rgba(10,88,202,0);
     color: #464040;
-    border: 0.078125rem solid #464040; /* 1px * 1.25 / 16 */
-    border-radius: 3.90625rem; /* 50px * 1.25 / 16 */
-    width: 17.1875rem; /* 220px * 1.25 / 16 */
+    border: 0.078125rem solid #464040;
+    border-radius: 3.90625rem;
+    width: 17.1875rem;
     font-weight: 900;
-    height: 4.296875rem; /* 55px * 1.25 / 16 */
-    font-size: 1.5625rem; /* 20px * 1.25 / 16 */
-    margin-top: -0.078125rem; /* -1px * 1.25 / 16 */
+    height: 4.296875rem;
+    font-size: 1.5625rem;
     transition: all 0.2s ease;
 }
 
     .cancelButton:hover {
-        border: 0.15625rem solid #464040; /* 2px * 1.25 / 16 */
-        border-radius: 3.90625rem; /* 50px * 1.25 / 16 */
+        border: 0.15625rem solid #464040;
+        border-radius: 3.90625rem;
         color: #464040;
     }
 
     .cancelButton:active {
         transform: scale(0.95);
-        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1); /* 0 2px 10px * 1.25 / 16 */
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
     }
 
 .SubmitButton {
     background: #660000;
     color: #fff;
-    border-radius: 3.90625rem; /* 50px * 1.25 / 16 */
-    width: 17.1875rem; /* 220px * 1.25 / 16 */
+    border-radius: 3.90625rem;
+    width: 17.1875rem;
     font-weight: 900;
-    height: 4.296875rem; /* 55px * 1.25 / 16 */
-    font-size: 1.5625rem; /* 20px * 1.25 / 16 */
-    margin-top: 1.796875rem; /* 23px * 1.25 / 16 */
+    height: 4.296875rem;
+    font-size: 1.5625rem;
     transition: all 0.2s ease;
     border: none;
-
-   
 }
 
     .SubmitButton:active {
         transform: scale(0.95);
-        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1); /* 0 2px 10px * 1.25 / 16 */
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
         color: #ffffff;
         background-color: #920000;
         border-style: none;
@@ -148,4 +141,3 @@
     .SubmitButton:hover {
         background-color: #920000;
     }
-

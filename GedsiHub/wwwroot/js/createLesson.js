@@ -81,7 +81,7 @@ function clearLessonContainer() {
 function loadLessonData(moduleId) {
     // Retrieve lesson data specific to the module from localStorage
     const lessonData = JSON.parse(localStorage.getItem(`lessons_${moduleId}`));
-    
+
     const lessonContainer = document.getElementById('all_lesson_container');
     const modulesContainer = document.getElementById('modules_container'); // Assuming this is the ID for the modules container
 
@@ -165,9 +165,9 @@ function handleCreateLessonPage(moduleId) {
     createLessonButton.addEventListener('click', (event) => {
         event.preventDefault();
 
-        const newLessonNumber = document.getElementById('CreateLesson_NumberInput').value;
-        const newLessonTitle = document.getElementById('CreateLesson_TitleInput').value;
-        const newLessonOverview = document.getElementById('CreateLesson_InputOverview').value;
+        const newLessonNumber = document.getElementById('CreateLesson_NumberInput').value.trim();
+        const newLessonTitle = document.getElementById('CreateLesson_TitleInput').value.trim();
+        const newLessonOverview = document.getElementById('CreateLesson_InputOverview').value.trim();
 
         if (!newLessonNumber || !newLessonTitle || !newLessonOverview) {
             alert('All fields are required!');
@@ -199,12 +199,41 @@ function handleCreateLessonPage(moduleId) {
         // Save lessons back to localStorage
         localStorage.setItem(`lessons_${moduleId}`, JSON.stringify(lessons));
 
-        // Redirect back to editNewCreatedModule.html with moduleId
+        // Redirect back to CMSEditNewCreatedLesson.html with moduleId
         window.location.href = `editNewCreatedModule.html?moduleId=${moduleId}`;
     });
+
 
     cancelButton.addEventListener('click', (event) => {
         event.preventDefault();
         window.location.href = `editNewCreatedModule.html?moduleId=${moduleId}`;
     });
+
+    // Function to display the lesson after creation
+    function displayLesson(moduleId) {
+        // Retrieve lesson data for the module from localStorage
+        const lessonData = JSON.parse(localStorage.getItem(`lessons_${moduleId}`)) || [];
+
+        if (lessonData.length > 0) {
+            // Assuming you want to display the last created lesson
+            const latestLesson = lessonData[lessonData.length - 1];
+
+            // Find the elements to display lesson number and title
+            const lessonNumberElement = document.getElementById('lesson_number');
+            const lessonNumberInwconElement = document.getElementById('lesson_number_inwcon');
+            const lessonTitleElement = document.getElementById('lesson_title');
+
+            // Display the latest lesson data in the corresponding elements
+            lessonNumberElement.textContent = latestLesson.number;
+            lessonNumberInwconElement.textContent = latestLesson.number + ".";
+            lessonTitleElement.textContent = " " + latestLesson.title;
+        } else {
+            console.error("No lessons found for the module!");
+        }
+    }
+
+    // Optionally, you can display the lessons when the page is loaded if needed
+    if (moduleId) {
+        displayLesson(moduleId); // Load previously saved lessons, if any
+    }
 }
