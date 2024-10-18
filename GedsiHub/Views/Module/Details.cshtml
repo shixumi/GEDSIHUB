@@ -7,7 +7,7 @@
 
 
 
-<div class="container-lesson pt-lg-5 pt-md-4 pt-sm-3 pt-2">
+<div class="container-lesson">
     <ol class="breadcrumb" id="breadcrumb">
         <li class="breadcrumb-item"><a asp-action="Index"><span id="modules_breadcrumb">Modules</span></a></li>
         <li class="breadcrumb-item"><a href="#"><span id="modules_lessons_breadcrumb">Module<span id="added_module_number" class="module_number">0</span></span></a></li>
@@ -19,32 +19,66 @@
         <p"><strong>Description:</strong>@Model.Description</p>
     </div>
  
-    
-
-
-    
-
-    <div id="create_new_lesson_container" class="container d-xxl-flex AddlLessonContainer">
+    <!-- Empty: Create new lesson container -->
+    <!-- Conditional to display this container WORKING CORRECTLY!!! -->
+    @if (Model.Lessons == null || !Model.Lessons.Any())
+    {
+        <div id="create_new_lesson_container" class="container d-xxl-flex AddLessonContainer">
+            <div id="add_new_lesson_container" class="d-xxl-flex justify-content-xxl-center align-items-xxl-center add_new_lesson_container">
+                <span class="no_lessons_added_text">No lessons have been added yet</span>
+                <button id="createNewLessonButton" class="create_lesson_button" type="button">
+                    <img id="add_icon_create_lesson" src="/images/Add_White.png" />Create Lesson - Testing
+                </button>
+            </div>
+        </div>
+    }
+    <div id="create_new_lesson_container" class="container d-xxl-flex AddLessonContainer">
         <div id="add_new_lesson_container" class="d-xxl-flex justify-content-xxl-center align-items-xxl-center add_new_lesson_container">
             <span class="no_lessons_added_text">No lessons have been added yet</span>
             <button id="createNewLessonButton" class="create_lesson_button" type="button">
-                <img id="add_icon_create_lesson" src="@Url.Content("~/images/Add_White.png")" />Create Lesson
+                <img id="add_icon_create_lesson" src="/images/Add_White.png" />Create Lesson
             </button>
         </div>
     </div>
 
-    <div class="container d-xxl-flex AddlLessonContainer" id="all_lesson_container">
-        <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center add_new_lesson_container" id="add_new_lesson_container"><span class="no_lessons_added_text"></span></div>
+   
+    <div id="edit_new_lesson_container" class="container d-xxl-flex EditLessonContainer">
+        <div class="lessonNo_title_container">
+            <span>Lesson</span>
+            <span id="LessonNumberDisplay">lesson.number.</span>
+            <span id="LessonTitleDisplay">lesson.title</span>
+            <div class="lesson_con_linebreak"></div>
+        </div>
+        <span id="LessonOverviewDisplay" class="lesson_brief_overview">lesson.overview</span>
+        <div class="button_container">
+            <div id="DeleteLesson">
+                <img id="Lesson_Delete" class="Delete" src="~/images/Delete.png" />
+                <span>Delete</span>
+            </div>
+            <div id="EditLesson">
+                <img class="Edit" src="~/images/Edit.png" />
+                <span>Edit</span>
+            </div>  
+            <div id="toggleButtonPublishUnpublish" class="d-xxl-flex">
+                <div id="publishLesson" class="toggle-content">
+                    <img class="PublishIcon" src="~/images/Publish.png" />
+                    <span>Publish</span>
+                </div>
+                <div id="unpublishLesson" class="toggle-content">
+                    <img class="PublishIcon" src="~/images/Unpublish.png" />
+                    <span>Unpublish</span>
+                </div>
+            </div>
+            <button id="go_to_lesson_button" class="btn btn-primary go_to_lesson_button" type="button">Go To Lesson</button>
+        </div>
     </div>
-
-
-
-
 
 </div>
 
 
-
+<div class="container d-xxl-flex AddLessonContainer" id="all_lesson_container">
+    <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center add_new_lesson_container" id="add_new_lesson_container"><span class="no_lessons_added_text"></span></div>
+</div>
 
 
 

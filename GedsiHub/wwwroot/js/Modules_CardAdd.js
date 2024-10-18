@@ -138,7 +138,7 @@ function addAllModules() {
         <div class="ModuleCard_LineBreak"></div>
         <button id="publishButton-${index}" class="d-xxl-flex justify-content-xxl-start publishButton" type="button">
           <img id="publishIcon-${index}" class="PublishIcon" src="${moduleData.isPublished ? 'Unpublish.png' : 'Publish.png'}" /> ${moduleData.isPublished ? 'Unpublish' : 'Publish'}
-        </button>
+        </button>   
         <div class="d-xxl-flex justify-content-xxl-end" style="margin-top: 19px;">
           <img id="EditModule-${index}" class="Edit" src="Edit.png" />
           <img id="DeleteModule" class="Delete" src="Delete.png" onclick="deleteModule(${index})"/></div>
