@@ -1,8 +1,7 @@
 .AddModuleDataContainer {
     background: #ffffff;
-    height: 37.109375rem;
-    padding-top: 3.125rem;
-    padding-right: 3.125rem;
+    height: auto;
+    padding: 3.125rem 3.125rem;
     margin-top: 2.65625rem;
     padding-left: 3.125rem;
     border-radius: 1.875rem;
@@ -23,11 +22,33 @@
     color: #464040;
 }
 
-    .InputBox::placeholder {
-        font-family: 'Poppins';
-        color: #9c9c9c;
-        font-weight: 200;
-    }
+.InputBox-ta {
+    font-size: 1.5625rem;
+    height: 12.5rem;
+    border: 0.078125rem solid #464040;
+    box-shadow: inset 0rem 0.234375rem 0.3125rem #d9d9d9;
+    border-radius: 0.9375rem;
+    width: 100%;
+    padding: 1.2rem 1.5625rem;
+    transition: border-color 0.3s ease, border-width 0.3s ease;
+    outline: none;
+    color: #464040;
+}
+
+.AddModuleDataContainer .row {
+    margin-bottom: 1.4rem;
+}
+.InputBox::placeholder {
+    font-family: 'Poppins';
+    color: #9c9c9c;
+    font-weight: 200;
+}
+
+.InputBox-ta::placeholder {
+    font-family: 'Poppins';
+    color: #9c9c9c;
+    font-weight: 200;
+}
 
 .AddModule_InputBox:focus {
     border-color: #464040;
@@ -72,15 +93,15 @@
     font-weight: 600;
 }
 
-    .AddIcon_Button:hover {
-        border: 0.15625rem solid #464040;
-        border-radius: 1.5625rem;
-    }
+.AddIcon_Button:hover {
+    border: 0.15625rem solid #464040;
+    border-radius: 1.5625rem;
+}
 
-    .AddIcon_Button:active {
-        transform: scale(0.95);
-        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
-    }
+.AddIcon_Button:active {
+    transform: scale(0.95);
+    box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+}
 
 .chooseIcon {
     width: 1.5625rem;
@@ -92,10 +113,14 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding-top: 3rem;
+    padding-top: 2rem;
+    margin-top: 2rem;
 }
 
 .cancelButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: rgba(10,88,202,0);
     color: #464040;
     border: 0.078125rem solid #464040;
@@ -107,16 +132,16 @@
     transition: all 0.2s ease;
 }
 
-    .cancelButton:hover {
-        border: 0.15625rem solid #464040;
-        border-radius: 3.90625rem;
-        color: #464040;
-    }
+.cancelButton:hover {
+    border: 0.15625rem solid #464040;
+    border-radius: 3.90625rem;
+    color: #464040;
+}
 
-    .cancelButton:active {
-        transform: scale(0.95);
-        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
-    }
+.cancelButton:active {
+    transform: scale(0.95);
+    box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+}
 
 .SubmitButton {
     background: #660000;
@@ -130,14 +155,15 @@
     border: none;
 }
 
-    .SubmitButton:active {
-        transform: scale(0.95);
-        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
-        color: #ffffff;
-        background-color: #920000;
-        border-style: none;
-    }
+.SubmitButton:active {
+    transform: scale(0.95);
+    box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    background-color: #920000;
+    border-style: none;
+}
 
-    .SubmitButton:hover {
-        background-color: #920000;
-    }
+.SubmitButton:hover {
+    background-color: #920000;
+    color: #ffffff;
+}

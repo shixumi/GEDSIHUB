@@ -3,24 +3,61 @@
     Layout = "_LayoutApp";
     ViewData["Title"] = "Edit Module";
 }
-<h2>Edit Module</h2>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="ModuleId" />
+<!-- Edit Module -->
+<div>
+    <!-- Header Title -->
+    <h1 id="editModule_HeaderTitle" class="modules_title" style="color: #464040;">Edit Module</h1>
+    <!-- Horizontal Break -->
+    <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
 
-    <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+    <!-- Form for editing the module -->
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="ModuleId" />
 
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+        <div class="container AddModuleDataContainer" id="moduleCards_container">
+            <div class="row">
+                <!-- Module No. Input (assuming you want to add a number field similar to create) -->
+                <div class="col-md-6 col-xl-5 col-xxl-4">
+                    <!-- Label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Number</h1>
+                    <!-- Input (assuming there's a number field to be edited) -->
+                    <input class="form-control InputBox" placeholder="Enter Module Number" id="EditModule_NumberInput" value="" />
+                    <span class="text-danger"></span>
+                </div>
+
+                <!-- Module Title Input -->
+                <div class="col-md-6 col-xl-7 col-xxl-8" style="padding-left: 35px;">
+                    <!-- Label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Title</h1>
+                    <!-- Input -->
+                    <input asp-for="Title" class="form-control InputBox" placeholder="Enter Module Title" id="EditModule_TitleInput" required />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Description Textarea Input-->
+                <div class="col-md-12">
+                    <!-- Label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Description</h1>
+                    <!-- Description Input -->
+                    <textarea asp-for="Description" class="form-control InputBox-ta" rows="4" placeholder="Enter Module Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <!-- Cancel Button -->
+                <a asp-controller="Module" asp-action="Index" id="cancelButton" class="btn fw-bolder cancelButton">Cancel</a>
+
+                <!-- Save Module Button -->
+                <button type="submit" class="btn fw-bolder SubmitButton">Save Changes</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 
 @section Scripts {
     @{
