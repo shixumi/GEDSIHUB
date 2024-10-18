@@ -136,7 +136,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                     <!DOCTYPE html>
                     <html>
                     <head>
-                        <meta charset=""UTF-8"">
+                        <meta charset='UTF-8'>
                         <title>Welcome to GEDSI Hub</title>
                         <!-- Include Google Fonts Poppins -->
                         <style>
@@ -210,25 +210,25 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                         </style>
                     </head>
                     <body>
-                        <div class=""container"">
-                            <div class=""header"">
+                        <div class='container'>
+                            <div class='header'>
                                 <p>Welcome to GEDSI HUB!</p>
                             </div>
                             <strong>Greetings!</strong>
                             <p>Thank you for joining the GEDSI HUB! We are excited to have you as part of our community. The GEDSI HUB is designed to provide an inclusive and engaging learning experience on gender equality, diversity, and inclusion.</p>
                             <p>To complete your registration, please confirm your email by clicking the button below. This will verify your email address and redirect you to the profile completion page, where you can provide additional details to enhance your experience.</p>
 
-                            <div class=""activate-btn"">
-                                <a href=""{{HtmlEncoder.Default.Encode(callbackUrl)}}"" class=""button"">Activate Your Account</a>
+                            <div class='activate-btn'>
+                                <a href='{{HtmlEncoder.Default.Encode(callbackUrl)}}' class='button'>Activate Your Account</a>
                             </div>
 
-                            <p>If you have any questions or need assistance, feel free to contact our support team at <a href=""mailto:support.gedsihub@gmail.com"">support.gedsihub@gmail.com</a>.</p>
+                            <p>If you have any questions or need assistance, feel free to contact our support team at <a href='mailto:support.gedsihub@gmail.com'>support.gedsihub@gmail.com</a>.</p>
 
                             <p>We look forward to helping you achieve your learning goals and build a more inclusive future together!</p>
                             <br>
                             <p>Warm regards,<br>GEDSI HUB Team</p>
                         </div>
-                        <footer class=""footer"">
+                        <footer class='footer'>
                             <p>GEDSI Hub | Committed to Gender Equality, Diversity, and Inclusion</p>
                             <p>&copy; 2024 GEDSI HUB. All rights reserved.</p>
                         </footer>
