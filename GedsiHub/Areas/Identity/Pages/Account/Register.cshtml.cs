@@ -138,7 +138,6 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                     <head>
                         <meta charset='UTF-8'>
                         <title>Welcome to GEDSI Hub</title>
-                        <!-- Include Google Fonts Poppins -->
                         <style>
                             /* Use a modern sans-serif font */
                             body {{
@@ -180,7 +179,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                                 align-items: center;
                                 padding: 12px 25px;
                                 margin: 20px 0;
-                                color: #ffffff;
+                                color: #ffffff !important;
                                 background-color: #880000;
                                 text-decoration: none;
                                 border-radius: 10px;
@@ -219,7 +218,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                             <p>To complete your registration, please confirm your email by clicking the button below. This will verify your email address and redirect you to the profile completion page, where you can provide additional details to enhance your experience.</p>
 
                             <div class='activate-btn'>
-                                <a href='{{HtmlEncoder.Default.Encode(callbackUrl)}}' class='button'>Activate Your Account</a>
+                                <a href='{HtmlEncoder.Default.Encode(callbackUrl)}' class='button'>Activate Your Account</a>
                             </div>
 
                             <p>If you have any questions or need assistance, feel free to contact our support team at <a href='mailto:support.gedsihub@gmail.com'>support.gedsihub@gmail.com</a>.</p>

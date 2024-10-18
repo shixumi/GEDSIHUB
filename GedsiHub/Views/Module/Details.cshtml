@@ -6,9 +6,50 @@
 
 
 
-<h2>Module: @Model.Title</h2>
-<p><strong>Description:</strong> @Model.Description</p>
 
+<div class="container-lesson pt-lg-5 pt-md-4 pt-sm-3 pt-2">
+    <ol class="breadcrumb" id="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index"><span id="modules_breadcrumb">Modules</span></a></li>
+        <li class="breadcrumb-item"><a href="#"><span id="modules_lessons_breadcrumb">Module<span id="added_module_number" class="module_number">0</span></span></a></li>
+    </ol>
+
+
+    <span id="added_module_title" class="added_module_title">@Model.Title</span>
+    <div class="module-desc-text">
+        <p"><strong>Description:</strong>@Model.Description</p>
+    </div>
+ 
+    
+
+
+    
+
+    <div id="create_new_lesson_container" class="container d-xxl-flex AddlLessonContainer">
+        <div id="add_new_lesson_container" class="d-xxl-flex justify-content-xxl-center align-items-xxl-center add_new_lesson_container">
+            <span class="no_lessons_added_text">No lessons have been added yet</span>
+            <button id="createNewLessonButton" class="create_lesson_button" type="button">
+                <img id="add_icon_create_lesson" src="@Url.Content("~/images/Add_White.png")" />Create Lesson
+            </button>
+        </div>
+    </div>
+
+    <div class="container d-xxl-flex AddlLessonContainer" id="all_lesson_container">
+        <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center add_new_lesson_container" id="add_new_lesson_container"><span class="no_lessons_added_text"></span></div>
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<h2>Module: @Model.Title</h2>
 <h3>Lessons</h3>
 
 <p>

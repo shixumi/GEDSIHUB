@@ -123,3 +123,8 @@
   overflow: visible;
 }
 
+.module-desc-text {
+    color: #464040;
+    font-weight: 400 !important;
+    background-color: none; 
+}
