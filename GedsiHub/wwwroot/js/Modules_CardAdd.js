@@ -36,7 +36,7 @@ function saveModuleData(event) {
 
             // Redirect back to modules.html after editing
             localStorage.setItem('modules', JSON.stringify(modules));
-            window.location.href = '/Module/Index';
+            window.location.href = 'modules.html';
             return;
         } else {
             console.error('Invalid module index for editing.');
@@ -64,7 +64,7 @@ function saveModuleData(event) {
     console.log('Saved Module:', moduleTitle, 'Number:', moduleNumber); // Log the data for verification
 
     // Redirect to editNewCreatedModule.html after adding a new module
-    window.location.href = '/Module/LessonsOverview';
+    window.location.href = 'editNewCreatedModule.html';
 }
 
 
@@ -107,7 +107,7 @@ function hexToRGBA(hex, opacity) {
     return `rgba(${+r}, ${+g}, ${+b}, ${opacity})`;
 }
 
-// Function to display all modules on modules.html
+// Display all modules on modules.html
 function addAllModules() {
     const modules = JSON.parse(localStorage.getItem('modules')) || [];
     if (modules.length === 0) return;
@@ -138,7 +138,7 @@ function addAllModules() {
         <div class="ModuleCard_LineBreak"></div>
         <button id="publishButton-${index}" class="d-xxl-flex justify-content-xxl-start publishButton" type="button">
           <img id="publishIcon-${index}" class="PublishIcon" src="${moduleData.isPublished ? 'Unpublish.png' : 'Publish.png'}" /> ${moduleData.isPublished ? 'Unpublish' : 'Publish'}
-        </button>   
+        </button>
         <div class="d-xxl-flex justify-content-xxl-end" style="margin-top: 19px;">
           <img id="EditModule-${index}" class="Edit" src="Edit.png" />
           <img id="DeleteModule" class="Delete" src="Delete.png" onclick="deleteModule(${index})"/></div>
@@ -160,7 +160,7 @@ function addAllModules() {
         // Handle edit button click
         document.getElementById(`EditModule-${index}`).addEventListener('click', function () {
             localStorage.setItem('editModuleIndex', index);  // Store index of module to edit
-            window.location.href = '/Module/Create';      // Redirect to add/edit page
+            window.location.href = 'addNewModule.html';      // Redirect to add/edit page
         });
 
         // Add event listener to the ModuleTitle span for navigation
@@ -169,16 +169,10 @@ function addAllModules() {
             localStorage.setItem('newModuleTitle', moduleData.title);
             localStorage.setItem('module_number', moduleData.number);
             // Redirect to editNewCreatedModule.html
-            window.location.href = '/Module/LessonsOverview';
+            window.location.href = 'editNewCreatedModule.html';
         });
     });
 }
-
-// Add this event listener after the addAllModules function
-document.querySelector('.add-new-module').addEventListener('click', function () {
-    window.location.href = '/Modules/Index';  // Redirect to /Modules/Index
-});
-
 
 // Apply color shadow dynamically when the page is loaded or color is changed
 function applyColorShadowAndPicker(index, color) {
@@ -215,14 +209,14 @@ function initializeAddModuleButtons() {
     if (addModuleTopButton) {
         addModuleTopButton.addEventListener('click', function () {
             localStorage.removeItem('editModuleIndex'); // Clear edit mode
-            window.location.href = '/Module/Create';  // Go to add module mode
+            window.location.href = 'addNewModule.html';  // Go to add module mode
         });
     }
 
     addNewModuleButtons.forEach(button => {
         button.addEventListener('click', function () {
             localStorage.removeItem('editModuleIndex'); // Clear edit mode
-            window.location.href = '/Module/Create';  // Go to add module mode
+            window.location.href = 'addNewModule.html';  // Go to add module mode
         });
     });
 }
@@ -277,14 +271,14 @@ window.onload = function () {
     // Check the current page and perform actions accordingly
     const pathname = window.location.pathname;
 
-    if (pathname.includes('/Module/Index')) {
+    if (pathname.includes('modules.html')) {
         // Handle module display on the modules page
         addAllModules();
         initializeAddModuleButtons();
-    } else if (pathname.includes('/Module/Create')) {
+    } else if (pathname.includes('addNewModule.html')) {
         // Handle the add/edit module page
         initializeEditModule();
-    } else if (pathname.includes('/Module/LessonsOverview')) {
+    } else if (pathname.includes('editNewCreatedModule.html')) {
         // Handle editNewCreatedModule page
         const newModuleTitle = localStorage.getItem('newModuleTitle');
         const moduleNumber = localStorage.getItem('module_number');

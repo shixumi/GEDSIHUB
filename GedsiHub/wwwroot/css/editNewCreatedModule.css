@@ -27,15 +27,26 @@
     box-shadow: 0rem 0.34375rem 1.03125rem rgba(0,0,0,0.2);
 }
 
+.breadcrumb-and-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 65%; /* Set width to 65% */
+    
+}
+
 .breadcrumb-item + .breadcrumb-item::before {
     content: ">";
     color: #9c9c9c;
-    padding: 0 0.6875rem;
+    margin: 0; 
+    padding: 0; 
+    list-style: none;
 }
 
 #breadcrumb {
     margin-top: 3.78125rem;
     color: #9c9c9c;
+    display: flex;
 }
 
 .breadcrumb-item span {
@@ -76,7 +87,12 @@
     font-size: 1.5125rem;
 }
 
+
+
 .create_lesson_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 2.1175rem;
     background: #660000;
     color: #fff;
@@ -90,18 +106,18 @@
     width: 14rem;
 }
 
+.create_lesson_button:active {
+    transform: scale(0.95);
+    box-shadow: 0rem 0.1375rem 0.6875rem rgba(0, 0, 0, 0.1);
+    color: #ffffff !important; 
+    background-color: #920000 !important;
+    border-style: none;
+}
 
-    .create_lesson_button:active {
-        transform: scale(0.95);
-        box-shadow: 0rem 0.1375rem 0.6875rem rgba(0, 0, 0, 0.1);
-        color: #ffffff;
-        background-color: #920000;
-        border-style: none;
-    }
-
-    .create_lesson_button:hover {
-        background-color: #920000;
-    }
+.create_lesson_button:hover {
+    background-color: #920000 !important;
+    color: #fff !important;
+}
 
 #add_icon_create_lesson {
     width: 1.1rem;
@@ -131,6 +147,3 @@
     font-size: 1.05875rem;
 }
 
-#LessonCard {
-
-}

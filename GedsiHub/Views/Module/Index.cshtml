@@ -6,11 +6,15 @@
 }
 
 <div>
+    <!-- Module Page Header -->
     <div id="ModulesHeader">
         <h1 class="modules_title" style="color: #464040;">Modules</h1>
+
+        <!-- Search Input for Modules -->
         <input type="search" id="SearchModule" class="SearchModule" placeholder="Search for modules">
         <img id="SearchModuleButton" class="SearchModule_Icon" src="~/images/Search_Small.png" style="position: absolute;">
 
+        <!-- Create Module Button -->
         <a asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton">
             <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
         </a>
@@ -24,58 +28,71 @@
         @foreach (var module in Model)
         {
             <!-- Make the entire module card clickable -->
-            <a asp-action="Details" asp-route-id="@module.ModuleId" class="module_card_link" style="text-decoration: none; color: inherit;">
-                <div class="module_card" id="moduleCard-@module.ModuleId" style="padding-right: 27px; padding-left: 27px;">
-                    <!-- Module Icon -->
-                    <span class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
-                        <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
-                        <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="Color" />
-                    </span>
+            <div class="module_card" id="moduleCard-@module.ModuleId" style="padding-right: 2.1rem; padding-left: 2.1rem;">
+                <!-- Module Icon -->
+                <span class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
+                    <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
+                    <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="Color" />
+                </span>
 
-                    <!-- Module Title -->
+
+                <!-- Module Title -->
+                <!-- The module title can be directed to its details -->
+                <a asp-action="Details" asp-route-id="@module.ModuleId">
                     <span id="ModuleTitle-@module.ModuleId" class="fw-bolder ModuleTitle">@module.Title</span>
+                </a>
 
-                    <!-- Number of Lessons Container -->
-                    <div id="NumberOfLessonsContainer" class="NumberOfLessonsContainer">
-                        <img class="LessonIcon" src="~/images/lesson.png" />
-                        <span id="NumberOfLessons" class="NumberOfLessons">0</span>
-                        <span class="fw-normal LessonsText" style="margin-left: 0px; position: static; margin-top: 0px;">lessons</span>
+                @* <!-- Module Title -->
+                <span id="ModuleTitle-@module.ModuleId" class="fw-bolder ModuleTitle">@module.Title</span> *@
+
+                <!-- Number of Lessons Container -->
+                <div id="NumberOfLessonsContainer" class="NumberOfLessonsContainer">
+                    <img class="LessonIcon" src="~/images/lesson.png" />
+                    <span id="NumberOfLessons" class="NumberOfLessons">0</span>
+                    <span class="fw-normal LessonsText">lessons</span>
+                </div>
+
+                <!-- Like and View Count -->
+                <div class="LikeViewContainer">
+                    <div class="LikeOnlyContainer">
+                        <img class="LikeIcon" src="~/images/Like.png" />
+                        <span id="LikeCount">0</span>
                     </div>
+                    <div class="ViewOnlyContainer">
+                        <img class="ViewIcon" src="~/images/View.png" />
+                        <span id="ViewCount">0</span>
+                    </div>
+                </div>
 
-                    <!-- Like and View Count -->
-                    <div class="LikeViewContainer">
-                        <div class="LikeOnlyContainer">
-                            <img class="LikeIcon" src="~/images/Like.png" />
-                            <span id="LikeCount">0</span>
+                <!-- Line Break -->
+                <div class="ModuleCard_LineBreak"></div>
+
+                <!-- Publish/Unpublish Button -->
+                <div id="modCardButtonContainer" class="d-xxl-flex justify-content-between align-items-center">
+                    <div id="toggleButtonPublishUnpublishModule" class="d-xxl-flex">
+                        <div id="publishModule" class="toggle-content">
+                            <img class="PublishIcon" src="~/images/Publish.png" />
+                            <span>Publish</span>
                         </div>
-                        <div class="ViewOnlyContainer">
-                            <img class="ViewIcon" src="~/images/View.png" />
-                            <span id="ViewCount">0</span>
+                        <div id="unpublishModule" class="toggle-content">
+                            <img class="PublishIcon" src="~/images/Unpublish.png" />
+                            <span>Unpublish</span>
                         </div>
                     </div>
-
-                    <!-- Line Break -->
-                    <div class="ModuleCard_LineBreak"></div>
-
-                    <!-- Publish/Unpublish Button -->
-                    <button id="publishButton-@module.ModuleId" class="d-xxl-flex justify-content-xxl-start publishButton" type="button">
-                        <img id="publishIcon-@module.ModuleId" class="PublishIcon" src="~/images/Unpublish.png" />
-                    </button>
 
                     <!-- Edit and Delete Buttons -->
                     <div class="d-xxl-flex justify-content-xxl-end" style="margin-top: 19px;">
                         <a asp-action="Edit" asp-route-id="@module.ModuleId">
                             <img id="EditModule-@module.ModuleId" class="Edit" src="~/images/Edit.png" />
                         </a>
-                        <!-- Trigger the Modal (Delete Icon) -->
                         <a data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@module.ModuleId">
                             <img id="DeleteModule-@module.ModuleId" class="Delete" src="~/images/Delete.png" />
                         </a>
                     </div>
                 </div>
-            </a>
+            </div>
         }
-
+        
         <!-- Add New Module Button -->
         <a asp-action="Create" class="btn add-new-module">
             <img class="d-xxl-flex add_icon" src="~/images/Add.png" /> Add New Module

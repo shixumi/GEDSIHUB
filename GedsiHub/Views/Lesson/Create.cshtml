@@ -26,6 +26,10 @@
 
             <div id="Create-lesson-button-container"class="button-container">
                 <button id="cancelButton_createLesson" class="btn fw-bolder cancelButton" type="button">Cancel</button>
+
+                <!-- Cancel Button -->
+                <a asp-controller="Module" asp-action="Details" asp-route-id="@ViewBag.ModuleId" id="cancelButton" class="btn fw-bolder cancelButton">Cancel</a>
+
                 <button id="CreateLessonButton" class="fw-bolder SubmitButton" type="button">Create Lesson</button>
             </div>
         </div>
