@@ -30,10 +30,11 @@
             <!-- Make the entire module card clickable -->
             <div class="module_card" id="moduleCard-@module.ModuleId" style="padding-right: 2.1rem; padding-left: 2.1rem;">
                 <!-- Module Icon -->
-                <span class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
+                <div class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
                     <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
+                    <!-- Color Picker with module ID in the input id -->
                     <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="Color" />
-                </span>
+                </div>
 
 
                 <!-- Module Title -->
