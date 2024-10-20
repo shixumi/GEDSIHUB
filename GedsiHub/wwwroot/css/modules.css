@@ -357,7 +357,7 @@
     margin-bottom: 1.664rem;
 }
 
-#toggleButtonPublishUnpublishModule, #toggleButtonPublishUnpublishLesson {
+#toggleButtonPublishUnpublishModule, #toggleButtonPublishUnpublishLesson, toggleButtonPublishUnpublishAssessment {
     display: flex;
     position: relative;
     gap: 10.4px;
