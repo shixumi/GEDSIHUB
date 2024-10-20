@@ -1,24 +1,28 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    // Find all publish/unpublish containers
-    document.querySelectorAll('[id^="toggleButtonPublishUnpublishModule-"]').forEach(function (toggleContainer) {
-        const moduleId = toggleContainer.id.split('-')[1]; // Extract the module ID from the element ID
-        const publishButton = document.getElementById("publishModule-" + moduleId);
-        const unpublishButton = document.getElementById("unpublishModule-" + moduleId);
+﻿document.addEventListener("DOMContentLoaded", () => {
+    // Event delegation for publish/unpublish toggle
+    document.addEventListener('click', (event) => {
+        // Check if the clicked element is a publish or unpublish div
+        const publishDiv = event.target.closest('#publishModule');
+        const unpublishDiv = event.target.closest('#unpublishModule');
 
-        // Show the publish button initially and hide the unpublish button
-        publishButton.style.display = "flex";
-        unpublishButton.style.display = "none";
+        if (publishDiv) {
+            const toggleContainer = publishDiv.closest('#toggleButtonPublishUnpublishModule');
+            toggleContainer.querySelector('#publishModule').style.display = 'none'; // Hide publish div
+            toggleContainer.querySelector('#unpublishModule').style.display = 'flex'; // Show unpublish div
+            console.log('Module published');
+        }
 
-        // Add event listener for the publish button
-        publishButton.addEventListener("click", function () {
-            publishButton.style.display = "none"; // Hide publish button
-            unpublishButton.style.display = "flex"; // Show unpublish button
-        });
+        if (unpublishDiv) {
+            const toggleContainer = unpublishDiv.closest('#toggleButtonPublishUnpublishModule');
+            toggleContainer.querySelector('#unpublishModule').style.display = 'none'; // Hide unpublish div
+            toggleContainer.querySelector('#publishModule').style.display = 'flex'; // Show publish div
+            console.log('Module unpublished');
+        }
+    });
 
-        // Add event listener for the unpublish button
-        unpublishButton.addEventListener("click", function () {
-            unpublishButton.style.display = "none"; // Hide unpublish button
-            publishButton.style.display = "flex"; // Show publish button
-        });
+    // On initial load or when new modules are added, only show the publish button
+    document.querySelectorAll('#toggleButtonPublishUnpublishModule').forEach(toggleContainer => {
+        toggleContainer.querySelector('#unpublishModule').style.display = 'none'; // Hide unpublish button
+        toggleContainer.querySelector('#publishModule').style.display = 'flex'; // Show publish button
     });
 });

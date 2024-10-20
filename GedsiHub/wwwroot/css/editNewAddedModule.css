@@ -90,10 +90,11 @@
     margin-top: 3.9rem;
     justify-content: space-between;
     align-items: center; /* Ensure all buttons are aligned vertically */
+    gap: 1.5rem; /* Add some space between buttons */
 }
 
     .button_container div {
-        margin-right: 1.5rem;
+        margin-right: 1rem;
         display: flex;
         align-items: center; /* Vertically align text and images */
     }
@@ -102,6 +103,10 @@
             font-size: 1.05875rem;
             color: #464040;
             margin-left: 0.5rem; /* Add some space between the image and label */
+        }
+
+        .button_container div:nth-child(3) {
+            margin-right: auto; /* This will push the fourth element to the right */
         }
 
 #Lesson_Delete,
@@ -194,7 +199,7 @@
 .button_container div {
     cursor: pointer;
     user-select: none;
-    margin-right: 1.875rem;
+
 }
 
     .button_container div:hover {
@@ -207,32 +212,14 @@
     }
 
 
-#toggleButtonPublishUnpublish {
-    width: auto; /* Adjust width to be flexible */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 2.0625rem;
+#publishLesson {
+    z-index: 2;
 }
 
-
-.toggle-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.PublishIcon {
-    width: 2.5rem;
-    margin-right: 0.5rem; /* Add some space between the icon and label */
-}
-
-#publishLesson,
 #unpublishLesson {
-    display: flex;
-    align-items: center;
+    z-index: 1;
 }
 
     #publishLesson span, #unpublishLesson span {
-        margin-left: 0.5rem; /* Space between the icon and text */
+        margin-left: 0.5rem;
     }

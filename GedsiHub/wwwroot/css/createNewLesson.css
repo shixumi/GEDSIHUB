@@ -26,8 +26,8 @@
 }
 
 #create_lesson_container {
+    height: auto !important;
     background: #ffffff;
-    height: 37.109375rem;
     padding-top: 3.125rem;
     padding-right: 3.125rem;
     margin-top: 2.65625rem;

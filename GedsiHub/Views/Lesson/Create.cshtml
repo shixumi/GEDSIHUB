@@ -5,36 +5,73 @@
     ViewData["Title"] = "Create Lesson";
 }
 
+
+<!-- Create Lesson -->
 <div>
+    <!-- Modules Header Title-->
     <h1 class="modules_title" style="color: #464040;">Create a lesson</h1>
+    <!-- Horizontal Break -->
     <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
-    <div class="container create_lesson_container" id="create_lesson_container">
-        <div class="row">
-            <div class="col-md-6 col-xl-5 col-xxl-4">
-                <h1 style="color: #464040;font-size: 1.5625rem;">Number</h1>
-                <input type="text" id="CreateLesson_NumberInput" class="InputBox" placeholder="Enter Lesson Number" required="">
-            </div>
-            <div class="col" style="padding-left: 35px;">
-                <h1 style="color: #464040;font-size: 1.5625rem;">Title</h1>
-                <input type="text" id="CreateLesson_TitleInput" class="InputBox" placeholder="Enter Lesson Title" required="">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col lesson-overview-col">
-                <h1 style="color: #464040;font-size: 1.5625rem;">Overview</h1><textarea id="CreateLesson_InputOverview" class="overview_textarea" placeholder="Enter a brief overview of the lesson" maxlength="250"></textarea>
+
+    <!-- Form for creating a new lesson -->
+    <form asp-action="Create" method="post">
+
+        <!-- Create Lesson Container -->
+        <div class="container create_lesson_container" id="create_lesson_container">
+            <!-- Add hidden field to include the moduleId -->
+            <input type="hidden" name="moduleId" value="@ViewBag.ModuleId" />
+
+
+            <div class="row">
+                <div class="col-md-6 col-xl-5 col-xxl-4">
+                    <!-- Lesson No. Label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Number</h1>
+
+                    <!-- Lesson No. Input-->
+                    <div class="form-group">
+                        <input asp-for="LessonNumber" class="form-control InputBox" placeholder="Enter Lesson Number" required="" />
+                        <span asp-validation-for="LessonNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col" style="padding-left: 35px;">
+                    <!-- Lesson Title Label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Title</h1>
+                    <!-- Lesson Title Input -->
+                    <div class="form-group">
+                        <input asp-for="Title" class="form-control InputBox" placeholder="Enter Lesson Title" required="" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
 
-            <div id="Create-lesson-button-container"class="button-container">
-                <button id="cancelButton_createLesson" class="btn fw-bolder cancelButton" type="button">Cancel</button>
+            <div class="row">
+                <div class="col lesson-overview-col">
+                    <!-- Overview label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Overview</h1>
+                    <!-- Overview Textarea -->
+                    <div class="form-group">
+                        <textarea asp-for="Overview" class="form-control overview_textarea" placeholder="Enter a brief overview of the lesson" maxlength="250"></textarea>
+                        <span asp-validation-for="Overview" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
 
+            <div id="Create-lesson-button-container" class="button-container">
                 <!-- Cancel Button -->
                 <a asp-controller="Module" asp-action="Details" asp-route-id="@ViewBag.ModuleId" id="cancelButton" class="btn fw-bolder cancelButton">Cancel</a>
 
-                <button id="CreateLessonButton" class="fw-bolder SubmitButton" type="button">Create Lesson</button>
+                <!-- Submit Button -->
+                <button type="submit" class="fw-bolder btn btn-primary SubmitButton">Create Lesson</button>
             </div>
+        
         </div>
-    </div>
+    </form>
 </div>
+
+
+
+
 <div>
     <h2>Create Lesson</h2>
 
