@@ -1,28 +1,42 @@
 ﻿@model GedsiHub.Models.Lesson
 @{
     Layout = "_LayoutApp";
-    ViewData["Title"] = "Module";
+    ViewData["Title"] = "Lesson Details";
 }
 
+@* Problems:
+Cannot display the Module Number/ID in the breadcrumb <line 23> *@
 
+
+
+<!-- Lesson Details Page -->
 <div>
+    <!-- Breadcrumbs -->
     <ol class="breadcrumb" id="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="modules.html"><span>Modules</span></a>
+            <!-- Proceed to list of modules page -->
+            <a asp-controller="Module" asp-action="Index"><span>Modules</span></a>
+
         </li>
         <li class="breadcrumb-item">
-            <a href=""><span>Module<span id="module_number" class="module_number">0</span></span></a>
+            <!-- Proceed to list of lessons page -->
+            <a asp-action="Index"><span>Module<span id="module_number" class="module_number">Module</span></span></a>
+            <a asp-action="Details" asp-controller="Module" asp-route-moduleId="@ViewBag.ModuleId">Module <span id="module_number" class="module_number">@ViewBag.ModuleId</span></a>
         </li>
+            <!-- Current lesson page -->
         <li class="breadcrumb-item">
-            <a href="CMSEditNewCreatedLesson.html"><span id="cms_lesson_breadcrumb">Lesson<span id="lesson_number" class="module_number">0</span></span></a>
+            <a asp-action="Details"><span id="cms_lesson_breadcrumb">Lesson<span id="lesson_number" class="module_number">@Model.LessonNumber</span></span></a>
         </li>
     </ol>
-    <span id="added_module_title" class="added_module_title">Newly Added Title Goes Here</span>
+
+    
+   
+    <span id="added_module_title" class="added_module_title">Module No: @ViewBag.ModuleId</span>
     <div class="cms_white_base_container">
         <div class="cms_lesson_title">
             <span>Lesson</span>
-            <span id="lesson_number_inwcon">0.</span>
-            <span id="lesson_title">Title of New Created Lesson</span>
+            <span id="lesson_number_inwcon">@Model.LessonNumber</span>
+            <span id="lesson_title">@Model.Title</span>
         </div>
         <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
             <img class="upload_icon" src="~/images/Upload.png" />
@@ -42,8 +56,13 @@
             <input type="file" id="uploadText" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
             <label for="uploadText" class="uploadButtonLabel"> Upload</label>
         </div>
-        <div id="cancel_save_con">
-            <button id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton" type="button" onclick="window.location.href='editNewCreatedModule.html'">Cancel</button>
+        <div class="cancel_save_con">
+
+
+            @* <button id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton" type="button" onclick="window.location.href='editNewCreatedModule.html'">Cancel</button> *@
+            <!-- Cancel Button -->
+            <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId" id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton">Cancel</a>
+            <!-- Save Button -->
             <button id="PreviewLessonContentButton" class="fw-bolder SaveButton" type="button">Preview</button>
         </div>
     </div>
@@ -53,10 +72,7 @@
 
 
 
-@{
-    Layout = "_LayoutApp";
-    ViewData["Title"] = "Module";
-}
+
 
 <h2>Lesson Details</h2>
 

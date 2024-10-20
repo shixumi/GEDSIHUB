@@ -108,6 +108,9 @@ input[type="file"] {
 }
 
 .cancelLessonContentButton {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
     background: rgba(10,88,202,0);
     color: #464040;
     border: 0.075rem solid #464040;
@@ -204,8 +207,11 @@ input[type="file"] {
     display: none;
 }
 
-#cancel_save_con {
+.cancel_save_con {
+    display: flex;
+    justify-content: space-between;
     padding-top: 3.125rem;
+
 }
 
 .remove-button {
