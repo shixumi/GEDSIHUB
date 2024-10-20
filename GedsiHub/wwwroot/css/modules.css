@@ -127,22 +127,36 @@
     width: 89.375rem;
 }
 
+.moduleIcon_container {
+    border: none; /* Ensure no border */
+    box-shadow: none; /* Remove any shadow */
+    padding: 0;
+}
+
 .ColorInput {
     appearance: none;
     -webkit-appearance: none;
     width: 4.46875rem;
     height: 4.46875rem;
     border-radius: 52%;
-    border: none;
+    border: none; /* Remove border */
     cursor: pointer;
-    background-color: transparent;
     padding: 0;
     outline: none;
+    box-shadow: none; /* Remove any default shadow */
 }
 
+    /* To ensure hover shadow looks smooth */
     .ColorInput:hover {
-        box-shadow: 0 0 0.40625rem rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 0.40625rem rgba(0, 0, 0, 0.2); /* Optional hover effect */
     }
+
+    /* Remove any default focus outline */
+    .ColorInput:focus {
+        outline: none;
+    }
+
+
 
 .module_card {
     height: 18.6875rem;

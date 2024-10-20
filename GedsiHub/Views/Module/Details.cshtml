@@ -46,7 +46,7 @@
         <div id="edit_new_lesson_container" class="container d-xxl-flex EditLessonContainer">
             <div class="lessonNo_title_container">
                 <span>Lesson</span>
-                <span id="LessonNumberDisplay">@lesson.LessonNumber</span>
+                <span id="LessonNumberDisplay">@lesson.LessonNumber.</span>
                 <span id="LessonTitleDisplay">@lesson.Title</span>
                 <div class="lesson_con_linebreak"></div>
             </div>
@@ -89,50 +89,45 @@
                 <a asp-action="Delete" asp-controller="Lesson" asp-route-id="@lesson.LessonId" class="btn btn-danger">Delete</a>
             </td>
         </tr>
-
-
-
-
-        <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
-            <div class="lessonNo_title_container">
-                <span>Module</span>
-                <span id="ModAssessNumberDisplay">0</span>
-                <span id="AssessmentTitleDisplay">Assessment</span>
-                <div class="lesson_con_linebreak"></div>
-            </div>
-            <span id="assessmentOverviewDisplay" class="lesson_brief_overview">Overview</span>
-            <div class="button_container">
-
-               <div id="DeleteAssessment">
-                    <a data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                        <img id="DeleteModule" class="Delete" src="~/images/Delete.png" />
-                        <span>Delete</span>
-                    </a>
-                </div>
-
-                <div id="EditAssessment">
-                    <img class="Edit" src="~/images/Edit.png" />
-                    <span>Edit</span>
-                </div>
-
-                <div id="toggleButtonPublishUnpublishAssessment" class="d-xxl-flex">
-                    <div id="publishAssessment" class="toggle-content">
-                        <img class="PublishIcon" src="~/images/Publish.png" />
-                        <span>Publish</span>
-                    </div>
-                    <div id="unpublishAssessment" class="toggle-content">
-                        <img class="PublishIcon" src="~/images/Unpublish.png" />
-                        <span>Unpublish</span>
-                    </div>
-                </div>
-
-                <button id="go_to_assessment" class="btn btn-primary go_to_button" type="button">Go To Assessment</button>
-            </div>
-        </div>
-
     }
 
 
+    <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
+        <div class="lessonNo_title_container">
+            <span>Module</span>
+            <span id="ModAssessNumberDisplay">0.</span>
+            <span id="AssessmentTitleDisplay">Assessment</span>
+            <div class="lesson_con_linebreak"></div>
+        </div>
+        <span id="assessmentOverviewDisplay" class="lesson_brief_overview">Overview</span>
+        <div class="button_container">
+
+            <div id="DeleteAssessment">
+                <a data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                    <img id="DeleteAssessment" class="Delete" src="~/images/Delete.png" />
+                    <span>Delete</span>
+                </a>
+            </div>
+
+            <div id="EditAssessment">
+                <img class="Edit" src="~/images/Edit.png" />
+                <span>Edit</span>
+            </div>
+
+            <div id="toggleButtonPublishUnpublishAssessment" class="d-xxl-flex">
+                <div id="publishAssessment" class="toggle-content">
+                    <img class="PublishIcon" src="~/images/Publish.png" />
+                    <span>Publish</span>
+                </div>
+                <div id="unpublishAssessment" class="toggle-content">
+                    <img class="PublishIcon" src="~/images/Unpublish.png" />
+                    <span>Unpublish</span>
+                </div>
+            </div>
+
+            <button id="go_to_assessment" class="btn btn-primary go_to_button" type="button">Go To Assessment</button>
+        </div>
+    </div>
 
 
 
