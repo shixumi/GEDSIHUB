@@ -30,6 +30,9 @@
 }
 
 .go_to_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #660000;
     color: #fff;
     border-radius: 3.125rem;
@@ -47,11 +50,11 @@
     transform: scale(0.95);
     box-shadow: 0 0.125rem 0.9375rem rgba(0, 0, 0, 0.1);
     color: #ffffff;
-    background-color: #920000;
+    background-color: #920000 !important;
 }
 
 .go_to_button:hover {
-    background-color: #920000;
+    background-color: #920000 !important;
 }
 
 
@@ -91,21 +94,27 @@
     gap: 1.5rem; /* Add some space between buttons */
 }
 
-    .button_container div {
-        margin-right: 1rem;
-        display: flex;
-        align-items: center; /* Vertically align text and images */
-    }
+.button_container div {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center; /* Vertically align text and images */
+}
 
-        .button_container div span {
-            font-size: 1.05875rem;
-            color: #464040;
-            margin-left: 0.5rem; /* Add some space between the image and label */
-        }
+.button_container div span {
+    font-size: 1.05875rem;
+    color: #464040;
+    margin-left: 0.5rem; /* Add some space between the image and label */
+}
 
-        .button_container div:nth-child(3) {
-            margin-right: auto; /* This will push the fourth element to the right */
-        }
+.button_container div:nth-child(3) {
+    margin-right: auto; /* This will push the fourth element to the right */
+}
+
+.lesson-ftr-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 #Lesson_Delete,
 #EditLesson {
