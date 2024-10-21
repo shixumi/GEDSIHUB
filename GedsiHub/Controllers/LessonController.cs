@@ -153,12 +153,14 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
+            var moduleId = lesson.ModuleId;  // Store the module ID before deleting the lesson
+
             _context.Lessons.Remove(lesson);
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"Lesson with ID {id} successfully deleted.");
 
-            return RedirectToAction(nameof(Index), new { moduleId = lesson.ModuleId });
+            return RedirectToAction("Details", "Module", new { id = moduleId });
         }
 
         // GET: Fetch Lesson Contents
