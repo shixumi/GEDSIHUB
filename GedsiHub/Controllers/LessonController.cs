@@ -57,7 +57,7 @@ namespace GedsiHub.Controllers
                     _context.Add(lesson);
                     await _context.SaveChangesAsync();
                     _logger.LogInformation("Lesson successfully saved to the database.");
-                    return RedirectToAction("Index", new { moduleId });
+                    return RedirectToAction("Details", "Module", new { id = moduleId });
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +75,7 @@ namespace GedsiHub.Controllers
             }
 
             ViewBag.ModuleId = moduleId;
-            return View(lesson);
+            return RedirectToAction("Details", "Module", new { id = moduleId });
         }
 
 

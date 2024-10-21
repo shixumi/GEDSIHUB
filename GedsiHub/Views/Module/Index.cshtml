@@ -129,35 +129,3 @@
         </div>
     }
 </div>
-
-<h2>Modules</h2>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Module</a>
-</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Created Date</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var module in Model)
-        {
-            <tr>
-                <td>@module.Title</td>
-                <td>@module.Description</td>
-                <td>@module.CreatedDate.ToShortDateString()</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@module.ModuleId" class="btn btn-info">Details</a> |
-                    <a asp-action="Edit" asp-route-id="@module.ModuleId" class="btn btn-warning">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@module.ModuleId" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
