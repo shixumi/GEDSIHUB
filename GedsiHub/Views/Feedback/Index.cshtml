@@ -1,4 +1,59 @@
-﻿@page
-@model GedsiHub.Views.Feedback.IndexModel
-@{
+﻿@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Feedback";
 }
+
+
+<div>
+    <div class="feedback-title-searcbar-con">
+        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">Feedback Responses</h1>
+        <div>
+            <input id="searchResponse" type="search" placeholder="Search feedback by keyword, user, or date..." />
+            <img class="search-icon-feedback" src="~/images/Search_Small.png" />
+        </div>
+    </div>
+    <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
+    <div class="container feedback-container">
+        <div class="feedback-header-buttons">
+            <div class="complain-suggestion-con">
+                <span id="user-complaints" class="complaint">Complaint</span>
+                <span id="user-suggestions" class="suggestion">Suggestion</span>
+            </div>
+            <div class="resolved-feedbacks-filter-con">
+                <span class="view-resolved-feedbacks">View Resolved Feedbacks</span>
+                <span class="filter">
+                    Filter
+                    <img src="~/images/Filter.png" width="39" height="37" />
+                </span>
+            </div>
+        </div>
+        <div class="table-responsive feedback-responses-table">
+            <table class="table">
+                <thead>
+                    <tr class="feedback-table-label">
+                        <th class="select-all-checkbox"><input type="checkbox" /></th>
+                        <th class="user-name-feedback-label"><br /><br /><strong>User Name</strong></th>
+                        <th class="date-feedback-label">Date</th>
+                        <th class="type-of-issue-feedback-label"><br /><strong>Type of Issue</strong></th>
+                        <th class="actions-feedback-label"><br /><span style="color: rgb(33, 37, 41);">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-feedback-response">
+                        <td class="checkbox-container"><input id="checkbox-feedback-response" type="checkbox" /></td>
+                        <td id="username-feedback-response">Alex Porlares</td>
+                        <td id="date-feedback-response">2024-10-20</td>
+                        <td id="type-of-issue-feedback-response">Inappropriate Content</td>
+                        <td class="view-delete-button-container">
+                            <button id="view-user-feedback-button" type="button">
+                                <img src="~/images/View_Green.png" />View
+                            </button>
+                            <button id="delete-user-feedback-button" class="delete-user-feedback-button" type="button">
+                                <img src="~/images/Delete.png" />Delete
+                            </button>
+                        </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
