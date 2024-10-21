@@ -417,15 +417,6 @@ namespace GedsiHub.Data
                       .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
             });
 
-            // **Configure Quiz relationships**
-            builder.Entity<Assessment>(entity =>
-            {
-                entity.HasOne(qz => qz.Module)
-                      .WithMany(m => m.Assessments)
-                      .HasForeignKey(qz => qz.ModuleId)
-                      .OnDelete(DeleteBehavior.Cascade); // Allow cascade delete from Module
-            });
-
             // Module - Lesson relationship
             builder.Entity<Module>()
                 .HasMany(m => m.Lessons)
@@ -439,6 +430,14 @@ namespace GedsiHub.Data
                 .WithOne(lc => lc.Lesson)
                 .HasForeignKey(lc => lc.LessonId)
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete LessonContent when Lesson is deleted
+
+            // Configure one-to-one relationship between Module and Assessment
+            builder.Entity<Module>()
+                .HasOne(m => m.Assessment)
+                .WithOne(a => a.Module)
+                .HasForeignKey<Assessment>(a => a.ModuleId)
+                .OnDelete(DeleteBehavior.Cascade);
+            ;
 
             // **Configure Module relationships**
             builder.Entity<Module>(entity =>

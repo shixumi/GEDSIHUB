@@ -16,21 +16,19 @@ namespace GedsiHub.Models
         [StringLength(500)]
         public string Description { get; set; }
 
-        // H5P Specific Properties
         [Required]
-        public string H5PId { get; set; } // Unique identifier for the H5P content
-
-        public string H5PMetadata { get; set; } // JSON or XML metadata for H5P
+        [DataType(DataType.Html)]
+        [Display(Name = "H5P Embed Code")]
+        public string H5PEmbedCode { get; set; }
 
         // Foreign Key to Module
-        [ForeignKey("Module")]
         public int ModuleId { get; set; }
 
-        public Module Module { get; set; } // Navigation property
+        // Navigation Property (Remove [Required] if present)
+        public virtual Module? Module { get; set; }
 
         // Timestamps
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-
         public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
     }
 }
