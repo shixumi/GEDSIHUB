@@ -111,6 +111,11 @@ function updateFileInput(inputElement, files) {
 function handleFiles(files, container, initialHTML, inputElement) {
     console.log("Handling files:", files);
     [...files].forEach(file => previewFile(file, container, initialHTML, inputElement)); // Preview each file
+
+    // Clear the input value after processing files to allow for re-uploading
+    setTimeout(() => {
+        inputElement.value = '';
+    }, 100);  // Small delay to ensure file processing is complete before clearing input
 }
 
 // Function to preview file and handle different file types (videos, images, PDFs, Word docs, etc.)
@@ -182,6 +187,16 @@ function previewFile(file, container, initialHTML, inputElement) {
             container.appendChild(filePreviewElement);
         };
         fileReader.readAsDataURL(file); // Read file as DataURL to create clickable link
+    } else if (file.name.endsWith('.h5p')) {
+        // Handle .h5p files (display as a clickable link)
+        filePreviewElement = document.createElement('a');
+        filePreviewElement.href = URL.createObjectURL(file);
+        filePreviewElement.textContent = `Click to preview ${file.name} (H5P content)`;
+        filePreviewElement.target = '_blank'; // Open in a new tab for H5P content
+        filePreviewElement.style.display = 'block';
+        filePreviewElement.style.textDecoration = 'underline';
+        filePreviewElement.style.color = '#007bff'; // Bootstrap link color
+        container.appendChild(filePreviewElement);
     } else {
         // Handle unsupported file types or provide a download link for any other file types
         filePreviewElement = document.createElement('a');
