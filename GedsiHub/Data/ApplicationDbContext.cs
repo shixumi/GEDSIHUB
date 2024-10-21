@@ -35,8 +35,8 @@ namespace GedsiHub.Data
         public DbSet<ForumComment> ForumComments { get; set; }
         public DbSet<ForumPostReport> ForumPostReports { get; set; } 
         public DbSet<ForumCommentReport> ForumCommentReports { get; set; }
-
         public DbSet<FAQ> FAQs { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

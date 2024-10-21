@@ -1,0 +1,10 @@
+﻿<!-- Views/Feedback/Details.cshtml -->
+<h2>Feedback Details</h2>
+
+<p><strong>User:</strong> @Model.UserName</p>
+<p><strong>Date:</strong> @Model.Date.ToShortDateString()</p>
+<p><strong>Type:</strong> @Model.Type</p>
+<p><strong>Description:</strong> @Model.Description</p>
+
+<a href="@Url.Action("MarkAsResolved", new { id = Model.Id })" class="btn btn-secondary">Mark as Resolved</a>
+<a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger">Delete</a>

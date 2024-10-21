@@ -1,4 +1,8 @@
-﻿@page
-@model GedsiHub.Views.Feedback.IndexModel
+﻿<!-- Views/Feedback/Index.cshtml -->
 @{
+    ViewData["Title"] = "Submit Feedback";
 }
+
+<h2>Submit Your Feedback</h2>
+<a href="@Url.Action("Complaint", "Feedback")" class="btn btn-primary">Submit a Complaint</a>
+<a href="@Url.Action("Suggestion", "Feedback")" class="btn btn-secondary">Submit a Suggestion</a>
