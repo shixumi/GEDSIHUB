@@ -15,6 +15,7 @@ namespace GedsiHub.Models
 
         [Required]
         public string Description { get; set; } = string.Empty;
+        public int PositionInt { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
@@ -22,8 +23,7 @@ namespace GedsiHub.Models
 
         // Navigation Properties
         public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
-        public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
-        public virtual ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
+        public virtual ICollection<Assessment> Assessments { get; set; } = new List<Assessment>();
         public virtual ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
         public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
 

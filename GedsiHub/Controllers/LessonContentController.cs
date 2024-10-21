@@ -1,8 +1,10 @@
-﻿using GedsiHub.Data;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using GedsiHub.Data;
 using GedsiHub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
 {
@@ -15,127 +17,178 @@ namespace GedsiHub.Controllers
             _context = context;
         }
 
-        // GET: LessonContents for a specific lesson
-        public async Task<IActionResult> Index(int lessonId)
+        // GET: LessonContent/Create/{lessonId}
+        public IActionResult Create(int lessonId)
         {
-            var lessonContents = await _context.LessonContents
-                                               .Where(lc => lc.LessonId == lessonId)
-                                               .ToListAsync();
-
-            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.LessonId == lessonId);
-
+            var lesson = _context.Lessons.Find(lessonId);
             if (lesson == null)
             {
                 return NotFound();
             }
 
-            ViewBag.LessonTitle = lesson.Title;
             ViewBag.LessonId = lessonId;
-
-            return View(lessonContents);
+            return PartialView("_Create");
         }
 
-
-        // GET: Create a new LessonContent
-        public IActionResult Create(int lessonId)
-        {
-            ViewBag.LessonId = lessonId;
-            return View();
-        }
-
-        // POST: Create a new LessonContent
+        // POST: LessonContent/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int lessonId, [Bind("ContentType,ContentPath,H5PId,H5PMetadata")] LessonContent lessonContent)
+        public async Task<IActionResult> Create([Bind("ContentType,TextContent,ImageUrl,H5PEmbedCode,PositionInt,LessonId")] LessonContent lessonContent)
         {
             if (ModelState.IsValid)
             {
-                lessonContent.LessonId = lessonId;
-                _context.Add(lessonContent);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { lessonId });
+                // Validate based on ContentType
+                switch (lessonContent.ContentType)
+                {
+                    case ContentTypeEnum.Text:
+                        if (string.IsNullOrWhiteSpace(lessonContent.TextContent))
+                        {
+                            ModelState.AddModelError("TextContent", "Text content is required.");
+                            break;
+                        }
+                        // Optionally, implement custom sanitization for text content
+                        break;
+
+                    case ContentTypeEnum.Image:
+                        if (string.IsNullOrWhiteSpace(lessonContent.ImageUrl))
+                        {
+                            ModelState.AddModelError("ImageUrl", "Image URL is required.");
+                            break;
+                        }
+                        if (!Uri.IsWellFormedUriString(lessonContent.ImageUrl, UriKind.Absolute))
+                        {
+                            ModelState.AddModelError("ImageUrl", "Please enter a valid image URL.");
+                            break;
+                        }
+                        break;
+
+                    case ContentTypeEnum.H5P:
+                        if (string.IsNullOrWhiteSpace(lessonContent.H5PEmbedCode))
+                        {
+                            ModelState.AddModelError("H5PEmbedCode", "H5P embed code is required.");
+                            break;
+                        }
+                        if (!IsValidH5PEmbed(lessonContent.H5PEmbedCode))
+                        {
+                            ModelState.AddModelError("H5PEmbedCode", "Please enter a valid H5P iframe embed code from h5p.org.");
+                            break;
+                        }
+                        break;
+
+                    default:
+                        ModelState.AddModelError("ContentType", "Invalid content type.");
+                        break;
+                }
+
+                if (ModelState.IsValid)
+                {
+                    _context.Add(lessonContent);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", "Lesson", new { id = lessonContent.LessonId });
+                }
             }
-            ViewBag.LessonId = lessonId;
-            return View(lessonContent);
+
+            ViewBag.LessonId = lessonContent.LessonId;
+            return PartialView("_Create", lessonContent);
         }
 
-        // GET: Edit an existing LessonContent
-        public async Task<IActionResult> Edit(int id)
+        // GET: LessonContent/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
+            if (id == null)
+            {
+                return BadRequest("Content ID is required.");
+            }
+
             var lessonContent = await _context.LessonContents.FindAsync(id);
             if (lessonContent == null)
             {
                 return NotFound();
             }
 
-            // Ensure the LessonId is set properly and passed to the view
-            ViewBag.LessonId = lessonContent.LessonId;
-            return View(lessonContent);
+            return PartialView("_Edit", lessonContent);
         }
 
-        // POST: Edit an existing LessonContent
+        // POST: LessonContent/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ContentId,ContentType,ContentPath,LessonId")] LessonContent lessonContent)
+        public async Task<IActionResult> Edit(int id, [Bind("ContentId,ContentType,TextContent,ImageUrl,H5PEmbedCode,PositionInt,LessonId")] LessonContent lessonContent)
         {
             if (id != lessonContent.ContentId)
             {
-                return NotFound();
-            }
-
-            // Ensure that the LessonId is valid and exists in the Lessons table
-            if (!_context.Lessons.Any(l => l.LessonId == lessonContent.LessonId))
-            {
-                ModelState.AddModelError("LessonId", "The selected Lesson does not exist.");
-                ViewBag.LessonId = lessonContent.LessonId;
-                return View(lessonContent);
+                return BadRequest("Content ID mismatch.");
             }
 
             if (ModelState.IsValid)
             {
-                try
+                // Validate based on ContentType
+                switch (lessonContent.ContentType)
                 {
-                    _context.Update(lessonContent);
-                    await _context.SaveChangesAsync();
+                    case ContentTypeEnum.Text:
+                        if (string.IsNullOrWhiteSpace(lessonContent.TextContent))
+                        {
+                            ModelState.AddModelError("TextContent", "Text content is required.");
+                            break;
+                        }
+                        // Optionally, implement custom sanitization for text content
+                        break;
+
+                    case ContentTypeEnum.Image:
+                        if (string.IsNullOrWhiteSpace(lessonContent.ImageUrl))
+                        {
+                            ModelState.AddModelError("ImageUrl", "Image URL is required.");
+                            break;
+                        }
+                        if (!Uri.IsWellFormedUriString(lessonContent.ImageUrl, UriKind.Absolute))
+                        {
+                            ModelState.AddModelError("ImageUrl", "Please enter a valid image URL.");
+                            break;
+                        }
+                        break;
+
+                    case ContentTypeEnum.H5P:
+                        if (string.IsNullOrWhiteSpace(lessonContent.H5PEmbedCode))
+                        {
+                            ModelState.AddModelError("H5PEmbedCode", "H5P embed code is required.");
+                            break;
+                        }
+                        if (!IsValidH5PEmbed(lessonContent.H5PEmbedCode))
+                        {
+                            ModelState.AddModelError("H5PEmbedCode", "Please enter a valid H5P iframe embed code from h5p.org.");
+                            break;
+                        }
+                        break;
+
+                    default:
+                        ModelState.AddModelError("ContentType", "Invalid content type.");
+                        break;
                 }
-                catch (DbUpdateConcurrencyException)
+
+                if (ModelState.IsValid)
                 {
-                    if (!LessonContentExists(lessonContent.ContentId))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(lessonContent);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!LessonContentExists(lessonContent.ContentId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction("Details", "Lesson", new { id = lessonContent.LessonId });
                 }
-                return RedirectToAction("Index", new { lessonId = lessonContent.LessonId });
             }
-
-            if (!_context.Lessons.Any(l => l.LessonId == lessonContent.LessonId))
-            {
-                ModelState.AddModelError("LessonId", "The selected Lesson does not exist.");
-                ViewBag.LessonId = lessonContent.LessonId;
-                return View(lessonContent);
-            }
-
-
-            ViewBag.LessonId = lessonContent.LessonId;
-            return View(lessonContent);
+            return PartialView("_Edit", lessonContent);
         }
 
-        // GET: Delete a LessonContent
-        public async Task<IActionResult> Delete(int id)
-        {
-            var lessonContent = await _context.LessonContents.FindAsync(id);
-            if (lessonContent == null)
-            {
-                return NotFound();
-            }
-            return View(lessonContent);
-        }
-
-        // POST: Delete a LessonContent
+        // POST: LessonContent/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -143,15 +196,38 @@ namespace GedsiHub.Controllers
             var lessonContent = await _context.LessonContents.FindAsync(id);
             if (lessonContent != null)
             {
+                int lessonId = lessonContent.LessonId;
                 _context.LessonContents.Remove(lessonContent);
                 await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Lesson", new { id = lessonId });
             }
-            return RedirectToAction(nameof(Index), new { lessonId = lessonContent.LessonId });
+            return NotFound();
         }
 
         private bool LessonContentExists(int id)
         {
             return _context.LessonContents.Any(e => e.ContentId == id);
+        }
+
+        // Utility method to validate H5P embed code
+        private bool IsValidH5PEmbed(string embedCode)
+        {
+            if (string.IsNullOrEmpty(embedCode))
+                return false;
+
+            // Simple validation: Check if it contains an iframe from h5p.org
+            embedCode = embedCode.Trim();
+
+            // Check if it starts with <iframe and contains h5p.org
+            if (!embedCode.StartsWith("<iframe", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            if (!embedCode.Contains("src=\"https://h5p.org", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Further validation can be added as needed
+
+            return true;
         }
     }
 }

@@ -27,9 +27,7 @@ namespace GedsiHub.Data
         public DbSet<Module> Modules { get; set; }
         public DbSet<Lesson> Lessons { get; set; } 
         public DbSet<LessonContent> LessonContents { get; set; }
-        public DbSet<Quiz> Quizzes { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<Answer> Answers { get; set; }
+        public DbSet<Assessment> Assessments { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         
         // DbSets for the Forum
@@ -419,29 +417,11 @@ namespace GedsiHub.Data
                       .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
             });
 
-            // **Configure Answer relationships**
-            builder.Entity<Answer>(entity =>
-            {
-                entity.HasOne(a => a.Question)
-                      .WithMany(q => q.Answers)
-                      .HasForeignKey(a => a.QuestionId)
-                      .OnDelete(DeleteBehavior.Cascade); // Allow cascade delete from Question
-            });
-
-            // **Configure Question relationships**
-            builder.Entity<Question>(entity =>
-            {
-                entity.HasOne(q => q.Module)
-                      .WithMany(m => m.Questions)
-                      .HasForeignKey(q => q.ModuleId)
-                      .OnDelete(DeleteBehavior.Cascade); // Allow cascade delete from Module
-            });
-
             // **Configure Quiz relationships**
-            builder.Entity<Quiz>(entity =>
+            builder.Entity<Assessment>(entity =>
             {
                 entity.HasOne(qz => qz.Module)
-                      .WithMany(m => m.Quizzes)
+                      .WithMany(m => m.Assessments)
                       .HasForeignKey(qz => qz.ModuleId)
                       .OnDelete(DeleteBehavior.Cascade); // Allow cascade delete from Module
             });

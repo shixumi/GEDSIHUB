@@ -1,38 +1,98 @@
 ﻿@model GedsiHub.Models.LessonContent
+@using GedsiHub.Models
 
-<h2>Edit Lesson Content</h2>
+<div class="modal-header">
+    <h5 class="modal-title">Edit Content</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="ContentId" />
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="ContentId" />
-    <input type="hidden" asp-for="LessonId" /> <!-- Ensure LessonId is passed as a hidden field -->
+        <div class="form-group mb-3">
+            <label asp-for="ContentType" class="control-label">Content Type</label>
+            @Html.DropDownListFor(
+                     model => model.ContentType,
+                     new SelectList(Enum.GetValues(typeof(ContentTypeEnum))),
+                     "-- Select Content Type --",
+                     new { @class = "form-control", @id = "ContentTypeSelectEdit", @disabled = "disabled" }
+                     )
+            <span asp-validation-for="ContentType" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="ContentType"></label>
-        <input asp-for="ContentType" class="form-control" />
-        <span asp-validation-for="ContentType" class="text-danger"></span>
-    </div>
+        <!-- Text Content -->
+        <div class="form-group mb-3 content-type-group" id="TextContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.Text ? "block" : "none")">
+            <label asp-for="TextContent" class="control-label">Text Content</label>
+            <textarea asp-for="TextContent" class="form-control" id="textEditorEdit">@Model.TextContent</textarea>
+            <span asp-validation-for="TextContent" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="ContentPath"></label>
-        <input asp-for="ContentPath" class="form-control" />
-        <span asp-validation-for="ContentPath" class="text-danger"></span>
-    </div>
+        <!-- Image Content -->
+        <div class="form-group mb-3 content-type-group" id="ImageContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.Image ? "block" : "none")">
+            <label asp-for="ImageUrl" class="control-label">Image URL</label>
+            <input asp-for="ImageUrl" class="form-control" placeholder="Enter image URL" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="H5PId"></label>
-        <input class="form-control" asp-for="H5PId" />
-    </div>
+        <!-- H5P Content -->
+        <div class="form-group mb-3 content-type-group" id="H5PContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.H5P ? "block" : "none")">
+            <label asp-for="H5PEmbedCode" class="control-label">H5P Embed Code</label>
+            <textarea asp-for="H5PEmbedCode" class="form-control" id="h5pEditorEdit">@Model.H5PEmbedCode</textarea>
+            <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
+            <small class="form-text text-muted">
+                To embed H5P content, paste the iframe embed code provided by H5P here.
+            </small>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="H5PMetadata"></label>
-        <textarea class="form-control" asp-for="H5PMetadata"></textarea>
-    </div>
+        <div class="form-group mb-3">
+            <label asp-for="PositionInt" class="control-label">Position</label>
+            <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
+            <span asp-validation-for="PositionInt" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    </form>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        // Initialize TinyMCE for Text Content
+        tinymce.init({
+            selector: '#textEditorEdit',
+            plugins: 'link image code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | link image',
+            height: 200,
+            menubar: false,
+            statusbar: false
+        });
+
+        // Initialize TinyMCE for H5P Embed Code
+        tinymce.init({
+            selector: '#h5pEditorEdit',
+            plugins: 'link image code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | link image',
+            height: 200,
+            menubar: false,
+            statusbar: false
+        });
+
+        // Show/Hide Content Fields Based on Content Type Selection
+        document.getElementById('ContentTypeSelectEdit').addEventListener('change', function () {
+            var selected = this.value;
+            var groups = document.querySelectorAll('.content-type-group');
+            groups.forEach(function (group) {
+                group.style.display = 'none';
+            });
+
+            if (selected === 'Text') {
+                document.getElementById('TextContentGroupEdit').style.display = 'block';
+            } else if (selected === 'Image') {
+                document.getElementById('ImageContentGroupEdit').style.display = 'block';
+            } else if (selected === 'H5P') {
+                document.getElementById('H5PContentGroupEdit').style.display = 'block';
+            }
+        });
+    </script>
 }

@@ -10,20 +10,32 @@ namespace GedsiHub.Models
         public int ContentId { get; set; }
 
         [Required]
-        public string ContentType { get; set; } = string.Empty; // e.g., Video, Text, PDF, H5P
+        public ContentTypeEnum ContentType { get; set; } // Enum to specify content type
 
-        [Required]
-        public string ContentPath { get; set; } = string.Empty; // Path to media or H5P
+        // Properties for Text Content
+        public string? TextContent { get; set; } // Stores HTML-formatted text
 
-        public int LessonId { get; set; } // Foreign Key to Lesson
+        // Properties for Image Content
+        public string? ImageUrl { get; set; } // URL of the image
+
+        // Properties for H5P Content
+        [DataType(DataType.Html)]
+        public string? H5PEmbedCode { get; set; } // Stores the iframe embed code
+
+        public int PositionInt { get; set; } // Determines the order of content within the lesson
+
+        // Foreign Key to Lesson
+        [ForeignKey("Lesson")]
+        public int LessonId { get; set; }
 
         // Navigation Property
-        public virtual Lesson? Lesson { get; set; } = null!;
+        public virtual Lesson Lesson { get; set; } = null!;
+    }
 
-        // Optional: H5P Specific Properties
-        public string? H5PId { get; set; } // ID or reference for H5P content
-
-        [Column(TypeName = "TEXT")]
-        public string? H5PMetadata { get; set; } // JSON or XML metadata related to H5P content
+    public enum ContentTypeEnum
+    {
+        Text = 1,
+        Image = 2,
+        H5P = 3
     }
 }

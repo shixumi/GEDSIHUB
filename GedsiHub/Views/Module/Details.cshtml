@@ -9,16 +9,23 @@
 <div class="container-lesson">
     <!-- Breadcrumb -->
     <div class="breadcrumb-and-button">
+
+        <!-- Link to the Modules overview -->
         <ol class="breadcrumb" id="breadcrumb">
             <li class="breadcrumb-item"><a asp-action="Index"><span id="modules_breadcrumb">Modules</span></a></li>
-            <li class="breadcrumb-item"><a href="#"><span id="modules_lessons_breadcrumb">Module
-                        <span id="added_module_number" class="module_number">
-                            @Model.ModuleId
 
-                </span>
-                </span>
+            <!-- Show the current module name (or title) -->
+            <li class="breadcrumb-item">
+                <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId">
+                    <span id="modules_lessons_breadcrumb">Module @Model.Title</span>
                 </a>
-                </li>
+            </li>
+
+            <!-- Optionally, display lesson breadcrumb if you are inside a lesson -->
+            @if (ViewBag.LessonId != null)
+            {
+                <li class="breadcrumb-item active">Lesson @ViewBag.LessonNumber</li>
+            }
         </ol>
         <!-- Create Assessment Button -->
         <button class="create_assessment_button" type="button">Create Assessment</button>
@@ -31,7 +38,7 @@
     <div class="module-desc-text">
         <strong>Description:&nbsp;</strong>@Model.Description
     </div>
- 
+
     <!-- If empty, Display this create new lesson container -->
     @if (Model.Lessons == null || !Model.Lessons.Any())
     {
@@ -57,17 +64,18 @@
             </div>
             <span id="LessonOverviewDisplay" class="lesson_brief_overview">@lesson.Overview</span>
             <div class="button_container">
-               
+
                 <!-- Delete Lesson Button -->
-                <a class="lesson-ftr-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@lesson.ModuleId">
+                <a class="lesson-ftr-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@lesson.LessonId">
                     <div id="DeleteLesson">
-                        <img id="DeleteModule-@lesson.LessonId" class="Delete" src="~/images/Delete.png" />
+                        <img class="Delete" src="~/images/Delete.png" />
                         <span>Delete</span>
                     </div>
                 </a>
 
+                <!-- mark mkarm akrake -->
                 <!-- Clickable Edit Lesson Button -->
-                <a asp-action="Edit" asp-controller="Lesson" asp-route-id="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="lesson-ftr-btn">
+                <a asp-action="Edit" asp-controller="Lesson" asp-route-id="@lesson.LessonId" class="lesson-ftr-btn">
                     <div id="EditLesson" style="cursor: pointer;">
                         <img class="Edit" src="~/images/Edit.png" alt="Edit Icon" />
                         <span>Edit</span>
@@ -95,6 +103,100 @@
             </div>
         </div>
     }
+
+    <!-- Assessments Section -->
+    <div class="mt-5">
+        <h3>Assessments</h3>
+
+        @if (Model.Assessments == null || !Model.Assessments.Any())
+        {
+            <!-- No Assessments Added Yet -->
+            <div id="create_new_assessment_container" class="container d-flex AddAssessmentContainer">
+                <div class="d-flex justify-content-center align-items-center add_new_assessment_container">
+                    <span class="no_assessments_added_text me-3">No assessments have been added yet.</span>
+                    <a asp-action="Create" asp-controller="Assessment" class="btn btn-success" asp-route-moduleId="@Model.ModuleId">
+                        <img src="/images/Add_White.png" alt="Add Assessment" /> Create Assessment
+                    </a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Assessments List -->
+            <div class="list-group">
+                @foreach (var assessment in Model.Assessments)
+                {
+                    <div class="list-group-item mb-3">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@assessment.Title</h5>
+                            <div>
+                                <!-- Edit Assessment Button -->
+                                <a asp-action="Edit" asp-controller="Assessment" asp-route-id="@assessment.AssessmentId" class="btn btn-warning btn-sm me-2">
+                                    <img src="~/images/Edit.png" alt="Edit Assessment" /> Edit
+                                </a>
+                                <!-- Delete Assessment Button -->
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteAssessmentModal-@assessment.AssessmentId">
+                                    <img src="~/images/Delete.png" alt="Delete Assessment" /> Delete
+                                </button>
+                            </div>
+                        </div>
+                        <p class="mb-1">@assessment.Description</p>
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewAssessmentModal-@assessment.AssessmentId">
+                            View Assessment
+                        </button>
+
+                        <!-- View Assessment Modal (H5P Embed) -->
+                        <div class="modal fade" id="viewAssessmentModal-@assessment.AssessmentId" tabindex="-1" aria-labelledby="viewAssessmentModalLabel-@assessment.AssessmentId" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="viewAssessmentModalLabel-@assessment.AssessmentId">@assessment.Title</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Description:</strong> @assessment.Description</p>
+                                        <!-- H5P Embed -->
+                                        <div class="h5p-embed mb-3">
+                                            <iframe src="https://h5p.org/h5p/embed/@assessment.H5PId" width="100%" height="400" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+                                        </div>
+                                        <p>
+                                            <a href="https://h5p.org/content-type/@assessment.H5PId" target="_blank">View in H5P.org</a>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delete Assessment Modal -->
+                        <div class="modal fade" id="confirmDeleteAssessmentModal-@assessment.AssessmentId" tabindex="-1" aria-labelledby="confirmDeleteAssessmentModalLabel-@assessment.AssessmentId" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmDeleteAssessmentModalLabel-@assessment.AssessmentId">Delete Assessment</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete the assessment titled "<strong>@assessment.Title</strong>"?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form asp-action="Delete" asp-controller="Assessment" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@assessment.AssessmentId" />
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
 
 
     <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
@@ -152,39 +254,13 @@
             </div>
         </a>
     }
-    
+
 
 </div>
 
 @foreach (var lesson in Model.Lessons)
 {
     <!-- Triggered by the Delete button -->
-    <div class="modal fade" id="confirmDeleteModal-@lesson.ModuleId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@lesson.ModuleId" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel-@lesson.ModuleId">Delete Module?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete the module titled "<strong>@lesson.Title</strong>"?
-                </div>
-                <div class="modal-footer">
-                    <!-- Delete Form -->
-                    <form asp-action="Delete" asp-controller="Lesson" method="post">
-                        @Html.AntiForgeryToken() <!-- Anti-forgery token for security -->
-                        <input type="hidden" name="id" value="@lesson.LessonId" />
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
-@foreach (var lesson in Model.Lessons)
-{
     <div class="modal fade" id="confirmDeleteModal-@lesson.LessonId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@lesson.LessonId" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -197,11 +273,11 @@
                 </div>
                 <div class="modal-footer">
                     <!-- Delete Form -->
-                    <form asp-action="Details" asp-controller="Module" method="post">
+                    <form asp-action="Delete" asp-controller="Lesson" method="post">
                         @Html.AntiForgeryToken() <!-- Anti-forgery token for security -->
                         <input type="hidden" name="id" value="@lesson.LessonId" />
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-primary">Delete</button>
                     </form>
                 </div>
             </div>

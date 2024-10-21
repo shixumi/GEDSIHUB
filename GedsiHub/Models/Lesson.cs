@@ -18,6 +18,7 @@ namespace GedsiHub.Models
         public string Overview { get; set; } = string.Empty;
 
         public int LessonNumber { get; set; }
+        public int PositionInt { get; set; }
 
         [Required]
         public int ModuleId { get; set; } // Foreign Key to Module

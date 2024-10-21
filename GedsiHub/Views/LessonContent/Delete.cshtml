@@ -1,14 +1,31 @@
 ﻿@model GedsiHub.Models.LessonContent
 
-<h2>Delete Lesson Content</h2>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>@Model.ContentType</h4>
+<div class="modal-header">
+    <h5 class="modal-title">Delete Content</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-
-<form asp-action="Delete">
-    <input type="hidden" asp-for="ContentId" />
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+<div class="modal-body">
+    <p>Are you sure you want to delete this content?</p>
+    <div class="h5p-embed mb-3">
+        @if (Model.ContentType == ContentTypeEnum.Text && !string.IsNullOrEmpty(Model.TextContent))
+        {
+            <div>@Html.Raw(Model.TextContent)</div>
+        }
+        else if (Model.ContentType == ContentTypeEnum.Image && !string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="Lesson Image" class="img-fluid" />
+        }
+        else if (Model.ContentType == ContentTypeEnum.H5P && !string.IsNullOrEmpty(Model.H5PEmbedCode))
+        {
+            @Html.Raw(Model.H5PEmbedCode)
+        }
+    </div>
+</div>
+<div class="modal-footer">
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.ContentId" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    </form>
+</div>

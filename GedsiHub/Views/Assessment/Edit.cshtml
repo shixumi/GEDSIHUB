@@ -1,0 +1,47 @@
+﻿@model GedsiHub.Models.Assessment
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Edit Assessment";
+}
+
+<h2>Edit Assessment: @Model.Title</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="AssessmentId" />
+
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="H5PId" class="control-label">H5P Content ID</label>
+        <input asp-for="H5PId" class="form-control" placeholder="Enter H5P Content ID" />
+        <span asp-validation-for="H5PId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="H5PMetadata" class="control-label">H5P Metadata</label>
+        <textarea asp-for="H5PMetadata" class="form-control" placeholder="Enter H5P Metadata"></textarea>
+        <span asp-validation-for="H5PMetadata" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
