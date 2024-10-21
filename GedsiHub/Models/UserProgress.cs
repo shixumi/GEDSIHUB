@@ -30,5 +30,8 @@ namespace GedsiHub.Models
 
         [Column("last_accessed", TypeName = "TIMESTAMP")]
         public DateTime LastAccessed { get; set; } = DateTime.UtcNow;
+
+        [Column("is_completed")]
+        public bool IsCompleted { get; set; }
     }
 }

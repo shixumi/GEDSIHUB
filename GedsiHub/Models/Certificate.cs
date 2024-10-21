@@ -1,31 +1,32 @@
-﻿// Certificate.cs
-
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GedsiHub.Models
 {
-    [Table("certificate_tbl")]
     public class Certificate
     {
         [Key]
-        [Column("certificate_id")]
         public int CertificateId { get; set; }
 
         [Required]
-        [ForeignKey("User")]
-        [Column("user_id")]
-        public string UserId { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        public string CertificateUrl { get; set; } = string.Empty; // URL for the generated certificate (optional if storing PDF in filesystem or DB)
 
         [Required]
-        [ForeignKey("Module")]
-        [Column("module_id")]
-        public int ModuleId { get; set; }
-        public virtual Module Module { get; set; }
+        public DateTime IssueDate { get; set; } = DateTime.UtcNow; // Issue date of the certificate
 
-        [Column("issue_date", TypeName = "TIMESTAMP")]
-        public DateTime IssueDate { get; set; } = DateTime.UtcNow;
+        // Foreign key to the ApplicationUser
+        [Required]
+        [ForeignKey("ApplicationUser")]
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
+
+        // Foreign key to the Module
+        [Required]
+        [ForeignKey("Module")]
+        public int ModuleId { get; set; }
+
+        public virtual Module Module { get; set; }
     }
 }
