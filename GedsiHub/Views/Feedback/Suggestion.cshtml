@@ -1,5 +1,9 @@
 ﻿<!-- Views/Feedback/Suggestion.cshtml -->
 @model FeedbackSuggestion
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Suggestion";
+}
 
 <h2>Suggestion Form</h2>
 <form asp-action="SubmitSuggestion" method="post" enctype="multipart/form-data">

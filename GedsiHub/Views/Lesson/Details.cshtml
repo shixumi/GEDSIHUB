@@ -20,8 +20,10 @@ Cannot display the Module Number/ID in the breadcrumb <line 23> *@
         </li>
         <li class="breadcrumb-item">
             <!-- Proceed to list of lessons page -->
-            <a asp-action="Index"><span>Module<span id="module_number" class="module_number">Module</span></span></a>
-            <a asp-action="Details" asp-controller="Module" asp-route-moduleId="@ViewBag.ModuleId">Module <span id="module_number" class="module_number">@ViewBag.ModuleId</span></a>
+
+            <a asp-action="Details" asp-controller="Module" asp-route-moduleId="@ViewBag.ModuleId">
+                <span id="module_number" class="module_number">@ViewBag.Title</span>
+            </a>
         </li>
             <!-- Current lesson page -->
         <li class="breadcrumb-item">
@@ -35,7 +37,7 @@ Cannot display the Module Number/ID in the breadcrumb <line 23> *@
     <div class="cms_white_base_container">
         <div class="cms_lesson_title">
             <span>Lesson</span>
-            <span id="lesson_number_inwcon">@Model.LessonNumber</span>
+            <span id="lesson_number_inwcon">@Model.LessonNumber:&nbsp;</span>
             <span id="lesson_title">@Model.Title</span>
         </div>
         <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
