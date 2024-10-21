@@ -146,11 +146,18 @@ namespace GedsiHub.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var lesson = await _context.Lessons.FindAsync(id);
-            if (lesson != null)
+
+            if (lesson == null)
             {
-                _context.Lessons.Remove(lesson);
-                await _context.SaveChangesAsync();
+                _logger.LogError($"Lesson with ID {id} not found for deletion.");
+                return NotFound();
             }
+
+            _context.Lessons.Remove(lesson);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Lesson with ID {id} successfully deleted.");
+
             return RedirectToAction(nameof(Index), new { moduleId = lesson.ModuleId });
         }
 
@@ -166,6 +173,9 @@ namespace GedsiHub.Controllers
             {
                 return NotFound();
             }
+
+            // Set the ModuleId in ViewBag
+            ViewBag.ModuleId = lesson.ModuleId;
 
             return View(lesson);
         }

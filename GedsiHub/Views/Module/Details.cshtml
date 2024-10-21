@@ -60,7 +60,7 @@
                 <!-- Delete Lesson Button -->
                 <a class="lesson-ftr-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@lesson.ModuleId">
                     <div id="DeleteLesson">
-                        <img id="DeleteModule-@lesson.ModuleId" class="Delete" src="~/images/Delete.png" />
+                        <img id="DeleteModule-@lesson.LessonId" class="Delete" src="~/images/Delete.png" />
                         <span>Delete</span>
                     </div>
                 </a>
@@ -172,7 +172,7 @@
                     <!-- Delete Form -->
                     <form asp-action="Delete" asp-controller="Lesson" method="post">
                         @Html.AntiForgeryToken() <!-- Anti-forgery token for security -->
-                        <input type="hidden" name="id" value="@lesson.ModuleId" />
+                        <input type="hidden" name="id" value="@lesson.LessonId" />
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Delete</button>
                     </form>
@@ -184,7 +184,7 @@
 
 @foreach (var lesson in Model.Lessons)
 {
-    <div class="modal fade" id="confirmDeleteModal-@lesson.ModuleId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@lesson.ModuleId" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteModal-@lesson.LessonId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@lesson.LessonId" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">

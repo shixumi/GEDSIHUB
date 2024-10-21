@@ -7,7 +7,7 @@
     <h4>@Model.Title</h4>
 </div>
 
-<form asp-action="Delete">
+<form asp-action="DeleteConfirmed">
     <input type="hidden" asp-for="LessonId" />
     <button type="submit" class="btn btn-danger">Delete</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
