@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241021162456_AddIsCompletedToUserProgress")]
+    partial class AddIsCompletedToUserProgress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -741,7 +744,11 @@ namespace GedsiHub.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("H5PEmbedCode")
+                    b.Property<string>("H5PId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("H5PMetadata")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -758,8 +765,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("AssessmentId");
 
-                    b.HasIndex("ModuleId")
-                        .IsUnique();
+                    b.HasIndex("ModuleId");
 
                     b.ToTable("Assessments");
                 });
@@ -1028,41 +1034,6 @@ namespace GedsiHub.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GedsiHub.Models.Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FeedbackType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsResolved")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Feedbacks");
-                });
-
             modelBuilder.Entity("GedsiHub.Models.ForumComment", b =>
                 {
                     b.Property<int>("CommentId")
@@ -1328,7 +1299,7 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 1,
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8121),
+                            CreatedDate = new DateTime(2024, 10, 21, 16, 24, 55, 509, DateTimeKind.Utc).AddTicks(1203),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             PositionInt = 0,
                             Title = "Introduction to Gender Equality"
@@ -1336,7 +1307,7 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 2,
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8123),
+                            CreatedDate = new DateTime(2024, 10, 21, 16, 24, 55, 509, DateTimeKind.Utc).AddTicks(1205),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             PositionInt = 0,
                             Title = "Understanding Gender Identities"
@@ -1344,7 +1315,7 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 3,
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8125),
+                            CreatedDate = new DateTime(2024, 10, 21, 16, 24, 55, 509, DateTimeKind.Utc).AddTicks(1206),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             PositionInt = 0,
                             Title = "Diversity and Inclusion in the Workplace"
@@ -1352,7 +1323,7 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 4,
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8127),
+                            CreatedDate = new DateTime(2024, 10, 21, 16, 24, 55, 509, DateTimeKind.Utc).AddTicks(1208),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
                             Title = "Gender and Development: Global Perspectives"
@@ -1360,7 +1331,7 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 5,
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8128),
+                            CreatedDate = new DateTime(2024, 10, 21, 16, 24, 55, 509, DateTimeKind.Utc).AddTicks(1210),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             PositionInt = 0,
                             Title = "Social Inclusion Strategies"
@@ -1368,7 +1339,7 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 6,
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8130),
+                            CreatedDate = new DateTime(2024, 10, 21, 16, 24, 55, 509, DateTimeKind.Utc).AddTicks(1233),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             PositionInt = 0,
                             Title = "Final Condensed Learning Module"
@@ -1376,7 +1347,7 @@ namespace GedsiHub.Migrations
                         new
                         {
                             ModuleId = 7,
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8132),
+                            CreatedDate = new DateTime(2024, 10, 21, 16, 24, 55, 509, DateTimeKind.Utc).AddTicks(1235),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             PositionInt = 0,
                             Title = "Gender-Based Violence and Prevention"
@@ -1623,8 +1594,8 @@ namespace GedsiHub.Migrations
             modelBuilder.Entity("GedsiHub.Models.Assessment", b =>
                 {
                     b.HasOne("GedsiHub.Models.Module", "Module")
-                        .WithOne("Assessment")
-                        .HasForeignKey("GedsiHub.Models.Assessment", "ModuleId")
+                        .WithMany("Assessments")
+                        .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1916,8 +1887,7 @@ namespace GedsiHub.Migrations
 
             modelBuilder.Entity("GedsiHub.Models.Module", b =>
                 {
-                    b.Navigation("Assessment")
-                        .IsRequired();
+                    b.Navigation("Assessments");
 
                     b.Navigation("Certificates");
 

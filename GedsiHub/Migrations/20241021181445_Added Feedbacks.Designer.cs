@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241021181445_Added Feedbacks")]
+    partial class AddedFeedbacks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -741,7 +744,11 @@ namespace GedsiHub.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("H5PEmbedCode")
+                    b.Property<string>("H5PId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("H5PMetadata")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -758,8 +765,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("AssessmentId");
 
-                    b.HasIndex("ModuleId")
-                        .IsUnique();
+                    b.HasIndex("ModuleId");
 
                     b.ToTable("Assessments");
                 });
@@ -1623,8 +1629,8 @@ namespace GedsiHub.Migrations
             modelBuilder.Entity("GedsiHub.Models.Assessment", b =>
                 {
                     b.HasOne("GedsiHub.Models.Module", "Module")
-                        .WithOne("Assessment")
-                        .HasForeignKey("GedsiHub.Models.Assessment", "ModuleId")
+                        .WithMany("Assessments")
+                        .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1916,8 +1922,7 @@ namespace GedsiHub.Migrations
 
             modelBuilder.Entity("GedsiHub.Models.Module", b =>
                 {
-                    b.Navigation("Assessment")
-                        .IsRequired();
+                    b.Navigation("Assessments");
 
                     b.Navigation("Certificates");
 
