@@ -1,37 +1,86 @@
 ﻿@model GedsiHub.Models.Lesson
 
-<h2>Edit Lesson</h2>
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Edit Lesson";
+}
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="LessonId" />
+<!-- Edit Lesson -->
+<div>
+    <!-- Modules Header Title-->
+    <h1 class="modules_title" style="color: #464040;">Edit Lesson</h1>
+    <!-- Horizontal Break -->
+    <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
 
-    <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+    <!-- Form for editing the lesson -->
+    <form asp-action="Edit">
 
-    <div class="form-group">
-        <label asp-for="LessonNumber"></label>
-        <input asp-for="LessonNumber" class="form-control" />
-        <span asp-validation-for="LessonNumber" class="text-danger"></span>
-    </div>
+        <!-- Hidden field for moduleId -->
+        <input type="hidden" asp-for="LessonId" />
 
-    <div class="form-group">
-        <label asp-for="Overview"></label>
-        <textarea asp-for="Overview" class="form-control"></textarea>
-        <span asp-validation-for="Overview" class="text-danger"></span>
-    </div>
+        <!-- Edit Lesson Container -->
+        <div class="container create_lesson_container" id="create_lesson_container">
 
-    <!-- If you want to allow ModuleId selection -->
-    <div class="form-group">
-        <label asp-for="ModuleId"></label>
-        <select asp-for="ModuleId" asp-items="ViewBag.ModuleList" class="form-control"></select>
-        <span asp-validation-for="ModuleId" class="text-danger"></span>
-    </div>
+            <!-- Lesson Number and Title -->
+            <div class="row">
+                <div class="col-md-6 col-xl-5 col-xxl-4">
+                    <!-- Lesson No. Label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Number</h1>
+                    <!-- Lesson No. Input-->
+                    <div class="form-group">
+                        <input asp-for="LessonNumber" class="form-control InputBox" placeholder="Enter Lesson Number" required />
+                        <span asp-validation-for="LessonNumber" class="text-danger"></span>
+                    </div>
+                </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+                <div class="col" style="padding-left: 35px;">
+                    <!-- Lesson Title Label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Title</h1>
+                    <!-- Lesson Title Input -->
+                    <div class="form-group">
+                        <input asp-for="Title" class="form-control InputBox" placeholder="Enter Lesson Title" required />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lesson Overview -->
+            <div class="row">
+                <div class="col lesson-overview-col">
+                    <!-- Overview label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Overview</h1>
+                    <!-- Overview Textarea -->
+                    <div class="form-group">
+                        <textarea asp-for="Overview" class="form-control overview_textarea" placeholder="Enter a brief overview of the lesson" maxlength="250"></textarea>
+                        <span asp-validation-for="Overview" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Optional Module Selection Dropdown -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="ModuleId" style="color: #464040;font-size: 1.5625rem;">Module</label>
+                        <select asp-for="ModuleId" asp-items="ViewBag.ModuleList" class="form-control"></select>
+                        <span asp-validation-for="ModuleId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="Create-lesson-button-container" class="button-container">
+                <!-- Cancel Button -->
+                <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId" id="cancelButton" class="btn fw-bolder cancelButton">Cancel</a>
+
+                <!-- Save Button -->
+                <button type="submit" class="fw-bolder btn btn-primary SubmitButton">Save Changes</button>
+            </div>
+
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{

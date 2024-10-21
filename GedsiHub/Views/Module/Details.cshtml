@@ -66,7 +66,7 @@
                 </a>
 
                 <!-- Clickable Edit Lesson Button -->
-                <a asp-action="Edit" asp-controller="Lesson" asp-route-id="@lesson.LessonId" class="lesson-ftr-btn">
+                <a asp-action="Edit" asp-controller="Lesson" asp-route-id="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="lesson-ftr-btn">
                     <div id="EditLesson" style="cursor: pointer;">
                         <img class="Edit" src="~/images/Edit.png" alt="Edit Icon" />
                         <span>Edit</span>
