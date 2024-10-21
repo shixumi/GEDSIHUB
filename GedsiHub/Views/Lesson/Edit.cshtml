@@ -18,6 +18,9 @@
         <!-- Hidden field for moduleId -->
         <input type="hidden" asp-for="LessonId" />
 
+        <!-- Hidden field for ModuleId -->
+        <input type="hidden" asp-for="ModuleId" />
+
         <!-- Edit Lesson Container -->
         <div class="container create_lesson_container" id="create_lesson_container">
 
@@ -53,18 +56,6 @@
                     <div class="form-group">
                         <textarea asp-for="Overview" class="form-control overview_textarea" placeholder="Enter a brief overview of the lesson" maxlength="250"></textarea>
                         <span asp-validation-for="Overview" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Optional Module Selection Dropdown -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label asp-for="ModuleId" style="color: #464040;font-size: 1.5625rem;">Module</label>
-                        <select asp-for="ModuleId" asp-items="ViewBag.ModuleList" class="form-control"></select>
-                        <span asp-validation-for="ModuleId" class="text-danger"></span>
                     </div>
                 </div>
             </div>

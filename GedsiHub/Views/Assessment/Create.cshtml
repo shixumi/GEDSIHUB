@@ -1,47 +1,47 @@
 ﻿@model GedsiHub.Models.Assessment
+
 @{
     Layout = "_LayoutApp";
     ViewData["Title"] = "Create Assessment";
 }
 
-<h2>Create Assessment for @ViewBag.ModuleTitle</h2>
+<h1>Create Assessment for Module</h1>
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="ModuleId" value="@ViewBag.ModuleId" />
+<div>
+    <form asp-action="Create" method="post">
 
-    <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+        @Html.AntiForgeryToken() <!-- Anti-forgery token for security -->
 
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <input type="hidden" asp-for="ModuleId" />
 
-    <div class="form-group">
-        <label asp-for="H5PId" class="control-label">H5P Content ID</label>
-        <input asp-for="H5PId" class="form-control" placeholder="Enter H5P Content ID" />
-        <span asp-validation-for="H5PId" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" required />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="H5PMetadata" class="control-label">H5P Metadata</label>
-        <textarea asp-for="H5PMetadata" class="form-control" placeholder="Enter H5P Metadata"></textarea>
-        <span asp-validation-for="H5PMetadata" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
 
-    <div class="form-group mt-3">
-        <button type="submit" class="btn btn-primary">Create</button>
-        <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId" class="btn btn-secondary">Cancel</a>
-    </div>
-</form>
+        <div class="form-group">
+            <label asp-for="H5PEmbedCode" class="control-label">H5P Embed Code</label>
+            <textarea asp-for="H5PEmbedCode" class="form-control" rows="5" required></textarea>
+            <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
+            <small class="form-text text-muted">
+                Paste the entire H5P iframe embed code here.
+            </small>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

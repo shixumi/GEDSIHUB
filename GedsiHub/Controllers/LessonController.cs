@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Reflection;
 
 namespace GedsiHub.Controllers
 {
@@ -16,7 +18,6 @@ namespace GedsiHub.Controllers
         public LessonController(ApplicationDbContext context, ILogger<LessonController> logger)
         {
             _context = context;
-            _logger = logger;
             _logger = logger;
         }
 
@@ -30,7 +31,6 @@ namespace GedsiHub.Controllers
             ViewBag.ModuleId = moduleId;  // To pass moduleId for "Create Lesson" link
             return View(lessons);
         }
-
 
         // GET: Create a new Lesson
         public IActionResult Create(int moduleId)
@@ -62,7 +62,7 @@ namespace GedsiHub.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError($"Error saving lesson to the database: {ex.Message}");
-                    throw;
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving the lesson. Please try again.");
                 }
             }
 
@@ -75,21 +75,19 @@ namespace GedsiHub.Controllers
             }
 
             ViewBag.ModuleId = moduleId;
-            return RedirectToAction("Details", "Module", new { id = moduleId });
+            return View(lesson);
         }
-
 
         // GET: Edit an existing Lesson
         public async Task<IActionResult> Edit(int id)
         {
-            var lesson = await _context.Lessons.FindAsync(id);
+            var lesson = await _context.Lessons
+                                       .Include(l => l.Module) // Ensure Module is loaded
+                                       .FirstOrDefaultAsync(l => l.LessonId == id);
             if (lesson == null)
             {
                 return NotFound();
             }
-
-            // Get a list of valid modules to select from
-            ViewBag.ModuleList = new SelectList(_context.Modules, "ModuleId", "Title", lesson.ModuleId);
 
             return View(lesson);
         }
@@ -108,6 +106,16 @@ namespace GedsiHub.Controllers
             {
                 try
                 {
+                    // Ensure that ModuleId is not altered unintentionally
+                    var existingLesson = await _context.Lessons.AsNoTracking().FirstOrDefaultAsync(l => l.LessonId == id);
+                    if (existingLesson == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Retain the original ModuleId to prevent changes
+                    lesson.ModuleId = existingLesson.ModuleId;
+
                     _context.Update(lesson);
                     await _context.SaveChangesAsync();
                 }
@@ -119,20 +127,23 @@ namespace GedsiHub.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Concurrency error while updating lesson.");
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index), new { moduleId = lesson.ModuleId });
+                return RedirectToAction("Details", "Module", new { id = lesson.ModuleId });
+
             }
 
-            ViewBag.ModuleList = new SelectList(_context.Modules, "ModuleId", "Title", lesson.ModuleId);
             return View(lesson);
         }
 
         // GET: Delete a Lesson
         public async Task<IActionResult> Delete(int id)
         {
-            var lesson = await _context.Lessons.FindAsync(id);
+            var lesson = await _context.Lessons
+                                       .Include(l => l.Module) // Ensure Module is loaded
+                                       .FirstOrDefaultAsync(l => l.LessonId == id);
             if (lesson == null)
             {
                 return NotFound();
@@ -163,12 +174,13 @@ namespace GedsiHub.Controllers
             return RedirectToAction("Details", "Module", new { id = moduleId });
         }
 
-        // GET: Fetch Lesson Contents
+        // GET: Fetch Lesson Details
         public async Task<IActionResult> Details(int id)
         {
             // Fetch the lesson by ID along with its related LessonContent
             var lesson = await _context.Lessons
                                        .Include(l => l.LessonContents)
+                                       .Include(l => l.Module) // Ensure Module is loaded
                                        .FirstOrDefaultAsync(l => l.LessonId == id);
 
             if (lesson == null)
@@ -176,12 +188,11 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
-            // Set the ModuleId in ViewBag
+            // Set the ModuleId in ViewBag for potential use
             ViewBag.ModuleId = lesson.ModuleId;
 
             return View(lesson);
         }
-
 
         private bool LessonExists(int id)
         {
