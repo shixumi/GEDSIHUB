@@ -14,6 +14,7 @@
 
     <!-- Form for creating a new module -->
     <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
         <div class="container AddModuleDataContainer" id="moduleCards_container">
             <div class="row">
                 <!-- Module Title Input -->
@@ -50,12 +51,19 @@
                 </div>
             </div>
 
+
+
             <!-- Color Picker -->
             <div class="row">
                 <div class="col-md-12">
                     <h1 style="color: #464040;font-size: 1.5625rem;">Color</h1>
-                    <input asp-for="Color" type="color" class="form-control InputBox" id="Module_Color" />
-                    <span asp-validation-for="Color" class="text-danger"></span>
+                    <div class="create_moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
+                        <div class="picker-container">
+                            <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
+                            <input asp-for="Color" type="color" class="ColorInput" id="Module_Color" />
+                            <span asp-validation-for="Color" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         
