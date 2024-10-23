@@ -38,9 +38,25 @@ namespace GedsiHub.Data
         public DbSet<FAQ> FAQs { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
 
+        // DbSets for the Analytics
+
+        public DbSet<UserLogin> UserLogins { get; set; }
+        public DbSet<ModuleActivity> ModuleActivities { get; set; }
+        public DbSet<UserEngagement> UserEngagements { get; set; }
+        public DbSet<UserFeedback> UserFeedbacks { get; set; }
+        public DbSet<ActiveUser> ActiveUsers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Configure ActiveUser model
+            builder.Entity<ActiveUser>()
+                .HasIndex(au => au.UserId); // Non-unique
+
+            builder.Entity<ActiveUser>()
+                .HasIndex(au => au.ConnectionId)
+                .IsUnique();
 
             // Seed College Departments
             builder.Entity<CollegeDepartment>().HasData(
@@ -285,6 +301,13 @@ namespace GedsiHub.Data
             {
                 b.ToTable("user_token_tbl");
             });
+
+            // Add indexes for performance
+            builder.Entity<UserLogin>()
+                .HasIndex(ul => ul.UserId);
+
+            builder.Entity<ModuleActivity>()
+                .HasIndex(ma => ma.UserId);
 
             // **Configure Certificate relationships**
             builder.Entity<Certificate>(entity =>

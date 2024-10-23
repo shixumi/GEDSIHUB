@@ -5,6 +5,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GedsiHub.Models
 {
+    public enum ModuleStatus
+    {
+        Unpublished = 0,
+        Published = 1
+    }
+
     public class Module
     {
         [Key]
@@ -16,13 +22,24 @@ namespace GedsiHub.Models
 
         [Required]
         public string Description { get; set; } = string.Empty;
+
         public int PositionInt { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
         public DateTime? LastModifiedDate { get; set; }
+
+        // New Status Property
+        [Required]
+        public ModuleStatus Status { get; set; } = ModuleStatus.Unpublished;
+
+        // New Color Property
+        [Required]
+        [StringLength(7, MinimumLength = 7, ErrorMessage = "Color must be a valid hex code.")]
+        public string Color { get; set; } = "#000000"; // Default to black
+
         // Navigation property for Assessment
-        public virtual Assessment Assessment { get; set; }
+        public virtual Assessment? Assessment { get; set; }
 
         // Navigation Properties
         public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();

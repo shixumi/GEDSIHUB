@@ -92,11 +92,13 @@ namespace GedsiHub.Controllers
             return View(lesson);
         }
 
+
         // POST: Edit an existing Lesson
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("LessonId,Title,LessonNumber,Overview,ModuleId")] Lesson lesson)
         {
+
             if (id != lesson.LessonId)
             {
                 return NotFound();

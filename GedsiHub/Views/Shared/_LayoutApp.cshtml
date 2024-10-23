@@ -28,11 +28,16 @@
     <link rel="stylesheet" href="~/css/feedbackSuccessfullySubmitted.css" />
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
           crossorigin="anonymous">
+
+    <link rel="stylesheet" href="~/css/createEditAssessment.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     
 
 </head>
-<body>
+<body data-authenticated="@User.Identity.IsAuthenticated.ToString().ToLower()">
 
     <header>
         <nav class="navbar navbar-expand-md sticky-top bg-body navbar">
@@ -195,6 +200,7 @@
     <script src="~/js/DragAndDropFile.js"></script>
     <script src="~/js/OthersOptionHandler.js"></script>
 
+    <script src="~/js/global.js"></script>
     
     
 
@@ -203,6 +209,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    @await Html.PartialAsync("_ActiveUserTracker")
 </body>
 </html>

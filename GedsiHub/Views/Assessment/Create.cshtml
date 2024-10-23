@@ -5,42 +5,75 @@
     ViewData["Title"] = "Create Assessment";
 }
 
-<h1>Create Assessment for Module</h1>
+<!-- Create Assessment -->
 
 <div>
+    <!-- Breadcrumbs -->
+    <ol class="breadcrumb" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <!-- Proceed to list of modules page -->
+            <a asp-controller="Module" asp-action="Index"><span>Modules</span></a>
+
+        </li>
+        <li class="breadcrumb-item">
+            <!-- Proceed to list of lessons page (Module/Details) -->
+            <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId">
+                <span asp-controller="Module" id="module_number" class="module_number">Module.Title</span>
+            </a>
+        </li>
+        <!-- Current lesson page -->
+        <li class="breadcrumb-item">
+            <a asp-action="Create" asp-controller="LessonContent" asp-route-Id="@Model.ModuleId"><span>Create Assessment</span></a>
+            
+        </li>
+    </ol>
+
+
+    <!-- Assessment Title -->
+    <span class="assessment_title">Create Assessment for Module</span>
+
+    <!--- Form for creating module assessment -->
     <form asp-action="Create" method="post">
-
         @Html.AntiForgeryToken() <!-- Anti-forgery token for security -->
-
         <input type="hidden" asp-for="ModuleId" />
 
-        <div class="form-group">
-            <label asp-for="Title" class="control-label"></label>
-            <input asp-for="Title" class="form-control" required />
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
+        <div class="cms_white_base_container">
 
-        <div class="form-group">
-            <label asp-for="Description" class="control-label"></label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
+            <!-- Title Input -->
+            <div class="form-group">
+                <h1 style="color: #464040; font-size: 1.5625rem;">Title</h1>
+                <input asp-for="Title" class="form-control assessment_input" placeholder="Enter Assessment Title" required />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="H5PEmbedCode" class="control-label">H5P Embed Code</label>
-            <textarea asp-for="H5PEmbedCode" class="form-control" rows="5" required></textarea>
-            <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
-            <small class="form-text text-muted">
-                Paste the entire H5P iframe embed code here.
-            </small>
-        </div>
+            <!-- Description Input -->
+            <div class="form-group">
+                <h1 style="color: #464040;font-size: 1.5625rem; margin-top: 1.5625rem;">Description</h1>
+                <textarea asp-for="Description" class="form-control assessment_input_textarea" rows="3" placeholder="Enter Assessment Description"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+             
+            <!-- H5P Embed Code -->
+            <div class="form-group">
+                <h1 style="color: #464040;font-size: 1.5625rem; margin-top: 1.5625rem">H5P Embed Code</h1>
+                <textarea asp-for="H5PEmbedCode" class="form-control assessment_input_textarea" rows="3" placeholder="Paste the entire H5P iframe embed code here"required></textarea>
+                <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
-            <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId" class="btn btn-secondary">Cancel</a>
+
+            <!-- Submit and Cancel Buttons -->
+            <div class="button-container">
+                <!-- Cancel Button -->
+                <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId" class="btn fw-bolder cancelButton">Cancel</a>
+
+                <!-- Add Module Button -->
+                <input type="submit" value="Create" class="btn fw-bolder SubmitButton" />
+                
+            </div>
         </div>
     </form>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

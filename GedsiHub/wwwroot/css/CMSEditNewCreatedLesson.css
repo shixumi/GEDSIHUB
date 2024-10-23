@@ -71,6 +71,22 @@
         color: #9C9C9C;
     }
 
+
+.url_input_textarea {
+    display: block;
+    border-radius: 0.7rem;
+    width: 100%;
+    border-width: 0.075rem;
+    border: 0.075rem solid #9C9C9C;
+    padding: 1.175rem;
+    font-size: 1.5rem;
+}
+
+    .url_input_textarea::placeholder {
+        color: #9C9C9C;
+    }
+
+
 .cms_white_base_container {
     background-color: white;
     padding: 3.125rem;
@@ -162,7 +178,7 @@
     height: 100%;
 }
 
-#Media_Upload_Container-1, .url_input, .lesson_content_text, #Media_Upload_Container, .tinymce_textarea {
+#Media_Upload_Container-1, .url_input, .url_input_textarea, .lesson_content_text, #Media_Upload_Container, .tinymce_textarea {
     margin-bottom: 1.5625rem;
 }
 

@@ -7,12 +7,8 @@ function applyColorShadowAndPicker(moduleId, color) {
     // Apply the selected color as the background of the parent container
     moduleIconContainer.style.backgroundColor = color;
 
-    // Ensure no black lines by setting border and background properly
-    moduleIconContainer.style.border = 'none';  // Ensure no border
-    colorPickerElement.style.border = 'none';   // Ensure no border on the input
-
-    // Apply the box shadow to the color picker itself
-    colorPickerElement.style.boxShadow = `0px 6px 10px ${shadowColor}`;
+    // Apply the box shadow to the moduleIcon_container itself
+    moduleIconContainer.style.boxShadow = `0px 9px 15px ${shadowColor}`; // Adjust shadow based on color
 }
 
 // Helper to convert hex to rgba color with opacity

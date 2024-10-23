@@ -1,4 +1,5 @@
 ﻿@model GedsiHub.Models.Module
+@using GedsiHub.Models
 @{
     Layout = "_LayoutApp";
     ViewData["Title"] = "Edit Module";
@@ -9,46 +10,65 @@
     <!-- Header Title -->
     <h1 id="editModule_HeaderTitle" class="modules_title" style="color: #464040;">Edit Module</h1>
     <!-- Horizontal Break -->
-    <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
+    <div style="height: 1px; background: rgb(183,186,199); border-color: #9C9C9C;"></div>
 
     <!-- Form for editing the module -->
     <form asp-action="Edit" method="post">
         <input type="hidden" asp-for="ModuleId" />
 
         <div class="container AddModuleDataContainer" id="moduleCards_container">
+            <!-- Module Title Input -->
             <div class="row">
-                <!-- Module Title Input -->
                 <div class="col-md-12">
-                    <!-- Label -->
-                    <h1 style="color: #464040;font-size: 1.5625rem;">Title</h1>
-                    <!-- Input -->
+                    <h1 style="color: #464040; font-size: 1.5625rem;">Title</h1>
                     <input asp-for="Title" class="form-control InputBox" placeholder="Enter Module Title" id="EditModule_TitleInput" required />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
             </div>
 
+            <!-- Description Textarea Input -->
             <div class="row">
-                <!-- Description Textarea Input-->
                 <div class="col-md-12">
-                    <!-- Label -->
-                    <h1 style="color: #464040;font-size: 1.5625rem;">Description</h1>
-                    <!-- Description Input -->
+                    <h1 style="color: #464040; font-size: 1.5625rem;">Description</h1>
                     <textarea asp-for="Description" class="form-control InputBox-ta" rows="4" placeholder="Enter Module Description"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
             </div>
 
-            <div class="button-container">
-                <!-- Cancel Button -->
-                <a asp-controller="Module" asp-action="Index" id="cancelButton" class="btn fw-bolder cancelButton">Cancel</a>
+            <!-- Status Selection -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="color: #464040; font-size: 1.5625rem;">Status</h1>
+                    <select asp-for="Status" asp-items="Html.GetEnumSelectList<ModuleStatus>()" class="form-control InputBox" id="Module_Status">
+                        <option value="">-- Select Status --</option> <!-- Optional: Placeholder option -->
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
 
-                <!-- Save Module Button -->
+            <!-- Color Picker -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Color</h1>
+                    <div class="create_moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
+                        <div class="picker-container">
+                            <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
+                            <input asp-for="Color" type="color" class="ColorInput" id="Module_Color" />
+                            <span asp-validation-for="Color" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="button-container">
+                <a asp-controller="Module" asp-action="Index" id="cancelButton" class="btn fw-bolder cancelButton">Cancel</a>
                 <button type="submit" class="btn fw-bolder SubmitButton">Save Changes</button>
             </div>
         </div>
     </form>
 </div>
-
 
 @section Scripts {
     @{
