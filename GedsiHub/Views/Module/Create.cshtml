@@ -38,6 +38,26 @@
                 </div>
             </div>
 
+            <!-- Status Selection -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Status</h1>
+                    <select asp-for="Status" class="form-control InputBox" id="Module_Status">
+                        <option value="Unpublished">Unpublished</option>
+                        <option value="Published">Published</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Color Picker -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Color</h1>
+                    <input asp-for="Color" type="color" class="form-control InputBox" id="Module_Color" />
+                    <span asp-validation-for="Color" class="text-danger"></span>
+                </div>
+            </div>
         
             <div class="button-container">
                 <!-- Cancel Button -->

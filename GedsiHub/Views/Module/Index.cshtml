@@ -32,8 +32,8 @@
                 <!-- Module Icon -->
                 <div class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
                     <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
-                    <!-- Color Picker with module ID in the input id -->
-                    <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="Color" />
+                    <!-- Color Picker -->
+                    <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="@module.Color" onchange="updateColor(@module.ModuleId, this.value)" />
                 </div>
 
 
@@ -71,14 +71,26 @@
                 <!-- Publish/Unpublish Button -->
                 <div id="modCardButtonContainer" class="d-xxl-flex justify-content-between align-items-center">
                     <div id="toggleButtonPublishUnpublishModule" class="d-xxl-flex">
-                        <div id="publishModule" class="toggle-content">
-                            <img class="PublishIcon" src="~/images/Publish.png" />
-                            <span>Publish</span>
-                        </div>
-                        <div id="unpublishModule" class="toggle-content">
-                            <img class="PublishIcon" src="~/images/Unpublish.png" />
-                            <span>Unpublish</span>
-                        </div>
+                        @if (module.Status == ModuleStatus.Published)
+                        {
+                            <form asp-action="Unpublish" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@module.ModuleId" />
+                                <button type="submit" class="toggle-content btn btn-warning me-2">
+                                    <img class="PublishIcon" src="~/images/Unpublish.png" />
+                                    <span>Unpublish</span>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="Publish" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@module.ModuleId" />
+                                <button type="submit" class="toggle-content btn btn-success me-2">
+                                    <img class="PublishIcon" src="~/images/Publish.png" />
+                                    <span>Publish</span>
+                                </button>
+                            </form>
+                        }
                     </div>
 
                     <!-- Edit and Delete Buttons -->
@@ -129,3 +141,26 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function updateColor(moduleId, color) {
+            $.ajax({
+                url: '@Url.Action("UpdateColor", "Module")',
+                type: 'POST',
+                data: {
+                    id: moduleId,
+                    Color: color,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    // Optionally, show a success message
+                },
+                error: function (xhr, status, error) {
+                    alert('Error updating color: ' + error);
+                }
+            });
+        }
+    </script>
+}
