@@ -13,10 +13,12 @@
     <link rel="stylesheet" href="~/css/register.css" />
     <link rel="stylesheet" href="~/css/emailsent-fp.css" />
     <link rel="stylesheet" href="~/css/signup-form.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 </head>
-<body>
+<body data-authenticated="@User.Identity.IsAuthenticated.ToString().ToLower()">
 
 
  @*
@@ -44,6 +46,9 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <span class="navbar-text ml-auto">
+                    Active Users: <span id="activeUsersCount">0</span>
+                </span>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -81,6 +86,9 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/global.js"></script>
+
+    @await Html.PartialAsync("_ActiveUserTracker")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

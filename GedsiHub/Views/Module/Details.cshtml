@@ -208,3 +208,42 @@
         </div>
     </div>
 }
+
+<!-- Module Time Spent Analytics -->
+<script>
+    let moduleStartTime;
+
+    window.onload = function() {
+        moduleStartTime = new Date();
+    };
+
+    window.onbeforeunload = function() {
+        let moduleEndTime = new Date();
+        let timeSpent = (moduleEndTime - moduleStartTime) / 1000; // Time in seconds
+
+        // Send the timeSpent to the server via fetch
+        navigator.sendBeacon('/Analytics/TrackModuleTime', JSON.stringify({
+            ModuleId: @Model.ModuleId,
+            TimeSpent: timeSpent
+        }));
+    };
+</script>
+// In your Razor Page or Layout
+<script>
+    let moduleStartTime;
+
+    window.onload = function () {
+        moduleStartTime = new Date();
+    };
+
+    window.onbeforeunload = function () {
+        let moduleEndTime = new Date();
+        let timeSpent = (moduleEndTime - moduleStartTime) / 1000; // Time in seconds
+
+        // Send the timeSpent to the server via fetch
+        navigator.sendBeacon('/Analytics/TrackModuleTime', JSON.stringify({
+            ModuleId: @Model.ModuleId,
+            TimeSpent: timeSpent
+        }));
+    };
+</script>

@@ -39,7 +39,7 @@ namespace GedsiHub.Models
         public string Color { get; set; } = "#000000"; // Default to black
 
         // Navigation property for Assessment
-        public virtual Assessment Assessment { get; set; }
+        public virtual Assessment? Assessment { get; set; }
 
         // Navigation Properties
         public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
