@@ -5,7 +5,61 @@
     ViewData["Title"] = "Suggestion";
 }
 
-<h2>Suggestion Form</h2>
+
+
+<div>
+    <h1 id="addNewModule_HeaderTitle" class="modules_title" style="color: #464040;">Suggestion Form</h1>
+    <hr>
+    
+    <div class="container form-container">
+        <form asp-action="SubmitSuggestion" method="post" enctype="multipart/form-data">
+            <div class="form-input-container">
+                <div class="type-affected-con">
+                    <div class="select-container-type-of-issue">
+                        <span>1. Type of Suggestion</span>
+                        <div class="custom-select-wrapper">
+                            <select asp-for="TypeOfSuggestion" id="typeOfSuggestionSelect" class="select">
+                                <option value="" disabled selected hidden>Select a suggestion type</option> <!-- Placeholder option -->
+                                <option value="Feature Request">Feature Request</option>
+                                <option value="UI Improvement">UI Improvement</option>
+                                <option value="Content Addition">Content Addition</option>
+                                <option value="Performance Enhancement">Performance Enhancement</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <!-- Input field for 'Others' -->
+                            <input type="text" id="otherSuggestionInput" class="hidden-input" placeholder="Please specify..." style="display: none;">
+                        </div>
+
+
+                        <span asp-validation-for="TypeOfSuggestion" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="textarea-issue-desc">
+                        <span>2. Description of Suggestion</span>
+                        <textarea asp-for="DescriptionOfSuggestion" id="suggestionDescTextarea" class="desc-textarea"></textarea>
+                        <span asp-validation-for="DescriptionOfSuggestion" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="area-evidence-container">
+                    <label for="suggestionAttachmentFileInput" class="custom-file-label">
+                        <span>3. Attachment (Optional)</span>
+                        <input type="file" asp-for="Attachment" id="suggestionAttachmentFileInput" class="file-input-feedback-form" />
+                        <span asp-validation-for="Attachment" class="text-danger"></span> <!-- No validation error if not provided -->
+                    </label>
+                </div>
+            </div>
+            <div class="back-submit-button-container">
+                <button id="backSuggestionFormButton" class="back-button" type="button">Back</button>
+                <button id="submitSuggestionFormButton" class="submit-button" type="submit">Submit</button>
+            </div>
+        </form> <!-- Correctly closed the form tag here -->
+    </div>
+</div>
+
+
+
+@* <h2>Suggestion Form</h2>
 <form asp-action="SubmitSuggestion" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="TypeOfSuggestion">Type of Suggestion</label>
@@ -33,3 +87,4 @@
 
     <button type="submit" class="btn btn-primary">Submit Suggestion</button>
 </form>
+ *@

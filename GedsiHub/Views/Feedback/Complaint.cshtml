@@ -6,6 +6,72 @@
 
 @model FeedbackComplaint
 
+
+<div>
+    <h1 id="addNewModule_HeaderTitle" class="modules_title" style="color: #464040;">Complaint Form</h1>
+    <hr>
+
+    <div class="container form-container">
+        <form asp-action="SubmitComplaint" method="post" enctype="multipart/form-data">
+        <div class="form-input-container">
+            <div class="type-affected-con">
+                <div class="custom-select-wrapper">
+                    <span>1. Type of Issue</span>
+                        <select asp-for="TypeOfIssue" id="typeOfIssueSelect" class="select">
+                            <option value="" disabled selected hidden>Select an issue type</option>
+                            <option value="System Bug">System Bug</option>
+                            <option value="UI Issue">UI Issue</option>
+                            <option value="Content Error">Content Error</option>
+                            <option value="Others">Others</option>
+                        </select>
+                        <input type="text" id="otherComplaintInput" class="hidden-input" placeholder="Please specify..." style="display: none;">
+                        <span asp-validation-for="TypeOfIssue" class="text-danger"></span>
+                </div>
+                <div class="select-container-affected-area">
+                    <span>2. Affected Area</span>
+                        <select asp-for="AffectedArea" id="affectedAreaSelect" class="select">
+                            <option value="" disabled selected hidden>Select an affected area</option> <!-- Placeholder option -->
+                            <option value="Dashboard">Dashboard</option>
+                            <option value="Modules">Modules</option>
+                            <option value="Leaderboard">Leaderboard</option>
+                            <option value="Forum">Forum</option>
+                            <option value="Feedback">Feedback</option>
+                            <option value="Profile">Profile</option>
+                        </select>
+                        <span asp-validation-for="AffectedArea" class="text-danger"></span>
+
+                </div>
+            </div>
+            <div>
+                <div class="textarea-issue-desc">
+                    <span>3. Detailed Description of the Issue</span>
+                        <textarea asp-for="DetailedDescription" id="deskIssueTextarea" class="desc-textarea"></textarea>
+                        <span asp-validation-for="DetailedDescription" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="area-evidence-container">
+                    <label for="complaintEvidenceFileInput" class="custom-file-label">
+                        <span>4. Evidence (Optional)</span>
+                        <input type="file" asp-for="Evidence" id="complaintEvidenceFileInput" class="file-input-feedback-form" />
+                        <span asp-validation-for="Evidence" class="text-danger"></span> <!-- No validation error if not provided -->
+                    </label>
+            </div>
+        </div>
+        <div class="back-submit-button-container">
+            <button id="backComplaintFormButton" class="back-button" type="button">Back</button>
+            <button id="submitComplaintFormButton" class="submit-button" type="submit">Submit</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+@* 
 <h2>Complaint Form</h2>
 <form asp-action="SubmitComplaint" method="post" enctype="multipart/form-data">
     <div class="form-group">
@@ -46,4 +112,4 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Submit Complaint</button>
-</form>
+</form> *@
