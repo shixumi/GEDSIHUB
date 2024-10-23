@@ -18,7 +18,9 @@ namespace GedsiHub.Controllers
         // GET: Modules
         public async Task<IActionResult> Index()
         {
-            var modules = await _context.Modules.ToListAsync();
+            var modules = await _context.Modules
+                .Include(m => m.Lessons)
+                .ToListAsync();
             return View(modules);
         }
 

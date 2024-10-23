@@ -4,7 +4,6 @@
     ViewData["Title"] = "Module Details";
 }
 
-
 <!-- Modulee Details -->
 <div class="container-lesson">
     <!-- Breadcrumb -->
@@ -99,9 +98,10 @@
 
 
                 <!-- Go to lesson button -->
-                <a asp-action="Create" asp-controller="LessonContent" asp-route-id="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
+                <a asp-action="Create" asp-controller="LessonContent" asp-route-lessonId="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
                     Go To Lesson
                 </a>
+
 
             </div>
         </div>

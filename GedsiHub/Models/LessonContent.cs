@@ -30,6 +30,9 @@ namespace GedsiHub.Models
 
         // Navigation Property
         public virtual Lesson Lesson { get; set; } = null!;
+
+        // *** New Property for Publish Status ***
+        public bool IsPublished { get; set; } = false; // Tracks whether the content is published or not
     }
 
     public enum ContentTypeEnum

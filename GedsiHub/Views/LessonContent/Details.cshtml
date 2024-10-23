@@ -1,0 +1,59 @@
+﻿@model GedsiHub.Models.LessonContent
+
+<div class="lesson-content-preview">
+    <h2>@Model.Lesson.Title</h2>
+
+    <!-- Preview of the H5P content -->
+    @if (!string.IsNullOrEmpty(Model.H5PEmbedCode))
+    {
+        <div class="responsive-iframe">
+            @Html.Raw(Model.H5PEmbedCode)
+        </div>
+    }
+
+    <!-- Preview of the text content -->
+    @if (!string.IsNullOrEmpty(Model.TextContent))
+    {
+        <div class="text-content-preview">
+            <p>@Model.TextContent</p>
+        </div>
+    }
+
+    <!-- Preview of the image content -->
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="image-content-preview">
+            <img src="@Model.ImageUrl" alt="Lesson Image" />
+        </div>
+    }
+
+    <!-- Buttons for managing lesson content -->
+    <div class="lesson-content-buttons">
+        <!-- Edit button -->
+        <a asp-action="Edit" asp-controller="LessonContent" asp-route-id="@Model.ContentId" class="btn btn-warning">
+            Edit
+        </a>
+
+        <!-- Publish/Unpublish button -->
+        @if (Model.IsPublished)
+        {
+            <form asp-action="Unpublish" method="post" class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger">Unpublish</button>
+            </form>
+        }
+        else
+        {
+            <form asp-action="Publish" method="post" class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-success">Publish</button>
+            </form>
+        }
+
+        <!-- Delete button -->
+        <form asp-action="DeleteConfirmed" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
