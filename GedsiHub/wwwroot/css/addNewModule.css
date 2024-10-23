@@ -168,3 +168,24 @@
     background-color: #920000;
     color: #ffffff;
 }
+
+.create_moduleIcon_container {
+    width: 4.46875rem;
+    height: 4.46875rem;
+    background: #d9d9d9;
+    border-radius: 52%;
+    margin-left: 2.275rem;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: none; /* Ensure no border */
+    box-shadow: none; /* Remove any default shadow */
+    padding: 0;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease-in-out; /* Smooth shadow transitions */
+}
+
+/* Hover effect for the container shadow */
+.create_moduleIcon_container:hover {
+    box-shadow: 0px 9px 15px rgba(0, 0, 0, 0.2); /* Example hover shadow */
+}

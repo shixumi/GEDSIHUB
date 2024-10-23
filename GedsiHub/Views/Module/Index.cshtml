@@ -33,7 +33,10 @@
                 <div class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
                     <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
                     <!-- Color Picker -->
-                    <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="@module.Color" onchange="updateColor(@module.ModuleId, this.value)" />
+                    <div class="picker-container">
+                        <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="@module.Color" onchange="updateColor(@module.ModuleId, this.value)" />
+                    </div>
+                    
                 </div>
 
 
