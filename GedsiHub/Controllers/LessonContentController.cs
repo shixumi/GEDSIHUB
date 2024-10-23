@@ -42,21 +42,28 @@ namespace GedsiHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LessonContent lessonContent)
         {
+            _logger.LogInformation($"Starting content creation for Lesson ID {lessonContent.LessonId}");
+
+            // Use only the LessonId for form binding, Lesson navigation is not required
+            ViewBag.LessonId = lessonContent.LessonId;
+
             if (!ModelState.IsValid)
             {
-                ViewBag.LessonId = lessonContent.LessonId;
+                _logger.LogWarning("Model state is invalid while creating lesson content.");
                 return View("Create", lessonContent);
             }
 
             ValidateLessonContent(lessonContent);
             if (!ModelState.IsValid)
             {
-                ViewBag.LessonId = lessonContent.LessonId;
+                _logger.LogWarning("Content validation failed.");
                 return View("Create", lessonContent);
             }
 
             _context.Add(lessonContent);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Lesson content created successfully.");
+
             return RedirectToAction("Details", new { id = lessonContent.LessonId });
         }
 
@@ -64,11 +71,17 @@ namespace GedsiHub.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
+            {
+                _logger.LogError("Content ID is null when attempting to edit.");
                 return BadRequest("Content ID is required.");
+            }
 
             var lessonContent = await _context.LessonContents.FindAsync(id);
             if (lessonContent == null)
+            {
+                _logger.LogWarning($"Lesson content with ID {id} not found.");
                 return NotFound();
+            }
 
             return View("Edit", lessonContent);
         }
@@ -79,25 +92,41 @@ namespace GedsiHub.Controllers
         public async Task<IActionResult> Edit(int id, LessonContent lessonContent)
         {
             if (id != lessonContent.ContentId)
+            {
+                _logger.LogError("Content ID mismatch while editing.");
                 return BadRequest("Content ID mismatch.");
+            }
 
             if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Model state is invalid during edit.");
                 return View("Edit", lessonContent);
+            }
 
             ValidateLessonContent(lessonContent);
             if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Content validation failed during edit.");
                 return View("Edit", lessonContent);
+            }
 
             try
             {
                 _context.Update(lessonContent);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Lesson content updated successfully.");
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!LessonContentExists(lessonContent.ContentId))
+                {
+                    _logger.LogWarning($"Lesson content with ID {lessonContent.ContentId} not found during update.");
                     return NotFound();
-                throw;
+                }
+                else
+                {
+                    throw;
+                }
             }
 
             return RedirectToAction("Details", "Lesson", new { id = lessonContent.LessonId });
@@ -106,12 +135,20 @@ namespace GedsiHub.Controllers
         // GET: LessonContent/Details/{id}
         public async Task<IActionResult> Details(int id)
         {
-            var lessonContent = await _context.LessonContents.FindAsync(id);
-            if (lessonContent == null)
-                return NotFound();
+            // Use Include to fetch the related Lesson along with LessonContent
+            var lessonContent = await _context.LessonContents
+                                              .Include(lc => lc.Lesson)  // Ensure Lesson is loaded
+                                              .FirstOrDefaultAsync(lc => lc.ContentId == id);
 
-            return View(lessonContent); // View the content and the publish/unpublish buttons
+            if (lessonContent == null)
+            {
+                _logger.LogWarning($"Lesson content with ID {id} not found.");
+                return NotFound();
+            }
+
+            return View(lessonContent);
         }
+
 
         // POST: LessonContent/Publish/5
         [HttpPost]
@@ -120,12 +157,16 @@ namespace GedsiHub.Controllers
         {
             var lessonContent = await _context.LessonContents.FindAsync(id);
             if (lessonContent == null)
+            {
+                _logger.LogWarning($"Lesson content with ID {id} not found for publishing.");
                 return NotFound();
+            }
 
             lessonContent.IsPublished = true;
             _context.Update(lessonContent);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation($"Lesson content with ID {id} published.");
             return RedirectToAction("Details", new { id = lessonContent.ContentId });
         }
 
@@ -136,12 +177,16 @@ namespace GedsiHub.Controllers
         {
             var lessonContent = await _context.LessonContents.FindAsync(id);
             if (lessonContent == null)
+            {
+                _logger.LogWarning($"Lesson content with ID {id} not found for unpublishing.");
                 return NotFound();
+            }
 
             lessonContent.IsPublished = false;
             _context.Update(lessonContent);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation($"Lesson content with ID {id} unpublished.");
             return RedirectToAction("Details", new { id = lessonContent.ContentId });
         }
 
@@ -152,10 +197,15 @@ namespace GedsiHub.Controllers
         {
             var lessonContent = await _context.LessonContents.FindAsync(id);
             if (lessonContent == null)
+            {
+                _logger.LogWarning($"Lesson content with ID {id} not found for deletion.");
                 return NotFound();
+            }
 
             _context.LessonContents.Remove(lessonContent);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Lesson content with ID {id} deleted.");
             return RedirectToAction("Details", "Lesson", new { id = lessonContent.LessonId });
         }
 
