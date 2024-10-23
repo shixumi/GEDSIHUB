@@ -18,7 +18,9 @@ namespace GedsiHub.Controllers
         // GET: Modules
         public async Task<IActionResult> Index()
         {
-            var modules = await _context.Modules.ToListAsync();
+            var modules = await _context.Modules
+                .Include(m => m.Lessons)
+                .ToListAsync();
             return View(modules);
         }
 
@@ -46,7 +48,7 @@ namespace GedsiHub.Controllers
         // POST: Create a new Module
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description")] Module module)
+        public async Task<IActionResult> Create([Bind("Title,Description,Status,Color")] Module module)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +73,7 @@ namespace GedsiHub.Controllers
         // POST: Edit a Module
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ModuleId,Title,Description,CreatedDate,LastModifiedDate")] Module module)
+        public async Task<IActionResult> Edit(int id, [Bind("ModuleId,Title,Description,Status,Color,CreatedDate,LastModifiedDate")] Module module)
         {
             if (id != module.ModuleId)
             {
@@ -82,6 +84,7 @@ namespace GedsiHub.Controllers
             {
                 try
                 {
+                    module.LastModifiedDate = DateTime.UtcNow;
                     _context.Update(module);
                     await _context.SaveChangesAsync();
                 }
@@ -125,6 +128,90 @@ namespace GedsiHub.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        // New Actions for Publish/Unpublish
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Publish(int id)
+        {
+            var module = await _context.Modules.FindAsync(id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+
+            module.Status = ModuleStatus.Published;
+            module.LastModifiedDate = DateTime.UtcNow;
+            _context.Update(module);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Unpublish(int id)
+        {
+            var module = await _context.Modules.FindAsync(id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+
+            module.Status = ModuleStatus.Unpublished;
+            module.LastModifiedDate = DateTime.UtcNow;
+            _context.Update(module);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Toggle Helper
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var module = await _context.Modules.FindAsync(id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+
+            module.Status = module.Status == ModuleStatus.Published ? ModuleStatus.Unpublished : ModuleStatus.Published;
+            module.LastModifiedDate = DateTime.UtcNow;
+            _context.Update(module);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Update Color
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateColor(int id, string Color)
+        {
+            var module = await _context.Modules.FindAsync(id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+
+            // Validate the color format if necessary
+            if (!System.Text.RegularExpressions.Regex.IsMatch(Color, "^#([A-Fa-f0-9]{6})$"))
+            {
+                TempData["Error"] = "Invalid color format.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            module.Color = Color;
+            module.LastModifiedDate = DateTime.UtcNow;
+            _context.Update(module);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
         private bool ModuleExists(int id)
         {

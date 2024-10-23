@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<h2>Admin Login</h2>
+
+<form asp-action="AdminLogin" method="post">
+    <div class="form-group">
+        <label for="adminPassword">Admin Password:</label>
+        <input type="password" name="adminPassword" class="form-control" required />
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Message
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
