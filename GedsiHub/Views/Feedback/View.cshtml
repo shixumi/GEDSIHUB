@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Feedback";
+}
+
+<div>
+    <h1 id="addNewModule_HeaderTitle" class="modules_title" style="color: #464040;">Feedback Responses</h1>
+    <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
+    <div class="container feedback-container">
+        <div class="feedback-header-buttons">
+            <div class="complain-suggestion-con">
+                <span id="user-complaints" class="complaint">Complaint</span>
+                <span id="user-suggestions" class="suggestion">Suggestion</span>
+            </div>
+        </div>
+        <div class="userinfo-actions-feedback-container">
+            <div class="feedback-details">
+                <div>
+                    <span class="submitted-by-text">Submitted by:</span>
+                    <span>Name</span>
+                </div>
+                <div>
+                    <span class="date-text">Date:</span>
+                    <span>Date</span>
+                </div>
+            </div>
+            <div class="feedback-actions">
+                <button id="marked-as-resolved-button" class="btn btn-primary" type="button">
+                    <img src="~/images/Check.png" />Mark as Resolved
+                </button>
+                <button class="btn btn-primary delete-user-feedback-button" type="button">
+                    <img src="~/images/Delete.png" />Delete
+                </button>
+            </div>
+        </div>
+        <div class="user-response-container">
+            <div class="type-desc-issue-con">
+                <div class="text-input-container-type-of-issue">
+                    <span>1. Type of Issue</span>
+                    <input id="type-of-issue-holder" class="holder" type="text" />
+                </div>
+                <div class="text-input-issue-desc">
+                    <span>3. Detailed Description of the Issue</span>
+                    <textarea id="issue-desc-holder" class="holder"></textarea>
+                </div>
+            </div>
+            <div class="area-evidence-container">
+                <div class="text-input-container-affected-area">
+                    <span>2. Affected Area</span>
+                    <input id="affected-area-holder" class="holder" type="text" />
+                </div>
+                <div class="input-text-evidence">
+                    <span>4. Evidence (Optional)</span>
+                    <input id="evidence-holder" class="holder" type="text" />
+                </div>
+            </div>
+        </div>
+        <div class="feedback-response-button-container">
+            <button id="back-previous-response-button" type="button">Back</button>
+            <button id="next-response-button" type="button">Next</button>
+        </div>
+    </div>
+</div>

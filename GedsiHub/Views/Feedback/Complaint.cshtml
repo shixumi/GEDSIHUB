@@ -1,0 +1,49 @@
+﻿<!-- Views/Feedback/Complaint.cshtml -->
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Complaint";
+}
+
+@model FeedbackComplaint
+
+<h2>Complaint Form</h2>
+<form asp-action="SubmitComplaint" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="TypeOfIssue">Type of Issue</label>
+        <select asp-for="TypeOfIssue" class="form-control">
+            <option value="System Bug">System Bug</option>
+            <option value="UI Issue">UI Issue</option>
+            <option value="Performance Issue">Performance Issue</option>
+            <option value="Content Error">Content Error</option>
+            <option value="Other">Other</option>
+        </select>
+        <span asp-validation-for="TypeOfIssue" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="AffectedArea">Affected Area</label>
+        <select asp-for="AffectedArea" class="form-control">
+            <option value="Dashboard">Dashboard</option>
+            <option value="Modules">Modules</option>
+            <option value="Leaderboard">Leaderboard</option>
+            <option value="Forum">Forum</option>
+            <option value="Discussion">Discussion</option>
+            <option value="Profile">Profile</option>
+        </select>
+        <span asp-validation-for="AffectedArea" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="DetailedDescription">Detailed Description</label>
+        <textarea asp-for="DetailedDescription" class="form-control"></textarea>
+        <span asp-validation-for="DetailedDescription" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Evidence">Evidence (optional)</label>
+        <input type="file" asp-for="Evidence" class="form-control" />
+        <span asp-validation-for="Evidence" class="text-danger"></span> <!-- No validation error if not provided -->
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Complaint</button>
+</form>

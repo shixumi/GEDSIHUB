@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241021181445_Added Feedbacks")]
+    partial class AddedFeedbacks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -741,7 +744,11 @@ namespace GedsiHub.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("H5PEmbedCode")
+                    b.Property<string>("H5PId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("H5PMetadata")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -758,8 +765,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("AssessmentId");
 
-                    b.HasIndex("ModuleId")
-                        .IsUnique();
+                    b.HasIndex("ModuleId");
 
                     b.ToTable("Assessments");
                 });
@@ -1329,62 +1335,54 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 1,
                             CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8121),
-                            CreatedDate = new DateTime(2024, 10, 21, 16, 29, 12, 649, DateTimeKind.Utc).AddTicks(3275),
-=========
-                            CreatedDate = new DateTime(2024, 10, 21, 17, 31, 54, 357, DateTimeKind.Utc).AddTicks(5727),
->>>>>>>>> Temporary merge branch 2
-                            CreatedDate = new DateTime(2024, 10, 21, 16, 29, 12, 649, DateTimeKind.Utc).AddTicks(3275),
-=========
-                            CreatedDate = new DateTime(2024, 10, 21, 17, 31, 54, 357, DateTimeKind.Utc).AddTicks(5727),
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8123),
+                            Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
+                            PositionInt = 0,
+                            Title = "Introduction to Gender Equality"
+                        },
                         new
                         {
                             ModuleId = 2,
-<<<<<<<<< Temporary merge branch 1
-                            CreatedDate = new DateTime(2024, 10, 21, 16, 29, 12, 649, DateTimeKind.Utc).AddTicks(3277),
-=========
-                            CreatedDate = new DateTime(2024, 10, 21, 17, 31, 54, 357, DateTimeKind.Utc).AddTicks(5729),
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8125),
+                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8123),
+                            Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
+                            PositionInt = 0,
+                            Title = "Understanding Gender Identities"
+                        },
                         new
                         {
                             ModuleId = 3,
-<<<<<<<<< Temporary merge branch 1
-                            CreatedDate = new DateTime(2024, 10, 21, 16, 29, 12, 649, DateTimeKind.Utc).AddTicks(3279),
-=========
-                            CreatedDate = new DateTime(2024, 10, 21, 17, 31, 54, 357, DateTimeKind.Utc).AddTicks(5731),
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8127),
+                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8125),
+                            Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
+                            PositionInt = 0,
+                            Title = "Diversity and Inclusion in the Workplace"
+                        },
                         new
                         {
                             ModuleId = 4,
-<<<<<<<<< Temporary merge branch 1
-                            CreatedDate = new DateTime(2024, 10, 21, 16, 29, 12, 649, DateTimeKind.Utc).AddTicks(3281),
-=========
-                            CreatedDate = new DateTime(2024, 10, 21, 17, 31, 54, 357, DateTimeKind.Utc).AddTicks(5733),
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8128),
+                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8127),
+                            Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
+                            PositionInt = 0,
+                            Title = "Gender and Development: Global Perspectives"
+                        },
                         new
                         {
                             ModuleId = 5,
-<<<<<<<<< Temporary merge branch 1
-                            CreatedDate = new DateTime(2024, 10, 21, 16, 29, 12, 649, DateTimeKind.Utc).AddTicks(3283),
-=========
-                            CreatedDate = new DateTime(2024, 10, 21, 17, 31, 54, 357, DateTimeKind.Utc).AddTicks(5735),
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8130),
+                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8128),
+                            Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
+                            PositionInt = 0,
+                            Title = "Social Inclusion Strategies"
+                        },
                         new
                         {
                             ModuleId = 6,
-<<<<<<<<< Temporary merge branch 1
-                            CreatedDate = new DateTime(2024, 10, 21, 16, 29, 12, 649, DateTimeKind.Utc).AddTicks(3285),
-=========
-                            CreatedDate = new DateTime(2024, 10, 21, 17, 31, 54, 357, DateTimeKind.Utc).AddTicks(5738),
-                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8132),
+                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8130),
+                            Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
+                            PositionInt = 0,
+                            Title = "Final Condensed Learning Module"
+                        },
                         new
                         {
                             ModuleId = 7,
-<<<<<<<<< Temporary merge branch 1
-                            CreatedDate = new DateTime(2024, 10, 21, 16, 29, 12, 649, DateTimeKind.Utc).AddTicks(3286),
-=========
-                            CreatedDate = new DateTime(2024, 10, 21, 17, 31, 54, 357, DateTimeKind.Utc).AddTicks(5739),
->>>>>>>>> Temporary merge branch 2
+                            CreatedDate = new DateTime(2024, 10, 21, 18, 14, 44, 303, DateTimeKind.Utc).AddTicks(8132),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             PositionInt = 0,
                             Title = "Gender-Based Violence and Prevention"
@@ -1631,8 +1629,8 @@ namespace GedsiHub.Migrations
             modelBuilder.Entity("GedsiHub.Models.Assessment", b =>
                 {
                     b.HasOne("GedsiHub.Models.Module", "Module")
-                        .WithOne("Assessment")
-                        .HasForeignKey("GedsiHub.Models.Assessment", "ModuleId")
+                        .WithMany("Assessments")
+                        .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1924,8 +1922,7 @@ namespace GedsiHub.Migrations
 
             modelBuilder.Entity("GedsiHub.Models.Module", b =>
                 {
-                    b.Navigation("Assessment")
-                        .IsRequired();
+                    b.Navigation("Assessments");
 
                     b.Navigation("Certificates");
 

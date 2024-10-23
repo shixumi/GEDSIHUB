@@ -20,8 +20,10 @@ Cannot display the Module Number/ID in the breadcrumb <line 23> *@
         </li>
         <li class="breadcrumb-item">
             <!-- Proceed to list of lessons page -->
-            <a asp-action="Index"><span>Module<span id="module_number" class="module_number">Module</span></span></a>
-            <a asp-action="Details" asp-controller="Module" asp-route-moduleId="@ViewBag.ModuleId">Module <span id="module_number" class="module_number">@ViewBag.ModuleId</span></a>
+
+            <a asp-action="Details" asp-controller="Module" asp-route-moduleId="@ViewBag.ModuleId">
+                <span id="module_number" class="module_number">@ViewBag.Title</span>
+            </a>
         </li>
             <!-- Current lesson page -->
         <li class="breadcrumb-item">
@@ -31,11 +33,14 @@ Cannot display the Module Number/ID in the breadcrumb <line 23> *@
 
     
    
+    <form asp-action="Create" method="post">
+
+    </form>
     <span id="added_module_title" class="added_module_title">Module No: @ViewBag.ModuleId</span>
     <div class="cms_white_base_container">
         <div class="cms_lesson_title">
             <span>Lesson</span>
-            <span id="lesson_number_inwcon">@Model.LessonNumber</span>
+            <span id="lesson_number_inwcon">@Model.LessonNumber:&nbsp;</span>
             <span id="lesson_title">@Model.Title</span>
         </div>
         <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
@@ -48,7 +53,10 @@ Cannot display the Module Number/ID in the breadcrumb <line 23> *@
         <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
         <input type="url" class="url_input" placeholder="Paste H5P link here" />
         <span class="lesson_content_text">Lesson Content</span>
+
+        <!-- TinyMCE TextArea -->
         <textarea id="tinymce_textarea" class="tinymce_textarea"></textarea>
+
         <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
         <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Lesson_Content_Upload_Container">
             <img class="upload_icon" src="~/images/Upload.png" />
@@ -63,7 +71,7 @@ Cannot display the Module Number/ID in the breadcrumb <line 23> *@
             <!-- Cancel Button -->
             <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId" id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton">Cancel</a>
             <!-- Save Button -->
-            <button id="PreviewLessonContentButton" class="fw-bolder SaveButton" type="button">Preview</button>
+            <button id="PreviewLessonContentButton" class="fw-bolder SaveButton" type="button">Save</button>
         </div>
     </div>
     <div class="CMS_Container"></div>

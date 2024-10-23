@@ -9,7 +9,7 @@ function setActiveSidebar() {
     'addNewModule.html': 'SidebarButton_Modules',
     'leaderboard.html': 'SidebarButton_Leaderboard',
     '/ForumPost': 'SidebarButton_Forum',
-    'feedback.html': 'SidebarButton_Feedback'
+    '/Feedback': 'SidebarButton_Feedback'
   };
 
   // Add the 'active' class to the correct button based on the current page
@@ -28,7 +28,7 @@ function setupSidebarButtonActions() {
     'SidebarButton_Modules': '/Module',
     'SidebarButton_Leaderboard': 'leaderboard.html',
     'SidebarButton_Forum': '/ForumPost',
-    'SidebarButton_Feedback': 'feedback.html'
+    'SidebarButton_Feedback': '/Feedback'
   };
 
   // Add click event listeners to the buttons

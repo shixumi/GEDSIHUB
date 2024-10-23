@@ -1,0 +1,213 @@
+﻿.feedback-container {
+    background: #ffffff;
+    min-height: 40rem;
+    padding: 50px;
+    margin-top: 34px;
+    margin-left: 0px;
+    border-radius: 30px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.feedback-header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    user-select: none;
+}
+
+    .feedback-header-buttons span {
+        font-weight: 550;
+        color: #464040;
+    }
+
+.complain-suggestion-con {
+    font-size: 1.5rem;
+    display: flex;
+    gap: 4rem;
+}
+
+.resolved-feedbacks-filter-con {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-left: auto;
+}
+
+.complaint, .suggestion, .filter, .view-resolved-feedbacks {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .complaint:active, .suggestion:active, .filter:active, .view-resolved-feedbacks:active {
+        transform: scale(0.95);
+    }
+
+.view-resolved-feedbacks {
+    color: rgb(102,0,0) !important;
+}
+
+    .view-resolved-feedbacks:hover {
+        color: #b30000 !important;
+    }
+
+.filter img {
+    margin-left: 0.5rem;
+}
+
+#view-user-feedback-button img, .delete-user-feedback-button img, #marked-as-resolved-button img {
+    width: 1.5rem;
+    margin-right: 0.4rem;
+}
+
+#view-user-feedback-button {
+    background: rgba(82,160,53,0.3);
+}
+
+.delete-user-feedback-button {
+    background: rgba(102,0,0,0.3);
+}
+
+#view-user-feedback-button, .delete-user-feedback-button, #marked-as-resolved-button {
+    border-radius: 1.5rem;
+    border: none;
+    padding: 0.3rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: #464040;
+}
+
+    #view-user-feedback-button:hover {
+        background-color: #b4f39d;
+    }
+
+    .delete-user-feedback-button:hover {
+        background-color: #f0adad;
+    }
+
+    #view-user-feedback-button:active, .delete-user-feedback-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+.view-delete-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.feedback-responses-table {
+    font-size: 1.2rem;
+    user-select: none;
+}
+
+    .feedback-responses-table th {
+        color: #464040;
+    }
+
+.date-feedback-label, .type-of-issue-feedback-label, .actions-feedback-label {
+    text-align: center;
+    color: #464040;
+    font-weight: 700;
+}
+
+#date-feedback-response, #type-of-issue-feedback-response {
+    text-align: center;
+    vertical-align: middle;
+    color: #464040;
+}
+
+.user-name-feedback-label, .type-of-issue-feedback-label {
+    font-weight: 500;
+}
+
+#type-of-issue-feedback-response {
+    color: #9C9C9C;
+}
+
+#username-feedback-response {
+    vertical-align: middle;
+}
+
+.checkbox-container {
+    display: flex;
+    height: 100%;
+    margin-top: 15px;
+}
+
+#checkbox-feedback-response {
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 0.4rem;
+    position: relative;
+    cursor: pointer;
+    border: 3px solid #464040;
+}
+
+    input[type="checkbox"]:checked {
+        border: none;
+        border: 3px solid #464040;
+    }
+
+        input[type="checkbox"]:checked::before {
+            content: '';
+            position: absolute;
+            left: 0.45rem;
+            width: 0.2rem;
+            height: 1rem;
+            background-color: #464040;
+            border-radius: 0.2rem;
+            transform: rotate(45deg);
+        }
+
+.feedback-responses-table th, .feedback-responses-table td {
+    border: none;
+}
+
+#feedback-responses-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#searchResponse {
+    border-style: none;
+    border-radius: 3.90625rem;
+    width: 26.5625rem;
+    height: 2.734375rem;
+    justify-self: end;
+    color: #464040;
+    padding-left: 1.5625rem;
+    padding-right: 3.125rem;
+    font-size: 1.015625rem;
+    min-width: 26.5625rem;
+}
+
+    #searchResponse::placeholder {
+        font-size: 1.015625rem;
+        color: #9c9c9c;
+        font-weight: 200;
+    }
+
+.search-icon-feedback {
+    width: 20px;
+    position: absolute;
+    margin-left: -42px;
+    margin-top: 7px;
+}
+
+.feedback-title-searcbar-con {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+

@@ -17,20 +17,24 @@ function initializeTinyMCE() {
         tinymce.init({
             selector: '#tinymce_textarea',  // Applies TinyMCE to any <textarea> element
             plugins: [
-                'autolink', 'link', 'lists', 'table', 'anchor',
-                'charmap', 'codesample', 'image', 'media',
-                'visualblocks', 'wordcount', 'fullscreen', 'autoresize'  // Added autoresize plugin
+                'autolink', 'link', 'lists', 'table', 'anchor', 'charmap', 'codesample', 
+                'image', 'media', 'visualblocks', 'wordcount', 'fullscreen', 
+                'autoresize', 'code'
             ],
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table fullscreen | removeformat',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table fullscreen | code | removeformat',
             tinycomments_mode: 'embedded',
             tinycomments_author: 'Author name',
             mergetags_list: [
                 { value: 'First.Name', title: 'First Name' },
                 { value: 'Email', title: 'Email' },
             ],
-            min_height: 300,  // Set the minimum height of the editor
-            max_height: 600,  // Set the maximum height the editor can grow to
+            min_height: 700,  // Set the minimum height of the editor
+            max_height: 1600,  // Set the maximum height the editor can grow to
             autoresize_bottom_margin: 20,  // Optional: Adds margin when resizing
+
+            // This allows <iframe> and <script> tags with certain attributes
+            extended_valid_elements: 'iframe[src|width|height|frameborder|allowfullscreen|allow|aria-label],script[src|charset]',
+            
             setup: (editor) => {
                 editor.on('init', () => {
                     console.log('TinyMCE initialized successfully.');
@@ -45,7 +49,6 @@ function initializeTinyMCE() {
         console.error("TinyMCE script wasn't loaded correctly.");
     }
 }
-
 
 // Function to display error if TinyMCE fails
 function displayEditorError(message) {

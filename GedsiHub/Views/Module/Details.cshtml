@@ -17,7 +17,7 @@
             <!-- Show the current module name (or title) -->
             <li class="breadcrumb-item">
                 <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId">
-                    <span id="modules_lessons_breadcrumb">Module @Model.Title</span>
+                    <span id="modules_lessons_breadcrumb">@Model.Title</span>
                 </a>
             </li>
 
@@ -28,10 +28,11 @@
             }
         </ol>
         <!-- Create Assessment Button -->
-        <a asp-controller="Assessment" asp-action="Create" asp-route-moduleId="@Model.ModuleId" class="btn btn-success">
+        <a asp-controller="Assessment" asp-action="Create" asp-route-moduleId="@Model.ModuleId" class="create_assessment_button">
             Create Assessment
         </a>
     </div>
+
 
     <!-- Module Title -->
     <span id="added_module_title" class="added_module_title">@Model.Title</span>
@@ -64,7 +65,7 @@
                 <span id="LessonTitleDisplay">@lesson.Title</span>
                 <div class="lesson_con_linebreak"></div>
             </div>
-            <span id="LessonOverviewDisplay" class="lesson_brief_overview">@lesson.Overview</span>
+            <span id="LessonOverviewDisplay" class="lesson_brief_overview">@lesson.Overview.Substring(0, Math.Min(250, lesson.Overview.Length))...</span>
             <div class="button_container">
 
                 <!-- Delete Lesson Button -->
@@ -98,83 +99,13 @@
 
 
                 <!-- Go to lesson button -->
-                <a asp-action="Details" asp-controller="Lesson" asp-route-id="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
+                <a asp-action="Create" asp-controller="LessonContent" asp-route-id="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
                     Go To Lesson
                 </a>
 
             </div>
         </div>
     }
-
-    <!-- Assessment Section -->
-    <h2>Assessment</h2>
-    @if (Model.Assessment == null)
-    {
-        <p>No assessment has been added for this module.</p>
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-controller="Assessment" asp-action="Create" asp-route-moduleId="@Model.ModuleId" class="btn btn-success">Create Assessment</a>
-        }
-    }
-    else
-    {
-        <div class="assessment-details mb-5">
-            <h3>@Model.Assessment.Title</h3>
-            <p>@Model.Assessment.Description</p>
-            <!-- H5P Embed -->
-            <div class="responsive-iframe">
-                @Html.Raw(Model.Assessment.H5PEmbedCode)
-            </div>
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-controller="Assessment" asp-action="Edit" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-warning mt-3">Edit Assessment</a>
-                <a asp-controller="Assessment" asp-action="Delete" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-danger mt-3">Delete Assessment</a>
-            }
-        </div>
-    }
-
-    <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
-        <div class="lessonNo_title_container">
-            <span>Module</span>
-            <span id="ModAssessNumberDisplay">0.</span>
-            <span id="AssessmentTitleDisplay">Assessment</span>
-            <div class="lesson_con_linebreak"></div>
-        </div>
-        <span id="assessmentOverviewDisplay" class="lesson_brief_overview">Overview</span>
-        <div class="button_container">
-
-            <div id="DeleteAssessment">
-                <a data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                    <img id="DeleteAssessment" class="Delete" src="~/images/Delete.png" />
-                    <span>Delete</span>
-                </a>
-            </div>
-
-            <div id="EditAssessment">
-                <img class="Edit" src="~/images/Edit.png" />
-                <span>Edit</span>
-            </div>
-
-            <div id="toggleButtonPublishUnpublishAssessment" class="d-xxl-flex">
-                <div id="publishAssessment" class="toggle-content">
-                    <img class="PublishIcon" src="~/images/Publish.png" />
-                    <span>Publish</span>
-                </div>
-                <div id="unpublishAssessment" class="toggle-content">
-                    <img class="PublishIcon" src="~/images/Unpublish.png" />
-                    <span>Unpublish</span>
-                </div>
-            </div>
-
-            <button id="go_to_assessment" class="btn btn-primary go_to_button" type="button">Go To Assessment</button>
-        </div>
-    </div>
-
-
-
-
-
-
 
     <!-- If there are lessons in the module, this add new lesson btn will appear -->
     @if (Model.Lessons != null && Model.Lessons.Any())
@@ -190,6 +121,82 @@
     }
 
 
+    <!-- Assessment Section -->
+
+    <div class="assessment-section" style="margin-top: 5rem">
+        <!-- Title -->
+        <span id="added_module_title" class="added_module_title">Assessment</span>
+
+
+        @if (Model.Assessment == null)
+        {
+            <div class="module-desc-text">
+                No assessment has been added for this module.
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Assessment" asp-action="Create" asp-route-moduleId="@Model.ModuleId" class="btn btn-success">Create Assessment</a>
+            }
+        }
+        else
+        {
+            <!-- With designs -->
+            <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
+                <div class="lessonNo_title_container">
+                    <span>Module</span>
+                    <span id="ModAssessNumberDisplay">0.</span>
+                    <span id="AssessmentTitleDisplay">Assessment</span>
+                    <div class="lesson_con_linebreak"></div>
+                </div>
+                <span id="assessmentOverviewDisplay" class="lesson_brief_overview">Overview</span>
+                <div class="button_container">
+
+                    <div id="DeleteAssessment">
+                        <a data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                            <img id="DeleteAssessment" class="Delete" src="~/images/Delete.png" />
+                            <span>Delete</span>
+                        </a>
+                    </div>
+
+                    <div id="EditAssessment">
+                        <img class="Edit" src="~/images/Edit.png" />
+                        <span>Edit</span>
+                    </div>
+
+                    <div id="toggleButtonPublishUnpublishAssessment" class="d-xxl-flex">
+                        <div id="publishAssessment" class="toggle-content">
+                            <img class="PublishIcon" src="~/images/Publish.png" />
+                            <span>Publish</span>
+                        </div>
+                        <div id="unpublishAssessment" class="toggle-content">
+                            <img class="PublishIcon" src="~/images/Unpublish.png" />
+                            <span>Unpublish</span>
+                        </div>
+                    </div>
+
+                    <button id="go_to_assessment" class="btn btn-primary go_to_button" type="button">Go To Assessment</button>
+                </div>
+            </div>
+
+            <!-- Need to integrate this -->
+            <div class="assessment-details mb-5">
+                <h3>@Model.Assessment.Title</h3>
+                <p>@Model.Assessment.Description</p>
+                <!-- H5P Embed -->
+                <div class="responsive-iframe">
+                    @Html.Raw(Model.Assessment.H5PEmbedCode)
+                </div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Assessment" asp-action="Edit" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-warning mt-3">Edit Assessment</a>
+                    <a asp-controller="Assessment" asp-action="Delete" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-danger mt-3">Delete Assessment</a>
+                }
+            </div>
+        }
+    </div>
+    
+
+
 </div>
 
 @foreach (var lesson in Model.Lessons)
@@ -200,7 +207,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmDeleteModalLabel-@lesson.LessonId">Delete Lesson?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button     type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     Are you sure you want to delete the lesson titled "<strong>@lesson.Title</strong>"?
