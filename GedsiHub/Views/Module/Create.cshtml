@@ -4,46 +4,39 @@
     ViewData["Title"] = "Create Module";
 }
 
-<!-- Create Module-->
 <div>
-
-    <!-- Header Title -->
     <h1 id="addNewModule_HeaderTitle" class="modules_title" style="color: #464040;">Add a New Module</h1>
-    <!-- Horizontal Break -->
     <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
 
-    <!-- Form for creating a new module -->
     <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken() <!-- Anti-forgery token to prevent CSRF -->
+        <!-- Display validation summary for model binding errors -->
+        <div asp-validation-summary="All" class="text-danger"></div>
+
         <div class="container AddModuleDataContainer" id="moduleCards_container">
             <div class="row">
-                <!-- Module Title Input -->
                 <div class="col-md-12">
-                    <!-- Label -->
-                    <h1 style="color: #464040;font-size: 1.5625rem;">Title</h1>
-                    <!-- Input -->
+                    <!-- Module Title -->
+                    <h1 style="color: #464040; font-size: 1.5625rem;">Title</h1>
                     <input asp-for="Title" class="form-control InputBox" placeholder="Enter Module Title" id="AddModule_TitleInput" required />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
             </div>
 
-
             <div class="row">
-                <!-- Description Textarea Input-->
                 <div class="col-md-12">
-                    <!-- Label -->
-                    <h1 style="color: #464040;font-size: 1.5625rem;">Description</h1>
-                    <!-- Description Input -->
-                    <textarea asp-for="Description" class="form-control InputBox-ta" rows="3" placeholder="Enter Module Description"></textarea>
+                    <!-- Module Description -->
+                    <h1 style="color: #464040; font-size: 1.5625rem;">Description</h1>
+                    <textarea asp-for="Description" class="form-control InputBox-ta" rows="3" placeholder="Enter Module Description" required></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
             </div>
 
-            <!-- Status Selection -->
             <div class="row">
                 <div class="col-md-12">
-                    <h1 style="color: #464040;font-size: 1.5625rem;">Status</h1>
-                    <select asp-for="Status" class="form-control InputBox" id="Module_Status">
+                    <!-- Module Status -->
+                    <h1 style="color: #464040; font-size: 1.5625rem;">Status</h1>
+                    <select asp-for="Status" class="form-control InputBox" id="Module_Status" required>
                         <option value="Unpublished">Unpublished</option>
                         <option value="Published">Published</option>
                     </select>
@@ -51,35 +44,27 @@
                 </div>
             </div>
 
-
-
-            <!-- Color Picker -->
             <div class="row">
                 <div class="col-md-12">
-                    <h1 style="color: #464040;font-size: 1.5625rem;">Color</h1>
-                    <div class="create_moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
-                        <div class="picker-container">
-                            <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
-                            <input asp-for="Color" type="color" class="ColorInput" id="Module_Color" />
-                            <span asp-validation-for="Color" class="text-danger"></span>
-                        </div>
-                    </div>
+                    <!-- Module Color -->
+                    <h1 style="color: #464040; font-size: 1.5625rem;">Color</h1>
+                    <input asp-for="Color" type="color" class="form-control InputBox" id="Module_Color" required />
+                    <span asp-validation-for="Color" class="text-danger"></span>
                 </div>
             </div>
-        
+
             <div class="button-container">
                 <!-- Cancel Button -->
-                <a asp-controller="Module" asp-action="Index" id="cancelButton" class="btn fw-bolder cancelButton">Cancel</a>
-
-                <!-- Add Module Button -->
-                <button type="submit" class="btn fw-bolder SubmitButton">Add Module</button>
+                <a asp-controller="Module" asp-action="Index" id="cancelButton" class="btn fw-bolder cancelButton" style="background-color: #d9534f; color: white;">Cancel</a>
+                <!-- Submit Button -->
+                <button type="submit" class="btn fw-bolder SubmitButton" style="background-color: #5cb85c; color: white;">Add Module</button>
             </div>
         </div>
     </form>
 </div>
 
-
 @section Scripts {
+    <!-- This ensures validation scripts are loaded for client-side validation -->
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
