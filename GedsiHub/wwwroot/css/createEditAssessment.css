@@ -5,3 +5,39 @@
     position: relative;
     top: -0.9625rem;
 }
+
+
+
+.assessment_input {
+    display: block;
+    border-radius: 0.7rem;
+    height: 3.875rem;
+    width: 100%;
+    border-width: 0.075rem;
+    border: 0.075rem solid #9C9C9C;
+    padding: 1.175rem;
+    font-size: 1.5rem;
+    margin-bottom: .5rem;
+}
+
+.assessment_input::placeholder {
+    color: #9C9C9C;
+}
+
+
+.assessment_input_textarea {
+    display: block;
+    border-radius: 0.7rem;
+    width: 100%;
+    border-width: 0.075rem;
+    border: 0.075rem solid #9C9C9C;
+    padding: 1.175rem;
+    font-size: 1.5rem;
+    margin-bottom: .5rem;
+}
+
+.assessment_input_textarea::placeholder {
+    color: #9C9C9C;
+}
+
+

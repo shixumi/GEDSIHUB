@@ -127,6 +127,8 @@
         <!-- Title -->
         <span id="added_module_title" class="added_module_title">Assessment</span>
 
+        
+        <!-- Cannot display the created assessments -->
 
         @if (Model.Assessment == null)
         {
@@ -140,7 +142,23 @@
         }
         else
         {
-            <!-- With designs -->
+            <!-- Need to integrate this -->
+            <div class="assessment-details mb-5">
+                <h3>@Model.Assessment.Title</h3>
+                <p>@Model.Assessment.Description</p>
+                <!-- H5P Embed -->
+                <div class="responsive-iframe">
+                    @Html.Raw(Model.Assessment.H5PEmbedCode)
+                </div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Assessment" asp-action="Edit" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-warning mt-3">Edit Assessment</a>
+                    <a asp-controller="Assessment" asp-action="Delete" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-danger mt-3">Delete Assessment</a>
+                }
+            </div>
+        }
+
+        <!-- With designs | Static Only -->
             <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
                 <div class="lessonNo_title_container">
                     <span>Module</span>
@@ -177,22 +195,6 @@
                     <button id="go_to_assessment" class="btn btn-primary go_to_button" type="button">Go To Assessment</button>
                 </div>
             </div>
-
-            <!-- Need to integrate this -->
-            <div class="assessment-details mb-5">
-                <h3>@Model.Assessment.Title</h3>
-                <p>@Model.Assessment.Description</p>
-                <!-- H5P Embed -->
-                <div class="responsive-iframe">
-                    @Html.Raw(Model.Assessment.H5PEmbedCode)
-                </div>
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-controller="Assessment" asp-action="Edit" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-warning mt-3">Edit Assessment</a>
-                    <a asp-controller="Assessment" asp-action="Delete" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-danger mt-3">Delete Assessment</a>
-                }
-            </div>
-        }
     </div>
 
 
