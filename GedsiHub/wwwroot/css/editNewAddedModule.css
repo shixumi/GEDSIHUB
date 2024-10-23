@@ -15,8 +15,8 @@
 
 #edit_new_lesson_container, #edit_assessment_container {
     background: #ffffff;
-    height: 18rem;
     width: 65%;
+    height: auto !important;
     border-radius: 1.5625rem;
     padding: 2.5rem;
     display: flex;
@@ -88,7 +88,7 @@
 .button_container {
     display: flex;
     flex-direction: row;
-    margin-top: 3.9rem;
+    margin-top: 1.2rem !important;
     justify-content: space-between;
     align-items: center; /* Ensure all buttons are aligned vertically */
     gap: 1.5rem; /* Add some space between buttons */
