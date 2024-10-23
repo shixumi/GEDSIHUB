@@ -4,7 +4,7 @@
     ViewData["Title"] = "Module Details";
 }
 
-<!-- Module Details -->
+<!-- Modulee Details -->
 <div class="container-lesson">
     <!-- Breadcrumb -->
     <div class="breadcrumb-and-button">
@@ -98,7 +98,7 @@
 
 
                 <!-- Go to lesson button -->
-                <a asp-action="Create" asp-controller="LessonContent" asp-route-id="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
+                <a asp-action="Create" asp-controller="LessonContent" asp-route-lessonId="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
                     Go To Lesson
                 </a>
 
@@ -194,7 +194,7 @@
             </div>
         }
     </div>
-    
+
 
 
 </div>
@@ -207,7 +207,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmDeleteModalLabel-@lesson.LessonId">Delete Lesson?</h5>
-                    <button     type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     Are you sure you want to delete the lesson titled "<strong>@lesson.Title</strong>"?

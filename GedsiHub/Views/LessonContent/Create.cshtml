@@ -5,16 +5,14 @@
     ViewData["Title"] = "Create Lesson Content";
 }
 
-
 <div class="modal-header">
     <h5 class="modal-title">Add Content to Lesson</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!-- Cancel button should close modal -->
 </div>
 <div class="modal-body">
     <form asp-action="Create" method="post">
         @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="LessonId" value="@ViewBag.LessonId" />
-
+        <input type="hidden" asp-for="LessonId" />
 
         <div class="form-group mb-3">
             <label asp-for="ContentType" class="control-label">Content Type</label>
@@ -58,126 +56,67 @@
         </div>
 
         <button type="submit" class="btn btn-success">Add Content</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> <!-- Ensure this closes the modal -->
     </form>
 </div>
-
-<!-- FROM CHATGPT -->
-<div class="modal-header">
-    <h5 class="modal-title">Add Content to Lesson</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-    <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="LessonId" value="@ViewBag.LessonId" />
-
-        <!-- Lesson Number and Title -->
-        <div class="cms_lesson_title mb-3">
-            <span>Lesson</span>
-            <span id="lesson_number_inwcon">@Model.Lesson.LessonNumber:&nbsp;</span>
-            <span id="lesson_title">@Model.Lesson.Title</span>
-        </div>
-
-        <!-- Content Type Selection -->
-        <div class="form-group mb-3">
-            <label asp-for="ContentType" class="control-label">Content Type</label>
-            <select asp-for="ContentType" class="form-control" id="ContentTypeSelectCreate">
-                <option value="">-- Select Content Type --</option>
-                <option value="Text">Text</option>
-                <option value="Image">Image</option>
-                <option value="H5P">H5P Embed</option>
-            </select>
-            <span asp-validation-for="ContentType" class="text-danger"></span>
-        </div>
-
-        <!-- Text Content -->
-        <div class="form-group mb-3 content-type-group" id="TextContentGroupCreate" style="display: none;">
-            <label asp-for="TextContent" class="control-label">Text Content</label>
-            <textarea asp-for="TextContent" class="form-control" id="tinymce_textarea"></textarea>
-            <span asp-validation-for="TextContent" class="text-danger"></span>
-        </div>
-
-        <!-- Image Content -->
-        <div class="form-group mb-3 content-type-group" id="ImageContentGroupCreate" style="display: none;">
-            <label asp-for="ImageUrl" class="control-label">Image URL</label>
-            <input asp-for="ImageUrl" class="form-control" placeholder="Enter image URL" />
-            <span asp-validation-for="ImageUrl" class="text-danger"></span>
-        </div>
-
-        <!-- H5P Content -->
-        <div class="form-group mb-3 content-type-group" id="H5PContentGroupCreate" style="display: none;">
-            <label asp-for="H5PEmbedCode" class="control-label">H5P Embed Code</label>
-            <textarea asp-for="H5PEmbedCode" class="form-control"></textarea>
-            <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
-            <small class="form-text text-muted">
-                To embed H5P content, paste the iframe embed code provided by H5P here.
-            </small>
-        </div>
-
-        <!-- File Uploads -->
-        <div class="container d-xxl-flex justify-content-xxl-center Upload_Container mb-3" id="Media_Upload_Container">
-            <img class="upload_icon" src="~/images/Upload.png" />
-            <span class="upload_text">Drag and Drop Files or Click to Upload Media</span>
-            <input type="file" id="uploadMedia" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
-            <label for="uploadMedia" class="uploadButtonLabel"> Upload</label>
-            <div id="MediaPreviewContainer"></div>
-        </div>
-
-        <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
-        <input type="url" class="url_input mb-3" placeholder="Paste H5P link here" />
-
-        <!-- Position Input -->
-        <div class="form-group mb-3">
-            <label asp-for="PositionInt" class="control-label">Position</label>
-            <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
-            <span asp-validation-for="PositionInt" class="text-danger"></span>
-        </div>
-
-        <!-- Buttons -->
-        <button type="submit" class="btn btn-success">Add Content</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-    </form>
-</div>
-
 
 @section Scripts {
     <script>
-        // Initialize TinyMCE for Text Content
-        tinymce.init({
-            selector: '#textEditorCreate',
-            plugins: 'link image code',
-            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | code | link image',
-            height: 200,
-            menubar: false,
-            statusbar: false
-        });
+        // Adding a function to initialize content type behavior
+        function initializeContentTypeSwitcher() {
+            console.log("Initializing content type switcher");  // Log initialization
+            var selectElement = document.getElementById('ContentTypeSelectCreate');
+            
+            // Check if element exists
+            if (!selectElement) {
+                console.log("Content type select element not found.");
+                return;
+            }
 
-        // Initialize TinyMCE for H5P Embed Code
-        tinymce.init({
-            selector: '#h5pEditorCreate',
-            plugins: 'link image code',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | link image',
-            height: 200,
-            menubar: false,
-            statusbar: false
-        });
+            // Add event listener for content type selection
+            selectElement.addEventListener('change', function () {
+                console.log("Content type changed to: " + this.value);  // Log selection
+                var selected = this.value;
+                var groups = document.querySelectorAll('.content-type-group');
 
-        // Show/Hide Content Fields Based on Content Type Selection
-        document.getElementById('ContentTypeSelectCreate').addEventListener('change', function () {
-            var selected = this.value;
-            var groups = document.querySelectorAll('.content-type-group');
-            groups.forEach(function (group) {
-                group.style.display = 'none';
+                // Hide all content groups
+                groups.forEach(function (group) {
+                    group.style.display = 'none';
+                });
+
+                // Show the corresponding content group
+                if (selected === 'Text') {
+                    document.getElementById('TextContentGroupCreate').style.display = 'block';
+                } else if (selected === 'Image') {
+                    document.getElementById('ImageContentGroupCreate').style.display = 'block';
+                } else if (selected === 'H5P') {
+                    document.getElementById('H5PContentGroupCreate').style.display = 'block';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeContentTypeSwitcher();  // Initialize when DOM is loaded
+
+            // Initialize TinyMCE for Text Content
+            tinymce.init({
+                selector: '#textEditorCreate',
+                plugins: 'link image code',
+                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | code | link image',
+                height: 200,
+                menubar: false,
+                statusbar: false
             });
 
-            if (selected === 'Text') {
-                document.getElementById('TextContentGroupCreate').style.display = 'block';
-            } else if (selected === 'Image') {
-                document.getElementById('ImageContentGroupCreate').style.display = 'block';
-            } else if (selected === 'H5P') {
-                document.getElementById('H5PContentGroupCreate').style.display = 'block';
-            }
+            // Initialize TinyMCE for H5P Embed Code
+            tinymce.init({
+                selector: '#h5pEditorCreate',
+                plugins: 'link image code',
+                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | link image',
+                height: 200,
+                menubar: false,
+                statusbar: false
+            });
         });
     </script>
 }
