@@ -4,14 +4,17 @@
     ViewData["Title"] = "Module Details";
 }
 
-<!-- Modulee Details -->
+<!-- Module Details -->
 <div class="container-lesson">
     <!-- Breadcrumb -->
     <div class="breadcrumb-and-button">
-
         <!-- Link to the Modules overview -->
         <ol class="breadcrumb" id="breadcrumb">
-            <li class="breadcrumb-item"><a asp-action="Index"><span id="modules_breadcrumb">Modules</span></a></li>
+            <li class="breadcrumb-item">
+                <a asp-action="Index">
+                    <span id="modules_breadcrumb">Modules</span>
+                </a>
+            </li>
 
             <!-- Show the current module name (or title) -->
             <li class="breadcrumb-item">
@@ -31,7 +34,6 @@
             Create Assessment
         </a>
     </div>
-
 
     <!-- Module Title -->
     <span id="added_module_title" class="added_module_title">@Model.Title</span>
@@ -54,7 +56,7 @@
         </div>
     }
 
-    <!-- Iterate thru loop and display each lesson card -->
+    <!-- Iterate through and display each lesson card -->
     @foreach (var lesson in Model.Lessons)
     {
         <div id="edit_new_lesson_container" class="container d-xxl-flex EditLessonContainer">
@@ -64,9 +66,10 @@
                 <span id="LessonTitleDisplay">@lesson.Title</span>
                 <div class="lesson_con_linebreak"></div>
             </div>
-            <span id="LessonOverviewDisplay" class="lesson_brief_overview">@lesson.Overview.Substring(0, Math.Min(250, lesson.Overview.Length))...</span>
+            <span id="LessonOverviewDisplay" class="lesson_brief_overview">
+                @lesson.Overview.Substring(0, Math.Min(250, lesson.Overview.Length))...
+            </span>
             <div class="button_container">
-
                 <!-- Delete Lesson Button -->
                 <a class="lesson-ftr-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@lesson.LessonId">
                     <div id="DeleteLesson">
@@ -75,16 +78,15 @@
                     </div>
                 </a>
 
-                <!-- mark mkarm akrake -->
-                <!-- Clickable Edit Lesson Button -->
+                <!-- Edit Lesson Button -->
                 <a asp-action="Edit" asp-controller="Lesson" asp-route-id="@lesson.LessonId" class="lesson-ftr-btn">
-                    <div id="EditLesson" style="cursor: pointer;">
+                    <div id="EditLesson">
                         <img class="Edit" src="~/images/Edit.png" alt="Edit Icon" />
                         <span>Edit</span>
                     </div>
                 </a>
 
-                <!-- Toggle button for published and unpublished lessons -->
+                <!-- Toggle button for publish/unpublish lesson -->
                 <div id="toggleButtonPublishUnpublishLesson" class="d-xxl-flex">
                     <div id="publishLesson" class="toggle-content lesson-ftr-btn">
                         <img class="PublishIcon" src="~/images/Publish.png" />
@@ -96,37 +98,30 @@
                     </div>
                 </div>
 
-
                 <!-- Go to lesson button -->
                 <a asp-action="Create" asp-controller="LessonContent" asp-route-lessonId="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
                     Go To Lesson
                 </a>
-
-
             </div>
         </div>
     }
 
-    <!-- If there are lessons in the module, this add new lesson btn will appear -->
+    <!-- Add New Lesson Button (if lessons exist) -->
     @if (Model.Lessons != null && Model.Lessons.Any())
     {
         <a asp-action="Create" asp-controller="Lesson" asp-route-moduleId="@Model.ModuleId">
             <div id="addNewLesson" class="container d-xxl-flex addNewLesson">
                 <div>
                     <img class="add_icon_lesson" src="~/images/Add.png" />
-                    <span style="font-size: 1.05875rem;">Add New Lesson</span>
+                    <span>Add New Lesson</span>
                 </div>
             </div>
         </a>
     }
 
-
     <!-- Assessment Section -->
-
     <div class="assessment-section" style="margin-top: 5rem">
-        <!-- Title -->
         <span id="added_module_title" class="added_module_title">Assessment</span>
-
 
         @if (Model.Assessment == null)
         {
@@ -140,7 +135,6 @@
         }
         else
         {
-            <!-- With designs -->
             <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
                 <div class="lessonNo_title_container">
                     <span>Module</span>
@@ -150,19 +144,16 @@
                 </div>
                 <span id="assessmentOverviewDisplay" class="lesson_brief_overview">Overview</span>
                 <div class="button_container">
-
                     <div id="DeleteAssessment">
                         <a data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
                             <img id="DeleteAssessment" class="Delete" src="~/images/Delete.png" />
                             <span>Delete</span>
                         </a>
                     </div>
-
                     <div id="EditAssessment">
                         <img class="Edit" src="~/images/Edit.png" />
                         <span>Edit</span>
                     </div>
-
                     <div id="toggleButtonPublishUnpublishAssessment" class="d-xxl-flex">
                         <div id="publishAssessment" class="toggle-content">
                             <img class="PublishIcon" src="~/images/Publish.png" />
@@ -173,16 +164,12 @@
                             <span>Unpublish</span>
                         </div>
                     </div>
-
                     <button id="go_to_assessment" class="btn btn-primary go_to_button" type="button">Go To Assessment</button>
                 </div>
             </div>
-
-            <!-- Need to integrate this -->
             <div class="assessment-details mb-5">
                 <h3>@Model.Assessment.Title</h3>
                 <p>@Model.Assessment.Description</p>
-                <!-- H5P Embed -->
                 <div class="responsive-iframe">
                     @Html.Raw(Model.Assessment.H5PEmbedCode)
                 </div>
@@ -194,14 +181,11 @@
             </div>
         }
     </div>
-
-
-
 </div>
 
+<!-- Delete lesson modal -->
 @foreach (var lesson in Model.Lessons)
 {
-    <!-- Triggered by the Delete button -->
     <div class="modal fade" id="confirmDeleteModal-@lesson.LessonId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@lesson.LessonId" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -213,7 +197,6 @@
                     Are you sure you want to delete the lesson titled "<strong>@lesson.Title</strong>"?
                 </div>
                 <div class="modal-footer">
-                    <!-- Delete Form -->
                     <form asp-action="Delete" asp-controller="Lesson" method="post">
                         @Html.AntiForgeryToken() <!-- Anti-forgery token for security -->
                         <input type="hidden" name="id" value="@lesson.LessonId" />

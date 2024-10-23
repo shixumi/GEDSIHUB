@@ -26,13 +26,14 @@ namespace GedsiHub.Models
 
         // Foreign Key to Lesson
         [ForeignKey("Lesson")]
+        [Required]
         public int LessonId { get; set; }
 
         // Navigation Property
-        public virtual Lesson Lesson { get; set; } = null!;
+        public virtual Lesson? Lesson { get; set; }
 
         // *** New Property for Publish Status ***
-        public bool IsPublished { get; set; } = false; // Tracks whether the content is published or not
+        public bool IsPublished { get; set; } = false;
     }
 
     public enum ContentTypeEnum

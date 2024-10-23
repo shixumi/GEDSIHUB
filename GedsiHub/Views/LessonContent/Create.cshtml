@@ -12,6 +12,8 @@
 <div class="modal-body">
     <form asp-action="Create" method="post">
         @Html.AntiForgeryToken()
+
+        <!-- Ensure LessonId is passed correctly -->
         <input type="hidden" asp-for="LessonId" />
 
         <div class="form-group mb-3">
@@ -56,7 +58,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">Add Content</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> <!-- Ensure this closes the modal -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
     </form>
 </div>
 
@@ -64,27 +66,16 @@
     <script>
         // Adding a function to initialize content type behavior
         function initializeContentTypeSwitcher() {
-            console.log("Initializing content type switcher");  // Log initialization
             var selectElement = document.getElementById('ContentTypeSelectCreate');
-            
-            // Check if element exists
-            if (!selectElement) {
-                console.log("Content type select element not found.");
-                return;
-            }
+            if (!selectElement) return;
 
-            // Add event listener for content type selection
             selectElement.addEventListener('change', function () {
-                console.log("Content type changed to: " + this.value);  // Log selection
                 var selected = this.value;
                 var groups = document.querySelectorAll('.content-type-group');
-
-                // Hide all content groups
                 groups.forEach(function (group) {
                     group.style.display = 'none';
                 });
 
-                // Show the corresponding content group
                 if (selected === 'Text') {
                     document.getElementById('TextContentGroupCreate').style.display = 'block';
                 } else if (selected === 'Image') {
@@ -96,9 +87,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            initializeContentTypeSwitcher();  // Initialize when DOM is loaded
-
-            // Initialize TinyMCE for Text Content
+            initializeContentTypeSwitcher();
             tinymce.init({
                 selector: '#textEditorCreate',
                 plugins: 'link image code',
@@ -107,8 +96,6 @@
                 menubar: false,
                 statusbar: false
             });
-
-            // Initialize TinyMCE for H5P Embed Code
             tinymce.init({
                 selector: '#h5pEditorCreate',
                 plugins: 'link image code',
