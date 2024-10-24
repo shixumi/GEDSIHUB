@@ -72,11 +72,11 @@
     outline: none;
     color: #9c9c9c;
     width: 100%;
-    background-color: var(--select-background-color);
     background: var(--select-icon) no-repeat right 1.5rem center;
     background-size: 16px;
     margin-top: 1rem;
     font-size: 1.2rem;
+    position: relative;
 }
 
     .select:hover {
@@ -88,10 +88,8 @@
         border-color: var(--select-focus-border-color);
         box-shadow: var(--select-focus-shadow);
         border-width: 2px;
-        background-color: var(--select-background-active-color);
         color: #464040;
     }
-
     
 
         .select option[disabled] {
@@ -188,25 +186,22 @@
     overflow: hidden !important; /* New */
 }
 
-    .file-input-feedback-form:hover {
-        box-shadow: inset 0px 3px 4px #d9d9d9 !important; 
-        background-color: #fff !important; 
-        border-color: #464040 !important; 
+
+
+    .file-input-feedback-form::-webkit-file-upload-button {
+        background-color: #E0E1E7 !important;
+        color: #464040 !important;
+        border: none !important;
+        padding: 17px 20px !important;
+        border-radius: 10px 0 0 10px !important;
+        cursor: pointer !important;
+        font-size: 1.2rem !important;
+        flex: 0 0 auto !important;
+        text-align: center !important;
+        margin-right: 1rem !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for hover effect */
+        background-image: linear-gradient(to bottom, #f7f8fa, #E0E1E7); /* Gradient to mimic light source */
     }
-
-
-.file-input-feedback-form::-webkit-file-upload-button {
-    background-color: #660000 !important;
-    color: white !important;
-    border: none !important;
-    padding: 17px 20px !important;
-    border-radius: 10px 0 0 10px !important;
-    cursor: pointer !important;
-    font-size: 1.2rem !important;
-    flex: 0 0 auto !important;
-    text-align: center !important;
-    margin-right: 1rem !important;
-}
 
 .file-input-feedback-form::after {
     content: 'No file chosen';
@@ -219,9 +214,6 @@
     white-space: nowrap !important;
 }
 
-.file-input-feedback-form:hover {
-    border-color: #660000 !important;
-}
 
 .area-evidence-container {
     width: 100%;
@@ -238,40 +230,65 @@
     display: block;
 }
 
-
 .custom-select-wrapper {
     position: relative;
-    display: inline-block;
-    width: 100%;
-}
-
-.select {
-    width: 100%;
-
+    width: 100%; /* Ensure the wrapper takes full width */
+    max-width: 100%; /* Prevent overflow on smaller screens */
+    display: flex;
+    flex-direction: column;
+     /* Add some spacing between the select and input */
 }
 
 .hidden-input {
-    position: absolute;
-    top: 1.6rem;
-    left: 1.5rem;
-    width: 30rem;
+    display: none; /* Initially hidden */
+    width: 85%; /* Make the input take the full width of the wrapper */
     padding: 0.5rem;
-    font-size: 1rem;
-    display: none;
-    box-sizing: border-box;
-    border: none;
     font-size: 1.2rem;
-   
-}
-
-.hidden-input:focus {
-    display: none;
-    border: none;
+    color: #464040;
+    margin-left: 1.5rem;
+    box-sizing: border-box;
+    background-color: #fff; /* Transparent background */
+    border: none; /* Add a border to keep it visible when shown */
     outline: none;
+    z-index: 0; /* Ensure the input stays below the select */
+    position: absolute; /* Relative to the parent container */
+    top: 1.5rem;
+
 }
 
+    /* When the input is focused or active, ensure it's visible */
+    .hidden-input:focus,
     .hidden-input:active {
-        display: none;
-        border: none;
+        display: inline-block; /* Ensure it shows when active or focused */
+        background-color: #fff; /* Keep background transparent */
         outline: none;
+        border: none;
     }
+
+#otherComplaintInput {
+    margin-top: 1.8rem !important; /* Ensure it aligns with the select box */
+}
+
+#otherSuggestionInput {
+    width: 43% !important;
+}
+
+
+
+
+
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .select, .hidden-input {
+        font-size: 1.2rem;
+        padding: 0.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .select, .hidden-input {
+        font-size: 1.2rem;
+        padding: 0.3rem;
+    }
+}
