@@ -44,20 +44,26 @@
                 </div>
             </div>
 
+
+            <!-- Color Picker -->
             <div class="row">
                 <div class="col-md-12">
-                    <!-- Module Color -->
                     <h1 style="color: #464040; font-size: 1.5625rem;">Color</h1>
-                    <input asp-for="Color" type="color" class="form-control InputBox" id="Module_Color" required />
-                    <span asp-validation-for="Color" class="text-danger"></span>
+                    <div class="create_moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
+                        <div class="picker-container">
+                            <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
+                            <input asp-for="Color" type="color" class="ColorInput" id="Module_Color" required />
+                            <span asp-validation-for="Color" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="button-container">
                 <!-- Cancel Button -->
-                <a asp-controller="Module" asp-action="Index" id="cancelButton" class="btn fw-bolder cancelButton" style="background-color: #d9534f; color: white;">Cancel</a>
+                <a asp-controller="Module" asp-action="Index" id="cancelButton" class="btn fw-bolder cancelButton">Cancel</a>
                 <!-- Submit Button -->
-                <button type="submit" class="btn fw-bolder SubmitButton" style="background-color: #5cb85c; color: white;">Add Module</button>
+                <button type="submit" class="btn fw-bolder SubmitButton">Add Module</button>
             </div>
         </div>
     </form>

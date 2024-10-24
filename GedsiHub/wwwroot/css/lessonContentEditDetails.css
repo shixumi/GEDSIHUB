@@ -1,0 +1,79 @@
+﻿.lesson_content_buttons {
+    display: flex;
+    justify-content: end;
+    align-content: center;
+    column-gap: 1.25rem;
+}
+
+.fs-icon {
+    font-size: 25px !important;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.editLessonContentButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    border-radius: 2rem;
+    border: 1px solid #9c9c9c;
+    background: #fff;
+    padding: 0.4rem 1.5rem;
+    color: #464040;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.deleteLessonContentButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    border-radius: 2rem;
+    border: 1px solid #9c9c9c;
+    background: #fff;
+    padding: 0.70rem 1.5rem;
+    color: #464040;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.publishUnpublishButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    border-radius: 2rem;
+    border: 1px solid #9c9c9c;
+    background: #660000;
+    padding: 0.75rem 1.5rem;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+}
+
+.card-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: -5px;
+    border-radius: 10px;
+    border: 1px solid #9c9c9c;
+    background: #fff;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.lesson_content_input {
+    display: block;
+    border-radius: 0.7rem;
+    height: 3.875rem;
+    width: 100%;
+    border-width: 0.075rem;
+    border: 0.075rem solid #9C9C9C;
+    padding: 1.175rem;
+    font-size: 1.5rem;
+    margin-bottom: .5rem;
+}

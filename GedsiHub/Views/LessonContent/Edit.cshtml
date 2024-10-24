@@ -1,6 +1,140 @@
 ﻿@model GedsiHub.Models.LessonContent
 @using GedsiHub.Models
 
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Edit Lesson Content";
+}
+
+<!-- Edit Lesson Content Page -->
+<div>
+    <!-- Breadcrumbs -->
+    <ol class="breadcrumb" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <!-- Proceed to list of module page (Module/Index) -->
+            <a asp-controller="Module" asp-action="Index"><span>Modules</span></a>
+
+        </li>
+        <li class="breadcrumb-item">
+            <!-- Proceed to list of lesson page (Module/Details) -->
+
+            <a asp-action="Details" asp-controller="Module">
+                <span id="module_number" class="module_number">~insert module title~</span>
+            </a>
+        </li>
+        <!-- Current lesson page -->
+        <li class="breadcrumb-item">
+            <a asp-action="Edit"><span id="cms_lesson_breadcrumb">Lesson<span id="lesson_number" class="module_number">~insert lesson number~</span></span></a>
+        </li>
+    </ol>
+
+    <!-- Lesson Title: Should be fetch from the Lesson.Title -->
+    <span id="added_module_title" class="added_module_title">~insert lesson title~</span>
+
+    <!-- White Container -->
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+
+        <!-- Container for Creating Lesson -->
+        <input type="hidden" asp-for="ContentId" />
+
+        <!-- Container for Creating Lesson -->
+        <div class="cms_white_base_container">
+
+            <!-- Placeholders -->
+            <!-- Content Type Selection (for review) -->
+            <div class="form-group mb-3">
+                <span asp-for="ContentType" class="lesson_content_text">Content Type</span>
+                @Html.DropDownListFor(
+                         model => model.ContentType,
+                         new SelectList(Enum.GetValues(typeof(ContentTypeEnum))),
+                         "-- Select Content Type --",
+                         new { @class = "form-control", @id = "ContentTypeSelectEdit" }
+                         )
+                <span asp-validation-for="ContentType" class="text-danger"></span>
+            </div>
+
+            <!--  Position Input (for review) -->
+            <div class="form-group mb-3">
+                <span asp-for="PositionInt" class="lesson_content_text">Position</span>
+                <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
+                <span asp-validation-for="PositionInt" class="text-danger"></span>
+            </div>
+
+            <!-- Media Upload Container -->
+            <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
+                <img class="upload_icon" src="~/images/Upload.png" />
+                <span class="upload_text">Drag and Drop Files or Click to Upload Media</span>
+                <input asp-for="ImageUrl" type="file" id="uploadMedia" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
+                <label for="uploadMedia" class="uploadButtonLabel">Upload</label>
+                <div id="MediaPreviewContainer"></div>
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <!-- or -->
+            <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
+
+            <!-- H5P Link Input -->
+            <textarea asp-for="H5PEmbedCode" class="url_input_textarea" placeholder="Paste H5P link here" id="h5pEditorCreate">@Model.H5PEmbedCode</textarea>
+            <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
+
+            <!-- Label -->
+            <span class="lesson_content_text">Lesson Content</span>
+
+            <!-- TinyMCE TextArea -->
+            <textarea asp-for="TextContent" id="tinymce_textarea" row="" class="tinymce_textarea">@Model.TextContent</textarea>
+            <span asp-validation-for="TextContent" class="text-danger"></span>
+
+            <!-- or -->
+            <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
+
+            <!-- Upload Content Upload Container -->
+            <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Lesson_Content_Upload_Container">
+                <img class="upload_icon" src="~/images/Upload.png" />
+                <span class="upload_text">Drag and Drop Files or Click to Upload Text or Images</span>
+                <input type="file" id="uploadText" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
+                <label for="uploadText" class="uploadButtonLabel"> Upload</label>
+            </div>
+            
+
+            <!-- Text Content -->
+            <div class="form-group mb-3 content-type-group" id="TextContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.Text ? "block" : "none")">
+                <span asp-for="TextContent" class="lesson_content_text">Text Content</span>
+                <textarea asp-for="TextContent" class="form-control" id="textEditorEdit">@Model.TextContent</textarea>
+                <span asp-validation-for="TextContent" class="text-danger"></span>
+            </div>
+
+            <!-- Image Content -->
+            <div class="form-group mb-3 content-type-group" id="ImageContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.Image ? "block" : "none")">
+                <span asp-for="ImageUrl" class="lesson_content_text">Image URL</span>
+                <input asp-for="ImageUrl" class="form-control" placeholder="Enter image URL" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <!-- H5P Content -->
+            <div class="form-group mb-3 content-type-group" id="H5PContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.H5P ? "block" : "none")">
+                <span asp-for="H5PEmbedCode" class="lesson_content_textl">H5P Embed Code</span>
+                <textarea asp-for="H5PEmbedCode" class="form-control" id="h5pEditorEdit">@Model.H5PEmbedCode</textarea>
+                <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
+                <small class="form-text text-muted">
+                    To embed H5P content, paste the iframe embed code provided by H5P here.
+                </small>
+            </div>
+
+            <!-- Cancel and Save Changes Button -->
+            <div class="cancel_save_con">
+                <!-- Cancel Button -->
+                <a asp-action="Details" asp-controller="LessonContent" asp-route-id="@Model.LessonId" id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton">Cancel</a>
+                
+                <!-- Save Changes Button -->
+                <button type="submit" class="SaveButton">Save Changes</button>
+
+            </div>          
+        </div>
+    </form>
+    
+
+</div>
 <div class="modal-header">
     <h5 class="modal-title">Edit Content</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -16,7 +150,7 @@
                      model => model.ContentType,
                      new SelectList(Enum.GetValues(typeof(ContentTypeEnum))),
                      "-- Select Content Type --",
-                     new { @class = "form-control", @id = "ContentTypeSelectEdit", @disabled = "disabled" }
+                     new { @class = "form-control", @id = "ContentTypeSelectEdit"}
                      )
             <span asp-validation-for="ContentType" class="text-danger"></span>
         </div>

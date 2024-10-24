@@ -5,62 +5,118 @@
     ViewData["Title"] = "Create Lesson Content";
 }
 
-<div class="modal-header">
-    <h5 class="modal-title">Add Content to Lesson</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!-- Cancel button should close modal -->
-</div>
-<div class="modal-body">
+<!-- Create Lesson Content Page -->
+
+<div>
+    <!-- Breadcrumbs -->
+    <ol class="breadcrumb" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <!-- Proceed to list of modules page -->
+            <a asp-controller="Module" asp-action="Index"><span>Modules</span></a>
+
+        </li>
+        <li class="breadcrumb-item">
+            <!-- Proceed to list of lessons page -->
+
+            <a asp-action="Details" asp-controller="Module">
+                <span id="module_number" class="module_number">~insert module title~</span>
+            </a>
+        </li>
+            <!-- Current lesson page -->
+        <li class="breadcrumb-item">
+            <a asp-action="Create"><span id="cms_lesson_breadcrumb">~insert lesson number~</span></a>
+        </li>
+    </ol>
+
+    <!-- Lesson Title: Should be fetch from the Lesson.Title --> 
+    <span id="added_module_title" class="added_module_title">Insert Module Title</span>
+
     <form asp-action="Create" method="post">
         @Html.AntiForgeryToken()
 
         <!-- Ensure LessonId is passed correctly -->
         <input type="hidden" asp-for="LessonId" />
 
-        <div class="form-group mb-3">
-            <label asp-for="ContentType" class="control-label">Content Type</label>
-            <select asp-for="ContentType" class="form-control" id="ContentTypeSelectCreate">
-                <option value="">-- Select Content Type --</option>
-                <option value="Text">Text</option>
-                <option value="Image">Image</option>
-                <option value="H5P">H5P Embed</option>
-            </select>
-            <span asp-validation-for="ContentType" class="text-danger"></span>
-        </div>
+        <!-- Container for Creating Lesson -->
+        <div class="cms_white_base_container">
+            <div class="cms_lesson_title">
+                <span>Lesson</span>
+                <span id="lesson_number_inwcon">Lesson: 1</span>
+                <span id="lesson_title">Insert Lesson Title</span>
+            </div>
 
-        <!-- Text Content -->
-        <div class="form-group mb-3 content-type-group" id="TextContentGroupCreate" style="display: none;">
-            <label asp-for="TextContent" class="control-label">Text Content</label>
-            <textarea asp-for="TextContent" class="form-control" id="textEditorCreate"></textarea>
-            <span asp-validation-for="TextContent" class="text-danger"></span>
-        </div>
+            <!-- Placeholders -->
+            <!-- Content Type Selection (for review) -->
+            <div class="form-group mb-3">
+                <label asp-for="ContentType" class="control-label">Content Type</label>
+                <select asp-for="ContentType" class="form-control" id="ContentTypeSelectCreate">
+                    <option value="">-- Select Content Type --</option>
+                    <option value="Text">Text</option>
+                    <option value="Image">Image</option>
+                    <option value="H5P">H5P Embed</option>
+                </select>
+                <span asp-validation-for="ContentType" class="text-danger"></span>
+            </div>
 
-        <!-- Image Content -->
-        <div class="form-group mb-3 content-type-group" id="ImageContentGroupCreate" style="display: none;">
-            <label asp-for="ImageUrl" class="control-label">Image URL</label>
-            <input asp-for="ImageUrl" class="form-control" placeholder="Enter image URL" />
-            <span asp-validation-for="ImageUrl" class="text-danger"></span>
-        </div>
+            <!-- Position Input (for review) -->
+            <div class="form-group mb-3">
+                <label asp-for="PositionInt" class="control-label">Position</label>
+                <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
+                <span asp-validation-for="PositionInt" class="text-danger"></span>
+            </div>
 
-        <!-- H5P Content -->
-        <div class="form-group mb-3 content-type-group" id="H5PContentGroupCreate" style="display: none;">
-            <label asp-for="H5PEmbedCode" class="control-label">H5P Embed Code</label>
-            <textarea asp-for="H5PEmbedCode" class="form-control" id="h5pEditorCreate"></textarea>
+
+            <!-- Media Upload Container -->
+            <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
+                <img class="upload_icon" src="~/images/Upload.png" />
+                <span class="upload_text">Drag and Drop Files or Click to Upload Media</span>
+                <input asp-for="ImageUrl" type="file" id="uploadMedia" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
+                <label for="uploadMedia" class="uploadButtonLabel">Upload</label>
+                <div id="MediaPreviewContainer"></div>
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <!-- or -->
+            <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
+
+            <!-- H5P Link Input -->
+            <textarea asp-for="H5PEmbedCode" class="url_input_textarea" placeholder="Paste H5P link here" id="h5pEditorCreate"></textarea>
             <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
-            <small class="form-text text-muted">
-                To embed H5P content, paste the iframe embed code provided by H5P here.
-            </small>
+
+            <!-- Label -->
+            <span class="lesson_content_text">Lesson Content</span>
+            <!-- TinyMCE TextArea -->
+            <textarea asp-for="TextContent" id="tinymce_textarea" row="" class="tinymce_textarea"></textarea>
+            <span asp-validation-for="TextContent" class="text-danger"></span>
+
+            <!-- or -->
+            <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
+
+            <!-- Upload Content Upload Container -->
+            <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Lesson_Content_Upload_Container">
+                <img class="upload_icon" src="~/images/Upload.png" />
+                <span class="upload_text">Drag and Drop Files or Click to Upload Text or Images</span>
+                <input type="file" id="uploadText" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
+                <label for="uploadText" class="uploadButtonLabel"> Upload</label>
+            </div>
+
+            
+            <!-- Cancel and Save Button -->
+            <div class="cancel_save_con">
+                <!-- Cancel Button -->
+                <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId" id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton">Cancel</a>
+                <!-- Save Button -->
+                <button type="submit" id="PreviewLessonContentButton" class="SaveButton">Save</button>
+            </div>
         </div>
 
-        <div class="form-group mb-3">
-            <label asp-for="PositionInt" class="control-label">Position</label>
-            <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
-            <span asp-validation-for="PositionInt" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-success">Add Content</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        
     </form>
+
 </div>
+
+
+
 
 @section Scripts {
     <script>

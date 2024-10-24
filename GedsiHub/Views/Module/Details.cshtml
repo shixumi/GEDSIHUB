@@ -67,7 +67,11 @@
                 <div class="lesson_con_linebreak"></div>
             </div>
             <span id="LessonOverviewDisplay" class="lesson_brief_overview">
-                @lesson.Overview.Substring(0, Math.Min(250, lesson.Overview.Length))...
+                @lesson.Overview.Substring(0, Math.Min(250, lesson.Overview.Length))
+                @if (lesson.Overview.Length > 250)
+                {
+                    <text>...</text>
+                }
             </span>
             <div class="button_container">
                 <!-- Delete Lesson Button -->
