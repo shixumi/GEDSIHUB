@@ -3,7 +3,7 @@
     ViewData["Title"] = "Feedback";
 }
 
-<div>
+@* <div>
     <h1 id="addNewModule_HeaderTitle" class="modules_title" style="color: #464040;">Feedback Responses</h1>
     <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
     <div class="container feedback-container">
@@ -28,7 +28,7 @@
                 <button id="marked-as-resolved-button" class="btn btn-primary" type="button">
                     <img src="~/images/Check.png" />Mark as Resolved
                 </button>
-                <button class="btn btn-primary delete-user-feedback-button" type="button">
+                <button class="delete-user-feedback-button" type="button">
                     <img src="~/images/Delete.png" />Delete
                 </button>
             </div>
@@ -37,21 +37,21 @@
             <div class="type-desc-issue-con">
                 <div class="text-input-container-type-of-issue">
                     <span>1. Type of Issue</span>
-                    <input id="type-of-issue-holder" class="holder" type="text" />
+                    <input id="type-of-issue-holder" class="holder" type="text" disabled/>
                 </div>
                 <div class="text-input-issue-desc">
                     <span>3. Detailed Description of the Issue</span>
-                    <textarea id="issue-desc-holder" class="holder"></textarea>
+                    <textarea id="issue-desc-holder" class="holder" disabled></textarea>
                 </div>
             </div>
             <div class="area-evidence-container">
                 <div class="text-input-container-affected-area">
                     <span>2. Affected Area</span>
-                    <input id="affected-area-holder" class="holder" type="text" />
+                    <input id="affected-area-holder" class="holder" type="text" disabled/>
                 </div>
                 <div class="input-text-evidence">
                     <span>4. Evidence (Optional)</span>
-                    <input id="evidence-holder" class="holder" type="text" />
+                    <input id="evidence-holder" class="holder" type="text" disabled/>
                 </div>
             </div>
         </div>
@@ -60,4 +60,4 @@
             <button id="next-response-button" type="button">Next</button>
         </div>
     </div>
-</div>
+</div> *@

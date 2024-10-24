@@ -1,0 +1,74 @@
+﻿.con-of-con-of-success-mess {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.success-message-container {
+    background: #ffffff;
+    width: 35%;
+    min-height: 70%;
+    max-height: 100%;
+    border-radius: 1.875rem;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    color: #464040;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 4rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+    .success-message-container img {
+        width: 5rem;
+    }
+
+.text-submitted {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.submitted-message {
+    font-size: 1.2rem;
+    text-align: justify;
+}
+
+.submitted-done-button {
+    background-color: #660000;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1.2rem;
+    width: 50%;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: none;
+    padding: 0.4rem;
+    margin-top: 1rem;
+    border-radius: 4rem;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+    .submitted-done-button:hover {
+        background-color: #880000;
+        color: #ffffff;
+    }
+
+    .submitted-done-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        background-color: #920000;
+        border-style: none;
+    }
