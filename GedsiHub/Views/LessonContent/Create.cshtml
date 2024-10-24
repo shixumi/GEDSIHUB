@@ -6,30 +6,24 @@
 }
 
 <!-- Create Lesson Content Page -->
-
 <div>
     <!-- Breadcrumbs -->
     <ol class="breadcrumb" id="breadcrumb">
         <li class="breadcrumb-item">
-            <!-- Proceed to list of modules page -->
             <a asp-controller="Module" asp-action="Index"><span>Modules</span></a>
-
         </li>
         <li class="breadcrumb-item">
-            <!-- Proceed to list of lessons page -->
-
-            <a asp-action="Details" asp-controller="Module">
-                <span id="module_number" class="module_number">~insert module title~</span>
+            <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId">
+                <span id="module_number" class="module_number">@ViewBag.ModuleTitle</span>
             </a>
         </li>
-            <!-- Current lesson page -->
         <li class="breadcrumb-item">
-            <a asp-action="Create"><span id="cms_lesson_breadcrumb">~insert lesson number~</span></a>
+            <span id="cms_lesson_breadcrumb">@ViewBag.LessonTitle</span>
         </li>
     </ol>
 
-    <!-- Lesson Title: Should be fetch from the Lesson.Title --> 
-    <span id="added_module_title" class="added_module_title">Insert Module Title</span>
+    <!-- Lesson Title: Should be fetch from the Lesson.Title -->
+    <span id="added_module_title" class="added_module_title">@ViewBag.LessonTitle</span>
 
     <form asp-action="Create" method="post">
         @Html.AntiForgeryToken()
@@ -41,8 +35,8 @@
         <div class="cms_white_base_container">
             <div class="cms_lesson_title">
                 <span>Lesson</span>
-                <span id="lesson_number_inwcon">Lesson: 1</span>
-                <span id="lesson_title">Insert Lesson Title</span>
+                <span id="lesson_number_inwcon">@ViewBag.LessonNumber</span>
+                <span id="lesson_title">@ViewBag.LessonTitle</span>
             </div>
 
             <!-- Placeholders -->
@@ -100,7 +94,7 @@
                 <label for="uploadText" class="uploadButtonLabel"> Upload</label>
             </div>
 
-            
+
             <!-- Cancel and Save Button -->
             <div class="cancel_save_con">
                 <!-- Cancel Button -->
@@ -110,13 +104,10 @@
             </div>
         </div>
 
-        
+
     </form>
 
 </div>
-
-
-
 
 @section Scripts {
     <script>
