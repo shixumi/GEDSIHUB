@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using QuestPDF.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 // ========================================
 
 // Register EmailSender and CertificateService
-builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, GedsiHub.Services.EmailSender>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<EmailSender>();
 builder.Services.AddTransient<CertificateService>();
 
 
