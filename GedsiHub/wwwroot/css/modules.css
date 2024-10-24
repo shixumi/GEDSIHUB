@@ -386,18 +386,24 @@
     gap: 10.4px;
 }
 
-.toggle-content {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    transition: all 0.3125s ease;
-}
+    .toggle-content {
+        cursor: pointer;
+        background: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        transition: all 0.3125s ease;
+        border: none !important;
+        outline: none !important;
+        padding: 0 !important;
+        margin: 0;
+    }
 
-#publishModule {
-    z-index: 2;
-}
+
+    #publishModule {
+        z-index: 2;
+    }
 
 #unpublishModule {
     z-index: 1;
