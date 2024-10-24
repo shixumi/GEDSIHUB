@@ -196,6 +196,24 @@ namespace GedsiHub.Controllers
             return View(lesson);
         }
 
+        // GET: Toggle Published status of a Lesson
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> TogglePublish(int id)
+        {
+            var lesson = await _context.Lessons.FindAsync(id);
+            if (lesson == null)
+            {
+                return NotFound();
+            }
+
+            lesson.IsPublished = !lesson.IsPublished; // Toggle publish status
+            _context.Update(lesson);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Module", new { id = lesson.ModuleId });
+        }
+
         private bool LessonExists(int id)
         {
             return _context.Lessons.Any(e => e.LessonId == id);

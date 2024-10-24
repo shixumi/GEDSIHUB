@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -29,7 +27,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-             ApplicationDbContext context)
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -63,8 +61,8 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             public required string ConfirmPassword { get; set; }
 
             [Required]
-            [Display(Name="Role")]
-            public required string Role { get; set; }
+            [Display(Name = "Role")]
+            public required string Role { get; set; }  // Ensure only Student or Employee is allowed
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -72,15 +70,23 @@ namespace GedsiHub.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
+                // Ensure that only Student or Employee roles are selected during registration
+                if (Input.Role != "Student" && Input.Role != "Employee")
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid role selected.");
+                    return Page();
+                }
+
                 // Create the user with necessary properties
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, Role = Input.Role };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // Assign the role (Student or Employee)
+                    // Assign the role (Student or Employee only)
                     await _userManager.AddToRoleAsync(user, Input.Role);
 
                     // Create corresponding Student or Employee record
@@ -91,7 +97,6 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                             UserId = user.Id,
                             CollegeDeptId = null,
                             Course = null
-                            // Initialize other required fields if any, or leave them to be filled later
                         };
                         _context.Students.Add(student);
                     }
@@ -103,17 +108,6 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                             // Initialize other required fields if any, or leave them to be filled later
                         };
                         _context.Employees.Add(employee);
-                    }
-                    // If you have an Admin role, handle it similarly
-                    else if (Input.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var admin = new Admin
-                        {
-                            UserId = user.Id,
-                            // Initialize Admin-specific fields
-                            AdminName = $"{user.FirstName} {user.LastName}" // Example initialization
-                        };
-                        _context.Admins.Add(admin);
                     }
 
                     // Save changes to the database
@@ -159,7 +153,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
 
                             /* Use deep red for header background */
                             .header {{
-                                background-color: #880000; /* Dark Red */
+                                background-color: #880000;
                                 padding: 1px;
                                 border-radius: 10px;
                                 color: white;
@@ -172,7 +166,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                             .activate-btn {{
                                 text-align: center;
                             }}
-                            /* Styling buttons to be rounded with a deep red background */
+
                             .button {{
                                 display: inline-block;
                                 justify-content: center;
@@ -187,25 +181,16 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                                 transition: background-color 0.3s ease;
                             }}
 
-                            /* Change button color on hover */
                             .button:hover {{
                                 background-color: #a50000;
                             }}
 
-                            /* Footer with light gray color and modern font size */
                             .footer {{
                                 margin-top: 20px;
                                 font-size: 0.85em;
                                 text-align: center;
                                 color: #777;
                             }}
-
-                            /* Adding gold accent for special text */
-                            .highlight {{
-                                color: #daa520; /* Gold */
-                                font-weight: bold;
-                            }}
-        
                         </style>
                     </head>
                     <body>

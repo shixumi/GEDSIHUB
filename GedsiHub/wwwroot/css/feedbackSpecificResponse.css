@@ -58,8 +58,9 @@
 }
 
 #issue-desc-holder {
-    min-height: 3rem;
-    max-height: 8rem;
+    min-height: 8rem !important;
+    overflow-y: auto;
+    resize: none;
 }
 
 .feedback-response-button-container {
@@ -72,7 +73,7 @@
     width: 17.1875rem;
     margin-top: 1.7rem;
     border-radius: 50px;
-    font-weight: 900;
+    font-weight: 700;
     font-size: 1.5625rem;
     transition: all 0.2s ease;
     border-style: none;
@@ -81,9 +82,34 @@
 #back-previous-response-button {
     border: 1px solid #464040;
     background-color: #ffffff;
+    color: #464040;
 }
+
+    #back-previous-response-button:hover {
+        border: 0.15625rem solid #464040;
+        border-radius: 3.90625rem;
+        color: #464040;
+    }
+
+    #back-previous-response-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+    }
 
 #next-response-button {
     background-color: #660000;
     color: #ffffff;
 }
+
+    #next-response-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        background-color: #920000;
+        border-style: none;
+    }
+
+    #next-response-button:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }

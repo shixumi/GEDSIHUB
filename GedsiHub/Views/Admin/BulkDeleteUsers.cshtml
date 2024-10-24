@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Bulk Delete Users";
+}
+
+<h2>Bulk Delete Users</h2>
+
+<p>Are you sure you want to delete the selected users?</p>
+
+<form asp-action="BulkDeleteUsers" method="post">
+    <button type="submit" class="btn btn-danger">Confirm Deletion</button>
+    <a asp-action="UserManagement" class="btn btn-secondary">Cancel</a>
+</form>

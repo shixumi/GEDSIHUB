@@ -20,7 +20,7 @@
         </a>
     </div>
 
-    <div class="break_title"></div>
+    <hr>
 
     <!-- Module Cards Container -->
     <div class="align-items-end flex-wrap ModuleCards_Container" id="moduleCardsContainer">
@@ -76,9 +76,9 @@
                     <div id="toggleButtonPublishUnpublishModule" class="d-xxl-flex">
                         @if (module.Status == ModuleStatus.Published)
                         {
-                            <form asp-action="Unpublish" method="post" style="display:inline;">
+                            <form asp-action="Unpublish" method="post">
                                 <input type="hidden" name="id" value="@module.ModuleId" />
-                                <button type="submit" class="toggle-content btn btn-warning me-2">
+                                <button type="submit" class="btn toggle-content">
                                     <img class="PublishIcon" src="~/images/Unpublish.png" />
                                     <span>Unpublish</span>
                                 </button>
@@ -86,9 +86,9 @@
                         }
                         else
                         {
-                            <form asp-action="Publish" method="post" style="display:inline;">
+                            <form asp-action="Publish" method="post" >
                                 <input type="hidden" name="id" value="@module.ModuleId" />
-                                <button type="submit" class="toggle-content btn btn-success me-2">
+                                <button type="submit" class="btn toggle-content">
                                     <img class="PublishIcon" src="~/images/Publish.png" />
                                     <span>Publish</span>
                                 </button>
@@ -167,3 +167,5 @@
         }
     </script>
 }
+
+@await Html.PartialAsync("_ActiveUserTracker")
