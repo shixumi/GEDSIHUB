@@ -66,9 +66,6 @@ namespace GedsiHub.Models
         [Column("is_active")]
         public bool IsActive { get; set; } = false; // Account activation status
 
-        [Column("role", TypeName = "VARCHAR(20)")]
-        public string Role { get; set; } = "Student"; // Role (Student or Employee)
-
         // Navigation properties for extended tables
         public virtual Admin Admin { get; set; }  // Ensure Admin is referenced properly
         public virtual Student Student { get; set; }

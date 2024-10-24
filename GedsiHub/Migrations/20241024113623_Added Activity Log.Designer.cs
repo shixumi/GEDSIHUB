@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024113623_Added Activity Log")]
+    partial class AddedActivityLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1359,7 +1362,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 1,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 13, 53, 4, 945, DateTimeKind.Utc).AddTicks(4771),
+                            CreatedDate = new DateTime(2024, 10, 24, 11, 36, 22, 832, DateTimeKind.Utc).AddTicks(7897),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             PositionInt = 0,
                             Status = 0,
@@ -1369,7 +1372,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 2,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 13, 53, 4, 945, DateTimeKind.Utc).AddTicks(4773),
+                            CreatedDate = new DateTime(2024, 10, 24, 11, 36, 22, 832, DateTimeKind.Utc).AddTicks(7899),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             PositionInt = 0,
                             Status = 0,
@@ -1379,7 +1382,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 3,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 13, 53, 4, 945, DateTimeKind.Utc).AddTicks(4774),
+                            CreatedDate = new DateTime(2024, 10, 24, 11, 36, 22, 832, DateTimeKind.Utc).AddTicks(7900),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             PositionInt = 0,
                             Status = 0,
@@ -1389,7 +1392,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 4,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 13, 53, 4, 945, DateTimeKind.Utc).AddTicks(4776),
+                            CreatedDate = new DateTime(2024, 10, 24, 11, 36, 22, 832, DateTimeKind.Utc).AddTicks(7902),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
                             Status = 0,
@@ -1399,7 +1402,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 5,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 13, 53, 4, 945, DateTimeKind.Utc).AddTicks(4778),
+                            CreatedDate = new DateTime(2024, 10, 24, 11, 36, 22, 832, DateTimeKind.Utc).AddTicks(7904),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             PositionInt = 0,
                             Status = 0,
@@ -1409,7 +1412,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 6,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 13, 53, 4, 945, DateTimeKind.Utc).AddTicks(4779),
+                            CreatedDate = new DateTime(2024, 10, 24, 11, 36, 22, 832, DateTimeKind.Utc).AddTicks(7905),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             PositionInt = 0,
                             Status = 0,
@@ -1419,7 +1422,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 7,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 13, 53, 4, 945, DateTimeKind.Utc).AddTicks(4781),
+                            CreatedDate = new DateTime(2024, 10, 24, 11, 36, 22, 832, DateTimeKind.Utc).AddTicks(7907),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             PositionInt = 0,
                             Status = 0,

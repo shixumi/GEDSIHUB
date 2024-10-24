@@ -38,6 +38,9 @@ namespace GedsiHub.Data
         public DbSet<FAQ> FAQs { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
 
+        // DbSets for Admin Dashboard
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -235,7 +238,7 @@ namespace GedsiHub.Data
                     SupportEmail = "dev.gedsihub@gmail.com",
                     PhoneNumber = "+1-800-123-4567",
                     Facebook = "https://www.facebook.com/gadpup",
-                    TikTok = "https://www.tiktok.com/@yourprofile",
+                    TikTok = "https://www.tiktok.com/@pup.gado",
                     Instagram = "https://www.instagram.com/pupgadofficial",
                     X = "https://x.com/PUPGADO",
                     Website = "https://www.pup.edu.ph/research/gado/"

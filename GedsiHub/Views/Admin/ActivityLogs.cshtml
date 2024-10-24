@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Activity Logs";
+}
+
+<h2>Activity Logs</h2>
+
+<!-- Filter Form -->
+<form method="get" class="mb-3">
+    <div class="form-row">
+        <div class="col-md-4">
+            <input type="text" name="adminName" value="@ViewBag.AdminName" placeholder="Search by Admin Name" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <input type="date" name="startDate" value="@ViewBag.StartDate" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <input type="date" name="endDate" value="@ViewBag.EndDate" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Filter Logs</button>
+        </div>
+    </div>
+</form>
+
+<!-- Activity Logs Table -->
+@if (Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Admin</th>
+                <th>Action</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model)
+            {
+                <tr>
+                    <td>@log.AdminUser</td>
+                    <td>@log.Action</td>
+                    <td>@log.Timestamp.ToString("g")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No activity logs found.</p>
+}
+
+<!-- Back Button -->
+<a asp-action="Index" class="btn btn-secondary">Back to Dashboard</a>

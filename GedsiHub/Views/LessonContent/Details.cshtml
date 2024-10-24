@@ -34,22 +34,6 @@
             Edit
         </a>
 
-        <!-- Publish/Unpublish button -->
-        @if (Model.IsPublished)
-        {
-            <form asp-action="Unpublish" method="post" class="d-inline">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-danger">Unpublish</button>
-            </form>
-        }
-        else
-        {
-            <form asp-action="Publish" method="post" class="d-inline">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-success">Publish</button>
-            </form>
-        }
-
         <!-- Delete button -->
         <form asp-action="DeleteConfirmed" method="post" class="d-inline">
             @Html.AntiForgeryToken()

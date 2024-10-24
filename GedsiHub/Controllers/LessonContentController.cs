@@ -149,47 +149,6 @@ namespace GedsiHub.Controllers
             return View(lessonContent);
         }
 
-
-        // POST: LessonContent/Publish/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Publish(int id)
-        {
-            var lessonContent = await _context.LessonContents.FindAsync(id);
-            if (lessonContent == null)
-            {
-                _logger.LogWarning($"Lesson content with ID {id} not found for publishing.");
-                return NotFound();
-            }
-
-            lessonContent.IsPublished = true;
-            _context.Update(lessonContent);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"Lesson content with ID {id} published.");
-            return RedirectToAction("Details", new { id = lessonContent.ContentId });
-        }
-
-        // POST: LessonContent/Unpublish/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Unpublish(int id)
-        {
-            var lessonContent = await _context.LessonContents.FindAsync(id);
-            if (lessonContent == null)
-            {
-                _logger.LogWarning($"Lesson content with ID {id} not found for unpublishing.");
-                return NotFound();
-            }
-
-            lessonContent.IsPublished = false;
-            _context.Update(lessonContent);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"Lesson content with ID {id} unpublished.");
-            return RedirectToAction("Details", new { id = lessonContent.ContentId });
-        }
-
         // POST: LessonContent/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

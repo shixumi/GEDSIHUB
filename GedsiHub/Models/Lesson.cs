@@ -23,6 +23,8 @@ namespace GedsiHub.Models
         [Required]
         public int ModuleId { get; set; } // Foreign Key to Module
 
+        public bool IsPublished { get; set; } = false;
+
         // Navigation Property
         public virtual Module? Module { get; set; } = null!;
 
