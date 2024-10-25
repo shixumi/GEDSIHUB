@@ -11,21 +11,16 @@
     <div id="ModulesHeader" class="d-flex justify-content-between align-items-center">
         <h1 class="modules_title" style="color: #464040;">Modules</h1>
 
-        <div class="d-flex">
+        <div class="modules-actions-con">
 
 
             <!-- Search Input for Modules -->
-
-
-        <div class="um-search-con">
-            <input id="moduleSearch" type="search" name="search" placeholder="Search for modules" />
-                <button type="submit" class="search-icon-um">
-                    <img id="modulesSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
-                </button>
-        </div>
-
-
-            
+            <div id="modules-search-con" class="um-search-con">
+                <input id="moduleSearch" type="search" name="search" placeholder="Search for modules" />
+                    <button type="submit" class="search-icon-um">
+                        <img id="modulesSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
+                    </button>
+            </div>
 
             <!-- Create Module Button -->
             <a asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton">
