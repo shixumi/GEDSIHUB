@@ -1,14 +1,16 @@
-﻿    .feedback-container {
-        background: #ffffff;
-        min-height: 43rem;
-        padding: 50px;
-        margin-top: 34px;
-        margin-left: 0px;
-        border-radius: 30px;
-        box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
-        max-width: 100%;
-        box-sizing: border-box;
-    }
+﻿.feedback-container {
+    background: #ffffff;
+    max-height: 43rem; /* Sets a maximum height */
+    padding: 50px;
+    margin-top: 25px;
+    margin-left: 0px;
+    border-radius: 30px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto; /* Enables vertical scroll when content exceeds max height */
+}
+
 
     .feedback-header-buttons {
         display: flex;
@@ -141,37 +143,38 @@
 
 
 
-    input[type="checkbox"] {
-        appearance: none; 
-        border: 3px solid #464040;
-        width: 1.2rem;
-        height: 1.2rem;
-        border-radius: 0.4rem;
-        cursor: pointer;
-        position: relative;
-        vertical-align: middle; 
-        transition: all 0.3s ease;
+input[type="checkbox"] {
+    appearance: none;
+    border: 3px solid #464040;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+    input[type="checkbox"]:hover {
+        border-color: #660000;
+        background-color: #f0f0f0;
     }
 
-        input[type="checkbox"]:hover {
-            border-color: #660000;
-            background-color: #f0f0f0;
+    input[type="checkbox"]:checked {
+        background-color: #660000;
+        border-color: #660000;
+    }
+
+        input[type="checkbox"]:checked::after {
+            content: '✔';
+            font-size: 1rem;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center checkmark */
         }
 
-        input[type="checkbox"]:checked {
-            background-color: #660000;
-            border-color: #660000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-            input[type="checkbox"]:checked::after {
-                content: '✔';
-                font-size: 1rem;
-                color: white;
-                position: absolute;
-            }
 
 
 

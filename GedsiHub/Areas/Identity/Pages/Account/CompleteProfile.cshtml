@@ -185,8 +185,8 @@
                     <!-- College Department Dropdown -->
                     <div class="mb-3">
                         <label asp-for="Input.StudentInfo.CollegeDeptId" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
-                        <select asp-for="Input.StudentInfo.CollegeDeptId" class="form-control" asp-items="Model.CollegeDepartments">
-                            <option value="" disabled selected>Select</option>
+                        <select id="college" asp-for="Input.StudentInfo.CollegeDeptId" class="form-control" asp-items="Model.CollegeDepartments" onchange="showProgramOptions()">
+                            <option value="" disabled selected>Select your department</option>
                         </select>
                         <span asp-validation-for="Input.StudentInfo.CollegeDeptId" class="text-danger"></span>
                     </div>
@@ -195,7 +195,7 @@
                     <!-- Add validations to only display the available course for each department -->
                     <div class="mb-3">
                         <label asp-for="Input.StudentInfo.CourseId" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
-                        <select asp-for="Input.StudentInfo.CourseId" class="form-control" asp-items="Model.Courses">
+                        <select id="program" asp-for="Input.StudentInfo.CourseId" class="form-control" asp-items="Model.Courses">
                             <option value="" disabled selected>Select</option>
                         </select>
                         <span asp-validation-for="Input.StudentInfo.CourseId" class="text-danger"></span>
@@ -204,14 +204,14 @@
                     <!-- Student Year -->
                     <div class="mb-3">
                         <label asp-for="Input.StudentInfo.Year" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
-                        <input asp-for="Input.StudentInfo.Year" class="form-control" type="number" min="1" placholder="Please enter year of study."/>
+                        <input asp-for="Input.StudentInfo.Year" class="form-control" type="number" maxlength="1" min="1" max="5" placholder="Please enter year of study." required />
                         <span asp-validation-for="Input.StudentInfo.Year" class="text-danger"></span>
                     </div>
 
                     <!-- Student Section -->
                     <div class="mb-3">
                         <label asp-for="Input.StudentInfo.Section" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl"></label>
-                        <input asp-for="Input.StudentInfo.Section" class="form-control" placeholder="Please enter section" />
+                        <input asp-for="Input.StudentInfo.Section" class="form-control" maxlength="2" placeholder="Please enter section" required/>
                         <span asp-validation-for="Input.StudentInfo.Section" class="text-danger"></span>
                     </div>
                 }
