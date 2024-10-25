@@ -101,6 +101,12 @@
     margin-top: 0.9rem;
 }
 
+.streak-week {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+}
+
 .streak-item {
     display: flex;
     flex-direction: column;
