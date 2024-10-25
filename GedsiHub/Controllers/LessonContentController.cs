@@ -24,21 +24,22 @@ namespace GedsiHub.Controllers
         // GET: Go To Lesson button
         public async Task<IActionResult> GoToLesson(int lessonId)
         {
-            // Check if there is any LessonContent for the given LessonId
-            var lessonContentExists = await _context.LessonContents.AnyAsync(lc => lc.LessonId == lessonId);
+            // Try to retrieve an existing LessonContent for the given LessonId
+            var existingLessonContent = await _context.LessonContents
+                                                      .AsNoTracking()
+                                                      .FirstOrDefaultAsync(lc => lc.LessonId == lessonId);
 
-            if (lessonContentExists)
+            if (existingLessonContent != null)
             {
-                // Redirect to the details page if content exists
-                return RedirectToAction("Details", new { id = lessonId });
+                // If LessonContent exists, redirect to its Details page
+                return RedirectToAction("Details", new { id = existingLessonContent.ContentId });
             }
             else
             {
-                // Redirect to the create page if content does not exist
+                // If no LessonContent exists, redirect to the Create page
                 return RedirectToAction("Create", new { lessonId = lessonId });
             }
         }
-
 
         // GET: LessonContent/Create/{lessonId}
         public IActionResult Create(int lessonId)
@@ -113,7 +114,7 @@ namespace GedsiHub.Controllers
             _logger.LogInformation($"Lesson Content created successfully with ID {lessonContent.ContentId} for Lesson ID {lessonContent.LessonId}.");
 
             // Redirect to the details of the lesson content
-            return RedirectToAction("Details", new { id = lessonContent.LessonId });
+            return RedirectToAction("Details", "LessonContent", new { id = lessonContent.ContentId });
         }
 
         // GET: LessonContent/Edit/5
@@ -218,7 +219,6 @@ namespace GedsiHub.Controllers
             return View(lessonContent);
         }
 
-
         // POST: LessonContent/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -227,12 +227,15 @@ namespace GedsiHub.Controllers
             _logger.LogInformation($"Attempting to delete Lesson Content with ID {id}.");
 
             // Fetch the lesson content by its ID
-            var lessonContent = await _context.LessonContents.FindAsync(id);
+            var lessonContent = await _context.LessonContents.Include(lc => lc.Lesson).FirstOrDefaultAsync(lc => lc.ContentId == id);
             if (lessonContent == null)
             {
                 _logger.LogWarning($"Lesson Content with ID {id} not found for deletion.");
                 return NotFound(); // Return NotFound if it doesn't exist
             }
+
+            // Store the ModuleId before deleting the content to use it in the redirect
+            var moduleId = lessonContent.Lesson.ModuleId;
 
             // Remove the lesson content from the context
             _context.LessonContents.Remove(lessonContent);
@@ -240,9 +243,10 @@ namespace GedsiHub.Controllers
 
             _logger.LogInformation($"Lesson Content with ID {id} deleted successfully.");
 
-            // Redirect to the details of the associated lesson
-            return RedirectToAction("Details", "Lesson", new { id = lessonContent.LessonId });
+            // Redirect to the details of the associated module
+            return RedirectToAction("Details", "Module", new { id = moduleId });
         }
+
 
         private bool LessonContentExists(int id)
         {
