@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AssessmentController : Controller
     {
         private readonly ApplicationDbContext _context;
