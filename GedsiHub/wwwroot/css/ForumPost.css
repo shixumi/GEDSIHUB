@@ -6,6 +6,10 @@
     margin-top: 0.97rem;
 }
 
+body {
+    overflow-x: hidden;
+}
+
 @media (min-width: 992px) {
 
     
@@ -344,6 +348,13 @@
         border: none;
     }
 
+/*    .modal {
+        z-index: 1500 !important;
+    }
+
+    .modal-backdrop {
+        z-index: 1400 !important;
+    }*/
     /* Modal Title */
     .modal-title {
         font-size: 20px;
@@ -405,6 +416,7 @@
         border-radius: 25px;
         padding: 5px;
     }
+
 
     /* Flair Radio Buttons */
     .flair-options .flair-label {
@@ -553,7 +565,8 @@
 
 
 
-/**Reset Bootstrap*/
+
+
 .dropdown-toggle::after {
     content: none;
     display: none;

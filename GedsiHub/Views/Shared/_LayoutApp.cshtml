@@ -75,103 +75,101 @@
    <div class="layout_container d-flex" style="min-height: 100vh;">
 
 
-    <!-- Sidebar -->
-    <div class="sidebar_container d-flex flex-column">
-        <div class="sidebar d-flex flex-column" style="width: 100%; max-width: 350px;">
-            <!-- Dashboard Button -->
-            <div class="sidebar_button dashboard_button d-flex align-items-center" id="SidebarButton_Dashboard">
-                <div class="icon_container">
-                    <img class="sidebar_icon" src="~/images/Dashboard_Dark.png" alt="Dashboard Icon" />
+        <!-- Sidebar -->
+        <div class="sidebar_container d-flex flex-column">
+            <div class="sidebar d-flex flex-column" style="width: 100%; max-width: 350px;">
+                <!-- Dashboard Button -->
+                <div class="sidebar_button dashboard_button d-flex align-items-center" id="SidebarButton_Dashboard">
+                    <div class="icon_container">
+                        <img class="sidebar_icon" src="~/images/Dashboard_Dark.png" alt="Dashboard Icon" />
+                    </div>
+                    <div class="label_container">
+                        <span class="sidebar_label">Dashboard</span>
+                    </div>
                 </div>
-                <div class="label_container">
-                    <span class="sidebar_label">Dashboard</span>
-                </div>
-            </div>
 
-            <!-- Modules Button -->
-            <div class="sidebar_button modules_button d-flex align-items-center" id="SidebarButton_Modules">
-                <div class="icon_container">
-                    <img class="sidebar_icon" src="~/images/Modules_Dark.png" alt="Modules Icon" />
+                <!-- Modules Button -->
+                <div class="sidebar_button modules_button d-flex align-items-center" id="SidebarButton_Modules">
+                    <div class="icon_container">
+                        <img class="sidebar_icon" src="~/images/Modules_Dark.png" alt="Modules Icon" />
+                    </div>
+                    <div class="label_container">
+                        <span class="sidebar_label">Modules</span>
+                    </div>
                 </div>
-                <div class="label_container">
-                    <span class="sidebar_label">Modules</span>
-                </div>
-            </div>
 
-            <!-- Leaderboard Button -->
-            <div class="sidebar_button leaderboard_button d-flex align-items-center" id="SidebarButton_Leaderboard">
-                <div class="icon_container">
-                    <img class="sidebar_icon" src="~/images/Leaderboard_Dark.png" alt="Leaderboard Icon" />
+                <!-- Leaderboard Button -->
+                <div class="sidebar_button leaderboard_button d-flex align-items-center" id="SidebarButton_Leaderboard">
+                    <div class="icon_container">
+                        <img class="sidebar_icon" src="~/images/Leaderboard_Dark.png" alt="Leaderboard Icon" />
+                    </div>
+                    <div class="label_container">
+                        <span class="sidebar_label">Leaderboard</span>
+                    </div>
                 </div>
-                <div class="label_container">
-                    <span class="sidebar_label">Leaderboard</span>
-                </div>
-            </div>
 
-            <!-- Forum Button (Active State) -->
-            <div class="sidebar_button forum_button d-flex align-items-center" id="SidebarButton_Forum">
-                <div class="icon_container">
-                    <img class="sidebar_icon" src="~/images/Forum_Dark.png" alt="Forum Icon" />
+                <!-- Forum Button (Active State) -->
+                <div class="sidebar_button forum_button d-flex align-items-center" id="SidebarButton_Forum">
+                    <div class="icon_container">
+                        <img class="sidebar_icon" src="~/images/Forum_Dark.png" alt="Forum Icon" />
+                    </div>
+                    <div class="label_container">
+                        <span class="sidebar_label">Forum</span>
+                    </div>
                 </div>
-                <div class="label_container">
-                    <span class="sidebar_label">Forum</span>
-                </div>
-            </div>
 
-            <!-- Feedback Button -->
-            <div class="sidebar_button feedback_button d-flex align-items-center" id="SidebarButton_Feedback">
-                <div class="icon_container">
-                    <img class="sidebar_icon" src="~/images/Feedback_Dark.png" alt="Feedback Icon" />
+                <!-- Feedback Button -->
+                <div class="sidebar_button feedback_button d-flex align-items-center" id="SidebarButton_Feedback">
+                    <div class="icon_container">
+                        <img class="sidebar_icon" src="~/images/Feedback_Dark.png" alt="Feedback Icon" />
+                    </div>
+                    <div class="label_container">
+                        <span class="sidebar_label">Feedback</span>
+                    </div>
                 </div>
-                <div class="label_container">
-                    <span class="sidebar_label">Feedback</span>
-                </div>
-            </div>
 
-            <!-- Logout Button -->
-            <div class="sidebar_button logout_button d-flex align-items-center" id="SidebarButton_Logout">
-                <div class="icon_container">
-                    <img class="sidebar_icon" src="~/images/Logout_Dark.png" alt="Logout Icon" />
+                    <!-- Logout Button -->
+                    <div class="sidebar_button logout_button d-flex align-items-center" id="SidebarButton_Logout" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <div class="icon_container">
+                            <img class="sidebar_icon" src="~/images/Logout_Dark.png" alt="Logout Icon" />
+                        </div>
+                        <div class="label_container">
+                            <span class="sidebar_label">Logout</span>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <!-- Background (Main Content Area) -->
+        <div class="background">
+                @RenderBody()
+        </div>
+   </div>
+
+
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="label_container">
-                    <span class="sidebar_label">Logout</span>
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <!-- Logout form inside modal -->
+                    <form class="form-inline logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                    </form>
+                    
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Background (Main Content Area) -->
-    <div class="background">
-            @RenderBody()
-    </div>
-</div>
-
-
-
-        <!-- Logout Confirmation Modal -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to log out?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <!-- Logout form inside modal -->
-                        <form class="form-inline logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
-                            <button type="submit" class="btn btn-primary">Yes</button>
-                        </form>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-      
 
 
 
@@ -202,19 +200,14 @@
     <script src="~/js/PublishUnpublishAssessmenttoggle.js"></script>
     <script src="~/js/DragAndDropFile.js"></script>
     <script src="~/js/OthersOptionHandler.js"></script>
-
     <script src="~/js/global.js"></script>
-    
-    
-
-       
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
     @await Html.PartialAsync("_ActiveUserTracker")
 </body>
+
 </html>
