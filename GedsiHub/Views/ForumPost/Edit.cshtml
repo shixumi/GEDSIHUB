@@ -16,7 +16,7 @@
 
     <h2>Edit Post</h2>
 
-    <!-- Display validation errors if any -->
+    <!-- Testing -->
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">
@@ -24,97 +24,136 @@
         </div>
     }
 
-    <!--- Card Posts -->
     <div class="card gedf-card">
-        <!-- Form to edit the post -->
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
 
             <!-- Hidden field for Post ID -->
             <input type="hidden" asp-for="PostId" />
 
+            <!-- Tabs for Text and Images/Video -->
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="editTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="edit-text-tab" data-bs-toggle="tab" href="#edit-text" role="tab" aria-controls="edit-text" aria-selected="true">
+                            Text
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="edit-images-tab" data-bs-toggle="tab" href="#edit-images" role="tab" aria-controls="edit-images" aria-selected="false">
+                            Images & Video
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <div class="card-body">
-                <!-- Title -->
-                <div class="mb-3">
-                    <label asp-for="Title" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">
-                        Title
-                        <span style="color: #dd3025; margin-left: 5px;">*</span>
-                    </label>
-                    <input asp-for="Title" class="form-control create-input" placeholder="Enter your title here..." />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
+                <div class="tab-content" id="editTabContent">
+                    <!-- Text Tab Content -->
+                    <div class="tab-pane fade show active" id="edit-text" role="tabpanel" aria-labelledby="edit-text-tab">
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label d-flex justify-content-start input-lbl">
+                                Title 
+                                <span style="color: #dd3025;">*</span>
+                            </label>
+                            <input asp-for="Title" class="form-control  create-input" placeholder="Enter your title here..." />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
 
-                <!-- Flair Selection -->
-                <div class="mb-3">
-                    <label class="form-label">Select Flair</label>
-                    <div class="flair-options d-flex flex-wrap">
-                        <div class="form-check me-3 mb-2">
-                            <input class="form-check-input" type="radio" asp-for="Flair" value="Discussion"
-                                   checked="@(Model.Flair == "Discussion")" />
-                            <label class="form-check-label" for="Flair">Discussion</label>
+                        <!-- Flair Selection -->
+                        <div class="mb-3">
+                            <label for="flair" class="form-label d-flex justify-content-start input-lbl">Select Flair</label>
+                            <div class="flair-options d-flex flex-wrap">
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="radio" asp-for="Flair" value="Discussion" checked="@(Model.Flair == "Discussion")" />
+                                    <label class="form-check-label" for="flair1">Discussion</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="radio" asp-for="Flair" value="Need Advice" checked="@(Model.Flair == "Need Advice")" />
+                                    <label class="form-check-label" for="flair2">Need Advice</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="radio" asp-for="Flair" value="Unsolicited Advice" checked="@(Model.Flair == "Unsolicited Advice")" />
+                                    <label class="form-check-label" for="flair3">Unsolicited Advice</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="radio" asp-for="Flair" value="Meme" checked="@(Model.Flair == "Meme")" />
+                                    <label class="form-check-label" for="flair4">Meme</label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="Flair" class="text-danger"></span>
                         </div>
-                        <div class="form-check me-3 mb-2">
-                            <input class="form-check-input" type="radio" asp-for="Flair" value="Need Advice"
-                                   checked="@(Model.Flair == "Need Advice")" />
-                            <label class="form-check-label" for="Flair">Need Advice</label>
+
+                        <!-- Module Selection -->
+                        <div class="mb-3">
+                            <label for="ModuleId" class="form-label d-flex justify-content-start input-lbl">Select Module (Tag)</label>
+                            <select asp-for="ModuleId" class="form-control create-input-select" asp-items="@(new SelectList(Model.Modules, "ModuleId", "Title", Model.ModuleId))">
+                                <option value="">-- Select a Module --</option>
+                            </select>
+                            <span asp-validation-for="ModuleId" class="text-danger"></span>
                         </div>
-                        <div class="form-check me-3 mb-2">
-                            <input class="form-check-input" type="radio" asp-for="Flair" value="Unsolicited Advice"
-                                   checked="@(Model.Flair == "Unsolicited Advice")" />
-                            <label class="form-check-label" for="Flair">Unsolicited Advice</label>
+
+
+                        <!-- Content -->
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label d-flex justify-content-start input-lbl">
+                                Content 
+                                <span style="color: #dd3025;">*</span>
+                            </label>
+                            <textarea asp-for="Content" class="form-control create-input-ta" rows="3" placeholder="Enter your content here..."></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
                         </div>
-                        <div class="form-check me-3 mb-2">
-                            <input class="form-check-input" type="radio" asp-for="Flair" value="Meme"
-                                   checked="@(Model.Flair == "Meme")" />
-                            <label class="form-check-label" for="Flair">Meme</label>
+
+                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <div id="existingImagePreviewContainer" class="mt-3">
+                                <label>Current Image:</label>
+                                <img src="@Model.ImagePath" alt="Existing Image" class="img-thumbnail" style="max-width: 100%; max-height: 300px;" />
+                            </div>
+                        }
+
+                        <!-- Poll Options -->
+                        <div class="form-group">
+                            <label asp-for="PollOptions" class="form-label">Poll Options (Optional)</label>
+                            <input asp-for="PollOptions" class="form-control create-input" />
+                            <span asp-validation-for="PollOptions" class="text-danger"></span>
                         </div>
                     </div>
-                    <span asp-validation-for="Flair" class="text-danger"></span>
-                </div>
 
-                <!-- Module Selection -->
-                <div class="mb-3">
-                    <label for="ModuleId" class="form-label">Select Module (Tag)</label>
-                    <select asp-for="ModuleId" class="form-control" asp-items="@(new SelectList(Model.Modules, "ModuleId", "Title", Model.ModuleId))">
-                        <option value="">-- Select a Module --</option>
-                    </select>
-                    <span asp-validation-for="ModuleId" class="text-danger"></span>
-                </div>
+                    <!-- Images Tab Content -->
+                    <div class="tab-pane fade" id="edit-images" role="tabpanel" aria-labelledby="edit-images-tab">
 
-                <!-- Content -->
-                <div class="mb-3">
-                    <label asp-for="Content" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">
-                        Content
-                        <span style="color: #dd3025; margin-left: 5px;">*</span>
-                    </label>
-                    <textarea asp-for="Content" class="form-control create-input-ta" rows="3" placeholder="Enter your content here..."></textarea>
-                    <span asp-validation-for="Content" class="text-danger"></span>
-                </div>
+                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <div class="mt-3">
+                                <label>Current Image:</label>
+                                <div class="post-img-container">
+                                    <img src="@Model.ImagePath" alt="Existing Image" class="post-img" style="max-width: 100%; max-height: 300px;" />
+                                </div>
+                            </div>
+                        }
 
-                <!-- Poll Options -->
-                <div class="form-group">
-                    <label asp-for="PollOptions" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Poll Options (Optional)</label>
-                    <input asp-for="PollOptions" class="form-control create-input" />
-                    <span asp-validation-for="PollOptions" class="text-danger"></span>
-                </div>
+                        <!-- Image Upload -->
+                        <div class="form-group">
+                            <label asp-for="ImageFile" class="form-label d-flex justify-content-start input-lbl">Upload Image (Optional)</label>
+                            <input asp-for="ImageFile" type="file" class="form-control img-input" id="imageUpload" accept=".jpg, .jpeg, .png, .gif" />
+                            <label class="form-label mt-2" id="fileLabel">No file chosen</label> <!-- Label for file name -->
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        </div>
 
-                <!-- Image Upload -->
-                <div class="form-group">
-                    <label asp-for="ImageFile" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Upload Image (Optional)</label>
-                    <div class="custom-file">
-                        <input asp-for="ImageFile" type="file" class="form-control img-input" id="imageUpload" accept=".jpg, .jpeg, .png, .gif" />
-                        <label class="form-label mt-2" id="fileLabel">No file chosen</label> <!-- Label for file name -->
+                        <!-- Image Preview -->
+                        <div id="imagePreviewContainer" class="mt-3" style="display: none;">
+                            <label>Image Preview:</label>
+                            <img id="imagePreview" src="#" alt="Image Preview" class="img-thumbnail" style="max-width: 100%; max-height: 300px; display: block;" />
+                        </div>
                     </div>
-                    <span asp-validation-for="ImageFile" class="text-danger"></span>
                 </div>
             </div>
 
-            <!-- Card Footer Buttons -->
-            <div class="d-flex align-items-center card-footer edit">
-                <div class="card-footer-btn">
-                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-submit">Save</button>
-                </div>
+            <div class="card-footer d-flex justify-content-end">
+                <a asp-action="Index" class="btn btn-secondary me-2">Cancel</a>
+                <button type="submit" class="btn btn-submit">Save</button>
             </div>
         </form>
     </div>

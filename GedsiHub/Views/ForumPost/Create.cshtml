@@ -5,13 +5,18 @@
     ViewData["Title"] = "Create Post";
 }
 
+<!-- Create ForumPost Page -->
 <div class="container-forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
+
+    <!-- Breadcrumbs -->
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb forum">
             <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Create post</li>
         </ol>
     </nav>
+
+    <!-- Title -->
     <h2>Create post</h2>
 
     @if (TempData["ErrorMessage"] != null)
@@ -21,7 +26,10 @@
         </div>
     }
 
+    <!--- Card Posts -->
     <div class="card gedf-card">
+
+        <!-- Form to create a post -->
         <form asp-action="Create" enctype="multipart/form-data" method="post">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
@@ -53,7 +61,7 @@
 
                         <!-- Flair Selection (New Inline Section) -->
                         <div class="mb-3">
-                            <label for="flair" class="form-label">Select Flair</label>
+                            <label for="flair" class="form-label d-flex justify-content-start input-lbl">Select Flair</label>
                             <div class="flair-options d-flex flex-wrap">
                                 <div class="form-check me-3 mb-2">
                                     <input class="form-check-input" type="radio" name="Flair" id="flair1" value="Discussion" asp-for="Flair">
@@ -77,8 +85,8 @@
 
                         <!-- Module Selection (New Inline Section) -->
                         <div class="mb-3">
-                            <label for="ModuleId" class="form-label">Select Module (Tag)</label>
-                            <select asp-for="ModuleId" class="form-control" asp-items="@(new SelectList(Model.Modules, "ModuleId", "Title"))">
+                            <label for="ModuleId" class="form-label d-flex justify-content-start input-lbl">Select Module (Tag)</label>
+                            <select asp-for="ModuleId" class="form-control create-input-select" asp-items="@(new SelectList(Model.Modules, "ModuleId", "Title"))">
                                 <option value="">Select a Module</option>
                             </select>
                             <span asp-validation-for="ModuleId" class="text-danger"></span>
@@ -105,6 +113,7 @@
                     <!-- Images Tab Content -->
                     <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                         <div class="form-group">
+                            <!-- Image Upload -->
                             <label asp-for="ImageFile" class="form-label d-flex justify-content-start input-lbl">Upload Image (Optional)</label>
                             <div class="custom-file">
                                 <input asp-for="ImageFile" type="file" class="form-control img-input" id="imageUpload" accept=".jpg, .jpeg, .png, .gif" />

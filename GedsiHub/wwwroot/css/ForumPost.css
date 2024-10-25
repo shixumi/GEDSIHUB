@@ -285,6 +285,15 @@ body {
         height: 50px;
     }
 
+    .create-input-select {
+        border-radius: 12px;
+        color: #464040;
+        font-size: 18px;
+        margin-bottom: 5px;
+        max-width: 100%;
+        height: 50px;
+    }
+
     .create-input-ta {
         border-radius: 12px;
         color: #464040;
@@ -471,8 +480,8 @@ body {
     .form-check-input {
         background-color: #fff;
         border-color: #555;
-        height: 20px;
-        width: 30px;
+        height: 1rem;
+        width: 1rem;
         
     }
 
