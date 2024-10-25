@@ -1,52 +1,60 @@
 ﻿// wwwroot/js/global.js
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Check if the user is authenticated before establishing a SignalR connection
-    const isAuthenticated = document.body.getAttribute('data-authenticated') === 'true';
+(function () {
+    if (window.signalRConnection) {
+        console.log("SignalR connection already exists.");
+        return;
+    }
 
-    if (isAuthenticated) {
-        // Initialize SignalR connection
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/analyticsHub")
-            .configureLogging(signalR.LogLevel.Information)
-            .build();
+    window.signalRConnection = null;
 
-        // Handle UpdateActiveUsers event
-        connection.on("UpdateActiveUsers", function (count) {
-            const activeUsersElement = document.getElementById("activeUsersCount");
-            if (activeUsersElement) {
-                activeUsersElement.innerText = count;
-            } else {
-                console.warn("activeUsersCount element not found in DOM.");
-            }
-        });
+    document.addEventListener("DOMContentLoaded", function () {
+        const isAuthenticated = document.body.getAttribute('data-authenticated') === 'true';
 
-        // Start the connection
-        connection.start()
-            .then(() => {
-                console.log("SignalR Connected");
+        if (isAuthenticated) {
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/analyticsHub")
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
 
-                // Optional: Implement Heartbeat Mechanism
-                setInterval(() => {
-                    connection.invoke("Heartbeat")
-                        .catch(err => console.error("Heartbeat Error: ", err));
-                }, 2 * 60 * 1000); // Every 2 minutes
-            })
-            .catch(err => {
-                console.error("SignalR Connection Error: ", err);
-                // Optionally, implement retry logic
+            connection.on("UpdateActiveUsers", function (count) {
+                const activeUsersElements = document.querySelectorAll(".activeUsersCount");
+                if (activeUsersElements.length > 0) {
+                    activeUsersElements.forEach(function (element) {
+                        element.innerText = count;
+                    });
+                } else {
+
+                }
             });
 
-        // Optional: Handle connection close and retry
-        connection.onclose(async () => {
-            console.warn("SignalR connection closed. Attempting to reconnect...");
-            try {
-                await connection.start();
-                console.log("SignalR Reconnected");
-            } catch (err) {
-                console.error("SignalR Reconnection Error: ", err);
-                setTimeout(() => connection.start(), 5000); // Retry after 5 seconds
-            }
-        });
-    }
-});
+            connection.start()
+                .then(() => {
+                    console.log("SignalR Connected");
+
+                    setInterval(() => {
+                        connection.invoke("Heartbeat")
+                            .catch(err => console.error("Heartbeat Error: ", err));
+                    }, 2 * 60 * 1000); // Every 2 minutes
+                })
+                .catch(err => {
+                    console.error("SignalR Connection Error: ", err);
+                });
+
+            connection.onclose(async () => {
+                console.warn("SignalR connection closed. Attempting to reconnect...");
+                try {
+                    await connection.start();
+                    console.log("SignalR Reconnected");
+                } catch (err) {
+                    console.error("SignalR Reconnection Error: ", err);
+                    setTimeout(() => connection.start(), 5000); // Retry after 5 seconds
+                }
+            });
+
+            window.signalRConnection = connection;
+        } else {
+            console.warn("User is not authenticated. SignalR connection not established.");
+        }
+    });
+})();
