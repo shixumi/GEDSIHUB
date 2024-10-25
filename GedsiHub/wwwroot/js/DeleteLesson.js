@@ -1,33 +1,24 @@
-document.addEventListener("DOMContentLoaded", () => {
-    document.addEventListener('click', (event) => {
-        const deleteDiv = event.target.closest('#DeleteLesson');
-        if (deleteDiv) {
-            const lessonContainer = deleteDiv.closest('.edit_new_lesson_container');
-            const lessonNumber = lessonContainer.querySelector('#LessonNumberDisplay').textContent.trim();
+// Toggle custom dropdown visibility when filter button is clicked
+document.getElementById('userManagementFilter').addEventListener('click', function () {
+    var dropdown = document.getElementById('customDropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+});
 
-            // Confirmation before deletion
-            if (confirm('Are you sure you want to delete this lesson?')) {
-                const moduleId = sessionStorage.getItem('currentModuleId');
-
-                // Remove lesson from local storage
-                removeLessonFromLocalStorage(moduleId, lessonNumber);
-                
-                // Remove the lesson from the DOM
-                lessonContainer.remove();
-                console.log(`Lesson ${lessonNumber} deleted.`);
-            }
-        }
+// Event listener for selecting an option
+document.querySelectorAll('.dropdown-option').forEach(function (option) {
+    option.addEventListener('click', function () {
+        var selectedValue = this.getAttribute('data-value');
+        document.getElementById('isActiveSelect').value = selectedValue; // Set the hidden select's value
+        document.getElementById('customDropdown').style.display = 'none'; // Hide dropdown
+        // Optionally, submit the form or trigger an action
     });
 });
 
-// Function to remove a lesson from localStorage
-function removeLessonFromLocalStorage(moduleId, lessonNumber) {
-    // Retrieve the existing lessons from localStorage
-    const lessons = JSON.parse(localStorage.getItem(`lessons_${moduleId}`)) || [];
-
-    // Filter out the lesson that matches the lessonNumber
-    const updatedLessons = lessons.filter(lesson => lesson.number !== lessonNumber);
-
-    // Save the updated lessons back to localStorage
-    localStorage.setItem(`lessons_${moduleId}`, JSON.stringify(updatedLessons));
-}
+// Hide dropdown if clicked outside
+document.addEventListener('click', function (event) {
+    var dropdown = document.getElementById('customDropdown');
+    var filterButton = document.getElementById('userManagementFilter');
+    if (!dropdown.contains(event.target) && event.target !== filterButton) {
+        dropdown.style.display = 'none';
+    }
+});

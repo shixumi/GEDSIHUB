@@ -15,8 +15,19 @@
   scroll-behavior: smooth;
 }
 
-
-
+.background {
+    flex-grow: 1;
+    height: 100vh;
+    background: #EFF0F4;
+    padding-left: 70px;
+    padding-right: 70px;
+    padding-bottom: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    border-top-left-radius: 40px;
+    transition: all 0.3s ease;
+}
 
 .container-forum{
     max-width: 65%;
