@@ -1,0 +1,77 @@
+﻿#delete-user-container {
+    min-height: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+    #delete-user-container img {
+        width: 5rem;
+        height: auto;
+    }
+
+    #delete-user-container span {
+        font-size: 1.2rem;
+    }
+
+#delete-user-text-con {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#deleteUserCancelButton, #deleteUserDeleteButton {
+    height: 3.5rem;
+    width: 9rem;
+    margin-top: 1.7rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+    border-style: none;
+}
+
+#cancel-delete-user-button-con {
+    display: flex;
+    gap: 1rem;
+}
+
+#deleteUserCancelButton {
+    border: 1px solid #464040;
+    background-color: #ffffff;
+    color: #464040;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+    #deleteUserCancelButton:hover {
+        border: 0.15625rem solid #464040;
+        border-radius: 3.90625rem;
+        color: #464040;
+    }
+
+    #deleteUserCancelButton:active {
+        transform: scale(0.95);
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+    }
+
+#deleteUserDeleteButton {
+    background-color: #660000;
+    color: #ffffff;
+}
+
+    #deleteUserDeleteButton:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }
+
+    #deleteUserDeleteButton:active {
+        transform: scale(0.95);
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        background-color: #920000;
+        border: none;
+    }

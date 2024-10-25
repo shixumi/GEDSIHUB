@@ -5,7 +5,28 @@
     ViewData["Title"] = "Delete User";
 }
 
-<h2>Delete User @Model.UserName</h2>
+
+<form asp-action="DeleteUserConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div id="delete-user-container" class="container feedback-container">
+   
+        <img src="~/images/Delete_Trash.png" alt="Delete Trash" />
+        <div id="delete-user-text-con">
+            <h3>Delete User</h3>
+                <h3>@Model.UserName</h3>
+        </div>
+        <span>Are you sure you want to delete this user?</span>
+        <div id="cancel-delete-user-button-con">
+                <a asp-action="UserManagement" id="deleteUserCancelButton">Cancel</a>
+
+                <button id="deleteUserDeleteButton" type="submit">Delete</button>
+        </div>
+    </div>
+</form>
+
+
+@* <h2>Delete User @Model.UserName</h2>
 
 <p>Are you sure you want to delete this user?</p>
 
@@ -13,4 +34,4 @@
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-danger">Delete</button>
     <a asp-action="UserManagement" class="btn btn-secondary">Cancel</a>
-</form>
+</form> *@

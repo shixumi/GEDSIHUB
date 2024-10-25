@@ -43,38 +43,7 @@
     background-color: #920000;
 }
 
-#SearchModule {
-    border-style: none;
-    border-radius: 3.90625rem;
-    width: 26.5625rem;
-    height: 2.734375rem;
-    margin-top: 1.171875rem;
-    justify-self: end;
-    margin-right: 0.78125rem;
-    color: #464040;
-    padding-left: 1.5625rem;
-    padding-right: 3.125rem;
-    font-size: 1.015625rem;
-    min-width: 26.5625rem;
-}
 
-    #SearchModule::placeholder {
-        font-size: 1.015625rem;
-        color: #9c9c9c;
-        font-weight: 200;
-    }
-
-.SearchModule_Icon {
-    justify-self: end;
-    width: 1.09375rem;
-    margin-right: 14.453125rem;
-    margin-top: 1.25rem;
-    transition: transform 0.3s ease;
-}
-
-    .SearchModule_Icon:hover {
-        transform: scale(1.03);
-    }
 
 
 .modules_container {

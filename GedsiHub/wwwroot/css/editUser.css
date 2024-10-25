@@ -1,0 +1,106 @@
+﻿.input-edit-user-dashboard {
+    height: 3.5rem;
+    border: 1px solid #464040;
+    box-shadow: inset 0px 3px 4px #d9d9d9;
+    border-radius: 1rem;
+    padding: 0 1rem;
+    transition: border-color 0.3s ease, border-width 0.3s ease;
+    color: #464040;
+    width: 100%;
+    background-size: 16px;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+
+#edit-user-w-name {
+    display: flex;
+    gap: 0.5rem;
+}
+
+ 
+
+#username-email-con-eu {
+    display: flex;
+    gap: 1.5rem;
+}
+
+    #username-email-con-eu label {
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+#username-eu-con {
+    width: 40%;
+}
+
+#email-eu-con {
+    width: 60%;
+}
+
+#edit-user-container {
+    min-height: 8rem;
+}
+
+#isadmin-isactive-con {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+    #isadmin-isactive-con label {
+        margin-right: 0.5rem;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+#userEditSaveButton, #userEditBackButton {
+    height: 4rem;
+    width: 15rem;
+    margin-top: 1.7rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    transition: all 0.2s ease;
+    border-style: none;
+}
+
+#userEditSaveButton {
+    background-color: #660000;
+    color: #ffffff;
+}
+
+    #userEditSaveButton:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }
+
+    #userEditSaveButton:active {
+        transform: scale(0.95);
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        background-color: #920000;
+        border-style: none;
+    }
+
+#userEditBackButton {
+    border: 1px solid #464040;
+    background-color: #ffffff;
+    color: #464040;
+}
+
+    #userEditBackButton:hover {
+        border: 0.15625rem solid #464040;
+        border-radius: 3.90625rem;
+        color: #464040;
+    }
+
+    #userEditBackButton:active {
+        transform: scale(0.95);
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+    }
+
+#edit-user-button-con {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+}

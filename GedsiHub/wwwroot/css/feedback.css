@@ -1,5 +1,6 @@
 ﻿.feedback-container {
     background: #ffffff;
+    min-height: 43rem;
     max-height: 43rem; /* Sets a maximum height */
     padding: 50px;
     margin-top: 25px;
