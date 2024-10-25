@@ -16,11 +16,39 @@
         font-weight: 200;
     }
 
+.um-title-searcbar-con {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .user-management-filter-con {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
+.um-search-con {
+    margin-top: 2rem;
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+#userManagementSearch {
+    flex: 1;
+    padding-right: 2.5rem; /* Add space on the right for the button */
+}
+
+.search-icon-um {
+    border: none;
+    background: none;
+    margin-left: -2.5rem; /* Position button over the padded space */
+    cursor: pointer;
+}
+
+
 
 #userManagementSearchButton {
     transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
@@ -43,7 +71,7 @@
     color: #464040;
 }
 
-    .um-header-label:nth-child(2), .um-header-label:nth-child(3) {
+    .um-header-label:nth-child(1), .um-header-label:nth-child(2), .um-header-label:nth-child(3) {
         text-align: left;
     }
 
@@ -54,17 +82,12 @@
     color: #464040;
 }
 
-    .um-content:nth-child(2), .um-content:nth-child(3) {
+    .um-content:nth-child(1), .um-content:nth-child(2), .um-content:nth-child(3) {
         text-align: left;
     }
 
-tbody tr:nth-child(odd) {
-    background-color: white;
-}
 
-tbody tr:nth-child(even) {
-    background-color: #EFF0F4;
-}
+
 
 #um-edit-user-button, #um-delete-user-button {
     border-radius: 1.5rem;
@@ -138,7 +161,7 @@ tbody tr:nth-child(even) {
     }
 
 #um-actions-con-bottom {
-    padding-left: 2.3rem;
+    padding-left: 0.3rem;
 }
 
 #userManagementFilter {
@@ -157,37 +180,70 @@ tbody tr:nth-child(even) {
     margin-bottom: 0.3rem;
 }
 
-.um-search-con {
-    margin-top: 2rem;
-    margin-right: 1rem;
-}
-
-.um-title-searcbar-con {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-
 
 .select-container {
-    display: flex;
-    justify-content: flex-end;
+    display: inline-flex;
     align-items: center;
+    position: relative;
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
     .select-container select {
         text-align: right;
         outline: none;
-        border: 1px solid #ccc;
-        margin-right: 10px;
+        border: none;
+        padding-right: 2.5rem;
+        width: auto;
+        color: #464040;
     }
+
+        .select-container select:focus {
+            outline: none;
+            box-shadow: none; 
+        }
+
+    .select-container select:hover {
+        font-weight: 500;
+    }
+
+        .select-container:active {
+            transform: scale(0.95);
+        }
 
 .filter-icon {
     width: 1.7rem;
     height: 1.7rem;
-    margin-bottom: 0.3rem;
-    margin-left: 1rem;
+    margin-left: -2rem;
     pointer-events: none;
-    position: absolute;
+    position: relative;
 }
+
+
+.table {
+    border-spacing: 0; /* Removes extra space between cells */
+    margin-top: 2rem;
+}
+
+.table th,
+.table td {
+    border-bottom: 1px solid #ccc; /* Line color */
+    padding: 8px; /* Optional: Adjust padding for spacing */
+}
+
+    .table thead th {
+        border-bottom: 2px solid #333; /* Thicker line for header */
+        padding-top: 4px !important; 
+        padding-bottom: 4px !important;
+    }
+
+
+.um-header-label {
+    padding-top: 0;
+    padding-bottom: 0; /* Adjust these values as needed */
+    padding-left: 8px;
+    padding-right: 8px;
+    vertical-align: bottom;
+}
+
+

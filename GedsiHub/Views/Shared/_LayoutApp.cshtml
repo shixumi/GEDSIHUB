@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="~/css/feedbackForm.css" />
     <link rel="stylesheet" href="~/css/feedbackSuccessfullySubmitted.css" />
     <link rel="stylesheet" href="~/css/userManagement.css" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
           crossorigin="anonymous">
 
@@ -81,12 +82,14 @@
             <div class="sidebar d-flex flex-column" style="width: 100%; max-width: 350px;">
                 <!-- Dashboard Button -->
                 <div class="sidebar_button dashboard_button d-flex align-items-center" id="SidebarButton_Dashboard">
-                    <div class="icon_container">
-                        <img class="sidebar_icon" src="~/images/Dashboard_Dark.png" alt="Dashboard Icon" />
-                    </div>
-                    <div class="label_container">
-                        <span class="sidebar_label">Dashboard</span>
-                    </div>
+                    <a asp-controller="Dashboard" asp-action="Index" class="d-flex align-items-center text-decoration-none">
+                        <div class="icon_container">
+                            <img class="sidebar_icon" src="~/images/Dashboard_Dark.png" alt="Dashboard Icon" />
+                        </div>
+                        <div class="label_container">
+                            <span class="sidebar_label">Dashboard</span>
+                        </div>
+                    </a>
                 </div>
 
                 <!-- Modules Button -->
