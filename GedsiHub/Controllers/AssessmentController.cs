@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
 {
-    [Authorize(Roles = "Admin")]  // Apply to the entire controller to restrict access to Admins only
+    [Authorize(Roles = "Admin")]
     public class AssessmentController : Controller
     {
         private readonly ApplicationDbContext _context;

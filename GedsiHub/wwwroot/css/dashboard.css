@@ -1,0 +1,183 @@
+﻿.dashboard-con-of-con {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    margin-top: 1.8rem;
+}
+
+.dashboard-container {
+    display: flex;
+    gap: 1.8rem;
+}
+
+.dashboard-item-container {
+    background: #ffffff;
+    padding: 1.35rem;
+    padding-left: 2.25rem;
+    border-radius: 1.6875rem;
+    box-shadow: 0px 3.6px 4.5px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    color: #464040;
+    display: flex;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .dashboard-item-container:hover {
+        transform: scale(1.01);
+        box-shadow: 0px 3.6px 4.5px rgba(0, 0, 0, 0.25);
+    }
+
+#to-do-and-completed, #your-streak-and-days {
+    width: 63%;
+}
+
+    #to-do-and-completed img, #your-streak-and-days img {
+        width: 5.4rem;
+        height: auto;
+        margin-top: 0.36rem;
+    }
+
+.no-of-comp-mod-con, .no-of-mod-to-do-con {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.9rem;
+}
+
+.no-of-mod {
+    color: #660000;
+    font-size: 3.6rem;
+    font-weight: 500;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-img-con {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mod-text-dashboard {
+    font-size: 1.08rem;
+    font-weight: 500;
+}
+
+#yourStreakCon {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 2.25rem;
+    padding-right: 2.25rem;
+}
+
+#streakDaysCon {
+    width: 25%;
+}
+
+.days-of-streak {
+    font-size: 5.4rem;
+    color: #52A035;
+}
+
+#streakDaysCon {
+    display: flex;
+    flex-direction: column;
+}
+
+.days-streak-text, .your-streak-label {
+    font-size: 1.35rem;
+}
+
+.your-streak-label {
+    margin-top: 0.45rem;
+}
+
+.streak {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.9rem;
+    margin-top: 0.9rem;
+}
+
+.streak-week {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+}
+
+.streak-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.streak-circle {
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0e0e0;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.days-label-your-streak {
+    font-size: 1.17rem;
+    font-weight: 500;
+    color: #464040;
+    margin-top: 0.72rem;
+}
+
+.days-streak-con {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4.5rem;
+    padding: 0.9rem;
+}
+
+.streak-circle i {
+    color: transparent;
+    font-size: 1.8rem;
+    transition: color 0.3s;
+}
+
+.streak-circle.filled {
+    color: white;
+    background: radial-gradient(circle, rgb(73,177,77) 20%, rgb(64,135,67) 100%);
+    transform: scale(1.045);
+}
+
+.bolt-icon {
+    color: white;
+    width: 45%;
+    height: 45%;
+}
+
+.streak-circle:hover {
+    transform: scale(1.045);
+}
+
+.streak-circle.filled:hover {
+    transform: scale(1.035);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 3.6px 9px rgba(0, 0, 0, 0.3);
+    }
+
+    50% {
+        transform: scale(1.072);
+        box-shadow: 0 5.4px 13.5px rgba(0, 0, 0, 0.4);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 3.6px 9px rgba(0, 0, 0, 0.3);
+    }
+}
