@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize(Roles = "Admin")]  // Apply to the entire controller to restrict access to Admins only
     public class AssessmentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -57,16 +58,14 @@ namespace GedsiHub.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogError("ModelState is invalid. Logging validation errors...");
-                // Log validation errors
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
                     _logger.LogError($"Validation Error: {error.ErrorMessage}");
                 }
 
-                return View(assessment); // Re-display form with validation errors
+                return View(assessment);
             }
 
-            // Optional: Assign the Module navigation property if necessary
             var module = await _context.Modules.FindAsync(assessment.ModuleId);
             if (module == null)
             {
@@ -75,7 +74,7 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
-            assessment.Module = module; // Assign the navigation property
+            assessment.Module = module;
 
             try
             {
@@ -130,7 +129,6 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
-            // Optional: Assign the Module navigation property if necessary
             var module = await _context.Modules.FindAsync(assessment.ModuleId);
             if (module == null)
             {
@@ -139,7 +137,7 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
-            assessment.Module = module; // Assign the navigation property
+            assessment.Module = module;
 
             try
             {

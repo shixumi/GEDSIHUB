@@ -1,7 +1,6 @@
 ﻿using GedsiHub.Data;
 using GedsiHub.Models;
 using GedsiHub.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.IO;
@@ -9,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
 {
-    [Authorize]
     public class ForumCommentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,7 +17,7 @@ namespace GedsiHub.Controllers
             _context = context;
         }
 
-        // GET: Create a new comment
+        // GET: Display comment creation form
         public IActionResult Create(int postId)
         {
             var viewModel = new ForumCommentViewModel
@@ -29,7 +27,7 @@ namespace GedsiHub.Controllers
             return View(viewModel);
         }
 
-        // POST: Create a new comment with an optional image
+        // POST: Create a new comment with optional image upload
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ForumCommentViewModel viewModel)
@@ -39,24 +37,32 @@ namespace GedsiHub.Controllers
                 var comment = new ForumComment
                 {
                     Content = viewModel.Content,
-                    PostId = viewModel.PostId,  // Make sure to pass the PostId correctly
+                    PostId = viewModel.PostId,
                     UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                     CreatedAt = DateTime.UtcNow
                 };
 
                 if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
                 {
-                    var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
+                    var fileName = $"{Path.GetFileNameWithoutExtension(viewModel.ImageFile.FileName)}_{DateTime.Now.Ticks}{Path.GetExtension(viewModel.ImageFile.FileName)}";
                     var imagePath = Path.Combine("wwwroot/images/comments", fileName);
 
-                    Directory.CreateDirectory(Path.Combine("wwwroot/images/comments"));
-
-                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    try
                     {
-                        await viewModel.ImageFile.CopyToAsync(stream);
-                    }
+                        Directory.CreateDirectory(Path.Combine("wwwroot/images/comments"));
 
-                    comment.ImagePath = "/images/comments/" + fileName;
+                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        {
+                            await viewModel.ImageFile.CopyToAsync(stream);
+                        }
+
+                        comment.ImagePath = $"/images/comments/{fileName}";
+                    }
+                    catch (IOException ex)
+                    {
+                        ModelState.AddModelError(string.Empty, "An error occurred while uploading the image.");
+                        return View(viewModel);
+                    }
                 }
 
                 _context.ForumComments.Add(comment);
@@ -79,7 +85,7 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
-            if (comment.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier) && !User.IsInRole("Admin"))
+            if (!IsUserAuthorizedToDeleteComment(comment))
             {
                 return Forbid(); // Ensure the user is either the comment owner or an admin
             }
@@ -107,7 +113,7 @@ namespace GedsiHub.Controllers
                 CommentId = commentId,
                 UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 Reason = reason,
-                CreatedAt = System.DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             };
 
             _context.ForumCommentReports.Add(report);

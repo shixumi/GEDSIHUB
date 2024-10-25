@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GedsiHub.Data;
 using GedsiHub.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,10 +21,13 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
+        // ************** USER INTERFACE **************
+
         // GET: Go To Lesson button
+        [Authorize(Roles = "Student, Employee, Admin")]  // Accessible by Students, Employees, and Admins
         public async Task<IActionResult> GoToLesson(int lessonId)
         {
-            // Try to retrieve an existing LessonContent for the given LessonId
+            // Check if a LessonContent exists for the given LessonId
             var existingLessonContent = await _context.LessonContents
                                                       .AsNoTracking()
                                                       .FirstOrDefaultAsync(lc => lc.LessonId == lessonId);
@@ -34,22 +37,26 @@ namespace GedsiHub.Controllers
                 // If LessonContent exists, redirect to its Details page
                 return RedirectToAction("Details", new { id = existingLessonContent.ContentId });
             }
+            else if (User.IsInRole("Admin"))
+            {
+                // Only allow Admins to go to the Create page if no content exists
+                return RedirectToAction("Create", new { lessonId = lessonId });
+            }
             else
             {
-                // If no LessonContent exists, redirect to the Create page
-                return RedirectToAction("Create", new { lessonId = lessonId });
+                // For non-Admins, if no content exists, redirect back to Module Details
+                return RedirectToAction("Details", "Module", new { id = lessonId });
             }
         }
 
         // GET: LessonContent/Create/{lessonId}
+        [Authorize(Roles = "Admin")]  // Only Admins can create LessonContent
         public IActionResult Create(int lessonId)
         {
             _logger.LogInformation($"Received request to create lesson content for Lesson ID: {lessonId}");
 
-            // Fetch the lesson and include its module using the correct property name
             var lesson = _context.Lessons.Include(l => l.Module).FirstOrDefault(l => l.LessonId == lessonId);
 
-            // Check if lesson is null
             if (lesson == null)
             {
                 _logger.LogWarning($"Lesson with ID {lessonId} not found in the database.");
@@ -60,20 +67,10 @@ namespace GedsiHub.Controllers
 
             // Set ViewBag properties
             ViewBag.LessonId = lessonId;
-            ViewBag.ModuleId = lesson.ModuleId; // Ensure this is set correctly
-            ViewBag.LessonTitle = lesson.Title; // Set the Lesson Title
+            ViewBag.ModuleId = lesson.ModuleId;
+            ViewBag.LessonTitle = lesson.Title;
             ViewBag.LessonNumber = lesson.LessonNumber;
-
-            // Ensure lesson.Module is not null
-            if (lesson.Module == null)
-            {
-                _logger.LogWarning($"Module associated with Lesson ID {lessonId} is not found.");
-                ViewBag.ModuleTitle = "Untitled Module"; // Provide a default title
-            }
-            else
-            {
-                ViewBag.ModuleTitle = lesson.Module.Title; // Set the Module Title if it exists
-            }
+            ViewBag.ModuleTitle = lesson.Module?.Title ?? "Untitled Module";
 
             return View("Create", new LessonContent { LessonId = lessonId });
         }
@@ -81,18 +78,18 @@ namespace GedsiHub.Controllers
         // POST: LessonContent/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]  // Only Admins can submit LessonContent creation
         public async Task<IActionResult> Create(LessonContent lessonContent)
         {
             _logger.LogInformation($"Attempting to create Lesson Content for Lesson ID {lessonContent.LessonId}");
 
-            // Ensure that the LessonId is being set correctly
             if (lessonContent.LessonId <= 0)
             {
                 _logger.LogWarning("Invalid Lesson ID for Lesson Content creation.");
                 return BadRequest("Invalid Lesson ID.");
             }
 
-            ViewBag.LessonId = lessonContent.LessonId; // Set the LessonId in ViewBag for the view
+            ViewBag.LessonId = lessonContent.LessonId;
 
             if (!ModelState.IsValid)
             {
@@ -100,7 +97,6 @@ namespace GedsiHub.Controllers
                 return View("Create", lessonContent);
             }
 
-            // Validate the lesson content
             ValidateLessonContent(lessonContent);
             if (!ModelState.IsValid)
             {
@@ -108,16 +104,15 @@ namespace GedsiHub.Controllers
                 return View("Create", lessonContent);
             }
 
-            // Add new lesson content
             _context.Add(lessonContent);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"Lesson Content created successfully with ID {lessonContent.ContentId} for Lesson ID {lessonContent.LessonId}.");
 
-            // Redirect to the details of the lesson content
             return RedirectToAction("Details", "LessonContent", new { id = lessonContent.ContentId });
         }
 
         // GET: LessonContent/Edit/5
+        [Authorize(Roles = "Admin")]  // Only Admins can edit LessonContent
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -127,8 +122,8 @@ namespace GedsiHub.Controllers
             }
 
             var lessonContent = await _context.LessonContents
-                .Include(lc => lc.Lesson) // Include the Lesson
-                .ThenInclude(l => l.Module) // Include the associated Module
+                .Include(lc => lc.Lesson)
+                .ThenInclude(l => l.Module)
                 .FirstOrDefaultAsync(lc => lc.ContentId == id);
 
             if (lessonContent == null)
@@ -137,11 +132,10 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
-            // Set ViewBag properties for breadcrumbs
-            ViewBag.ModuleId = lessonContent.Lesson.ModuleId; // Get ModuleId from Lesson
-            ViewBag.ModuleTitle = lessonContent.Lesson.Module?.Title ?? "Untitled Module"; // Get Module Title
-            ViewBag.LessonTitle = lessonContent.Lesson.Title; // Get Lesson Title
-            ViewBag.LessonNumber = lessonContent.Lesson.LessonNumber; // Get Lesson Number
+            ViewBag.ModuleId = lessonContent.Lesson.ModuleId;
+            ViewBag.ModuleTitle = lessonContent.Lesson.Module?.Title ?? "Untitled Module";
+            ViewBag.LessonTitle = lessonContent.Lesson.Title;
+            ViewBag.LessonNumber = lessonContent.Lesson.LessonNumber;
 
             return View("Edit", lessonContent);
         }
@@ -149,6 +143,7 @@ namespace GedsiHub.Controllers
         // POST: LessonContent/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]  // Only Admins can submit LessonContent edits
         public async Task<IActionResult> Edit(int id, LessonContent lessonContent)
         {
             if (id != lessonContent.ContentId)
@@ -160,14 +155,14 @@ namespace GedsiHub.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Model state is invalid during edit for Lesson Content ID {ContentId}.", lessonContent.ContentId);
-                return View(lessonContent); // Return the view with the current model to show validation errors
+                return View(lessonContent);
             }
 
             ValidateLessonContent(lessonContent);
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Content validation failed during edit for Lesson Content ID {ContentId}.", lessonContent.ContentId);
-                return View(lessonContent); // Return the view with the current model to show validation errors
+                return View(lessonContent);
             }
 
             try
@@ -190,27 +185,26 @@ namespace GedsiHub.Controllers
                 }
             }
 
-            // Redirect to the Details page after a successful update
             return RedirectToAction("Details", "LessonContent", new { id = lessonContent.ContentId });
         }
 
         // GET: LessonContent/Details/{id}
+        [Authorize(Roles = "Student, Employee, Admin")]  // Accessible by Students, Employees, and Admins
         public async Task<IActionResult> Details(int id)
         {
             var lessonContent = await _context.LessonContents
-                .Include(lc => lc.Lesson) // Include the related Lesson
-                .ThenInclude(l => l.Module) // Include the associated Module
+                .Include(lc => lc.Lesson)
+                .ThenInclude(l => l.Module)
                 .FirstOrDefaultAsync(lc => lc.ContentId == id);
 
             if (lessonContent == null)
             {
                 _logger.LogWarning($"Lesson Content with ID {id} not found.");
-                return NotFound(); // Return NotFound if it no longer exists
+                return NotFound();
             }
 
             _logger.LogInformation($"Displaying details for Lesson Content ID {id}.");
 
-            // Set ViewBag properties if needed for breadcrumbs
             ViewBag.ModuleId = lessonContent.Lesson.ModuleId;
             ViewBag.ModuleTitle = lessonContent.Lesson.Module?.Title ?? "Untitled Module";
             ViewBag.LessonTitle = lessonContent.Lesson.Title;
@@ -222,31 +216,26 @@ namespace GedsiHub.Controllers
         // POST: LessonContent/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]  // Only Admins can delete LessonContent
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             _logger.LogInformation($"Attempting to delete Lesson Content with ID {id}.");
 
-            // Fetch the lesson content by its ID
             var lessonContent = await _context.LessonContents.Include(lc => lc.Lesson).FirstOrDefaultAsync(lc => lc.ContentId == id);
             if (lessonContent == null)
             {
                 _logger.LogWarning($"Lesson Content with ID {id} not found for deletion.");
-                return NotFound(); // Return NotFound if it doesn't exist
+                return NotFound();
             }
 
-            // Store the ModuleId before deleting the content to use it in the redirect
             var moduleId = lessonContent.Lesson.ModuleId;
 
-            // Remove the lesson content from the context
             _context.LessonContents.Remove(lessonContent);
-            await _context.SaveChangesAsync(); // Commit the change to the database
-
+            await _context.SaveChangesAsync();
             _logger.LogInformation($"Lesson Content with ID {id} deleted successfully.");
 
-            // Redirect to the details of the associated module
             return RedirectToAction("Details", "Module", new { id = moduleId });
         }
-
 
         private bool LessonContentExists(int id)
         {

@@ -4,8 +4,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using GedsiHub.Data;  // Adjust this to your actual namespace
-using GedsiHub.Models;  // Adjust this to your actual namespace
+using GedsiHub.Data;
+using GedsiHub.Models;
 
 public class FeedbackController : Controller
 {
