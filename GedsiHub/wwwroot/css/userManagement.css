@@ -1,4 +1,4 @@
-﻿#userManagementSearch {
+﻿#userManagementSearch, #moduleSearch {
     border-style: none;
     border-radius: 3.90625rem;
     width: 26.5625rem;
@@ -10,7 +10,7 @@
     min-width: 26.5625rem;
 }
 
-    #userManagementSearch::placeholder {
+    #userManagementSearch::placeholder, #moduleSearch {
         font-size: 1.015625rem;
         color: #9c9c9c;
         font-weight: 200;
@@ -36,7 +36,7 @@
     position: relative;
 }
 
-#userManagementSearch {
+#userManagementSearch, #moduleSearch {
     flex: 1;
     padding-right: 2.5rem; /* Add space on the right for the button */
 }
@@ -44,22 +44,23 @@
 .search-icon-um {
     border: none;
     background: none;
-    margin-left: -2.5rem; /* Position button over the padded space */
+    margin-left: -3rem; /* Position button over the padded space */
     cursor: pointer;
 }
 
 
 
-#userManagementSearchButton {
+#userManagementSearchButton, #modulesSearchButton {
     transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
+    margin-right: 0.5rem;
 }
 
-    #userManagementSearchButton:hover {
+    #userManagementSearchButton:hover, #modulesSearchButton {
         transform: scale(1.1);
     }
 
-    #userManagementSearchButton:active {
+    #userManagementSearchButton:active, #modulesSearchButton {
         transform: scale(0.95);
     }
 
@@ -222,17 +223,17 @@
 
 .table {
     border-spacing: 0; /* Removes extra space between cells */
-    margin-top: 2rem;
+    margin-top: 3rem;
 }
 
 .table th,
 .table td {
-    border-bottom: 1px solid #ccc; /* Line color */
+    border-bottom: 1px solid #9c9c9c; /* Line color */
     padding: 8px; /* Optional: Adjust padding for spacing */
 }
 
     .table thead th {
-        border-bottom: 2px solid #333; /* Thicker line for header */
+        border-bottom: 2px solid #464040; /* Thicker line for header */
         padding-top: 4px !important; 
         padding-bottom: 4px !important;
     }
