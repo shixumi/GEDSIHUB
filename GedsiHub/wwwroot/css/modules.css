@@ -4,7 +4,6 @@
     grid-template-columns: 1fr auto auto;
     gap: 0.78125rem;
     width: 100%;
-    padding-right: 1.5625rem;
 }
 
 #addModuleTopButton {
@@ -15,7 +14,7 @@
     font-weight: 500;
     height: 2.734375rem;
     font-size: 1.015625rem;
-    margin-top: 1.171875rem;
+    margin-top: 2rem;
     transition: all 0.2s ease;
     border-style: none;
     align-items: center;
@@ -44,6 +43,9 @@
 }
 
 
+#modules-search-con {
+    margin-right: 1.5rem;
+}
 
 
 .modules_container {
@@ -446,7 +448,8 @@
 
 .module_list_grid_view {
     margin-left: 2.5rem;
-    margin-top: 1.171875rem;
+    margin-top: 2rem;
+    flex-wrap: nowrap;
 }
 
 #grid-tab {
@@ -554,4 +557,9 @@
     display: flex;
     column-gap: 1.2rem;
     align-items: center;
+}
+
+
+.modules-actions-con {
+    display: flex;
 }
