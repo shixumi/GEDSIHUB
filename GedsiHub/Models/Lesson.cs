@@ -25,6 +25,9 @@ namespace GedsiHub.Models
 
         public bool IsPublished { get; set; } = false;
 
+        [NotMapped]
+        public bool HasContent { get; set; }
+
         // Navigation Property
         public virtual Module? Module { get; set; } = null!;
 
