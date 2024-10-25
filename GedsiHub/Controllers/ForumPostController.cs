@@ -32,10 +32,12 @@ namespace GedsiHub.Controllers
                     PostId = post.PostId,
                     Title = post.Title,
                     Content = post.Content,
-                    CreatedAt = post.CreatedAt.ToLocalTime(),  // Convert UTC to local time
+                    ImagePath = post.ImagePath,
+                    Flair = post.Flair,
+                    CreatedAt = post.CreatedAt.ToLocalTime(),
                     PollOptions = post.PollOptions,
-                    UserFirstName = post.User.FirstName,  // Fetch the user's first name
-                    UserLastName = post.User.LastName,     // Fetch the user's last name
+                    UserFirstName = post.User.FirstName,
+                    UserLastName = post.User.LastName,
                     CommentCount = post.ForumComments.Count,
                     RelativeCreatedAt = DateTimeHelper.GetRelativeTime(post.CreatedAt)
                 })
@@ -62,103 +64,49 @@ namespace GedsiHub.Controllers
             {
                 ForumPost = post,
                 CommentViewModel = new ForumCommentViewModel { PostId = post.PostId },
-                UserFirstName = post.User.FirstName,  // Pass the user's first name
-                UserLastName = post.User.LastName    // Pass the user's last name
+                UserFirstName = post.User.FirstName,
+                UserLastName = post.User.LastName,
+                Flair = post.Flair
             };
 
             return View(viewModel);
         }
 
-        // POST: ForumPost/AddComment - Handle comment submission
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddComment(ForumCommentViewModel viewModel)
+        // GET: ForumPost/Create
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["ErrorMessage"] = "Please fix the errors in the comment form.";
-                return RedirectToAction(nameof(Details), new { id = viewModel.PostId });
-            }
+            var modules = await _context.Modules
+                .Where(m => m.Status == ModuleStatus.Published)
+                .ToListAsync();
 
-            var comment = new ForumComment
+            var viewModel = new ForumPostViewModel
             {
-                Content = viewModel.Content,
-                CreatedAt = DateTime.UtcNow,
-                PostId = viewModel.PostId,
-                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                Modules = modules
             };
 
-            if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
-            {
-                var supportedTypes = new[] { "jpg", "jpeg", "png", "gif" };
-                var fileExt = Path.GetExtension(viewModel.ImageFile.FileName).Substring(1).ToLower();
-
-                if (!supportedTypes.Contains(fileExt))
-                {
-                    TempData["ErrorMessage"] = "Invalid image format. Please upload a JPG, PNG, or GIF file.";
-                    return RedirectToAction(nameof(Details), new { id = viewModel.PostId });
-                }
-
-                var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
-                var imagePath = Path.Combine("wwwroot/images/comments", fileName);
-
-                Directory.CreateDirectory(Path.Combine("wwwroot/images/comments"));
-
-                using (var stream = new FileStream(imagePath, FileMode.Create))
-                {
-                    await viewModel.ImageFile.CopyToAsync(stream);
-                }
-                comment.ImagePath = "/images/comments/" + fileName;
-            }
-
-            try
-            {
-                _context.ForumComments.Add(comment);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Comment added successfully!";
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "An error occurred while saving the comment: " + ex.Message;
-            }
-
-            return RedirectToAction(nameof(Details), new { id = viewModel.PostId });
+            return View(viewModel);
         }
 
-        // GET: ForumPost/Create - Display form to create a new post
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ForumPost/Create - Handle form submission for creating a new post
+        // POST: ForumPost/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ForumPostViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
+                viewModel.Modules = await _context.Modules
+                    .Where(m => m.Status == ModuleStatus.Published)
+                    .ToListAsync();
+
                 TempData["ErrorMessage"] = "Please correct the errors in the form.";
                 return View(viewModel);
             }
 
-            // Get the current user's ID
-            var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
             {
                 TempData["ErrorMessage"] = "You must be logged in to create a post.";
-                return View(viewModel);
-            }
-
-            // Retrieve the current user's details from the database
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == userId);
-
-            if (user == null)
-            {
-                TempData["ErrorMessage"] = "User not found.";
                 return View(viewModel);
             }
 
@@ -167,180 +115,176 @@ namespace GedsiHub.Controllers
                 Title = viewModel.Title,
                 Content = viewModel.Content,
                 CreatedAt = DateTime.UtcNow,
+                Flair = viewModel.Flair,
+                Tag = viewModel.ModuleId.ToString(),
                 PollOptions = string.IsNullOrWhiteSpace(viewModel.PollOptions) ? null : viewModel.PollOptions,
-                UserId = userId,   // Store the user ID
-                User = user        // Set the navigation property to the current user
+                UserId = userId
             };
 
-            // Handle optional image upload
-            if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+            if (viewModel.ImageFile != null)
             {
-                var supportedTypes = new[] { "jpg", "jpeg", "png", "gif" };
-                var fileExt = Path.GetExtension(viewModel.ImageFile.FileName).Substring(1).ToLower();
-
-                if (!supportedTypes.Contains(fileExt))
+                var imagePath = SaveImageFile(viewModel.ImageFile, "posts");
+                if (imagePath == null)
                 {
-                    TempData["ErrorMessage"] = "Invalid image format. Please upload a JPG, PNG, or GIF file.";
+                    TempData["ErrorMessage"] = "Failed to upload image.";
                     return View(viewModel);
                 }
-
-                var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
-                var imagePath = Path.Combine("wwwroot/images/posts", fileName);
-
-                Directory.CreateDirectory(Path.Combine("wwwroot/images/posts"));
-
-                using (var stream = new FileStream(imagePath, FileMode.Create))
-                {
-                    await viewModel.ImageFile.CopyToAsync(stream);
-                }
-
-                newPost.ImagePath = "/images/posts/" + fileName;
+                newPost.ImagePath = imagePath;
             }
 
-            try
-            {
-                _context.ForumPosts.Add(newPost);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Post created successfully!";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                var exceptionMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                TempData["ErrorMessage"] = "An error occurred while creating the post: " + exceptionMessage;
-                return View(viewModel);
-            }
+            _context.ForumPosts.Add(newPost);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Post created successfully!";
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: ForumPost/Edit/{id} - Load the edit page for a specific post
+        // GET: ForumPost/Edit/{id}
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var post = await _context.ForumPosts
-            .Include(p => p.User)  // If user data is needed
-            .FirstOrDefaultAsync(p => p.PostId == id);
-            if (post == null)
+                                     .Include(p => p.User)
+                                     .FirstOrDefaultAsync(p => p.PostId == id);
+
+            if (post == null || !IsUserAuthorized(post.UserId))
             {
-                return NotFound();
+                return Forbid();
             }
 
-            // Populate the ForumPostViewModel from the ForumPost model
+            var modules = await _context.Modules
+                .Where(m => m.Status == ModuleStatus.Published)
+                .ToListAsync();
+
             var viewModel = new ForumPostViewModel
             {
                 PostId = post.PostId,
                 Title = post.Title,
                 Content = post.Content,
-                PollOptions = post.PollOptions,
-                CreatedAt = post.CreatedAt,
-                UserFirstName = post.User.FirstName,  // Pass the user's first name if needed
-                UserLastName = post.User.LastName     // Pass the user's last name if needed
+                Flair = post.Flair,
+                ModuleId = post.Tag != null ? int.Parse(post.Tag) : 0,
+                Modules = modules,
+                PollOptions = post.PollOptions
             };
 
             return View(viewModel);
         }
 
-        // POST: ForumPost/Edit - Handle form submission for editing a post
+        // POST: ForumPost/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ForumPostViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
+                // Populate Modules list if validation fails
+                viewModel.Modules = await _context.Modules
+                                        .Where(m => m.Status == ModuleStatus.Published)
+                                        .ToListAsync();
                 return View(viewModel);
             }
 
             var post = await _context.ForumPosts.FindAsync(viewModel.PostId);
-            if (post == null)
+            if (post == null || !IsUserAuthorized(post.UserId))
             {
-                return NotFound();
+                return Forbid();
             }
 
+            // Update post properties with values from the viewModel
             post.Title = viewModel.Title;
             post.Content = viewModel.Content;
+            post.Flair = viewModel.Flair;
             post.PollOptions = string.IsNullOrWhiteSpace(viewModel.PollOptions) ? null : viewModel.PollOptions;
 
-            // Handle optional image upload
-            if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
-            {
-                var supportedTypes = new[] { "jpg", "jpeg", "png", "gif" };
-                var fileExt = Path.GetExtension(viewModel.ImageFile.FileName).Substring(1).ToLower();
+            // Save selected ModuleId as Tag or the appropriate property
+            post.Tag = viewModel.ModuleId.ToString();
 
-                if (!supportedTypes.Contains(fileExt))
+            if (viewModel.ImageFile != null)
+            {
+                var imagePath = SaveImageFile(viewModel.ImageFile, "posts");
+                if (imagePath == null)
                 {
-                    TempData["ErrorMessage"] = "Invalid image format. Please upload a JPG, PNG, or GIF file.";
+                    TempData["ErrorMessage"] = "Failed to upload image.";
+                    // Populate Modules list before returning view
+                    viewModel.Modules = await _context.Modules
+                                            .Where(m => m.Status == ModuleStatus.Published)
+                                            .ToListAsync();
                     return View(viewModel);
                 }
-
-                var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
-                var imagePath = Path.Combine("wwwroot/images/posts", fileName);
-
-                Directory.CreateDirectory(Path.Combine("wwwroot/images/posts"));
-
-                using (var stream = new FileStream(imagePath, FileMode.Create))
-                {
-                    await viewModel.ImageFile.CopyToAsync(stream);
-                }
-
-                post.ImagePath = "/images/posts/" + fileName;
+                post.ImagePath = imagePath;
             }
 
-            try
-            {
-                _context.ForumPosts.Update(post);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Post updated successfully!";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                var exceptionMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                TempData["ErrorMessage"] = "An error occurred while updating the post: " + exceptionMessage;
-                return View(viewModel);
-            }
+            _context.ForumPosts.Update(post);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Post updated successfully!";
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: ForumPost/Delete/{id} - Show the delete confirmation page
+        // GET: ForumPost/Delete/{id}
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var post = await _context.ForumPosts.FindAsync(id);
-            if (post == null)
+            if (post == null || !IsUserAuthorized(post.UserId))
             {
-                return NotFound();
+                return Forbid();
             }
 
-            return View(post);  // Pass the post to the view, including the PostId
+            return View(post);
         }
 
-        // POST: ForumPost/DeleteConfirmed/{id} - Handle post deletion
+        // POST: ForumPost/DeleteConfirmed
         [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (id == 0)
+            var post = await _context.ForumPosts.FindAsync(id);
+            if (post == null || !IsUserAuthorized(post.UserId))
             {
-                TempData["ErrorMessage"] = "Invalid Post ID.";
-                return RedirectToAction(nameof(Index));
+                return Forbid();
             }
 
-            var post = await _context.ForumPosts.FindAsync(id);
-            if (post == null)
+            _context.ForumPosts.Remove(post);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Post deleted successfully!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool IsUserAuthorized(string userId)
+        {
+            return userId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin");
+        }
+
+        private string? SaveImageFile(IFormFile imageFile, string folderName)
+        {
+            var supportedTypes = new[] { "jpg", "jpeg", "png", "gif" };
+            var fileExt = Path.GetExtension(imageFile.FileName).Substring(1).ToLower();
+
+            if (!supportedTypes.Contains(fileExt))
             {
-                return NotFound();  // If the post is not found, return 404
+                TempData["ErrorMessage"] = "Invalid image format. Please upload a JPG, PNG, or GIF file.";
+                return null;
             }
+
+            var fileName = $"{Path.GetFileNameWithoutExtension(imageFile.FileName)}_{DateTime.Now.Ticks}{Path.GetExtension(imageFile.FileName)}";
+            var imagePath = Path.Combine("wwwroot/images", folderName, fileName);
+
+            // Logging the filename for verification
+            Console.WriteLine($"Generated file name: {fileName}");
 
             try
             {
-                _context.ForumPosts.Remove(post);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Post deleted successfully!";
+                Directory.CreateDirectory(Path.Combine("wwwroot/images", folderName));
+
+                using var stream = new FileStream(imagePath, FileMode.Create);
+                imageFile.CopyTo(stream);
             }
             catch
             {
-                TempData["ErrorMessage"] = "An error occurred while deleting the post.";
+                return null;
             }
 
-            return RedirectToAction(nameof(Index));
+            return $"/images/{folderName}/{fileName}";
         }
+
     }
 }

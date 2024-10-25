@@ -4,161 +4,8 @@
     Layout = "_LayoutApp";
     ViewData["Title"] = "Module";
 }
-@* 
-<div>
-    <!-- Module Page Header -->
-    <div id="ModulesHeader">
-        <h1 class="modules_title" style="color: #464040;">Modules</h1>
 
-        <!-- Search Input for Modules -->
-        <input type="search" id="SearchModule" class="SearchModule" placeholder="Search for modules">
-        <img id="SearchModuleButton" class="SearchModule_Icon" src="~/images/Search_Small.png" style="position: absolute;">
-
-        <!-- Create Module Button -->
-        <a asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton">
-            <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
-        </a>
-
-        <!-- Grid and List View Tabs -->
-        <ul class="nav nav-pills ms-3 module_list_grid_view" id="viewTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list-view" type="button" role="tab" aria-controls="list-view" aria-selected="false">
-                    <i class="la la-th-list"></i>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="grid-tab" data-bs-toggle="tab" data-bs-target="#grid-view" type="button" role="tab" aria-controls="grid-view" aria-selected="true">
-                    <i class="la la-th-large"></i>
-                </button>
-            </li>
-            
-        </ul>
-       
-    </div>
-
-    <hr>
-
-    <!-- Module Cards Container -->
-    <div class="align-items-end flex-wrap ModuleCards_Container" id="moduleCardsContainer">
-        <!-- Loop through each module and create a module card -->
-        @foreach (var module in Model)
-        {
-            <!-- Module Card -->
-            <div class="module_card" id="moduleCard-@module.ModuleId" style="padding-right: 2.1rem; padding-left: 2.1rem;">
-                <!-- Module Icon and Color Picker -->
-                <div class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
-                    <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
-                    <div class="picker-container">
-                        <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="@module.Color" onchange="updateColor(@module.ModuleId, this.value)" />
-                    </div>
-                </div>
-
-                <!-- Module Title and Details -->
-                <a asp-action="Details" asp-route-id="@module.ModuleId">
-                    <span id="ModuleTitle-@module.ModuleId" class="fw-bolder ModuleTitle">@module.Title</span>
-                </a>
-
-                <!-- Number of Lessons -->
-                <div id="NumberOfLessonsContainer" class="NumberOfLessonsContainer">
-                    <img class="LessonIcon" src="~/images/lesson.png" />
-                    <span id="NumberOfLessons" class="NumberOfLessons">@module.Lessons.Count()</span>
-                    <span class="fw-normal LessonsText">lessons</span>
-                </div>
-
-                <!-- Like and View Count -->
-                <div class="LikeViewContainer">
-                    <div class="LikeOnlyContainer">
-                        <img class="LikeIcon" src="~/images/Like.png" />
-                        <span id="LikeCount">0</span>
-                    </div>
-                    <div class="ViewOnlyContainer">
-                        <img class="ViewIcon" src="~/images/View.png" />
-                        <span id="ViewCount">0</span>
-                    </div>
-                </div>
-
-                <!-- Line Break -->
-                <div class="ModuleCard_LineBreak"></div>
-
-                <!-- Publish/Unpublish and Edit/Delete -->
-                <div id="modCardButtonContainer" class="d-xxl-flex justify-content-between align-items-center">
-                    <div id="toggleButtonPublishUnpublishModule" class="d-xxl-flex">
-                        @if (module.Status == ModuleStatus.Published)
-                        {
-                            <form asp-action="Unpublish" method="post">
-                                <input type="hidden" name="id" value="@module.ModuleId" />
-                                <button type="submit" class="btn toggle-content">
-                                    <img class="PublishIcon" src="~/images/Unpublish.png" />
-                                    <span>Unpublish</span>
-                                </button>
-                            </form>
-                        }
-                        else
-                        {
-                            <form asp-action="Publish" method="post">
-                                <input type="hidden" name="id" value="@module.ModuleId" />
-                                <button type="submit" class="btn toggle-content">
-                                    <img class="PublishIcon" src="~/images/Publish.png" />
-                                    <span>Publish</span>
-                                </button>
-                            </form>
-                        }
-                    </div>
-
-                    
-                    <div class="d-xxl-flex justify-content-xxl-end" style="margin-top: 19px;">
-                        <!-- Edit Button -->
-                        <a asp-action="Edit" asp-route-id="@module.ModuleId">
-                            <img id="EditModule-@module.ModuleId" class="Edit" src="~/images/Edit.png" />
-                        </a>
-
-                        <!-- Delete Button -->
-                        <a data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
-                            <img id="DeleteModule-@module.ModuleId" class="Delete" src="~/images/Delete.png" />
-                        </a>
-                    </div>
-                </div>
-            </div>
-        }
-
-        <!-- Add New Module Button -->
-        <a asp-action="Create" class="btn add-new-module">
-            <img class="d-xxl-flex add_icon" src="~/images/Add.png" /> Add New Module
-        </a>
-    </div>
-
-    
-</div>
-
-<!-- Modal Structure for each module -->
-@foreach (var module in Model)
-{
-    <div class="modal fade" id="moduleConfirmDeleteModal-@module.ModuleId" tabindex="0" aria-labelledby="moduleConfirmDeleteModalLabel-@module.ModuleId" aria-hidden="true">
-        <div class="modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="moduleConfirmDeleteModalLabel-@module.ModuleId">Delete Module?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete the module titled "<strong>@module.Title</strong>"?
-                </div>
-                <div class="modal-footer">
-                    <form asp-action="Delete" method="post">
-                        @Html.AntiForgeryToken() <!-- Anti-forgery token to secure the POST request -->
-                        <input type="hidden" name="id" value="@module.ModuleId" />
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-} *@
-
-
-
-<!-- V3 TESTING -->
+<!-- List of Modules Page -->
 <div>
     <!-- Module Page Header -->
     <div id="ModulesHeader" class="d-flex justify-content-between align-items-center">
@@ -188,12 +35,12 @@
             <!-- View Toggle Buttons using Bootstrap Pills -->
             <ul class="nav nav-pills module_list_grid_view" id="viewTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list-view" type="button" role="tab" aria-controls="list-view" aria-selected="false">
+                    <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list-view" type="button" role="tab" aria-controls="list-view" aria-selected="false" onclick="setView('list')">
                         <i class="fa fa-bars"></i>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="grid-tab" data-bs-toggle="tab" data-bs-target="#grid-view" type="button" role="tab" aria-controls="grid-view" aria-selected="true">
+                    <button class="nav-link active" id="grid-tab" data-bs-toggle="tab" data-bs-target="#grid-view" type="button" role="tab" aria-controls="grid-view" aria-selected="true" onclick="setView('grid')">
                         <i class="fa fa-th-large"></i>
                     </button>
                 </li>
@@ -208,7 +55,7 @@
     <!-- Tab Content for Grid and List Views -->
     <div class="tab-content" id="viewTabContent">
         <!-- Grid View Tab -->
-        <div class="tab-pane fade show active" id="grid-view" role="tabpanel" aria-labelledby="grid-tab">
+        <div class="tab-pane fade" id="grid-view" role="tabpanel" aria-labelledby="grid-tab">
             <div class="align-items-end flex-wrap ModuleCards_Container" id="moduleCardsContainer">
                 @foreach (var module in Model)
                 {
@@ -301,10 +148,10 @@
                 <table class="table table-hover modern-table">
                     <thead>
                         <tr class="module-table-label">
-                            <th class="module-header-label">Module Title</th>
-                            <th>Number of Lessons</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th class="module-header-label text-start">Module Title</th>
+                            <th class="module-header-label">No. of Lessons</th>
+                            <th class="module-header-label">Status</th>
+                            <th class="module-header-label text-start">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -313,17 +160,17 @@
                         {
                             <tr>
                                 <!-- Module Title -->
-                                <td>
+                                <td class="module-content text-start">
                                     <a asp-action="Details" asp-route-id="@module.ModuleId" class="module-title-link text-decoration-none">
                                         @module.Title
                                     </a>
                                 </td>
 
                                 <!-- Number of Lessons -->
-                                <td>@module.Lessons.Count()</td>
+                                <td class="module-content">@module.Lessons.Count()</td>
 
                                 <!-- Status (Published/Unpublished) -->
-                                <td>
+                                <td class="module-content">
                                     @if (module.Status == ModuleStatus.Published)
                                     {
                                         <span class="text-success">Published</span>
@@ -335,15 +182,15 @@
                                 </td>
 
                                 <!-- Actions (Edit/Delete/Publish/Unpublish) -->
-                                <td>
+                                <td class="module-content text-start action-buttons">
                                     <!-- Edit Button with Rounded Corners and Icon -->
-                                    <a asp-action="Edit" asp-route-id="@module.ModuleId" class="btn btn-sm btn-primary rounded-pill">
-                                        <i class="fa fa-edit"></i> Edit
+                                    <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId">
+                                        <img src="~/images/Edit.png" /> Edit
                                     </a>
 
                                     <!-- Delete Button with Rounded Corners and Icon -->
-                                    <a data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId" class="btn btn-sm btn-danger rounded-pill">
-                                        <i class="fa fa-trash"></i> Delete
+                                    <a id="list-deleteModuleButton" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
+                                        <img src="~/images/Delete.png" /> Delete
                                     </a>
 
                                     <!-- Publish/Unpublish Button with Icons -->
@@ -351,8 +198,8 @@
                                     {
                                         <form asp-action="Unpublish" method="post" style="display:inline;">
                                             <input type="hidden" name="id" value="@module.ModuleId" />
-                                            <button type="submit" class="btn btn-sm btn-secondary rounded-pill">
-                                                <i class="fa fa-eye-slash"></i> Unpublish
+                                            <button id="list-unpublishModuleButton" type="submit">
+                                                <img src="~/images/Unpublish.png" /> Unpublish
                                             </button>
                                         </form>
                                     }
@@ -360,8 +207,8 @@
                                     {
                                         <form asp-action="Publish" method="post" style="display:inline;">
                                             <input type="hidden" name="id" value="@module.ModuleId" />
-                                            <button type="submit" class="btn btn-sm btn-success rounded-pill">
-                                                <i class="fa fa-eye"></i> Publish
+                                            <button id="list-publishModuleButton" type="submit">
+                                                <img src="~/images/Publish.png" /> Publish
                                             </button>
                                         </form>
                                     }

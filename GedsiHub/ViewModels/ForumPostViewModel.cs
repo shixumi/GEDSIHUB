@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using GedsiHub.Models;
 
 namespace GedsiHub.ViewModels
 {
@@ -15,11 +16,9 @@ namespace GedsiHub.ViewModels
         [Required(ErrorMessage = "Post content is required.")]
         [StringLength(2000, ErrorMessage = "Post content must not exceed 2000 characters.")]
         public string Content { get; set; } = string.Empty;
-
         public IFormFile? ImageFile { get; set; }
-
+        public string? ImagePath { get; set; }
         public string? PollOptions { get; set; }
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Add user's first and last name properties
@@ -31,5 +30,12 @@ namespace GedsiHub.ViewModels
 
         // Add a new property to store the relative time string
         public string RelativeCreatedAt { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Please select a flair.")]
+        public string Flair { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Please select a module.")]
+        public int ModuleId { get; set; }
+        public List<Module>? Modules { get; set; }
     }
 }

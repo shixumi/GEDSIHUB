@@ -71,6 +71,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
+                    // Retrieve the user
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user != null)
                     {
@@ -79,16 +80,19 @@ namespace GedsiHub.Areas.Identity.Pages.Account
 
                         if (!isProfileComplete)
                         {
+                            _logger.LogInformation("User profile incomplete, redirecting to CompleteProfile.");
                             return RedirectToPage("/Account/CompleteProfile");
                         }
                     }
 
                     return LocalRedirect(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
+
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
@@ -107,46 +111,46 @@ namespace GedsiHub.Areas.Identity.Pages.Account
 
         private async Task<bool> IsProfileComplete(ApplicationUser user)
         {
+            // Skip profile completeness check for Admins
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                return true;
+            }
+
             // Check general information
-            if (string.IsNullOrEmpty(user.FirstName) ||
-                string.IsNullOrEmpty(user.LastName) ||
+            if (string.IsNullOrWhiteSpace(user.FirstName) ||
+                string.IsNullOrWhiteSpace(user.LastName) ||
                 user.DateOfBirth == default ||
-                string.IsNullOrEmpty(user.GenderIdentity) ||
-                string.IsNullOrEmpty(user.Pronouns))
+                string.IsNullOrWhiteSpace(user.GenderIdentity) ||
+                string.IsNullOrWhiteSpace(user.Pronouns))
             {
                 return false;
             }
 
-            // Check role-specific information
+            // Role-specific checks
             if (await _userManager.IsInRoleAsync(user, "Student"))
             {
-                // Fetch Student data from the database
-                var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.UserId == user.Id);
-                if (student == null ||
-                    student.CollegeDepartment == default ||
-                    student.Course == default ||
-                    student.Year == null ||
-                    string.IsNullOrEmpty(student.Section))
-                {
-                    return false;
-                }
+                var student = await _dbContext.Students.AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.UserId == user.Id);
+                return student != null &&
+                       student.CollegeDeptId != null &&
+                       student.CourseId != default &&
+                       student.Year != null &&
+                       !string.IsNullOrWhiteSpace(student.Section);
             }
             else if (await _userManager.IsInRoleAsync(user, "Employee"))
             {
-                // Fetch Employee data from the database
-                var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.UserId == user.Id);
-                if (employee == null ||
-                    string.IsNullOrEmpty(employee.BranchOfficeSectionUnit) ||
-                    string.IsNullOrEmpty(employee.Position) ||
-                    string.IsNullOrEmpty(employee.Sector))
-                {
-                    return false;
-                }
+                var employee = await _dbContext.Employees.AsNoTracking()
+                    .FirstOrDefaultAsync(e => e.UserId == user.Id);
+                return employee != null &&
+                       !string.IsNullOrWhiteSpace(employee.BranchOfficeSectionUnit) &&
+                       !string.IsNullOrWhiteSpace(employee.Position) &&
+                       !string.IsNullOrWhiteSpace(employee.Sector);
             }
-
-            // Add checks for Admin or other roles if necessary
 
             return true;
         }
+
+
     }
 }

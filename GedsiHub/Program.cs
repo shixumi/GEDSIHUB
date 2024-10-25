@@ -9,6 +9,8 @@ using Serilog;
 using QuestPDF.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,23 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 // ========================================
 // 3. Register Application Services
 // ========================================
+
+
+// Add Razor Pages and MVC with global authorization filter
+builder.Services.AddControllersWithViews(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+                     .RequireAuthenticatedUser()
+                     .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login"; // Set your login path here
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied"; // Optional: Set your access denied path
+});
+
 
 // Register EmailSender and CertificateService
 builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -123,6 +142,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Authentication & Authorization Middleware
 app.UseAuthentication();
 app.UseAuthorization();
 

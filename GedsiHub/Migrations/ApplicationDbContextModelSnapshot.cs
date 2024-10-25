@@ -1208,9 +1208,18 @@ namespace GedsiHub.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<string>("Flair")
+                        .HasMaxLength(30)
+                        .HasColumnType("VARCHAR(30)")
+                        .HasColumnName("flair");
+
                     b.Property<string>("ImagePath")
                         .HasColumnType("VARCHAR(255)")
                         .HasColumnName("image_path");
+
+                    b.Property<int?>("ModuleId")
+                        .HasColumnType("int")
+                        .HasColumnName("module_id");
 
                     b.Property<string>("PollOptions")
                         .HasColumnType("TEXT")
@@ -1233,6 +1242,8 @@ namespace GedsiHub.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("PostId");
+
+                    b.HasIndex("ModuleId");
 
                     b.HasIndex("UserId");
 
@@ -1388,7 +1399,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 1,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 17, 43, 18, 111, DateTimeKind.Utc).AddTicks(2198),
+                            CreatedDate = new DateTime(2024, 10, 25, 12, 49, 40, 599, DateTimeKind.Utc).AddTicks(4465),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             PositionInt = 0,
                             Status = 0,
@@ -1398,7 +1409,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 2,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 17, 43, 18, 111, DateTimeKind.Utc).AddTicks(2200),
+                            CreatedDate = new DateTime(2024, 10, 25, 12, 49, 40, 599, DateTimeKind.Utc).AddTicks(4467),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             PositionInt = 0,
                             Status = 0,
@@ -1408,7 +1419,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 3,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 17, 43, 18, 111, DateTimeKind.Utc).AddTicks(2201),
+                            CreatedDate = new DateTime(2024, 10, 25, 12, 49, 40, 599, DateTimeKind.Utc).AddTicks(4469),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             PositionInt = 0,
                             Status = 0,
@@ -1418,7 +1429,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 4,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 17, 43, 18, 111, DateTimeKind.Utc).AddTicks(2203),
+                            CreatedDate = new DateTime(2024, 10, 25, 12, 49, 40, 599, DateTimeKind.Utc).AddTicks(4470),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
                             Status = 0,
@@ -1428,7 +1439,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 5,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 17, 43, 18, 111, DateTimeKind.Utc).AddTicks(2204),
+                            CreatedDate = new DateTime(2024, 10, 25, 12, 49, 40, 599, DateTimeKind.Utc).AddTicks(4472),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             PositionInt = 0,
                             Status = 0,
@@ -1438,7 +1449,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 6,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 17, 43, 18, 111, DateTimeKind.Utc).AddTicks(2206),
+                            CreatedDate = new DateTime(2024, 10, 25, 12, 49, 40, 599, DateTimeKind.Utc).AddTicks(4474),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             PositionInt = 0,
                             Status = 0,
@@ -1448,7 +1459,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 7,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 24, 17, 43, 18, 111, DateTimeKind.Utc).AddTicks(2208),
+                            CreatedDate = new DateTime(2024, 10, 25, 12, 49, 40, 599, DateTimeKind.Utc).AddTicks(4507),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             PositionInt = 0,
                             Status = 0,
@@ -1912,11 +1923,17 @@ namespace GedsiHub.Migrations
 
             modelBuilder.Entity("GedsiHub.Models.ForumPost", b =>
                 {
+                    b.HasOne("GedsiHub.Models.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId");
+
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumPosts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Module");
 
                     b.Navigation("User");
                 });

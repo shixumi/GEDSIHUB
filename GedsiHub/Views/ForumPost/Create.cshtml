@@ -6,8 +6,6 @@
 }
 
 <div class="container-forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
-
-    <!-- Breadcrumbs -->
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb forum">
             <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
@@ -23,9 +21,7 @@
         </div>
     }
 
-    <!--- Card Posts -->
     <div class="card gedf-card">
-        <!-- Form starts around the entire card -->
         <form asp-action="Create" enctype="multipart/form-data" method="post">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
@@ -44,30 +40,53 @@
 
             <div class="card-body">
                 <div class="tab-content" id="myTabContent">
-                    <!-- Posts Tab Content -->
                     <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-
                         <!-- Title -->
                         <div class="mb-3">
-                            <label asp-for="Title" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">
-                                Title 
+                            <label asp-for="Title" class="form-label d-flex justify-content-start input-lbl">
+                                Title
                                 <span style="color: #dd3025; margin-left: 5px;">*</span>
                             </label>
                             <input asp-for="Title" class="form-control create-input" placeholder="Enter your title here..." />
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 
-                        <!-- Add Flair and Tags Button -->
-                        <div class="mb-3 d-flex justify-content-start">
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#flairModal">
-                                Add Flair and Tags 
-                                <span style="color: #dd3025;">*</span>
-                            </button>
+                        <!-- Flair Selection (New Inline Section) -->
+                        <div class="mb-3">
+                            <label for="flair" class="form-label">Select Flair</label>
+                            <div class="flair-options d-flex flex-wrap">
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="radio" name="Flair" id="flair1" value="Discussion" asp-for="Flair">
+                                    <label class="form-check-label" for="flair1">Discussion</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="radio" name="Flair" id="flair2" value="Need Advice" asp-for="Flair">
+                                    <label class="form-check-label" for="flair2">Need Advice</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="radio" name="Flair" id="flair3" value="Unsolicited Advice" asp-for="Flair">
+                                    <label class="form-check-label" for="flair3">Unsolicited Advice</label>
+                                </div>
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="radio" name="Flair" id="flair4" value="Meme" asp-for="Flair">
+                                    <label class="form-check-label" for="flair4">Meme</label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="Flair" class="text-danger"></span>
+                        </div>
+
+                        <!-- Module Selection (New Inline Section) -->
+                        <div class="mb-3">
+                            <label for="ModuleId" class="form-label">Select Module (Tag)</label>
+                            <select asp-for="ModuleId" class="form-control" asp-items="@(new SelectList(Model.Modules, "ModuleId", "Title"))">
+                                <option value="">Select a Module</option>
+                            </select>
+                            <span asp-validation-for="ModuleId" class="text-danger"></span>
                         </div>
 
                         <!-- Content -->
                         <div class="mb-3">
-                            <label asp-for="Content" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">
+                            <label asp-for="Content" class="form-label d-flex justify-content-start input-lbl">
                                 Content
                                 <span style="color: #dd3025; margin-left: 5px;">*</span>
                             </label>
@@ -77,25 +96,28 @@
 
                         <!-- Poll Options -->
                         <div class="form-group">
-                            <label asp-for="PollOptions" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Poll Options (Optional)</label>
+                            <label asp-for="PollOptions" class="form-label d-flex justify-content-start input-lbl">Poll Options (Optional)</label>
                             <input asp-for="PollOptions" class="form-control create-input" />
                             <span asp-validation-for="PollOptions" class="text-danger"></span>
                         </div>
-
-                        
                     </div>
 
                     <!-- Images Tab Content -->
                     <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                         <div class="form-group">
-                            <label asp-for="ImageFile" class="form-label d-flex d-lg-flex justify-content-start justify-content-lg-start input-lbl">Upload Image (Optional)</label>
+                            <label asp-for="ImageFile" class="form-label d-flex justify-content-start input-lbl">Upload Image (Optional)</label>
                             <div class="custom-file">
                                 <input asp-for="ImageFile" type="file" class="form-control img-input" id="imageUpload" accept=".jpg, .jpeg, .png, .gif" />
-                                <label class="form-label mt-2" id="fileLabel">No file chosen</label> <!-- Label for file name -->
+                                <label class="form-label mt-2" id="fileLabel">No file chosen</label>
                             </div>
                             <span asp-validation-for="ImageFile" class="text-danger"></span>
                         </div>
-                        <div class="py-4"></div>
+
+                        <!-- Image Preview -->
+                        <div id="imagePreviewContainer" class="mt-3" style="display: none;">
+                            <label>Image Preview:</label>
+                            <img id="imagePreview" src="#" alt="Image Preview" class="img-thumbnail" style="max-width: 100%; max-height: 300px; display: block;" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -106,74 +128,24 @@
             </div>
         </form>
     </div>
-
-    <!-- Modal for Adding Flairs and Tags -->
-    <div class="modal fade" id="flairModal" tabindex="-1" aria-labelledby="flairModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="flairModalLabel">Add Flair and Tags</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                 
-                    <!-- Input for Flair -->
-                    <div class="mb-3">
-                        <label for="flair" class="form-label">Select Flair</label>
-                        <div class="flair-options d-flex flex-wrap">
-                            <div class="form-check me-3 mb-2">
-                                <input class="form-check-input flair-radio" type="radio" name="flair" id="flair1" value="Discussion">
-                                <label class="form-check-label flair-label flair-discussion" for="flair1">Discussion</label>
-                            </div>
-                            <div class="form-check me-3 mb-2">
-                                <input class="form-check-input flair-radio" type="radio" name="flair" id="flair2" value="Need Advice">
-                                <label class="form-check-label flair-label flair-advice" for="flair2">Need Advice</label>
-                            </div>
-                            <div class="form-check me-3 mb-2">
-                                <input class="form-check-input flair-radio" type="radio" name="flair" id="flair3" value="Unsolicited Advice">
-                                <label class="form-check-label flair-label flair-unsolicited" for="flair3">Unsolicited Advice</label>
-                            </div>
-                            <div class="form-check me-3 mb-2">
-                                <input class="form-check-input flair-radio" type="radio" name="flair" id="flair4" value="Meme">
-                                <label class="form-check-label flair-label flair-meme" for="flair4">Meme</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Input for Tags with Toggles -->
-                    <div class="mb-3">
-                        <label for="tags" class="form-label">Tags</label>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="nsfwTag">
-                            <label class="form-check-label" for="nsfwTag">Not Safe For Work (NSFW)</label>
-                            <small class="text-muted d-block">Contains mature or adult content</small>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="spoilerTag">
-                            <label class="form-check-label" for="spoilerTag">Spoiler</label>
-                            <small class="text-muted d-block">May ruin a surprise</small>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="affiliateTag">
-                            <label class="form-check-label" for="affiliateTag">Brand affiliate</label>
-                            <small class="text-muted d-block">Made for a brand or business</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Add</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-        
 </div>
-
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("imageUpload").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                        reader.onload = function (e) {
+                    const imagePreview = document.getElementById("imagePreview");
+                    imagePreview.src = e.target.result;
+                    document.getElementById("imagePreviewContainer").style.display = "block";
+                        };
+                reader.readAsDataURL(file);
+                    } else {
+                document.getElementById("imagePreviewContainer").style.display = "none";
+            }
+                });
+    </script>
 }

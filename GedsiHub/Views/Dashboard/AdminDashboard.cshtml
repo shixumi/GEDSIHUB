@@ -1,0 +1,40 @@
+﻿@model GedsiHub.ViewModels.AdminDashboardViewModel
+
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+
+<!-- Dashboard Statistics -->
+<div class="dashboard-stats">
+    <p><strong>Total Users:</strong> @Model.TotalUsers</p>
+    <p><strong>Admin Users:</strong> @Model.AdminCount</p>
+    <p><strong>Non-Admin Users:</strong> @Model.NonAdminCount</p>
+</div>
+
+<!-- Recent Admin Activity Logs -->
+<h3>Recent Admin Activity Logs</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Admin</th>
+            <th>Action</th>
+            <th>Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model.RecentLogs)
+        {
+            <tr>
+                <td>@log.AdminUser</td>
+                <td>@log.Action</td>
+                <td>@log.Timestamp.ToString("g")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Navigation Links (e.g., sidebar or top links) -->
+<a asp-action="UserManagement" class="btn btn-primary">Manage Users</a>

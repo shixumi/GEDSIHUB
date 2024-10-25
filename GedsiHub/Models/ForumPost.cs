@@ -28,9 +28,18 @@ namespace GedsiHub.Models
         [Column("content", TypeName = "TEXT")]
         public string Content { get; set; } = string.Empty;
 
+        [Column("flair", TypeName = "VARCHAR(30)")]
+        [StringLength(30)]
+        public string? Flair { get; set; }
+
         [Column("tag", TypeName = "VARCHAR(30)")]
         [StringLength(30)]
         public string? Tag { get; set; }
+
+        [ForeignKey("Module")]
+        [Column("module_id")]
+        public int? ModuleId { get; set; } // Link to Module
+        public virtual Module? Module { get; set; } // Navigation property
 
         [Column("image_path", TypeName = "VARCHAR(255)")]
         public string? ImagePath { get; set; }

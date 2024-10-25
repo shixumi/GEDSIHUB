@@ -7,7 +7,6 @@
 }
 
 <div class="container-forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
-
     <!-- Breadcrumbs -->
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb forum">
@@ -15,7 +14,6 @@
             <li class="breadcrumb-item active" aria-current="page">@Model.ForumPost.Title</li>
         </ol>
     </nav>
-
 
     <!--- Card Posts -->
     <div class="card gedf-card">
@@ -31,13 +29,15 @@
                         <div class="h7">@Model.ForumPost.CreatedAt.ToString("g")</div>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
         <div class="card-body">
-            <span class="badge rounded-pill">Announcement</span>
+            @if (!string.IsNullOrWhiteSpace(Model.ForumPost.Flair))
+            {
+                <span class="badge rounded-pill">@Model.ForumPost.Flair</span>
+            }
+
             <!-- Card Title -->
             <h4 class="card-title">@Model.ForumPost.Title</h4>
 
@@ -55,7 +55,6 @@
             }
         </div>
 
-
         <!-- Card Footer Buttons -->
         <div class="d-flex align-items-center card-footer">
             <a asp-action="Details" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>@Model.ForumPost.ForumComments.Count()</a>
@@ -63,9 +62,7 @@
             <a class="card-link d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@Model.ForumPost.PostId">
                 <i class="f-icon la la-trash"></i> Delete
             </a>
-
         </div>
-
 
         <!-- Comments List -->
         <div class="d-flex flex-column comment-footer">
@@ -78,12 +75,10 @@
                     {
                         <li class="list-group-item">
                             <div class="d-flex align-items-center justify-content-between">
-                                
                                 <div class="comment-user-info ml-2">
                                     <!-- Commenter's Name and Date -->
                                     <div class="d-flex align-items-center">
                                         <div class="comment-profile-pic">
-                                            <!-- Profile Picture -->
                                             <img class="rounded-circle" src="https://picsum.photos/50/50" alt="Profile Picture" width="40">
                                         </div>
                                         <span class="comment-username">@comment.User.FirstName @comment.User.LastName</span>
@@ -94,12 +89,9 @@
 
                                     @if (comment.ImagePath != null)
                                     {
-                                        <img src="@comment.ImagePath" alt="Comment Image" class="comment-img"/> 
+                                        <img src="@comment.ImagePath" alt="Comment Image" class="comment-img" />
                                     }
                                 </div>
-
-
-
 
                                 @if (comment.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
                                 {
@@ -109,7 +101,6 @@
                                             <i class="comment-icon la la-trash"></i>
                                         </button>
                                     </div>
-
 
                                     <!-- Modal -->
                                     <div class="modal fade" id="confirmDeleteModal-@comment.CommentId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@comment.CommentId" aria-hidden="true">
@@ -124,11 +115,9 @@
                                                     Are you sure you want to delete this comment?
                                                 </div>
                                                 <div class="modal-footer">
-
                                                     <!-- Delete form inside the modal -->
                                                     <form asp-action="DeleteComment" asp-controller="ForumComment" asp-route-id="@comment.CommentId" method="post" class="mt-2">
                                                         @Html.AntiForgeryToken()
-                                                        <!-- Cancel button to close the modal -->
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                         <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
                                                     </form>
@@ -137,13 +126,7 @@
                                         </div>
                                     </div>
                                 }
-
-                                
-
                             </div>
-                        
-
-                            
                         </li>
                     }
                 </ul>
@@ -152,9 +135,8 @@
             {
                 <p class="comment-content">No comments yet. Be the first to comment!</p>
             }
-
-            
         </div>
+
         <!-- Comment Form -->
         <div class="comment-footer">
             <h6>Leave a Comment</h6>
@@ -170,62 +152,45 @@
 
                 <!-- Camera icon and image preview -->
                 <div class="form-group">
-                    <!-- Camera icon to trigger file upload -->
                     <label for="ImageFile" class="image-icon-label">
                         <svg class="bi bi-image" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"></path>
                             <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12"></path>
                         </svg>
                     </label>
-                    <input type="file" name="ImageFile" class="form-control visually-hidden" id="ImageFile" accept=".jpg, .jpeg, .png, .gif" onchange="loadFile(event)"/>
+                    <input type="file" name="ImageFile" class="form-control visually-hidden" id="ImageFile" accept=".jpg, .jpeg, .png, .gif" onchange="previewCommentImage(event)" />
                     <span asp-validation-for="CommentViewModel.ImageFile" class="text-danger"></span>
-                    
-                   
+
                     <!-- Image preview -->
-                    <div id="imagePreview" class="imagePreview">
-                        <img src="https://picsum.photos/50/50" alt="Comment Image Preview">
-                        <span onclick="removeImage()">&times;</span>
-                        <!-- Preview image will be inserted dynamically here -->
+                    <div id="commentImagePreviewContainer" class="imagePreview" style="display: none;">
+                        <img id="commentImagePreview" src="#" alt="Image Preview" style="max-width: 100px; margin-top: 10px;">
+                        <span onclick="removeImagePreview()" style="cursor: pointer; color: red;">&times;</span>
                     </div>
                 </div>
 
                 <!-- Comment button -->
                 <button type="submit" class="ms-auto comment-btn">Comment</button>
             </form>
-
-        </div>
-            
-            
-    </div>
-
-    <!-- Modal Structure for Deleting Post -->
-    <div class="modal fade" id="confirmDeleteModal-@Model.ForumPost.PostId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@Model.ForumPost.PostId" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel-@Model.ForumPost.PostId">Delete post?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete the post titled "<strong>@Model.ForumPost.Title</strong>"?
-                </div>
-                <div class="modal-footer">
-                    <form asp-action="DeleteConfirmed" method="post">
-                        @Html.AntiForgeryToken() <!-- Anti-forgery token to secure the POST request -->
-                        <input type="hidden" name="id" value="@Model.ForumPost.PostId" />
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
-
-
 </div>
 
-
-<!-- Include client-side validation scripts -->
+<!-- JavaScript for image preview -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewCommentImage(event) {
+            const [file] = event.target.files;
+            if (file) {
+                const preview = document.getElementById("commentImagePreview");
+                preview.src = URL.createObjectURL(file);
+                document.getElementById("commentImagePreviewContainer").style.display = "block";
+            }
+        }
+
+        function removeImagePreview() {
+            document.getElementById("ImageFile").value = "";
+            document.getElementById("commentImagePreviewContainer").style.display = "none";
+        }
+    </script>
 }

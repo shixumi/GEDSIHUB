@@ -84,12 +84,14 @@
             <div class="sidebar d-flex flex-column" style="width: 100%; max-width: 350px;">
                 <!-- Dashboard Button -->
                 <div class="sidebar_button dashboard_button d-flex align-items-center" id="SidebarButton_Dashboard">
-                    <div class="icon_container">
-                        <img class="sidebar_icon" src="~/images/Dashboard_Dark.png" alt="Dashboard Icon" />
-                    </div>
-                    <div class="label_container">
-                        <span class="sidebar_label">Dashboard</span>
-                    </div>
+                    <a asp-controller="Dashboard" asp-action="Index" class="d-flex align-items-center text-decoration-none">
+                        <div class="icon_container">
+                            <img class="sidebar_icon" src="~/images/Dashboard_Dark.png" alt="Dashboard Icon" />
+                        </div>
+                        <div class="label_container">
+                            <span class="sidebar_label">Dashboard</span>
+                        </div>
+                    </a>
                 </div>
 
                 <!-- Modules Button -->
@@ -205,10 +207,9 @@
     <script src="~/js/ForumPost.js"></script>
     <script src="~/js/PublishUnpublishModuletoggle.js"></script>
     <script src="~/js/PublishUnpublishAssessmenttoggle.js"></script>
-
     <script src="~/js/ModalInitalization.js"></script>
-
     <script src="~/js/OthersOptionHandler.js"></script>
+    <script src="~/js/ListGridView.js"></script>
 
     <script src="~/js/global.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

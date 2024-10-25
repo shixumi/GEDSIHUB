@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize(Roles = "Admin")]  // Only Admins have access to the AnalyticsController
     [ApiController]
     [Route("[controller]")]
     public class AnalyticsController : Controller
@@ -25,6 +26,7 @@ namespace GedsiHub.Controllers
             _analyticsService = analyticsService;
         }
 
+        // Endpoint to display the dashboard view
         [HttpGet("")]
         [HttpGet("Dashboard")]
         public async Task<IActionResult> Dashboard()
@@ -37,6 +39,7 @@ namespace GedsiHub.Controllers
             return View(viewModel);
         }
 
+        // API endpoint to get user demographics data
         [HttpGet("GetUserDemographics")]
         public async Task<IActionResult> GetUserDemographics()
         {
@@ -44,6 +47,7 @@ namespace GedsiHub.Controllers
             return Json(demographics);
         }
 
+        // API endpoint to get module performance metrics
         [HttpGet("GetModulePerformance")]
         public async Task<IActionResult> GetModulePerformance(int moduleId)
         {
@@ -61,6 +65,7 @@ namespace GedsiHub.Controllers
             return Json(performance);
         }
 
+        // API endpoint to get the count of current active users
         [HttpGet("GetCurrentActiveUsers")]
         public async Task<IActionResult> GetCurrentActiveUsers()
         {
@@ -68,6 +73,7 @@ namespace GedsiHub.Controllers
             return Json(new { ActiveUsers = activeUsers });
         }
 
+        // API endpoint to get live progress data for a user in a specific module
         [HttpGet("GetLiveUserProgress")]
         public async Task<IActionResult> GetLiveUserProgress(string userId, int moduleId)
         {
@@ -75,6 +81,7 @@ namespace GedsiHub.Controllers
             return Json(progress);
         }
 
+        // API endpoint to get feedback analysis data
         [HttpGet("GetFeedbackAnalysis")]
         public async Task<IActionResult> GetFeedbackAnalysis()
         {
@@ -82,6 +89,7 @@ namespace GedsiHub.Controllers
             return Json(feedbackAnalysis);
         }
 
+        // API endpoint to track time spent on a module
         [HttpPost("TrackModuleTime")]
         public async Task<IActionResult> TrackModuleTime([FromBody] ModuleTimeDto dto)
         {
@@ -106,6 +114,7 @@ namespace GedsiHub.Controllers
             return Ok();
         }
 
+        // API endpoint to get employment status breakdown data
         [HttpGet("GetEmploymentStatusBreakdown")]
         public async Task<IActionResult> GetEmploymentStatusBreakdown()
         {
@@ -113,6 +122,7 @@ namespace GedsiHub.Controllers
             return Json(employmentStatus);
         }
 
+        // API endpoint to get course associations data
         [HttpGet("GetCourseAssociations")]
         public async Task<IActionResult> GetCourseAssociations()
         {
@@ -120,23 +130,23 @@ namespace GedsiHub.Controllers
             return Json(courseAssociations);
         }
 
+        // API endpoint to get user satisfaction levels data
         [HttpGet("GetUserSatisfactionLevels")]
         public async Task<IActionResult> GetUserSatisfactionLevels()
         {
             var satisfactionLevels = await _analyticsService.GetUserSatisfactionLevelsAsync();
             return Json(satisfactionLevels);
         }
-
     }
 
-
+    // DTO for tracking time spent on a module
     public class ModuleTimeDto
     {
-        [Required]
+        [Required(ErrorMessage = "Module ID is required.")]
         public int ModuleId { get; set; }
 
-        [Required]
-        [Range(0.1, double.MaxValue)]
+        [Required(ErrorMessage = "Time spent is required.")]
+        [Range(0.1, double.MaxValue, ErrorMessage = "Time spent must be greater than 0.")]
         public double TimeSpent { get; set; } // Time in seconds
     }
 }
