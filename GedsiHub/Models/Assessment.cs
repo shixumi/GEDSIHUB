@@ -25,7 +25,7 @@ namespace GedsiHub.Models
         public int ModuleId { get; set; }
 
         // Navigation Property (Remove [Required] if present)
-        public virtual Module? Module { get; set; }
+        public Module Module { get; set; }
 
         // Timestamps
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;

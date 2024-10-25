@@ -38,9 +38,10 @@ namespace GedsiHub.Controllers
         // GET: Module Details
         public async Task<IActionResult> Details(int id)
         {
-            // Fetch the module and include its lessons
+            // Fetch the module and include its lessons and assessments
             var module = await _context.Modules
                 .Include(m => m.Lessons)
+                .Include(m => m.Assessment) // Include the assessments
                 .FirstOrDefaultAsync(m => m.ModuleId == id);
 
             if (module == null)

@@ -152,9 +152,11 @@
         }
         else
         {
-            <div class="assessment-details mb-5">
+                <div class="assessment-details mb-5">
                 <h3>@Model.Assessment.Title</h3>
                 <p>@Model.Assessment.Description</p>
+                </div>
+        }
                 <!-- H5P Embed -->
                 <div class="responsive-iframe">
                     @Html.Raw(Model.Assessment.H5PEmbedCode)
@@ -164,7 +166,6 @@
                     <a asp-controller="Assessment" asp-action="Edit" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-warning mt-3">Edit Assessment</a>
                     <a asp-controller="Assessment" asp-action="Delete" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-danger mt-3">Delete Assessment</a>
                 }
-            </div>
         }
     </div>
 </div>
