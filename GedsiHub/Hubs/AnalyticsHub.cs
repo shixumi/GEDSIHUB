@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace GedsiHub.Hubs
 {
+    [Authorize]
     public class AnalyticsHub : Hub
     {
         private readonly ApplicationDbContext _context;
@@ -30,7 +31,6 @@ namespace GedsiHub.Hubs
             {
                 _logger.LogInformation($"User connected: {userId} with ConnectionId: {Context.ConnectionId}");
 
-                // Add a new ActiveUser entry for each connection
                 var activeUser = new ActiveUser
                 {
                     UserId = userId,
@@ -40,13 +40,11 @@ namespace GedsiHub.Hubs
                 _context.ActiveUsers.Add(activeUser);
                 await _context.SaveChangesAsync();
 
-                // Count unique active users
                 var activeUsersCount = await _context.ActiveUsers
                     .Select(au => au.UserId)
                     .Distinct()
                     .CountAsync();
 
-                // Broadcast the updated active users count
                 await Clients.All.SendAsync("UpdateActiveUsers", activeUsersCount);
             }
             else
@@ -65,7 +63,6 @@ namespace GedsiHub.Hubs
             {
                 _logger.LogInformation($"User disconnected: {userId} with ConnectionId: {Context.ConnectionId}");
 
-                // Remove the specific ActiveUser entry
                 var activeUser = await _context.ActiveUsers
                     .FirstOrDefaultAsync(au => au.UserId == userId && au.ConnectionId == Context.ConnectionId);
                 if (activeUser != null)
@@ -73,13 +70,11 @@ namespace GedsiHub.Hubs
                     _context.ActiveUsers.Remove(activeUser);
                     await _context.SaveChangesAsync();
 
-                    // Recount unique active users
                     var activeUsersCount = await _context.ActiveUsers
                         .Select(au => au.UserId)
                         .Distinct()
                         .CountAsync();
 
-                    // Broadcast the updated active users count
                     await Clients.All.SendAsync("UpdateActiveUsers", activeUsersCount);
                 }
                 else
@@ -95,7 +90,6 @@ namespace GedsiHub.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        // Optional: Implement Heartbeat for more accurate tracking
         public async Task Heartbeat()
         {
             var userId = Context.UserIdentifier;
@@ -110,6 +104,12 @@ namespace GedsiHub.Hubs
                     activeUser.LastActive = DateTime.UtcNow;
                     _context.ActiveUsers.Update(activeUser);
                     await _context.SaveChangesAsync();
+
+                    _logger.LogInformation($"Heartbeat received from UserId: {userId}, ConnectionId: {Context.ConnectionId}");
+                }
+                else
+                {
+                    _logger.LogWarning($"ActiveUser not found for Heartbeat from UserId: {userId}, ConnectionId: {Context.ConnectionId}");
                 }
             }
         }

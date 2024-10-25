@@ -1,0 +1,193 @@
+﻿#userManagementSearch {
+    border-style: none;
+    border-radius: 3.90625rem;
+    width: 26.5625rem;
+    height: 2.734375rem;
+    color: #464040;
+    padding-left: 1.5625rem;
+    padding-right: 3.125rem;
+    font-size: 1.015625rem;
+    min-width: 26.5625rem;
+}
+
+    #userManagementSearch::placeholder {
+        font-size: 1.015625rem;
+        color: #9c9c9c;
+        font-weight: 200;
+    }
+
+.user-management-filter-con {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#userManagementSearchButton {
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+    #userManagementSearchButton:hover {
+        transform: scale(1.1);
+    }
+
+    #userManagementSearchButton:active {
+        transform: scale(0.95);
+    }
+
+.um-header-label {
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    color: #464040;
+}
+
+    .um-header-label:nth-child(2), .um-header-label:nth-child(3) {
+        text-align: left;
+    }
+
+.um-content {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    color: #464040;
+}
+
+    .um-content:nth-child(2), .um-content:nth-child(3) {
+        text-align: left;
+    }
+
+tbody tr:nth-child(odd) {
+    background-color: white;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #EFF0F4;
+}
+
+#um-edit-user-button, #um-delete-user-button {
+    border-radius: 1.5rem;
+    border: none;
+    padding: 0.3rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: #464040;
+}
+
+    #um-edit-user-button img, #um-delete-user-button img {
+        width: 1.5rem;
+        margin-right: 0.4rem;
+    }
+
+#um-edit-user-button {
+    background: rgba(82,160,53,0.3);
+}
+
+#um-delete-user-button {
+    background: rgba(102,0,0,0.3);
+}
+
+#um-edit-user-button:hover {
+    background-color: #b4f39d;
+}
+
+#um-delete-user-button:hover {
+    background-color: #f0adad;
+}
+
+#um-edit-user-button:active, #um-delete-user-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#umBackButton {
+    transition: all 0.2s ease;
+}
+
+#umBackButton img {
+    width: 2.7rem;
+}
+#umBackButton:hover {
+    font-weight: 500;
+}
+
+    #umBackButton:active {
+        transform: scale(0.95);
+    }
+
+#um-content-button-con {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#deleteSelectedUM {
+    width: 1.7rem;
+    height: 1.7rem;
+    transition: all 0.2s ease;
+}
+
+    #deleteSelectedUM:hover {
+        opacity: 1;
+        filter: brightness(1.768);
+    }
+
+    #deleteSelectedUM:active {
+        transform: scale(0.95);
+    }
+
+#um-actions-con-bottom {
+    padding-left: 2.3rem;
+}
+
+#userManagementFilter {
+    font-size: 1rem;
+  
+}
+
+#userManagementFilter:hover {
+    font-weight: 500;
+}
+
+
+#userManagementFilter img {
+    width: 1.7rem;
+    height: 1.7rem;
+    margin-bottom: 0.3rem;
+}
+
+.um-search-con {
+    margin-top: 2rem;
+    margin-right: 1rem;
+}
+
+.um-title-searcbar-con {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+.select-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+    .select-container select {
+        text-align: right;
+        outline: none;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+    }
+
+.filter-icon {
+    width: 1.7rem;
+    height: 1.7rem;
+    margin-bottom: 0.3rem;
+    margin-left: 1rem;
+    pointer-events: none;
+    position: absolute;
+}

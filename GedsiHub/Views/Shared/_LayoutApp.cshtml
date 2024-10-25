@@ -26,12 +26,13 @@
     <link rel="stylesheet" href="~/css/feedbackUserIndex.css" />
     <link rel="stylesheet" href="~/css/feedbackForm.css" />
     <link rel="stylesheet" href="~/css/feedbackSuccessfullySubmitted.css" />
+    <link rel="stylesheet" href="~/css/userManagement.css" />
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
           crossorigin="anonymous">
 
     <link rel="stylesheet" href="~/css/createEditAssessment.css" />
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="~/css/lessonContentEditDetails.css" />
     
@@ -175,6 +176,9 @@
 
 
 
+
+
+
 @*
     <footer class="border-top footer text-muted">
         <div class="container">
@@ -198,16 +202,17 @@
     <script src="~/js/ForumPost.js"></script>
     <script src="~/js/PublishUnpublishModuletoggle.js"></script>
     <script src="~/js/PublishUnpublishAssessmenttoggle.js"></script>
-    <script src="~/js/DragAndDropFile.js"></script>
+
+    <script src="~/js/ModalInitalization.js"></script>
+
     <script src="~/js/OthersOptionHandler.js"></script>
+
     <script src="~/js/global.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
 
-    @await Html.PartialAsync("_ActiveUserTracker")
 </body>
 
 </html>

@@ -182,8 +182,8 @@
     box-sizing: border-box !important;
     box-shadow: inset 0px 3px 4px #d9d9d9 !important;
     margin-top: 1rem !important;
-    position: relative !important; /* New */
-    overflow: hidden !important; /* New */
+    position: relative !important; 
+    overflow: hidden !important; 
 }
 
 

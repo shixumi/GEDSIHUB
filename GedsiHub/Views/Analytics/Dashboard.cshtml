@@ -49,8 +49,8 @@
 
     <!-- Current Active Users -->
     <div>
-        <h2>Current Active Users</h2>
-        <p><strong>Active Users:</strong> <span id="activeUsersCount">0</span></p>
+    <h2>Current Active Users</h2>
+        <p><strong>Active Users:</strong> <span class="activeUsersCount">0</span></p>
     </div>
 
     <!-- User Feedback Analysis -->
@@ -78,12 +78,6 @@
     </div>
 
 </div>
-
-<!-- Include Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- Include SignalR -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
-<script src="~/js/global.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -203,19 +197,6 @@
 
         // Initial load for module performance
         document.getElementById('moduleSelector').dispatchEvent(new Event('change'));
-
-        // Current Active Users with SignalR
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/analyticsHub")
-            .build();
-
-        connection.on("UpdateActiveUsers", function (count) {
-            document.getElementById("activeUsersCount").innerText = count;
-        });
-
-        connection.start().catch(function (err) {
-            return console.error(err.toString());
-        });
 
         // Feedback Analysis
         fetch('/Analytics/GetFeedbackAnalysis')
