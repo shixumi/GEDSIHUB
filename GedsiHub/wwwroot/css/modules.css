@@ -469,6 +469,7 @@
 .table-responsive {
     background: #ffffff;
     min-height: 43rem;
+    padding-top: 0;
     padding: 50px;
     margin-top: 34px;
     margin-left: 0px;
