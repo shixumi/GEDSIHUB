@@ -1,0 +1,207 @@
+﻿.leaderboard-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.module-lead-con, .rank-lead-con {
+    background: #ffffff;
+    min-height: 40rem;
+    padding: 40px;
+    margin-top: 34px;
+    margin-left: 0px;
+    border-radius: 30px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    box-sizing: border-box;
+    color: #464040;
+}
+
+.module-lead-con {
+    width: 25%;
+    overflow-y: auto;
+}
+
+.rank-lead-con {
+    width: 75%;
+}
+
+.module-lead-con {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.leaderboard-head-con {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+}
+
+.leaderboard-text {
+    flex-grow: 1;
+    text-align: left;
+    font-size: 1.5rem !important;
+}
+
+#leaderboard-filter {
+    cursor: pointer;
+    text-align: right;
+    font-weight: 500;
+}
+
+    #leaderboard-filter:active {
+        transform: scale(0.95);
+    }
+
+    #leaderboard-filter img {
+        width: 1.3rem;
+        height: auto;
+        margin-left: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
+
+#leaderboard-table td:nth-child(1), #leaderboard-table th:nth-child(1) {
+    text-align: center;
+    width: 1%;
+}
+
+#leaderboard-table td:nth-child(2), #leaderboard-table th:nth-child(2) {
+    padding-left: 4rem;
+}
+
+#leaderboard-table td:nth-child(3), #leaderboard-table th:nth-child(3) {
+    text-align: center;
+    width: 1%;
+}
+
+.view-lead-text, .leaderboard-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.view-lead-text {
+    color: #880000;
+    margin-bottom: 1.5rem;
+}
+
+#leaderboard-table th {
+    color: #880000;
+}
+
+#leaderboard-table {
+    border-collapse: collapse;
+    border: none;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+    #leaderboard-table th, #leaderboard-table td {
+        border: none;
+    }
+
+.module-lead-con button {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.leaderboard-sidebar {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #464040;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+    .leaderboard-sidebar:focus {
+        outline: none;
+    }
+
+    /* Hover effect */
+    .leaderboard-sidebar:hover {
+        color: #7C0A02;
+    }
+
+    /* Active effect (underline for the clicked button) */
+    .leaderboard-sidebar.active::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background-color: #7C0A02;
+        border-radius: 10px;
+        width: 100%;
+        transition: width 0.3s ease-in-out, background-color 0.3s ease;
+    }
+
+    .leaderboard-sidebar.active {
+        color: #7C0A02;
+        transition: color 0.3s ease;
+    }
+
+    /* Default state of the underline when the button is not active */
+    .leaderboard-sidebar::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background-color: transparent;
+        width: 0%;
+        transition: width 0.3s ease-in-out, background-color 0.3s ease;
+    }
+
+.inside-container-leaderboard {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 0 5px rgba(112,112,112,0.2), 0 0 10px rgba(111,111,111,0.15), 0 0 15px rgba(255,255,255,0.07);
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+#leaderboard-table th {
+    background: #660000;
+    color: white;
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+    #leaderboard-table th:nth-child(2) {
+        padding-left: 4rem;
+    }
+
+#leaderboard-table td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+    #leaderboard-table td:first-child {
+        font-weight: 600;
+    }
+
+#leaderboard-table img {
+    width: 2rem;
+    margin-right: 0.5rem;
+}
+
+#leaderboard-table tr:nth-child(n + 4):nth-child(-n + 10) td img {
+    width: 1.5rem;
+    margin-top: -0.4rem;
+}
+
+/* Hover effect animation for table rows */
+#leaderboard-table tr:hover td {
+    background-color: #f5f5f5;
+    transform: scale(1.02);
+    transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
