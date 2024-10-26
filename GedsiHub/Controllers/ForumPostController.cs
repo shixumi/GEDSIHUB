@@ -161,6 +161,7 @@ namespace GedsiHub.Controllers
                 Title = post.Title,
                 Content = post.Content,
                 Flair = post.Flair,
+                ImagePath = post.ImagePath,
                 ModuleId = post.Tag != null ? int.Parse(post.Tag) : 0,
                 Modules = modules,
                 PollOptions = post.PollOptions
