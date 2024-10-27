@@ -41,7 +41,7 @@ namespace GedsiHub.Controllers
             // Fetch the module and include its lessons and assessments
             var module = await _context.Modules
                 .Include(m => m.Lessons)
-                .Include(m => m.Assessment) // Include the assessments
+                .Include(m => m.Assessment)
                 .FirstOrDefaultAsync(m => m.ModuleId == id);
 
             if (module == null)
@@ -70,29 +70,34 @@ namespace GedsiHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Description,Status,Color")] Module module)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    module.CreatedDate = DateTime.UtcNow;
-                    module.LastModifiedDate = DateTime.UtcNow;
-                    _context.Add(module);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateException ex)
-                {
-                    _logger.LogError(ex, "Database error while creating module");
-                    ModelState.AddModelError("", "Database error occurred. Please try again.");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error while creating module");
-                    ModelState.AddModelError("", "An error occurred while creating the module.");
-                }
+                // If ModelState is invalid, return the view with the errors
+                return View(module);
             }
 
-            return View(module);
+            // If valid, proceed with saving the module
+            try
+            {
+                module.CreatedDate = DateTime.UtcNow;
+                module.LastModifiedDate = DateTime.UtcNow;
+
+                _context.Add(module);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));  // Redirect to index after success
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Database error while creating module.");
+                ModelState.AddModelError("", "A database error occurred. Please try again.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while creating module.");
+                ModelState.AddModelError("", "An error occurred while creating the module.");
+            }
+
+            return View(module);  // Return the view if an exception occurs
         }
 
         // GET: Edit a Module
@@ -188,10 +193,10 @@ namespace GedsiHub.Controllers
 
             module.Status = ModuleStatus.Published;
             module.LastModifiedDate = DateTime.UtcNow;
-            _context.Update(module);
-            await _context.SaveChangesAsync();
+                _context.Update(module);
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return View(module);
         }
 
         // POST: Unpublish a Module

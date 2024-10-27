@@ -21,6 +21,9 @@
             </li>
         </ol>
 
+        <!-- Validation Summary for displaying error messages -->
+        <div asp-validation-summary="All" class="text-danger"></div>
+
         <!-- Create Assessment Button -->
         @if (User.IsInRole("Admin") && Model.Assessment == null)
         {
