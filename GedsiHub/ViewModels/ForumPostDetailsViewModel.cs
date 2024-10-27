@@ -9,7 +9,9 @@ namespace GedsiHub.ViewModels
         public ForumCommentViewModel CommentViewModel { get; set; }  // ViewModel for the comment form
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
+        public string UserId { get; set; }
         public string Flair { get; set; }
+        
     }
 }
 

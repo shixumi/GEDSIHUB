@@ -57,11 +57,22 @@
 
         <!-- Card Footer Buttons -->
         <div class="d-flex align-items-center card-footer">
-            <a asp-action="Details" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-comment"></i>@Model.ForumPost.ForumComments.Count()</a>
-            <a asp-action="Edit" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center"><i class="f-icon la la-edit"></i> Edit</a>
-            <a class="card-link d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@Model.ForumPost.PostId">
-                <i class="f-icon la la-trash"></i> Delete
+            <a asp-action="Details" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center">
+                <i class="f-icon la la-comment"></i> @Model.ForumPost.ForumComments.Count()
             </a>
+
+            <!-- Only show Edit and Delete if the user is authorized -->
+            @if (User.Identity.IsAuthenticated &&
+            (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value == Model.ForumPost.UserId || User.IsInRole("Admin")))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center">
+                    <i class="f-icon la la-edit"></i> Edit
+                </a>
+
+                <a class="card-link d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@Model.ForumPost.PostId">
+                    <i class="f-icon la la-trash"></i> Delete
+                </a>
+            }
         </div>
 
         <!-- Comments List -->

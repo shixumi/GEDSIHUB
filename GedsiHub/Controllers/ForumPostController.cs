@@ -38,6 +38,7 @@ namespace GedsiHub.Controllers
                     PollOptions = post.PollOptions,
                     UserFirstName = post.User.FirstName,
                     UserLastName = post.User.LastName,
+                    UserId = post.UserId,
                     CommentCount = post.ForumComments.Count,
                     RelativeCreatedAt = DateTimeHelper.GetRelativeTime(post.CreatedAt)
                 })
@@ -66,6 +67,7 @@ namespace GedsiHub.Controllers
                 CommentViewModel = new ForumCommentViewModel { PostId = post.PostId },
                 UserFirstName = post.User.FirstName,
                 UserLastName = post.User.LastName,
+                UserId = post.UserId,
                 Flair = post.Flair
             };
 
