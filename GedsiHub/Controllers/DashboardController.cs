@@ -110,7 +110,7 @@ namespace GedsiHub.Controllers
                     .CountAsync();
 
                 // **Set a fixed streak value for testing**
-                int fixedStreak = 20; // You can change this value to test different streak lengths
+                int fixedStreak = 9; // You can change this value to test different streak lengths
 
                 // **Assign the fixed streak value instead of calculating it**
                 var currentStreak = Task.FromResult(fixedStreak);

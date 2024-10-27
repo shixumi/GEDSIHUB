@@ -1,15 +1,53 @@
-﻿@model GedsiHub.Models.ViewModels.AnalyticsDashboardViewModel
+﻿@model GedsiHub.ViewModels.AnalyticsDashboardViewModel
 
 @{
     ViewData["Title"] = "Analytics Dashboard";
 }
 
-<h1>Analytics Dashboard</h1>
+<h1>@ViewData["Title"]</h1>
+
+<!-- Summary Metrics -->
+<div class="row mb-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body">
+                <h5 class="card-title">Total Learners</h5>
+                <p class="card-text" style="font-size: 2em;">@Model.TotalLearners</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body">
+                <h5 class="card-title">Student Learners</h5>
+                <p class="card-text" style="font-size: 2em;">@Model.StudentLearners</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card text-white bg-warning h-100">
+            <div class="card-body">
+                <h5 class="card-title">Employee Learners</h5>
+                <p class="card-text" style="font-size: 2em;">@Model.EmployeeLearners</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card text-white bg-danger h-100">
+            <div class="card-body">
+                <h5 class="card-title">Total Modules</h5>
+                <p class="card-text" style="font-size: 2em;">@Model.TotalModules</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Container for All Charts -->
 <div style="display: flex; flex-direction: column; gap: 40px;">
+    <!-- Existing Analytics Charts -->
+    <!-- ... your existing charts like User Demographics, Module Performance, etc. ... -->
 
-    <!-- User Demographics -->
+    <!-- Example: User Demographics -->
     <div>
         <h2>User Demographics</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 20px;">
@@ -49,7 +87,7 @@
 
     <!-- Current Active Users -->
     <div>
-    <h2>Current Active Users</h2>
+        <h2>Current Active Users</h2>
         <p><strong>Active Users:</strong> <span class="activeUsersCount">0</span></p>
     </div>
 
@@ -76,9 +114,10 @@
         <h2>User Satisfaction Levels</h2>
         <canvas id="userSatisfactionChart"></canvas>
     </div>
-
 </div>
 
+<!-- Charts Initialization Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Fetch and render User Demographics
@@ -196,7 +235,9 @@
         });
 
         // Initial load for module performance
-        document.getElementById('moduleSelector').dispatchEvent(new Event('change'));
+        if (document.getElementById('moduleSelector').options.length > 0) {
+            document.getElementById('moduleSelector').dispatchEvent(new Event('change'));
+        }
 
         // Feedback Analysis
         fetch('/Analytics/GetFeedbackAnalysis')
@@ -278,9 +319,8 @@
         fetch('/Analytics/GetCourseAssociations')
             .then(response => response.json())
             .then(data => {
-                // If you have a mapping of CourseId to CourseName, use it here
-                // For simplicity, we'll use CourseId as labels
-                const labels = data.map(c => `Course ${c.courseId}`);
+                // Assuming data contains CourseId and CourseName for better labels
+                const labels = data.map(c => c.courseName);
                 const counts = data.map(c => c.count);
 
                 new Chart(document.getElementById('courseAssociationsChart'), {
@@ -352,6 +392,13 @@
                         }
                     }
                 });
+            });
+
+        // Current Active Users
+        fetch('/Analytics/GetCurrentActiveUsers')
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.activeUsersCount').innerText = data.ActiveUsers;
             });
     });
 </script>

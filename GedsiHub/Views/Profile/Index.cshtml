@@ -1,0 +1,90 @@
+﻿@model GedsiHub.ViewModels.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <img src="@Model.ProfilePicturePath" alt="Profile Picture" class="profile-picture" />
+        <h3>@Model.Honorifics @Model.LivedName</h3>
+    </div>
+
+    <div class="profile-details">
+        <table class="table">
+            <tr>
+                <th>Type</th>
+                <td>@Model.UserType</td>
+            </tr>
+            <tr>
+                <th>Pronouns</th>
+                <td>@Model.Pronouns</td>
+            </tr>
+            <tr>
+                <th>Honorifics</th>
+                <td>@Model.Honorifics</td>
+            </tr>
+            <tr>
+                <th>Date of Birth</th>
+                <td>@Model.DateOfBirth.ToString("yyyy-MM-dd")</td>
+            </tr>
+            <tr>
+                <th>Phone Number</th>
+                <td>@Model.PhoneNumber</td>
+            </tr>
+            <tr>
+                <th>Sex</th>
+                <td>@Model.Sex</td>
+            </tr>
+            <tr>
+                <th>Gender Identity</th>
+                <td>@Model.GenderIdentity</td>
+            </tr>
+
+            @if (Model.UserType == "Student")
+            {
+                <tr>
+                    <th>Program</th>
+                    <td>@Model.Program</td>
+                </tr>
+                <tr>
+                    <th>Year</th>
+                    <td>@Model.Year</td>
+                </tr>
+                <tr>
+                    <th>Section</th>
+                    <td>@Model.Section</td>
+                </tr>
+            }
+            else if (Model.UserType == "Employee")
+            {
+                <tr>
+                    <th>Employee Type</th>
+                    <td>@Model.EmployeeType</td>
+                </tr>
+                <tr>
+                    <th>Employment Status</th>
+                    <td>@Model.EmploymentStatus</td>
+                </tr>
+                <tr>
+                    <th>Branch Office/Section/Unit</th>
+                    <td>@Model.BranchOfficeSectionUnit</td>
+                </tr>
+                <tr>
+                    <th>Position</th>
+                    <td>@Model.Position</td>
+                </tr>
+                <tr>
+                    <th>Sector</th>
+                    <td>@Model.Sector</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="profile-actions">
+        <a asp-action="Edit" class="btn btn-primary">Edit Profile</a>
+    </div>
+</div>

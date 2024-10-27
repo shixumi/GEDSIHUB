@@ -1,0 +1,132 @@
+﻿@model GedsiHub.ViewModels.EditUserProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label asp-for="Honorifics"></label>
+        <input asp-for="Honorifics" class="form-control" />
+        <span asp-validation-for="Honorifics" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LivedName"></label>
+        <input asp-for="LivedName" class="form-control" />
+        <span asp-validation-for="LivedName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Pronouns"></label>
+        <input asp-for="Pronouns" class="form-control" />
+        <span asp-validation-for="Pronouns" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateOfBirth"></label>
+        <input asp-for="DateOfBirth" class="form-control" type="date" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Sex"></label>
+        <select asp-for="Sex" class="form-control">
+            <option value="">-- Select Sex --</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+            <option>Prefer not to say</option>
+        </select>
+        <span asp-validation-for="Sex" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="GenderIdentity"></label>
+        <input asp-for="GenderIdentity" class="form-control" />
+        <span asp-validation-for="GenderIdentity" class="text-danger"></span>
+    </div>
+
+    @* Role-Specific Fields *@
+    @if (User.IsInRole("Student"))
+    {
+        <div class="form-group">
+            <label asp-for="Program"></label>
+            <input asp-for="Program" class="form-control" />
+            <span asp-validation-for="Program" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Year"></label>
+            <input asp-for="Year" class="form-control" type="number" min="1" max="10" />
+            <span asp-validation-for="Year" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Section"></label>
+            <input asp-for="Section" class="form-control" />
+            <span asp-validation-for="Section" class="text-danger"></span>
+        </div>
+    }
+    else if (User.IsInRole("Employee"))
+    {
+        <div class="form-group">
+            <label asp-for="EmployeeType"></label>
+            <input asp-for="EmployeeType" class="form-control" />
+            <span asp-validation-for="EmployeeType" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="EmploymentStatus"></label>
+            <input asp-for="EmploymentStatus" class="form-control" />
+            <span asp-validation-for="EmploymentStatus" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="BranchOfficeSectionUnit"></label>
+            <input asp-for="BranchOfficeSectionUnit" class="form-control" />
+            <span asp-validation-for="BranchOfficeSectionUnit" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Position"></label>
+            <input asp-for="Position" class="form-control" />
+            <span asp-validation-for="Position" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Sector"></label>
+            <input asp-for="Sector" class="form-control" />
+            <span asp-validation-for="Sector" class="text-danger"></span>
+        </div>
+    }
+
+    <div class="form-group">
+        <label asp-for="ProfilePicture"></label>
+        <input asp-for="ProfilePicture" type="file" class="form-control-file" />
+        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+</style>

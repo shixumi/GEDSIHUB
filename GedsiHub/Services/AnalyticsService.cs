@@ -292,6 +292,33 @@ namespace GedsiHub.Services
                 })
                 .ToListAsync();
         }
+
+        // Method to get Total Learners
+        public async Task<int> GetTotalLearnersAsync()
+        {
+            // Total Learners = Students + Employees
+            var studentCount = await _context.Students.CountAsync();
+            var employeeCount = await _context.Employees.CountAsync();
+            return studentCount + employeeCount;
+        }
+
+        // Method to get Student Learners
+        public async Task<int> GetStudentLearnersAsync()
+        {
+            return await _context.Students.CountAsync();
+        }
+
+        // Method to get Employee Learners
+        public async Task<int> GetEmployeeLearnersAsync()
+        {
+            return await _context.Employees.CountAsync();
+        }
+
+        // Method to get Total Modules
+        public async Task<int> GetTotalModulesAsync()
+        {
+            return await _context.Modules.CountAsync();
+        }
     }
 
     // DTO Classes
