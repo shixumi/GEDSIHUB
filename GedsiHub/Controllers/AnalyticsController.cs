@@ -7,7 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using GedsiHub.Services;
-using GedsiHub.Models.ViewModels;
+using GedsiHub.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace GedsiHub.Controllers
@@ -32,12 +32,26 @@ namespace GedsiHub.Controllers
         public async Task<IActionResult> Dashboard()
         {
             var modules = await _context.Modules.ToListAsync();
+
+            // Compute new metrics
+            var totalLearners = await _analyticsService.GetTotalLearnersAsync();
+            var studentLearners = await _analyticsService.GetStudentLearnersAsync();
+            var employeeLearners = await _analyticsService.GetEmployeeLearnersAsync();
+            var totalModules = await _analyticsService.GetTotalModulesAsync();
+
             var viewModel = new AnalyticsDashboardViewModel
             {
-                Modules = modules
+                Modules = modules,
+                TotalLearners = totalLearners,
+                StudentLearners = studentLearners,
+                EmployeeLearners = employeeLearners,
+                TotalModules = totalModules
+                // Populate other existing metrics if any
             };
+
             return View(viewModel);
         }
+
 
         // API endpoint to get user demographics data
         [HttpGet("GetUserDemographics")]
@@ -149,4 +163,6 @@ namespace GedsiHub.Controllers
         [Range(0.1, double.MaxValue, ErrorMessage = "Time spent must be greater than 0.")]
         public double TimeSpent { get; set; } // Time in seconds
     }
+
+
 }
