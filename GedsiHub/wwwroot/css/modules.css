@@ -48,23 +48,7 @@
 }
 
 
-.modules_container {
-    height: 104vh;
-    position: absolute;
-    margin-left: 24.946rem;
-    width: calc(100% - 24.946rem);
-    background: #EFF0F4;
-    border-top-left-radius: 3.25rem;
-    border-color: #464040;
-    padding-left: 5.6875rem;
-    padding-right: 5.6875rem;
-    padding-bottom: 16.25rem;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-    flex: 1 0 auto;
-    top: 5.6875rem;
-}
+
 
 .modules_title {
     margin-top: 2.4375rem;
@@ -83,9 +67,8 @@
 }
 
 .moduleCards_container {
-    margin-top: 4.225rem;
-    width: 92.625rem;
-    margin-left: 3.65625rem;
+    margin-top: 3.5rem;
+    width: 100%;
     position: relative;
     border-style: none;
 }
@@ -93,8 +76,8 @@
 #moduleCardsContainer {
     display: flex;
     gap: 3.65625rem;
-    margin-top: 4.875rem;
-    width: 89.375rem;
+    margin-top: 3.5rem;
+    width: 100%;
 }
 
 

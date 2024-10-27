@@ -197,33 +197,52 @@
         margin-right: 0;
     }
 
+    /* Image preview container */
     .imagePreview {
-        height: 85px;
-        width: 85px;
-        border-radius: 10px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+        height: 5.3125rem; 
+        width: 5.3125rem; 
+        border-radius: 0.625rem; 
+        box-shadow: 0 0 0.3125rem rgba(0, 0, 0, 0.15); 
         overflow: hidden;
         position: relative;
-        margin-right: 7px;
+        margin-right: 0.4375rem; 
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
     }
 
     .imagePreview img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
 
     .imagePreview span {
         position: absolute;
-        top: -4px;
-        right: 5px;
+        top: -0.25rem;
+        right: 0.3125rem; 
         cursor: pointer;
-        font-size: 22px;
+        font-size: 1.25rem; 
         color: #fff;
+        padding: 0.125rem 0.375rem;
+        transition: background-color 0.2s ease-in-out;
     }
 
-     .imagePreview span:hover {
-         opacity: 0.8;
-     }
+
+    .imagePreview:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25); /* 8px */
+    }
+
+
+    .imagePreview span:hover {
+        opacity: 0.8;
+    }
+
+    .imagePreview:nth-child(4n) {
+        margin-right: 0;
+    }
+
 
 
    
