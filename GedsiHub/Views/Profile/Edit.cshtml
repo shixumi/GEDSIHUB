@@ -6,39 +6,39 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Edit" enctype="multipart/form-data" method="post">
+<form asp-action="Edit" enctype="multipart/form-data" method="post" class="edit-profile-form">
     <div class="form-group">
-        <label asp-for="Honorifics"></label>
+        <label asp-for="Honorifics" class="form-label"></label>
         <input asp-for="Honorifics" class="form-control" />
         <span asp-validation-for="Honorifics" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="LivedName"></label>
+        <label asp-for="LivedName" class="form-label"></label>
         <input asp-for="LivedName" class="form-control" />
         <span asp-validation-for="LivedName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Pronouns"></label>
+        <label asp-for="Pronouns" class="form-label"></label>
         <input asp-for="Pronouns" class="form-control" />
         <span asp-validation-for="Pronouns" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="DateOfBirth"></label>
+        <label asp-for="DateOfBirth" class="form-label"></label>
         <input asp-for="DateOfBirth" class="form-control" type="date" />
         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="PhoneNumber"></label>
+        <label asp-for="PhoneNumber" class="form-label"></label>
         <input asp-for="PhoneNumber" class="form-control" />
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Sex"></label>
+        <label asp-for="Sex" class="form-label"></label>
         <select asp-for="Sex" class="form-control">
             <option value="">-- Select Sex --</option>
             <option>Male</option>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="GenderIdentity"></label>
+        <label asp-for="GenderIdentity" class="form-label"></label>
         <input asp-for="GenderIdentity" class="form-control" />
         <span asp-validation-for="GenderIdentity" class="text-danger"></span>
     </div>
@@ -59,19 +59,19 @@
     @if (User.IsInRole("Student"))
     {
         <div class="form-group">
-            <label asp-for="Program"></label>
+            <label asp-for="Program" class="form-label"></label>
             <input asp-for="Program" class="form-control" />
             <span asp-validation-for="Program" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Year"></label>
+            <label asp-for="Year" class="form-label"></label>
             <input asp-for="Year" class="form-control" type="number" min="1" max="10" />
             <span asp-validation-for="Year" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Section"></label>
+            <label asp-for="Section" class="form-label"></label>
             <input asp-for="Section" class="form-control" />
             <span asp-validation-for="Section" class="text-danger"></span>
         </div>
@@ -79,38 +79,38 @@
     else if (User.IsInRole("Employee"))
     {
         <div class="form-group">
-            <label asp-for="EmployeeType"></label>
+            <label asp-for="EmployeeType" class="form-label"></label>
             <input asp-for="EmployeeType" class="form-control" />
             <span asp-validation-for="EmployeeType" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="EmploymentStatus"></label>
+            <label asp-for="EmploymentStatus" class="form-label"></label>
             <input asp-for="EmploymentStatus" class="form-control" />
             <span asp-validation-for="EmploymentStatus" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="BranchOfficeSectionUnit"></label>
+            <label asp-for="BranchOfficeSectionUnit" class="form-label"></label>
             <input asp-for="BranchOfficeSectionUnit" class="form-control" />
             <span asp-validation-for="BranchOfficeSectionUnit" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Position"></label>
+            <label asp-for="Position" class="form-label"></label>
             <input asp-for="Position" class="form-control" />
             <span asp-validation-for="Position" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Sector"></label>
+            <label asp-for="Sector" class="form-label"></label>
             <input asp-for="Sector" class="form-control" />
             <span asp-validation-for="Sector" class="text-danger"></span>
         </div>
     }
 
     <div class="form-group">
-        <label asp-for="ProfilePicture"></label>
+        <label asp-for="ProfilePicture" class="form-label"></label>
         <input asp-for="ProfilePicture" type="file" class="form-control-file" />
         <span asp-validation-for="ProfilePicture" class="text-danger"></span>
     </div>
@@ -124,9 +124,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-<style>
-    .form-group {
-        margin-bottom: 15px;
-    }
-</style>
