@@ -94,14 +94,14 @@
                             </div>
                         </div>
 
-                        <!-- Line Break -->
-                        <div class="ModuleCard_LineBreak"></div>
+                       @*  <!-- Line Break -->
+                        <div class="ModuleCard_LineBreak"></div> *@
 
-                        @* @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin"))
                         {
                             <!-- Line Break -->
                             <div class="ModuleCard_LineBreak"></div>
-                        } *@
+                        } 
 
                         <!-- Publish/Unpublish Button (Admin only) -->
                         @if (User.IsInRole("Admin"))
