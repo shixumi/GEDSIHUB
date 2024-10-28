@@ -12,5 +12,5 @@ public class FeedbackSuggestion
     [Display(Name = "Description of Suggestion")]
     public string DescriptionOfSuggestion { get; set; }
 
-    public IFormFile Attachment { get; set; } // Optional file upload
+    public IFormFile? Attachment { get; set; } // Optional file upload
 }

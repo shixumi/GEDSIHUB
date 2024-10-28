@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GedsiHub.Data;
 using GedsiHub.Models;
 
+[Authorize]
 public class FeedbackController : Controller
 {
 	private readonly ApplicationDbContext _context;
@@ -18,7 +19,7 @@ public class FeedbackController : Controller
 
 	// ************** USER INTERFACE **************
 
-	[Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
+	[Authorize(Roles = "Student, Employee, Admin")]  // Accessible by both Students and Employees
 	public IActionResult Index()
 	{
 		return View();  // Views/Feedback/Index.cshtml
