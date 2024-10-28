@@ -1,9 +1,65 @@
 ﻿@model GedsiHub.ViewModels.AnalyticsDashboardViewModel
 
 @{
+    Layout = "_LayoutApp";
     ViewData["Title"] = "Analytics Dashboard";
 }
 
+
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+
+<div class="feedback-title-searcbar-con">
+    <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">@ViewData["Title"]</h1>
+    <div class="manage-user-and-gen-rep-con">
+        <button id="GenerateReportButton" type="button">
+            <img src="~/images/Graph.png" alt="Generate Report" /> Generate Report
+        </button>
+    </div>
+
+</div>
+<hr>
+
+<div class="dashboard-con-of-con">
+    <div class="ad-dashboard-container">
+        <div class="container admin-dashboard-item-con">
+            <div class="label-and-no-con">
+                <span class="ad-mod-text-dashboard">Total Learners</span>
+                <h1 class="ad-number">@Model.TotalLearners</h1>
+            </div>
+            <img src="~/images/Total_Learners.png" alt="Total Learners" />
+        </div>
+        <div class="container admin-dashboard-item-con">
+            <div class="label-and-no-con">
+                <span class="ad-mod-text-dashboard">Student Learners</span>
+                <h1 class="ad-number">@Model.StudentLearners</h1>
+            </div>
+            <img src="~/images/Student_Learners.png" alt="Student Learners" />
+        </div>
+        <div class="container admin-dashboard-item-con">
+            <div class="label-and-no-con">
+                <span class="ad-mod-text-dashboard">Employee Learners</span>
+                <h1 class="ad-number">@Model.EmployeeLearners</h1>
+            </div>
+            <img src="~/images/Employee_Learners.png" alt="Employee Learners" />
+        </div>
+        <div class="container admin-dashboard-item-con">
+            <div class="label-and-no-con">
+                <span class="ad-mod-text-dashboard">Total Modules</span>
+                <h1 class="ad-number">@Model.TotalModules</h1>
+            </div>
+            <img src="~/images/Total_Modules.png" alt="Total Modules" />
+        </div>
+    </div>
+</div>
+
+
+
+
+@* 
 <h1>@ViewData["Title"]</h1>
 
 <!-- Summary Metrics -->
@@ -41,8 +97,123 @@
         </div>
     </div>
 </div>
+ *@
 
-<!-- Container for All Charts -->
+
+<h4 style="padding:1.5rem 0 0 0; color: #464040;">User Demographics</h4>
+<div class="all-analytics-container">
+    <div class="ad-dashboard-container">
+        <!-- Age Distribution Container -->
+        <div class="col-1-age-dist-container">
+            <div id="age-distribution-container" class="container analytics_graph_container">
+                <h6>Age Distribution</h6>
+                <canvas id="ageDistributionChart" class="full-width-canvas"></canvas>
+            </div>
+
+
+
+            <!-- Module Performance and Active Users Container -->
+            <div class="mod-perf-active-users-container">
+
+                <div id="active-users-container" class="container analytics_graph_container">
+                    <!-- Current Active Users -->
+                    <div class="active-users-label-and-count-con">
+                        <h4>Current<br>Active Users</h4>
+                        <span class="activeUsersCount">0</span>
+                    </div>
+                </div>
+                
+                <!-- Module Performance -->
+                <div id="mod-perf-container" class="container analytics_graph_container module-performance-container">
+                    <h2>Module Performance</h2>
+                    <div class="form-group">
+                        <label for="moduleSelector" class="module-label">Select Module</label>
+                        <select id="moduleSelector" class="form-control select">
+                            @foreach (var module in Model.Modules)
+                            {
+                                <option value="@module.ModuleId">@module.Title</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Horizontal Stat Container -->
+                    <div class="module-performance-stats-container">
+                        <div class="module-performance-stat">
+                            <p><strong>Average Quiz Score</strong></p>
+                            <p id="averageQuizScore">0</p>
+                        </div>
+                        <div class="module-performance-stat">
+                            <p><strong>Completion Rate</strong></p>
+                            <p id="completionRate">0%</p>
+                        </div>
+                        <div class="module-performance-stat">
+                            <p><strong>Certificates Issued</strong></p>
+                            <p id="certificateIssuance">0</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- User Demographics Container -->
+        <div class="col-2-of-user-demo">
+            <div class="container analytics_graph_container">
+                <h6>Gender Identity</h6>
+                <canvas id="genderIdentityChart"></canvas>
+            </div>
+            <div class="container analytics_graph_container">
+                <h6>Indigenous Membership</h6>
+                <canvas id="indigenousMembershipChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="ad-dashboard-container">
+        <div class="col-1-feedback-satistfaction-container">
+            <div class="container analytics_graph_container feedback-emp-course-satisfaction">
+                <!-- Employment Status Breakdown -->
+                <h2>Employment Status Breakdown</h2>
+                <canvas id="employmentStatusChart"></canvas>
+            </div>
+            <div class="container analytics_graph_container feedback-emp-course-satisfaction">
+                <!-- User Satisfaction Levels -->
+                <h2>User Satisfaction Levels</h2>
+                <canvas id="userSatisfactionChart"></canvas>
+            </div>
+        </div>
+        <div class="col-2-emp-course-container">
+            <div class="container analytics_graph_container feedback-emp-course-satisfaction">
+                <!-- User Feedback Analysis -->
+                <h2>User Feedback Analysis</h2>
+                <canvas id="feedbackAnalysisChart"></canvas>
+            </div>
+            <div class="container analytics_graph_container feedback-emp-course-satisfaction smaller-course-association">
+                <!-- Course Associations -->
+                <h2>Course Associations</h2>
+                <canvas id="courseAssociationsChart"></canvas>
+
+            </div>
+
+
+            
+        </div>
+    </div>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+@* <!-- Container for All Charts -->
 <div style="display: flex; flex-direction: column; gap: 40px;">
     <!-- Existing Analytics Charts -->
     <!-- ... your existing charts like User Demographics, Module Performance, etc. ... -->
@@ -89,7 +260,8 @@
     <div>
         <h2>Current Active Users</h2>
         <p><strong>Active Users:</strong> <span class="activeUsersCount">0</span></p>
-    </div>
+    </div> *@
+
 
     <!-- Employment Status Breakdown -->
     <div>

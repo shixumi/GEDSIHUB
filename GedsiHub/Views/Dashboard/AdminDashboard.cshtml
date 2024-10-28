@@ -5,6 +5,44 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
+<div class="feedback-title-searcbar-con">
+    <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">Admin Dashboard</h1>
+    <div class="manage-user-and-gen-rep-con">
+        <a id="ManageUsersButton" asp-controller="Admin" asp-action="UserManagement" class="btn btn-primary">
+            <img src="~/images/ManageUsers.png" alt="Manage Users" /> Manage Users
+        </a>
+    </div>
+</div>
+<hr>
+
+    <h1 class="recent-ad-log-text">Recent Admin Activity Logs</h1>
+    <div id="admin-activity-logs-table-container">
+        <table class="table-striped table-hover">
+            <thead>
+               
+                <tr>
+                    <th>Admin</th>
+                    <th>Action</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model.RecentLogs)
+                {
+                <tr>
+                        <td>@log.AdminUser</td>
+                        <td>@log.Action</td>
+                        <td>@log.Timestamp.ToString("g")</td>
+                </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
 <h2>Admin Dashboard</h2>
 
 <!-- Dashboard Statistics -->
