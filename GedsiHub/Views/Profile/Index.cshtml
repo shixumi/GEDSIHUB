@@ -1,10 +1,138 @@
 ﻿@model GedsiHub.ViewModels.UserProfileViewModel
 
 @{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "User Dashboard";
      Layout = "_LayoutApp";
     ViewData["Title"] = "User Profile";
 }
 
+<div>
+    <div id="con-of-user-info-and-cert">
+        <div class="recent-act-user-info-con">
+            <div id="user-profile-con" class="container user-profile-con">
+                <div class="user-info-with-cert-con">
+                    <div class="all-user-info-con">
+                        <div class="col-1-user-profile">
+                            <div class="profile-container">
+                                <img src="~/images/Account_Bigger.png" alt="User Profile Image" />
+                                <div class="camera-container">
+                                    <img src="~/images/Camera.png" alt="Camera Icon" />
+                                </div>
+                            </div>
+                            <span class="role-user-profile">@Model.UserType</span>
+                            <span class="name-user-profile">@Model.LivedName</span>
+                            <span class="pronouns-user-profile">@Model.Pronouns</span>
+                            <span class="label-col-1-user-profile">Pronouns</span>
+                            <span class="honorifics-user-profile">@Model.Honorifics</span>
+                            <span class="label-col-1-user-profile">Honorifics</span>
+                            <span class="date-joined-user-profile">Date Joined</span>
+                            <div></div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <div>
+                            <div class="col-2-con">
+                                <button id="editUserProfileButtton" type="button" onclick="location.href='@Url.Action("Edit", "Profile")'">
+                                    <img src="~/images/Edit_Green.png" alt="Edit Icon" width="13" height="13" /> Edit Profile
+                                </button>
+                                <div class="user-profile-table-container">
+                                    <table class="user-profile-table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Name</td>
+                                                <td>@Model.FirstName @Model.LastName</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Program</td>
+                                                <td>@Model.Program</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Date of Birth</td>
+                                                <td>@Model.DateOfBirth.ToString("MMMM dd, yyyy")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Phone No.</td>
+                                                <td>@Model.PhoneNumber</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sex</td>
+                                                <td>@Model.Sex</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gender</td>
+                                                <td>@Model.GenderIdentity</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="view-more">
+                                    <span>View More </span><span>&gt;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="recent-activity-con" class="container user-profile-con">
+                <div class="recent-activity-table-container">
+                    <table class="recent-activity-table">
+                        <thead class="hd-recent-act-text">
+                            <tr>
+                                <th class="text-start">Recent Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RecentPosts != null && Model.RecentPosts.Any())
+                            {
+                                @foreach (var post in Model.RecentPosts)
+                                {
+                                    <tr>
+                                        <td class="text-start">
+                                            <a href="@Url.Action("Details", "ForumPost", new { id = post.PostId })" class="post-title">
+                                                @post.Title
+                                            </a>
+                                            <p class="post-snippet">@post.ContentSnippet</p>
+                                            <span class="recent-activity-time">@post.RelativeCreatedAt</span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-start">No recent activities.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="certificates-con" class="container">
+            <h1 class="your-cert-label">
+                Your Certificates 
+                <img src="~/images/Certificate.png" alt="Certificate Icon" />
+            </h1>
+            <span>View your earned certificates for completed modules. Click on any certificate to view or download.</span>
+            <div class="certificates-container">
+                <div class="certificate-item">
+                    <div class="cert-mod-no-con">
+                        <h1>Module</h1>
+                        <h1>1</h1>
+                    </div>
+                    <span class="status-completed">Completed</span>
+                    <div class="certificate-placeholder"></div>
+                </div>
+                <div class="certificate-item">
+                    <div class="cert-mod-no-con">
+                        <h1>Module</h1>
+                        <h1>1</h1>
+                    </div>
+                    <span class="status-completed">Completed</span>
+                    <div class="certificate-placeholder"></div>
+                </div>
+            </div>
+        </div>
 
 <div>
     <div id="con-of-user-info-and-cert">

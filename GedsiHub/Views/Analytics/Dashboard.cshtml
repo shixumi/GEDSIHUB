@@ -110,8 +110,6 @@
                 <canvas id="ageDistributionChart" class="full-width-canvas"></canvas>
             </div>
 
-
-
             <!-- Module Performance and Active Users Container -->
             <div class="mod-perf-active-users-container">
 
@@ -119,7 +117,7 @@
                     <!-- Current Active Users -->
                     <div class="active-users-label-and-count-con">
                         <h4>Current<br>Active Users</h4>
-                        <span class="activeUsersCount">0</span>
+                        <span class="activeUsersCount"></span>
                     </div>
                 </div>
                 
@@ -179,100 +177,17 @@
                 <h2>Employment Status Breakdown</h2>
                 <canvas id="employmentStatusChart"></canvas>
             </div>
-            <div class="container analytics_graph_container feedback-emp-course-satisfaction">
-                <!-- User Satisfaction Levels -->
-                <h2>User Satisfaction Levels</h2>
-                <canvas id="userSatisfactionChart"></canvas>
-            </div>
         </div>
         <div class="col-2-emp-course-container">
-            <div class="container analytics_graph_container feedback-emp-course-satisfaction">
-                <!-- User Feedback Analysis -->
-                <h2>User Feedback Analysis</h2>
-                <canvas id="feedbackAnalysisChart"></canvas>
-            </div>
             <div class="container analytics_graph_container feedback-emp-course-satisfaction smaller-course-association">
                 <!-- Course Associations -->
                 <h2>Course Associations</h2>
                 <canvas id="courseAssociationsChart"></canvas>
-
             </div>
 
 
             
         </div>
-    </div>
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-@* <!-- Container for All Charts -->
-<div style="display: flex; flex-direction: column; gap: 40px;">
-    <!-- Existing Analytics Charts -->
-    <!-- ... your existing charts like User Demographics, Module Performance, etc. ... -->
-
-    <!-- Example: User Demographics -->
-    <div>
-        <h2>User Demographics</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-            <div style="flex: 1 1 300px;">
-                <h3>Age Distribution</h3>
-                <canvas id="ageDistributionChart"></canvas>
-            </div>
-            <div style="flex: 1 1 300px;">
-                <h3>Gender Identity</h3>
-                <canvas id="genderIdentityChart"></canvas>
-            </div>
-            <div style="flex: 1 1 300px;">
-                <h3>Indigenous Membership</h3>
-                <canvas id="indigenousMembershipChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Module Performance -->
-    <div>
-        <h2>Module Performance</h2>
-        <div style="margin-bottom: 20px;">
-            <label for="moduleSelector">Select Module:</label>
-            <select id="moduleSelector">
-                @foreach (var module in Model.Modules)
-                {
-                    <option value="@module.ModuleId">@module.Title</option>
-                }
-            </select>
-        </div>
-        <div>
-            <p><strong>Average Quiz Score:</strong> <span id="averageQuizScore">0</span></p>
-            <p><strong>Completion Rate:</strong> <span id="completionRate">0</span>%</p>
-            <p><strong>Certificates Issued:</strong> <span id="certificateIssuance">0</span></p>
-        </div>
-    </div>
-
-    <!-- Current Active Users -->
-    <div>
-        <h2>Current Active Users</h2>
-        <p><strong>Active Users:</strong> <span class="activeUsersCount">0</span></p>
-    </div> *@
-
-
-    <!-- Employment Status Breakdown -->
-    <div>
-        <h2>Employment Status Breakdown</h2>
-        <canvas id="employmentStatusChart"></canvas>
-    </div>
-
-    <!-- Course Associations -->
-    <div>
-        <h2>Course Associations</h2>
-        <canvas id="courseAssociationsChart"></canvas>
     </div>
 
 </div>
@@ -447,7 +362,7 @@
                 });
             });
 
-        // Course Associations
+             // Course Associations
         fetch('/Analytics/GetCourseAssociations')
             .then(response => response.json())
             .then(data => {
@@ -478,7 +393,6 @@
                     }
                 });
             });
-
 
         // Current Active Users
         fetch('/Analytics/GetCurrentActiveUsers')

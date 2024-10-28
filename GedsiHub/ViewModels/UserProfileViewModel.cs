@@ -1,12 +1,17 @@
 ﻿// ViewModels/UserProfileViewModel.cs
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GedsiHub.ViewModels
 {
     public class UserProfileViewModel
     {
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
         // Common Fields
         [Display(Name = "User Type")]
         public string UserType { get; set; } // "Student" or "Employee"
@@ -63,6 +68,12 @@ namespace GedsiHub.ViewModels
         // Profile Picture
         [Display(Name = "Profile Picture")]
         public string ProfilePicturePath { get; set; }
+
+        // Certificates
+        public List<CertificateDto> Certificates { get; set; } = new List<CertificateDto>();
+
+        // Recent Activities
+        public List<RecentPostDto> RecentPosts { get; set; } = new List<RecentPostDto>();
 
         // Additional Fields (if any)
     }

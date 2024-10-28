@@ -29,7 +29,7 @@ namespace GedsiHub.Models
         [Column("reason", TypeName = "TEXT")]
         public string Reason { get; set; } = string.Empty; // Reason for reporting
 
-        [Column("created_at", TypeName = "TIMESTAMP")]
+        [Column("created_at", TypeName = "DATETIME2")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
