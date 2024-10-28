@@ -1,8 +1,160 @@
 ﻿@model GedsiHub.ViewModels.UserProfileViewModel
 
 @{
+     Layout = "_LayoutApp";
     ViewData["Title"] = "User Profile";
 }
+
+
+<div>
+    <div id="con-of-user-info-and-cert">
+        <div class="recent-act-user-info-con">
+            <div id="user-profile-con" class="container user-profile-con">
+                <div class="user-info-with-cert-con">
+                    <div class="all-user-info-con">
+                        <div class="col-1-user-profile">
+                            <div class="profile-container">
+                                <img src="~/images/Account_Bigger.png" alt="User Profile Image" />
+                                <div class="camera-container">
+                                    <img src="~/images/Camera.png" alt="Camera Icon" />
+                                </div>
+                            </div>
+                            <span class="role-user-profile">Student</span>
+                            <span class="name-user-profile">ALEXANDER S. PORLARES</span>
+                            <span class="pronouns-user-profile">He/Him</span>
+                            <span class="label-col-1-user-profile">Pronouns</span>
+                            <span class="honorifics-user-profile">Mr.</span>
+                            <span class="label-col-1-user-profile">Honorifics</span>
+                            <span class="date-joined-user-profile">Date Joined</span>
+                            <div></div>
+                        </div>
+                        <div class="vertical-line"></div>
+                        <div>
+                            <div class="col-2-con">
+                                <button id="editUserProfileButtton" type="button">
+                                    <img src="~/images/Edit_Green.png" alt="Edit Icon" width="13" height="13" /> Edit Profile
+                                </button>
+                                <div class="user-profile-table-container">
+                                    <table class="user-profile-table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Name</td>
+                                                <td>Alex Porlares</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Program</td>
+                                                <td>BSIT</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Date of Birth</td>
+                                                <td>December 1, 2005</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Phone No.</td>
+                                                <td>+639761948900</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sex</td>
+                                                <td>Female</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gender</td>
+                                                <td>Cisgender</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="view-more" id="viewMoreButton">
+                                    <span>View More ></span>
+                                </div>
+
+                                <!-- Additional details section -->
+                                <div class="additional-details">
+                                    <div class="user-profile-table-container">
+                                        <button id="editUserProfileButtton" type="button">
+                                            <img src="~/images/Edit_Green.png" alt="Edit Icon" width="13" height="13" /> Edit Profile
+                                        </button>
+                                        <table class="user-profile-table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Indigenous Community</td>
+                                                    <td>Yes</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Differently Abled</td>
+                                                    <td>No</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>College</td>
+                                                    <td>Some College</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Year</td>
+                                                    <td>2nd Year</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Section</td>
+                                                    <td>A</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="recent-activity-con" class="container user-profile-con">
+                <div class="recent-activity-table-container">
+                    <table class="recent-activity-table">
+                        <thead class="hd-recent-act-text">
+                            <tr>
+                                <th class="text-start">Recent Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-start">
+                                    This is the recent activity of the admin
+                                    <span class="recent-activity-time">2hrs ago</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="certificates-con" class="container">
+            <h1 class="your-cert-label">
+                Your Certificates
+                <img src="~/images/Certificate.png" alt="Certificate Icon" />
+            </h1>
+            <span>View your earned certificates for completed modules. Click on any certificate to view or download.</span>
+            <div class="certificates-container">
+                <div class="certificate-item">
+                    <div class="cert-mod-no-con">
+                        <h1>Module</h1>
+                        <h1>1</h1>
+                    </div>
+                    <span class="status-completed">Completed</span>
+                    <div class="certificate-placeholder"></div>
+                </div>
+                <div class="certificate-item">
+                    <div class="cert-mod-no-con">
+                        <h1>Module</h1>
+                        <h1>2</h1>
+                    </div>
+                    <span class="status-completed">Completed</span>
+                    <div class="certificate-placeholder"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <h2>@ViewData["Title"]</h2>
 

@@ -219,3 +219,33 @@ input[type="checkbox"] {
         margin-top: 1rem;
         margin-right: 1rem;
     }
+
+
+#mark-as-resolved-button {
+    font-weight: 500;
+    border-radius: 1.5rem;
+    border: none;
+    padding: 0.3rem 1.5rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    color: #464040;
+    background-color: #e6e6e6;
+    border: none;
+    width: rem;
+    font-size: 1.2rem;
+}
+
+    #mark-as-resolved-button:hover {
+        background-color: #edf1ff;
+    }
+
+    #mark-as-resolved-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #mark-as-resolved-button img {
+        width: 1.3rem;
+        margin-right: 0.5rem;
+    }
+
