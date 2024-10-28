@@ -15,6 +15,33 @@
 </div>
 <hr>
 
+<div class="ad-dashboard-container">
+    <div class="container admin-dashboard-item-con">
+        <div class="label-and-no-con">
+            <span class="ad-mod-text-dashboard">Total Users</span>
+            <h1 class="ad-number">@Model.TotalUsers</h1>
+        </div>
+        <img src="~/images/People.png" alt="Total Users" />
+    </div>
+    <div class="container admin-dashboard-item-con">
+        <div class="label-and-no-con">
+            <span class="ad-mod-text-dashboard">Admin Users</span>
+            <h1 class="ad-number">@Model.AdminCount</h1>
+        </div>
+        <div></div>
+        <img src="~/images/Admin.png" alt="Admin Users" />
+    </div>
+    <div class="container admin-dashboard-item-con">
+        <div class="label-and-no-con">
+            <span class="ad-mod-text-dashboard">Non-Admin Users</span>
+            <h1 class="ad-number">@Model.NonAdminCount</h1>
+        </div>
+        <div></div>
+        <img src="~/images/Total_Learners.png" alt="Non-Admin Users" />
+    </div>
+</div>
+
+
     <h1 class="recent-ad-log-text">Recent Admin Activity Logs</h1>
     <div id="admin-activity-logs-table-container">
         <table class="table-striped table-hover">
@@ -42,7 +69,7 @@
 
 
 
-
+@* 
 <h2>Admin Dashboard</h2>
 
 <!-- Dashboard Statistics -->
@@ -75,5 +102,5 @@
 </table>
 
 <!-- Navigation Links (e.g., sidebar or top links) -->
-<a asp-controller="Admin" asp-action="UserManagement" class="btn btn-primary">Manage Users</a>
+<a asp-controller="Admin" asp-action="UserManagement" class="btn btn-primary">Manage Users</a> *@
 
