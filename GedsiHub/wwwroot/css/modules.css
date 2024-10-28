@@ -221,17 +221,17 @@
     max-height: calc(1.248em * 2);
 }
 
-#NumberOfLessonsContainer {
+.NumberOfLessonsContainer {
     width: 100%;
     margin-left: 0;
     display: flex;
-    align-content: center;
+    align-items: center;
 }
 
 .LessonIcon {
     width: 1.05625rem;
     height: 0.975rem;
-    margin-top: 0.208rem;
+/*    margin-top: 0.208rem;*/
 }
 
 .LessonsText, .NumberOfLessons {
