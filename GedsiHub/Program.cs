@@ -61,8 +61,8 @@ builder.Services.AddControllersWithViews(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Identity/Account/Login"; // Set your login path here
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied"; // Optional: Set your access denied path
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
 

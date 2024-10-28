@@ -1,15 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using GedsiHub.Models; // Assuming ApplicationUser is in this namespace
-using System.Text; // For Encoding
-using Microsoft.AspNetCore.WebUtilities; // For WebEncoders
+using GedsiHub.Models;
+using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace GedsiHub.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;

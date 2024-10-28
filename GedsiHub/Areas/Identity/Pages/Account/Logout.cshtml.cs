@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GedsiHub.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class LogoutModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
