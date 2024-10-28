@@ -61,7 +61,6 @@ namespace GedsiHub.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
                 // Attempt to sign in the user
@@ -85,7 +84,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                         }
                     }
 
-                    return LocalRedirect(returnUrl);
+                    return RedirectToAction("Index", "Dashboard");
                 }
 
                 if (result.RequiresTwoFactor)

@@ -140,7 +140,7 @@ namespace GedsiHub.Services
                     .GroupBy(s => s.CourseId)
                     .Select(g => new CourseAssociationDto
                     {
-                        CourseId = g.Key,
+                        CourseName = g.FirstOrDefault().Course.CourseName,
                         Count = g.Count()
                     })
                     .ToListAsync()
@@ -181,23 +181,6 @@ namespace GedsiHub.Services
             return 0.0;
         }
 
-        public async Task<FeedbackAnalysisDto> GetFeedbackAnalysisAsync()
-        {
-            var feedbacks = await _context.UserFeedbacks.ToListAsync();
-
-            // Simple sentiment analysis example (placeholder)
-            var positive = feedbacks.Count(f => f.SatisfactionScore >= 4);
-            var neutral = feedbacks.Count(f => f.SatisfactionScore == 3);
-            var negative = feedbacks.Count(f => f.SatisfactionScore <= 2);
-
-            return new FeedbackAnalysisDto
-            {
-                Positive = positive,
-                Neutral = neutral,
-                Negative = negative
-            };
-        }
-
         public async Task<UserSegmentationDto> GetUserSegmentationAsync()
         {
             // Example segmentation by Employment Status
@@ -222,24 +205,6 @@ namespace GedsiHub.Services
             return new CorrelationDto
             {
                 CorrelationCoefficient = 0.0
-            };
-        }
-
-        public async Task<UserSatisfactionDto> GetUserSatisfactionAsync(int moduleId)
-        {
-            var satisfaction = await _context.UserFeedbacks
-                .Where(f => f.ModuleId == moduleId)
-                .GroupBy(f => f.SatisfactionScore)
-                .Select(g => new SatisfactionDto
-                {
-                    Score = g.Key,
-                    Count = g.Count()
-                })
-                .ToListAsync();
-
-            return new UserSatisfactionDto
-            {
-                SatisfactionScores = satisfaction
             };
         }
 
@@ -271,27 +236,13 @@ namespace GedsiHub.Services
                 .GroupBy(s => s.CourseId)
                 .Select(g => new CourseAssociationDto
                 {
-                    CourseId = g.Key,
+                    CourseName = g.FirstOrDefault().Course.CourseName, // Fetch CourseName
                     Count = g.Count()
                 })
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Retrieves user satisfaction levels.
-        /// </summary>
-        /// <returns>List of SatisfactionDto.</returns>
-        public async Task<List<SatisfactionDto>> GetUserSatisfactionLevelsAsync()
-        {
-            return await _context.UserFeedbacks
-                .GroupBy(f => f.SatisfactionScore)
-                .Select(g => new SatisfactionDto
-                {
-                    Score = g.Key,
-                    Count = g.Count()
-                })
-                .ToListAsync();
-        }
+
 
         // Method to get Total Learners
         public async Task<int> GetTotalLearnersAsync()
@@ -330,9 +281,10 @@ namespace GedsiHub.Services
 
     public class CourseAssociationDto
     {
-        public int? CourseId { get; set; }
+        public string CourseName { get; set; }
         public int Count { get; set; }
     }
+
 
     public class SatisfactionDto
     {
@@ -374,13 +326,6 @@ namespace GedsiHub.Services
         public bool IsCompleted { get; set; }
     }
 
-    public class FeedbackAnalysisDto
-    {
-        public int Positive { get; set; }
-        public int Neutral { get; set; }
-        public int Negative { get; set; }
-    }
-
     public class UserSegmentationDto
     {
         public List<SegmentDto> Segments { get; set; }
@@ -395,10 +340,5 @@ namespace GedsiHub.Services
     public class CorrelationDto
     {
         public double CorrelationCoefficient { get; set; }
-    }
-
-    public class UserSatisfactionDto
-    {
-        public List<SatisfactionDto> SatisfactionScores { get; set; }
     }
 }

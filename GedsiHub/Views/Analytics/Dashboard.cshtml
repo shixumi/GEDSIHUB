@@ -91,12 +91,6 @@
         <p><strong>Active Users:</strong> <span class="activeUsersCount">0</span></p>
     </div>
 
-    <!-- User Feedback Analysis -->
-    <div>
-        <h2>User Feedback Analysis</h2>
-        <canvas id="feedbackAnalysisChart"></canvas>
-    </div>
-
     <!-- Employment Status Breakdown -->
     <div>
         <h2>Employment Status Breakdown</h2>
@@ -109,11 +103,6 @@
         <canvas id="courseAssociationsChart"></canvas>
     </div>
 
-    <!-- User Satisfaction Levels -->
-    <div>
-        <h2>User Satisfaction Levels</h2>
-        <canvas id="userSatisfactionChart"></canvas>
-    </div>
 </div>
 
 <!-- Charts Initialization Script -->
@@ -239,35 +228,6 @@
             document.getElementById('moduleSelector').dispatchEvent(new Event('change'));
         }
 
-        // Feedback Analysis
-        fetch('/Analytics/GetFeedbackAnalysis')
-            .then(response => response.json())
-            .then(data => {
-                const ctx = document.getElementById('feedbackAnalysisChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Positive', 'Neutral', 'Negative'],
-                        datasets: [{
-                            data: [data.positive, data.neutral, data.negative],
-                            backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            title: {
-                                display: false,
-                                text: 'User Feedback Analysis'
-                            }
-                        }
-                    }
-                });
-            });
-
         // Employment Status Breakdown
         fetch('/Analytics/GetEmploymentStatusBreakdown')
             .then(response => response.json())
@@ -319,7 +279,7 @@
         fetch('/Analytics/GetCourseAssociations')
             .then(response => response.json())
             .then(data => {
-                // Assuming data contains CourseId and CourseName for better labels
+                // Assuming data contains CourseName and Count
                 const labels = data.map(c => c.courseName);
                 const counts = data.map(c => c.count);
 
@@ -347,52 +307,6 @@
                 });
             });
 
-        // User Satisfaction Levels
-        fetch('/Analytics/GetUserSatisfactionLevels')
-            .then(response => response.json())
-            .then(data => {
-                const labels = data.map(s => `Score ${s.score}`);
-                const counts = data.map(s => s.count);
-
-                new Chart(document.getElementById('userSatisfactionChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Number of Responses',
-                            data: counts,
-                            backgroundColor: 'rgba(255, 159, 64, 0.6)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: false,
-                                text: 'User Satisfaction Levels'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Number of Responses'
-                                }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Satisfaction Score'
-                                }
-                            }
-                        }
-                    }
-                });
-            });
 
         // Current Active Users
         fetch('/Analytics/GetCurrentActiveUsers')
