@@ -564,6 +564,9 @@ body {
         background-color: #fff;
     }
 
+    .modal {
+        font-family: 'Poppins', sans-serif;
+    }
     .modal-body .alert {
         margin: 0px;
     }
