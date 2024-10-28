@@ -13,19 +13,21 @@
 
         <div class="modules-actions-con">
 
-
             <!-- Search Input for Modules -->
             <div id="modules-search-con" class="um-search-con">
                 <input id="moduleSearch" type="search" name="search" placeholder="Search for modules" />
-                    <button type="submit" class="search-icon-um">
-                        <img id="modulesSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
-                    </button>
+                <button type="submit" class="search-icon-um">
+                    <img id="modulesSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
+                </button>
             </div>
 
-            <!-- Create Module Button -->
-            <a asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton">
-                <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
-            </a>
+            <!-- Create Module Button (Visible to Admins only) -->
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton">
+                    <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
+                </a>
+            }
 
             <!-- View Toggle Buttons using Bootstrap Pills -->
             <ul class="nav nav-pills module_list_grid_view" id="viewTabs" role="tablist">
@@ -40,8 +42,6 @@
                     </button>
                 </li>
             </ul>
-
-
         </div>
     </div>
 
@@ -58,11 +58,17 @@
                     <div class="module_card" id="moduleCard-@module.ModuleId" style="padding-right: 2.1rem; padding-left: 2.1rem;">
                         <div class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
                             <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
+
+                            <!-- Color Picker (Admin only) -->
                             <div class="picker-container">
-                                <input id="colorPicker-@module.ModuleId" class="ColorInput" type="color" value="@module.Color" onchange="updateColor(@module.ModuleId, this.value)" />
+                                <input id="colorPicker-@module.ModuleId"
+                                       class="ColorInput"
+                                       type="color"
+                                       value="@module.Color"
+                                       onchange="updateColor(@module.ModuleId, this.value)"
+                                @(User.IsInRole("Admin") ? "" : "disabled") />
                             </div>
                         </div>
-
 
                         <!-- Module Title -->
                         <a asp-action="Details" asp-route-id="@module.ModuleId">
@@ -88,51 +94,55 @@
                             </div>
                         </div>
 
-                        <!-- Line Break -->
-                        <div class="ModuleCard_LineBreak"></div>
+                       @*  <!-- Line Break -->
+                        <div class="ModuleCard_LineBreak"></div> *@
 
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <!-- Line Break -->
+                            <div class="ModuleCard_LineBreak"></div>
+                        } 
 
-                        <!-- Publish/Unpublish Button -->
-                        <div id="modCardButtonContainer" class="d-xxl-flex justify-content-between align-items-center">
-                            <div id="toggleButtonPublishUnpublishModule" class="d-xxl-flex">
-                                @if (module.Status == ModuleStatus.Published)
-                                {
-                                    <form asp-action="Unpublish" method="post">
-                                        <input type="hidden" name="id" value="@module.ModuleId" />
-                                        <button type="submit" class="btn toggle-content">
-                                            <img class="PublishIcon" src="~/images/Unpublish.png" />
-                                            <span>Unpublish</span>
-                                        </button>
-                                    </form>
-                                }
-                                else
-                                {
-                                    <form asp-action="Publish" method="post">
-                                        <input type="hidden" name="id" value="@module.ModuleId" />
-                                        <button type="submit" class="btn toggle-content">
-                                            <img class="PublishIcon" src="~/images/Publish.png" />
-                                            <span>Publish</span>
-                                        </button>
-                                    </form>
-                                }
+                        <!-- Publish/Unpublish Button (Admin only) -->
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div id="modCardButtonContainer" class="d-xxl-flex justify-content-between align-items-center">
+                                <div id="toggleButtonPublishUnpublishModule" class="d-xxl-flex">
+                                    @if (module.Status == ModuleStatus.Published)
+                                    {
+                                        <form asp-action="Unpublish" method="post">
+                                            <input type="hidden" name="id" value="@module.ModuleId" />
+                                            <button type="submit" class="btn toggle-content">
+                                                <img class="PublishIcon" src="~/images/Unpublish.png" />
+                                                <span>Unpublish</span>
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="Publish" method="post">
+                                            <input type="hidden" name="id" value="@module.ModuleId" />
+                                            <button type="submit" class="btn toggle-content">
+                                                <img class="PublishIcon" src="~/images/Publish.png" />
+                                                <span>Publish</span>
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+
+                                <!-- Edit and Delete Buttons (Admin only) -->
+                                <div class="d-xxl-flex justify-content-xxl-end" style="margin-top: 19px;">
+                                    <a asp-action="Edit" asp-route-id="@module.ModuleId">
+                                        <img id="EditModule-@module.ModuleId" class="Edit" src="~/images/Edit.png" />
+                                    </a>
+                                    <a data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
+                                        <img id="DeleteModule-@module.ModuleId" class="Delete" src="~/images/Delete.png" />
+                                    </a>
+                                </div>
                             </div>
-
-                            <!-- Edit and Delete Buttons -->
-                            <div class="d-xxl-flex justify-content-xxl-end" style="margin-top: 19px;">
-                                <a asp-action="Edit" asp-route-id="@module.ModuleId">
-                                    <img id="EditModule-@module.ModuleId" class="Edit" src="~/images/Edit.png" />
-                                </a>
-                                <a data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
-                                    <img id="DeleteModule-@module.ModuleId" class="Delete" src="~/images/Delete.png" />
-                                </a>
-                            </div>
-                        </div>
+                        }
                     </div>
                 }
-                <!-- Add New Module Button -->
-                <a asp-action="Create" class="btn add-new-module">
-                    <img class="d-xxl-flex add_icon" src="~/images/Add.png" /> Add New Module
-                </a>
             </div>
         </div>
 
@@ -145,12 +155,16 @@
                         <tr class="module-table-label">
                             <th class="module-header-label text-start">Module Title</th>
                             <th class="module-header-label">No. of Lessons</th>
-                            <th class="module-header-label">Status</th>
-                            <th class="module-header-label text-start">Actions</th>
+
+                            <!-- Conditionally display Status and Actions for Admins only -->
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <th class="module-header-label">Status</th>
+                                <th class="module-header-label text-start">Actions</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach (var module in Model)
                         {
                             <tr>
@@ -164,60 +178,53 @@
                                 <!-- Number of Lessons -->
                                 <td class="module-content">@module.Lessons.Count()</td>
 
-                                <!-- Status (Published/Unpublished) -->
-                                <td class="module-content">
-                                    @if (module.Status == ModuleStatus.Published)
-                                    {
-                                        <span class="text-success">Published</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-danger">Unpublished</span>
-                                    }
-                                </td>
+                                <!-- Conditionally display Status and Actions for Admins only -->
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <!-- Status (Published/Unpublished) -->
+                                    <td class="module-content">
+                                        @if (module.Status == ModuleStatus.Published)
+                                        {
+                                            <span class="text-success">Published</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">Unpublished</span>
+                                        }
+                                    </td>
 
-                                <!-- Actions (Edit/Delete/Publish/Unpublish) -->
-                                <td class="module-content text-start action-buttons">
-                                    <!-- Edit Button with Rounded Corners and Icon -->
-                                    <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId">
-                                        <img src="~/images/Edit.png" /> Edit
-                                    </a>
+                                    <!-- Actions (Edit/Delete/Publish/Unpublish) -->
+                                    <td class="module-content text-start action-buttons">
+                                        <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId">
+                                            <img src="~/images/Edit.png" /> Edit
+                                        </a>
 
-                                    <!-- Delete Button with Rounded Corners and Icon -->
-                                    <a id="list-deleteModuleButton" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
-                                        <img src="~/images/Delete.png" /> Delete
-                                    </a>
+                                        <a id="list-deleteModuleButton" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
+                                            <img src="~/images/Delete.png" /> Delete
+                                        </a>
 
-                                    <!-- Publish/Unpublish Button with Icons -->
-                                    @if (module.Status == ModuleStatus.Published)
-                                    {
-                                        <form asp-action="Unpublish" method="post" style="display:inline;">
-                                            <input type="hidden" name="id" value="@module.ModuleId" />
-                                            <button id="list-unpublishModuleButton" type="submit">
-                                                <img src="~/images/Unpublish.png" /> Unpublish
-                                            </button>
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <form asp-action="Publish" method="post" style="display:inline;">
-                                            <input type="hidden" name="id" value="@module.ModuleId" />
-                                            <button id="list-publishModuleButton" type="submit">
-                                                <img src="~/images/Publish.png" /> Publish
-                                            </button>
-                                        </form>
-                                    }
-                                </td>
+                                        @if (module.Status == ModuleStatus.Published)
+                                        {
+                                            <form asp-action="Unpublish" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@module.ModuleId" />
+                                                <button id="list-unpublishModuleButton" type="submit">
+                                                    <img src="~/images/Unpublish.png" /> Unpublish
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="Publish" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@module.ModuleId" />
+                                                <button id="list-publishModuleButton" type="submit">
+                                                    <img src="~/images/Publish.png" /> Publish
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                }
                             </tr>
                         }
-
-                        <!-- "Add New Module" Row - Entire Row Clickable -->
-                        <tr style="cursor: pointer;" onclick="location.href='@Url.Action("Create")';">
-                            <td colspan="4" class="text-start text-muted">
-                                <i class="la la-plus"></i> Add New Module
-                            </td>
-                        </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -251,8 +258,6 @@
     </div>
 }
 
-
-
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
@@ -273,7 +278,5 @@
                 }
             });
         }
-
-
     </script>
 }

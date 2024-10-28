@@ -89,3 +89,12 @@
 .h5p-controls {
     font-family: 'Poppins', sans-serif !important;
 }
+
+.responsive-iframe {
+    margin-bottom: 2rem;
+}
+
+
+/*.tinyMCE_preview {
+    margin-top: 2rem;
+}*/

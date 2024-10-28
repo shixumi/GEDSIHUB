@@ -16,5 +16,5 @@ public class FeedbackComplaint
     [Display(Name = "Detailed Description")]
     public string DetailedDescription { get; set; }
 
-    public IFormFile Evidence { get; set; } // Optional file upload
+    public IFormFile? Evidence { get; set; } // Optional file upload
 }

@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize]
     public class ChatbotController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,12 +18,21 @@ namespace GedsiHub.Controllers
             _context = context;
         }
 
+        // ****************************** CHATBOT HOME VIEW ******************************
+
+        // GET: Chatbot/Index
+        // Displays the Chatbot interface view.
         public IActionResult Index()
         {
             return View("Chat");
         }
 
-        // Fetch available modules
+        // ****************************** API ENDPOINTS ******************************
+
+        // ****************************** FETCH AVAILABLE MODULES ******************************
+
+        // GET: api/chatbot/modules
+        // API endpoint to fetch a list of all available modules. Only the module title is returned for simplicity.
         [HttpGet("api/chatbot/modules")]
         public async Task<IActionResult> GetModules()
         {
@@ -32,7 +43,10 @@ namespace GedsiHub.Controllers
             return Ok(new { modules });
         }
 
-        // Fetch FAQs
+        // ****************************** FETCH FAQS ******************************
+
+        // GET: api/chatbot/faqs
+        // API endpoint to fetch a list of Frequently Asked Questions (FAQs), returning the question and answer for each FAQ.
         [HttpGet("api/chatbot/faqs")]
         public async Task<IActionResult> GetFAQs()
         {
@@ -43,7 +57,10 @@ namespace GedsiHub.Controllers
             return Ok(new { faqs });
         }
 
-        // Fetch FAQ answer by ID
+        // ****************************** FETCH FAQ ANSWER BY ID ******************************
+
+        // GET: api/chatbot/faq/{id}
+        // API endpoint to fetch the answer of a specific FAQ by its ID.
         [HttpGet("api/chatbot/faq/{id}")]
         public async Task<IActionResult> GetFaqAnswer(int id)
         {
@@ -60,7 +77,10 @@ namespace GedsiHub.Controllers
             return Ok(faq);
         }
 
-        // Fetch module details by ID
+        // ****************************** FETCH MODULE DETAILS BY ID ******************************
+
+        // GET: api/chatbot/module/{id}
+        // API endpoint to fetch details (description) of a specific module by its ID.
         [HttpGet("api/chatbot/module/{id}")]
         public async Task<IActionResult> GetModuleDetails(int id)
         {
@@ -77,7 +97,10 @@ namespace GedsiHub.Controllers
             return Ok(new { details = module.Description });
         }
 
-        // Fetch Contact Info
+        // ****************************** FETCH CONTACT INFORMATION ******************************
+
+        // GET: api/chatbot/contact
+        // API endpoint to fetch contact information such as support email, phone number, and social media links.
         [HttpGet("api/chatbot/contact")]
         public async Task<IActionResult> GetContact()
         {

@@ -221,17 +221,17 @@
     max-height: calc(1.248em * 2);
 }
 
-#NumberOfLessonsContainer {
+.NumberOfLessonsContainer {
     width: 100%;
     margin-left: 0;
     display: flex;
-    align-content: center;
+    align-items: center;
 }
 
 .LessonIcon {
     width: 1.05625rem;
     height: 0.975rem;
-    margin-top: 0.208rem;
+/*    margin-top: 0.208rem;*/
 }
 
 .LessonsText, .NumberOfLessons {
@@ -250,6 +250,7 @@
     width: 100%;
     display: flex;
     margin-top: 1.976rem;
+    margin-bottom: 1.9rem; /* tested in user side */
 }
 
 #ViewCount, #LikeCount {
@@ -284,6 +285,7 @@
     border-radius: 0.8125rem;
     display: flex;
     margin-bottom: -1.04rem;
+    margin-top: -1.9rem;
 }
 
 #DeleteModule, #EditModule {

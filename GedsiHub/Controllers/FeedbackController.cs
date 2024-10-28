@@ -6,7 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using GedsiHub.Data;
 using GedsiHub.Models;
+using GedsiHub.ViewModels;
 
+[Authorize]
 public class FeedbackController : Controller
 {
 	private readonly ApplicationDbContext _context;
@@ -16,15 +18,30 @@ public class FeedbackController : Controller
 		_context = context;
 	}
 
-	// ************** USER INTERFACE **************
+    // ************** USER INTERFACE **************
 
-	[Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
-	public IActionResult Index()
-	{
-		return View();  // Views/Feedback/Index.cshtml
-	}
+    [Authorize]
+    public IActionResult Index()
+    {
+        var complaints = _context.Feedbacks
+            .Where(f => f.FeedbackType == "Complaint" && !f.IsResolved)
+            .ToList();
 
-	[Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
+        var suggestions = _context.Feedbacks
+            .Where(f => f.FeedbackType == "Suggestion" && !f.IsResolved)
+            .ToList();
+
+        // Pass both lists to the view via a ViewModel
+        var model = new FeedbackAdminViewModel
+        {
+            Complaints = complaints,
+            Suggestions = suggestions
+        };
+
+        return View(model);
+    }
+
+    [Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
 	public IActionResult Complaint()
 	{
 		return View();  // Views/Feedback/Complaint.cshtml

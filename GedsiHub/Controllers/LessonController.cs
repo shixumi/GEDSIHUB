@@ -7,9 +7,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize]
     public class LessonController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,18 +23,25 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
-        // GET: Lessons for a specific module
+        // ****************************** LESSON MANAGEMENT ******************************
+
+        // GET: List all lessons for a specific module
+        // Displays the lessons under the provided module ID.
         public async Task<IActionResult> Index(int moduleId)
         {
             var lessons = await _context.Lessons
                                         .Where(l => l.ModuleId == moduleId)
                                         .ToListAsync();
 
-            ViewBag.ModuleId = moduleId;  // To pass moduleId for "Create Lesson" link
+            ViewBag.ModuleId = moduleId;
             return View(lessons);
         }
 
+        // ****************************** LESSON CREATION ******************************
+
         // GET: Create a new Lesson
+        // Displays the form for creating a new lesson in a specified module.
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(int moduleId)
         {
             ViewBag.ModuleId = moduleId;
@@ -40,8 +49,10 @@ namespace GedsiHub.Controllers
         }
 
         // POST: Create a new Lesson
+        // Handles the creation of a new lesson in the specified module.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(int moduleId, [Bind("Title,Overview,LessonNumber")] Lesson lesson)
         {
             _logger.LogInformation($"Creating lesson for ModuleId: {moduleId}");
@@ -51,7 +62,6 @@ namespace GedsiHub.Controllers
             {
                 try
                 {
-                    // Assign the moduleId to the lesson
                     lesson.ModuleId = moduleId;
                     _logger.LogInformation($"Saving lesson with ModuleId: {lesson.ModuleId}, Title: {lesson.Title}");
                     _context.Add(lesson);
@@ -78,7 +88,11 @@ namespace GedsiHub.Controllers
             return View(lesson);
         }
 
+        // ****************************** LESSON EDITING ******************************
+
         // GET: Edit an existing Lesson
+        // Displays the form for editing an existing lesson by ID.
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var lesson = await _context.Lessons
@@ -94,8 +108,10 @@ namespace GedsiHub.Controllers
 
 
         // POST: Edit an existing Lesson
+        // Handles the submission of the lesson edit form.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("LessonId,Title,LessonNumber,Overview,ModuleId")] Lesson lesson)
         {
 
@@ -140,7 +156,11 @@ namespace GedsiHub.Controllers
             return View(lesson);
         }
 
+        // ****************************** LESSON DELETION ******************************
+
         // GET: Delete a Lesson
+        // Displays the confirmation page to delete a lesson by ID.
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var lesson = await _context.Lessons
@@ -154,8 +174,10 @@ namespace GedsiHub.Controllers
         }
 
         // POST: Delete a Lesson
+        // Handles the deletion of a lesson upon confirmation.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var lesson = await _context.Lessons.FindAsync(id);
@@ -176,7 +198,11 @@ namespace GedsiHub.Controllers
             return RedirectToAction("Details", "Module", new { id = moduleId });
         }
 
+        // ****************************** LESSON DETAILS ******************************
+
         // GET: Fetch Lesson Details
+        // Fetches the details of a lesson along with related content.
+        [Authorize(Roles = "Student, Employee, Admin")]
         public async Task<IActionResult> Details(int id)
         {
             // Fetch the lesson by ID along with its related LessonContent
@@ -196,9 +222,13 @@ namespace GedsiHub.Controllers
             return View(lesson);
         }
 
-        // GET: Toggle Published status of a Lesson
+        // ****************************** TOGGLE PUBLISH STATUS ******************************
+
+        // POST: Toggle Published status of a Lesson
+        // Toggles the "IsPublished" status of the lesson.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> TogglePublish(int id)
         {
             var lesson = await _context.Lessons.FindAsync(id);
@@ -214,6 +244,9 @@ namespace GedsiHub.Controllers
             return RedirectToAction("Details", "Module", new { id = lesson.ModuleId });
         }
 
+        // ****************************** HELPER METHODS ******************************
+
+        // Helper method to check if a lesson exists by its ID.
         private bool LessonExists(int id)
         {
             return _context.Lessons.Any(e => e.LessonId == id);

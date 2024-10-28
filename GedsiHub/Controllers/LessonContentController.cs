@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize]
     public class LessonContentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,10 +22,13 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
-        // ************** USER INTERFACE **************
+        // ****************************** USER INTERFACE ******************************
 
         // GET: Go To Lesson button
-        [Authorize(Roles = "Student, Employee, Admin")]  // Accessible by Students, Employees, and Admins
+        // This action allows users to go to a lesson's content. If the content exists, they are redirected to the content details page.
+        // If no content exists and the user is an Admin, they are redirected to the content creation page.
+        // Non-admin users are redirected to the module details if content does not exist.
+        [Authorize(Roles = "Student, Employee, Admin")] 
         public async Task<IActionResult> GoToLesson(int lessonId)
         {
             // Check if a LessonContent exists for the given LessonId
@@ -49,7 +53,10 @@ namespace GedsiHub.Controllers
             }
         }
 
+        // ****************************** LESSON CONTENT CREATION ******************************
+
         // GET: LessonContent/Create/{lessonId}
+        // Displays the form for creating new lesson content for a specified lesson. Only Admins have access.
         [Authorize(Roles = "Admin")]  // Only Admins can create LessonContent
         public IActionResult Create(int lessonId)
         {
@@ -76,6 +83,7 @@ namespace GedsiHub.Controllers
         }
 
         // POST: LessonContent/Create
+        // Handles the submission of the form for creating new lesson content. Only Admins have access.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]  // Only Admins can submit LessonContent creation
@@ -111,8 +119,11 @@ namespace GedsiHub.Controllers
             return RedirectToAction("Details", "LessonContent", new { id = lessonContent.ContentId });
         }
 
-        // GET: LessonContent/Edit/5
-        [Authorize(Roles = "Admin")]  // Only Admins can edit LessonContent
+        // ****************************** LESSON CONTENT EDITING ******************************
+
+        // GET: LessonContent/Edit/{id}
+        // Displays the form for editing an existing lesson content by its ID. Only Admins have access.
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -140,7 +151,8 @@ namespace GedsiHub.Controllers
             return View("Edit", lessonContent);
         }
 
-        // POST: LessonContent/Edit/5
+        // POST: LessonContent/Edit/{id}
+        // Handles the submission of the form for editing existing lesson content. Only Admins have access.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]  // Only Admins can submit LessonContent edits
@@ -188,8 +200,11 @@ namespace GedsiHub.Controllers
             return RedirectToAction("Details", "LessonContent", new { id = lessonContent.ContentId });
         }
 
+        // ****************************** LESSON CONTENT DETAILS ******************************
+
         // GET: LessonContent/Details/{id}
-        [Authorize(Roles = "Student, Employee, Admin")]  // Accessible by Students, Employees, and Admins
+        // Displays the details of a lesson content by its ID. Accessible by Students, Employees, and Admins.
+        [Authorize(Roles = "Student, Employee, Admin")]
         public async Task<IActionResult> Details(int id)
         {
             var lessonContent = await _context.LessonContents
@@ -213,7 +228,10 @@ namespace GedsiHub.Controllers
             return View(lessonContent);
         }
 
-        // POST: LessonContent/Delete/5
+        // ****************************** LESSON CONTENT DELETION ******************************
+
+        // POST: LessonContent/Delete/{id}
+        // Handles the confirmation and deletion of a lesson content by its ID. Only Admins have access.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]  // Only Admins can delete LessonContent
@@ -237,6 +255,9 @@ namespace GedsiHub.Controllers
             return RedirectToAction("Details", "Module", new { id = moduleId });
         }
 
+        // ****************************** HELPER METHODS ******************************
+
+        // Helper method to check if a lesson content exists by ID.
         private bool LessonContentExists(int id)
         {
             return _context.LessonContents.Any(e => e.ContentId == id);
@@ -253,7 +274,8 @@ namespace GedsiHub.Controllers
                    embedCode.Contains("src=\"https://h5p.org");
         }
 
-        // Extracted validation logic to a separate method to avoid repetition
+        // Extracted validation logic to a separate method to avoid repetition.
+        // Validates the lesson content based on its type (e.g., Text, Image, H5P).
         private void ValidateLessonContent(LessonContent lessonContent)
         {
             switch (lessonContent.ContentType)

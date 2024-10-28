@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Student,Employee,Admin")]
     public class DashboardController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -84,7 +84,6 @@ namespace GedsiHub.Controllers
             }
         }
 
-        // User Dashboard (for Students and Employees)
         // User Dashboard (for Students and Employees)
         [Authorize(Roles = "Student,Employee")]
         public async Task<IActionResult> UserDashboard()

@@ -1,6 +1,7 @@
 ﻿using GedsiHub.Data;
 using GedsiHub.Models;
 using GedsiHub.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize(Roles = "Student,Employee,Admin")]
     public class ForumCommentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -87,7 +89,7 @@ namespace GedsiHub.Controllers
 
             if (!IsUserAuthorizedToDeleteComment(comment))
             {
-                return Forbid(); // Ensure the user is either the comment owner or an admin
+                return Forbid();
             }
 
             _context.ForumComments.Remove(comment);

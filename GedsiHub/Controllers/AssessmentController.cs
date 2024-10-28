@@ -21,7 +21,11 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
+        // ****************************** CREATE ASSESSMENT ******************************
+
         // GET: Assessment/Create/{moduleId}
+        // Displays the form to create a new assessment for a specified module.
+        // If an assessment already exists for the module, it redirects to the edit page.
         public IActionResult Create(int moduleId)
         {
             _logger.LogInformation($"Creating assessment for ModuleId: {moduleId}");
@@ -49,6 +53,8 @@ namespace GedsiHub.Controllers
         }
 
         // POST: Assessment/Create
+        // Handles the submission of the form to create a new assessment.
+        // Validates the input and saves the new assessment to the database.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Description,H5PEmbedCode,ModuleId")] Assessment assessment)
@@ -93,7 +99,10 @@ namespace GedsiHub.Controllers
             return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
         }
 
-        // GET: Assessment/Edit/5
+        // ****************************** EDIT ASSESSMENT ******************************
+
+        // GET: Assessment/Edit/{id}
+        // Displays the form to edit an existing assessment by its ID.
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -112,7 +121,9 @@ namespace GedsiHub.Controllers
             return View(assessment);
         }
 
-        // POST: Assessment/Edit/5
+        // POST: Assessment/Edit/{id}
+        // Handles the submission of the form to edit an assessment.
+        // Validates the input and updates the assessment in the database.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AssessmentId,Title,Description,H5PEmbedCode,ModuleId,CreatedDate,LastModifiedDate")] Assessment assessment)
@@ -169,7 +180,10 @@ namespace GedsiHub.Controllers
             return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
         }
 
-        // GET: Assessment/Delete/5
+        // ****************************** DELETE ASSESSMENT ******************************
+
+        // GET: Assessment/Delete/{id}
+        // Displays the confirmation page to delete an assessment by its ID.
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -191,7 +205,8 @@ namespace GedsiHub.Controllers
             return View(assessment);
         }
 
-        // POST: Assessment/Delete/5
+        // POST: Assessment/Delete/{id}
+        // Handles the confirmation and deletion of an assessment.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -210,6 +225,9 @@ namespace GedsiHub.Controllers
             return NotFound();
         }
 
+        // ****************************** HELPER METHOD ******************************
+
+        // Helper method to check if an assessment exists by ID.
         private bool AssessmentExists(int id)
         {
             var exists = _context.Assessments.Any(e => e.AssessmentId == id);

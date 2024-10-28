@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GedsiHub.Controllers
 {
@@ -31,7 +32,10 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
+        // ****************************** PROFILE VIEWING ******************************
+
         // GET: Profile
+        // Displays the profile information for the logged-in user, which can be a Student, Employee, or Admin.
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -87,7 +91,10 @@ namespace GedsiHub.Controllers
             return View(profileViewModel);
         }
 
+        // ****************************** PROFILE EDITING ******************************
+
         // GET: Profile/Edit
+        // Displays the profile edit form for the logged-in user, which can be a Student, Employee, or Admin.
         public async Task<IActionResult> Edit()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -142,6 +149,7 @@ namespace GedsiHub.Controllers
         }
 
         // POST: Profile/Edit
+        // Submits changes to the user profile for Students, Employees, or Admins.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditUserProfileViewModel model)
@@ -252,7 +260,9 @@ namespace GedsiHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Helper Method to Determine User Type
+        // ****************************** HELPER METHODS ******************************
+
+        // Helper Method to Determine User Type (Student, Employee, or Admin).
         private async Task<string> GetUserTypeAsync(ApplicationUser user)
         {
             var isStudent = await _context.Students.AnyAsync(s => s.UserId == user.Id);
