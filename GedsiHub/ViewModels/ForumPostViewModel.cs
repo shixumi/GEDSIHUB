@@ -35,7 +35,8 @@ namespace GedsiHub.ViewModels
         public string Flair { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Please select a module.")]
-        public int ModuleId { get; set; }
+        public int? ModuleId { get; set; }
+        public string? ModuleTitle { get; set; }
         public List<Module>? Modules { get; set; }
         public string? UserId { get; set; }
     }

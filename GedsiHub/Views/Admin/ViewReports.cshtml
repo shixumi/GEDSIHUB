@@ -1,0 +1,136 @@
+﻿@model GedsiHub.ViewModels.AdminReportsViewModel
+
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Reported Posts and Comments";
+}
+
+<!-- Admin View -->
+<div class="feedback-dashboard">
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="reportsTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="post-reports-tab" data-bs-toggle="tab" href="#post-reports" role="tab" aria-controls="post-reports" aria-selected="true">
+                Reported Posts
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="comment-reports-tab" data-bs-toggle="tab" href="#comment-reports" role="tab" aria-controls="comment-reports" aria-selected="false">
+                Reported Comments
+            </a>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content" id="reportsTabContent">
+        <!-- Reported Posts Tab -->
+        <div class="tab-pane fade show active" id="post-reports" role="tabpanel" aria-labelledby="post-reports-tab">
+            <div class="table-responsive feedback-responses-table">
+                <table class="table">
+                    <thead>
+                        <tr class="feedback-table-label">
+                            <th class="select-all-checkbox"><input type="checkbox" /></th>
+                            <th><strong>Post Title</strong></th>
+                            <th><strong>Reported By</strong></th>
+                            <th><strong>Reason</strong></th>
+                            <th><strong>Date</strong></th>
+                            <th><strong>Actions</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ReportedPosts.Any())
+                        {
+                            @foreach (var report in Model.ReportedPosts)
+                            {
+                                <tr class="row-feedback-response">
+                                    <td class="checkbox-container"><input type="checkbox" /></td>
+                                    <td>@report.PostTitle</td>
+                                    <td>@report.ReportedByName</td>
+                                    <td>@report.Reason</td>
+                                    <td>@report.CreatedAt.ToShortDateString()</td>
+                                    <td class="view-delete-button-container">
+                                        <!-- View button to go to post details -->
+                                        <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" class="btn btn-sm btn-info">View</a>
+
+                                        <!-- Dismiss button -->
+                                        <form asp-action="DismissPostReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-secondary">Dismiss</button>
+                                        </form>
+
+                                        <!-- Delete button -->
+                                        <form asp-action="DeletePost" asp-route-id="@report.PostId" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">No reports found for posts.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reported Comments Tab -->
+        <div class="tab-pane fade" id="comment-reports" role="tabpanel" aria-labelledby="comment-reports-tab">
+            <div class="table-responsive feedback-responses-table">
+                <table class="table">
+                    <thead>
+                        <tr class="feedback-table-label">
+                            <th class="select-all-checkbox"><input type="checkbox" /></th>
+                            <th><strong>Comment Content</strong></th>
+                            <th><strong>Reported By</strong></th>
+                            <th><strong>Reason</strong></th>
+                            <th><strong>Date</strong></th>
+                            <th><strong>Actions</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ReportedComments.Any())
+                        {
+                            @foreach (var report in Model.ReportedComments)
+                            {
+                                <tr class="row-feedback-response">
+                                    <td class="checkbox-container"><input type="checkbox" /></td>
+                                    <td>@report.CommentContent</td>
+                                    <td>@report.ReportedByName</td>
+                                    <td>@report.Reason</td>
+                                    <td>@report.CreatedAt.ToShortDateString()</td>
+                                    <td class="view-delete-button-container">
+                                        <!-- View button to go to the post details where the comment is located -->
+                                        <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" class="btn btn-sm btn-info">View</a>
+
+                                        <!-- Dismiss button -->
+                                        <form asp-action="DismissCommentReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-secondary">Dismiss</button>
+                                        </form>
+
+                                        <!-- Delete button -->
+                                        <form asp-action="DeleteComment" asp-route-id="@report.CommentId" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">No reports found for comments.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

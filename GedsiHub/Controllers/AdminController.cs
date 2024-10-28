@@ -258,6 +258,115 @@ namespace GedsiHub.Controllers
             }
         }
 
+        // ****************************** ADMIN REPORTS DASHBOARD ******************************
+
+        // GET: View all reports (Posts and Comments)
+        public async Task<IActionResult> ViewReports()
+        {
+            var postReports = await _context.ForumPostReports
+                .Include(r => r.ForumPost)
+                .Include(r => r.User)
+                .Select(r => new ReportedPostViewModel
+                {
+                    ReportId = r.ReportId,
+                    PostId = r.PostId,
+                    PostTitle = r.ForumPost.Title,
+                    ReportedByName = $"{r.User.FirstName} {r.User.LastName}",
+                    Reason = r.Reason,
+                    CreatedAt = r.CreatedAt
+                })
+                .ToListAsync();
+
+            var commentReports = await _context.ForumCommentReports
+                .Include(r => r.ForumComment)
+                .Include(r => r.User)
+                .Select(r => new ReportedCommentViewModel
+                {
+                    ReportId = r.ReportId,
+                    CommentId = r.CommentId,
+                    CommentContent = r.ForumComment.Content,
+                    ReportedByName = $"{r.User.FirstName} {r.User.LastName}",
+                    Reason = r.Reason,
+                    CreatedAt = r.CreatedAt,
+                    PostId = r.ForumComment.PostId // For linking to the post
+                })
+                .ToListAsync();
+
+            var viewModel = new AdminReportsViewModel
+            {
+                ReportedPosts = postReports,
+                ReportedComments = commentReports
+            };
+
+            return View(viewModel); // Ensure the correct model is passed here
+        }
+
+        // POST: Delete the reported post
+        [HttpPost]
+        public async Task<IActionResult> DeletePost(int postId)
+        {
+            var post = await _context.ForumPosts.FindAsync(postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            // Remove the post and associated reports
+            _context.ForumPosts.Remove(post);
+            var relatedReports = _context.ForumPostReports.Where(r => r.PostId == postId);
+            _context.ForumPostReports.RemoveRange(relatedReports);
+
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Post and associated reports deleted successfully.";
+            return RedirectToAction(nameof(ViewReports));
+        }
+
+        // POST: Delete the reported comment
+        [HttpPost]
+        public async Task<IActionResult> DeleteComment(int commentId)
+        {
+            var comment = await _context.ForumComments.FindAsync(commentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            // Remove the comment and associated reports
+            _context.ForumComments.Remove(comment);
+            var relatedReports = _context.ForumCommentReports.Where(r => r.CommentId == commentId);
+            _context.ForumCommentReports.RemoveRange(relatedReports);
+
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Comment and associated reports deleted successfully.";
+            return RedirectToAction(nameof(ViewReports));
+        }
+
+        // POST: Dismiss a post report
+        [HttpPost]
+        public async Task<IActionResult> DismissPostReport(int reportId)
+        {
+            var report = await _context.ForumPostReports.FindAsync(reportId);
+            if (report == null) return NotFound();
+
+            _context.ForumPostReports.Remove(report);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Post report dismissed successfully.";
+            return RedirectToAction(nameof(ViewReports));
+        }
+
+        // POST: Dismiss a comment report
+        [HttpPost]
+        public async Task<IActionResult> DismissCommentReport(int reportId)
+        {
+            var report = await _context.ForumCommentReports.FindAsync(reportId);
+            if (report == null) return NotFound();
+
+            _context.ForumCommentReports.Remove(report);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Comment report dismissed successfully.";
+            return RedirectToAction(nameof(ViewReports));
+        }
+
         // ****************************** ACTIVITY LOGS ******************************
 
         // GET: Admin/ActivityLogs

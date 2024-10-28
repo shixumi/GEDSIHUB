@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace GedsiHub.Controllers
 {
@@ -263,6 +264,8 @@ namespace GedsiHub.Controllers
         }
 
         // ****************************** FORUM POSTS: REPORT ******************************
+
+        // POST: ForumPost/ReportPost
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ReportPost(int postId, string reason)
@@ -273,10 +276,16 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);  // Using claims to get the user ID
+            if (userId == null)
+            {
+                return Forbid();  // Ensure the user is logged in
+            }
+
             var report = new ForumPostReport
             {
                 PostId = postId,
-                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                UserId = userId,  // User ID from claims
                 Reason = reason,
                 CreatedAt = DateTime.UtcNow
             };
@@ -284,10 +293,47 @@ namespace GedsiHub.Controllers
             _context.ForumPostReports.Add(report);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Post reported successfully!";
+            TempData["SuccessMessage"] = "Your report has been submitted successfully!";
             return RedirectToAction("Details", new { id = postId });
         }
 
+        // POST: ForumPost/ReportComment
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ReportComment(int commentId, string reason)
+        {
+            if (string.IsNullOrWhiteSpace(reason))
+            {
+                TempData["ErrorMessage"] = "Please provide a reason for reporting.";
+                return RedirectToAction("Details", new { id = commentId });  // Redirect to the post if no reason is provided
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);  // Get user ID from claims
+            if (userId == null)
+            {
+                return Forbid();  // Ensure the user is logged in
+            }
+
+            var comment = await _context.ForumComments.FindAsync(commentId);
+            if (comment == null)
+            {
+                return NotFound();  // If the comment doesn't exist
+            }
+
+            var report = new ForumCommentReport
+            {
+                CommentId = commentId,
+                UserId = userId,  // Set user ID from claims
+                Reason = reason,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ForumCommentReports.Add(report);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Comment reported successfully.";
+            return RedirectToAction("Details", new { id = comment.PostId });
+        }
 
         // ****************************** HELPER METHODS FOR RBAC ******************************
 
