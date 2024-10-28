@@ -191,6 +191,40 @@
     gap: 1rem;
 }
 
+#AnalyticsButton {
+    background: none;
+    color: white;
+    background-color: #660000;
+    border: none;
+    border-radius: 3rem;
+    width: 11rem;
+    height: 2.734375rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#AnalyticsButtonhover {
+    background-color: #920000;
+}
+
+
+
+#AnalyticsButton:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    border-style: none;
+}
+
+#AnalyticsButton img {
+    width: 1.7rem;
+    margin-top: -0.1rem;
+    margin-right: 0.7rem;
+}
+
+
+
+
 
 /*ANALYTICS CSS*/
 
