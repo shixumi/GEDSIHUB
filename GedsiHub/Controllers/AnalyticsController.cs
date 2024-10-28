@@ -110,17 +110,6 @@ namespace GedsiHub.Controllers
             return Json(progress);
         }
 
-        // ****************************** FEEDBACK ANALYSIS API ******************************
-
-        // GET: Analytics/GetFeedbackAnalysis
-        // API endpoint that returns feedback analysis, including positive and negative feedback trends.
-        [HttpGet("GetFeedbackAnalysis")]
-        public async Task<IActionResult> GetFeedbackAnalysis()
-        {
-            var feedbackAnalysis = await _analyticsService.GetFeedbackAnalysisAsync();
-            return Json(feedbackAnalysis);
-        }
-
         // ****************************** TRACK MODULE TIME API ******************************
 
         // POST: Analytics/TrackModuleTime
@@ -169,17 +158,6 @@ namespace GedsiHub.Controllers
         {
             var courseAssociations = await _analyticsService.GetCourseAssociationsAsync();
             return Json(courseAssociations);
-        }
-
-        /// ****************************** USER SATISFACTION LEVELS API ******************************
-
-        // GET: Analytics/GetUserSatisfactionLevels
-        // API endpoint that returns user satisfaction levels based on surveys and feedback.
-        [HttpGet("GetUserSatisfactionLevels")]
-        public async Task<IActionResult> GetUserSatisfactionLevels()
-        {
-            var satisfactionLevels = await _analyticsService.GetUserSatisfactionLevelsAsync();
-            return Json(satisfactionLevels);
         }
     }
 
