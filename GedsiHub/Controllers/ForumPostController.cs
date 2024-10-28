@@ -262,6 +262,33 @@ namespace GedsiHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // ****************************** FORUM POSTS: REPORT ******************************
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ReportPost(int postId, string reason)
+        {
+            var post = await _context.ForumPosts.FindAsync(postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var report = new ForumPostReport
+            {
+                PostId = postId,
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                Reason = reason,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ForumPostReports.Add(report);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Post reported successfully!";
+            return RedirectToAction("Details", new { id = postId });
+        }
+
+
         // ****************************** HELPER METHODS FOR RBAC ******************************
 
         private bool IsUserAuthorized(string userId)
