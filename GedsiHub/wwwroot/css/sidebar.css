@@ -4,18 +4,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/*  font-family: 'Poppins', sans-serif;*/
+/*  background: #fafafa;*/
 body, p {
-  font-family: 'Poppins', sans-serif;
-  background: #fafafa;
   overflow-x: hidden;
   overflow-y: hidden;
 }
 
-p {
+/*p {
   font-size: 1.1em;
   font-weight: 300;
   line-height: 1.7em;
-}
+}*/
 
 a, a:hover, a:focus {
   color: inherit;
@@ -55,6 +55,7 @@ a, a:hover, a:focus {
 }
 
 .layout_container {
+    font-family: 'Poppins', sans-serif;
     display: flex;
     min-height: 100vh;
     width: 100%;
