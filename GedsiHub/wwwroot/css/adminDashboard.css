@@ -1,0 +1,432 @@
+﻿hr {
+    margin-top: -0.3rem;
+
+}
+
+.ad-dashboard-container {
+    display: flex;
+    gap: 1rem;
+}
+
+    .ad-dashboard-container img {
+        width: 2.5rem;
+        height: auto;
+    }
+
+.admin-dashboard-item-con {
+    background: #ffffff;
+    padding: 3rem 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    color: #464040;
+    display: flex;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    align-items: center;
+    max-height: 5rem;
+}
+
+.ad-mod-text-dashboard {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 0.7rem;
+}
+
+.ad-number {
+    color: #660000;
+    font-weight: 600;
+    font-size: 2.5rem;
+}
+
+.label-and-no-con {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#GenerateReportButton {
+    background: none;
+    color: white;
+    background-color: #660000;
+    border: none;
+    border-radius: 3rem;
+    width: 14rem;
+    height: 2.734375rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    #GenerateReportButton:hover {
+        background-color: #920000;
+    }
+
+    #GenerateReportButton:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        border-style: none;
+    }
+
+    #GenerateReportButton img {
+        width: 1.7rem;
+        margin-top: -0.1rem;
+        margin-right: 0.7rem;
+    }
+
+
+#admin-activity-logs-table-container {
+    background: #ffffff;
+    height: 13rem;
+    margin-top: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    overflow-y: auto;
+    border-collapse: collapse;
+    color: #464040;
+}
+
+    #admin-activity-logs-table-container::-webkit-scrollbar {
+        width: 0; /* Hide scrollbar */
+    }
+
+    #admin-activity-logs-table-container table {
+        width: 100%;
+        box-sizing: border-box;
+        
+    }
+
+    #admin-activity-logs-table-container th,
+    #admin-activity-logs-table-container td {
+        padding: 0.5rem 0;
+        text-align: left;
+        color: #464040;
+        font-size: 1rem;
+    }
+
+        #admin-activity-logs-table-container th:first-child,
+        #admin-activity-logs-table-container td:first-child {
+            padding-left: 3rem;
+        }
+
+        #admin-activity-logs-table-container th:last-child,
+        #admin-activity-logs-table-container td:last-child {
+            padding-right: 3rem;
+        }
+
+    #admin-activity-logs-table-container th {
+        padding-top: 0.8rem;
+        border-bottom: 2px solid #464040;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: #660000;
+        color: white;
+        vertical-align: middle;
+    }
+
+    #admin-activity-logs-table-container tr {
+        background: none;
+        border-bottom: 1px solid #b7bac7;
+        transition: background-color 0.3s ease;
+    }
+
+        #admin-activity-logs-table-container tr:hover {
+            background-color: #e0e0e0;
+        }
+
+    #admin-activity-logs-table-container td:first-child {
+        width: 25%;
+        font-weight: 600;
+    }
+
+    #admin-activity-logs-table-container td:nth-child(2) {
+        width: 55%;
+    }
+
+    #admin-activity-logs-table-container td:last-child {
+        width: 20%;
+    }
+
+
+
+.recent-ad-log-text {
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}
+
+#ManageUsersButton {
+    background: none;
+    border: 2px solid #464040;
+    border-radius: 3rem;
+    width: 13rem;
+    height: 2.734375rem;
+    font-weight: 500;
+    transition: border 0.2s ease, color 0.2s ease;
+    align-items: center;
+    color: #464040;
+}
+
+    #ManageUsersButton:hover {
+        border: 3px solid #464040;
+        font-weight: 600;
+    }
+
+    #ManageUsersButton:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #ManageUsersButton img {
+        width: 2rem;
+        margin-top: -0.9rem;
+        margin-bottom: -0.9rem;
+        margin-right: 0.6rem;
+    }
+
+.manage-user-and-gen-rep-con {
+    display: flex;
+    gap: 1rem;
+}
+
+
+/*ANALYTICS CSS*/
+
+.analytics_graph_container {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    color: #464040;
+    display: flex;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    align-items: center;
+    min-height: 20rem;
+    max-height: 20rem;
+    font-weight: 600;
+}
+
+#age-distribution-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#age-distribution-container h6 {
+    font-weight: bold;
+}
+
+
+
+.col-1-age-dist-container {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.col-2-of-user-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 30%;
+    text-align: start;
+}
+    .col-2-of-user-demo h6 {
+        font-weight: bold;
+    }
+
+
+#age-distribution-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%; /* Ensure it takes full width */
+    height: 100%; /* Ensure it takes full height, or define a specific height */
+}
+
+.full-width-canvas {
+    width: 100%; /* Make the canvas take the full width of the container */
+    height: 100%; /* Make the canvas take the full height of the container */
+    max-height: 400px; /* Optional: set a max height for the canvas */
+}
+
+
+
+
+#mod-perf-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+}
+
+
+/* Set specific widths for the two containers */
+#active-users-container {
+
+    min-width: 25%; /* Optional: set a minimum width to prevent collapsing */
+}
+
+#mod-perf-container {
+
+    min-width: 75%; /* Optional: set a minimum width to prevent collapsing */
+}
+
+
+.module-performance-container h2 {
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.module-label {
+    font-weight: 500;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.form-control {
+    min-width: 40.3rem; /* Make it responsive to the parent container */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    height: 3rem; /* Maintain the height */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+}
+
+/* Flex container for the stats to align them horizontally */
+.module-performance-stats-container {
+    display: flex;
+    justify-content: space-between; /* Distributes the stats evenly */
+    width: 100%;
+    margin-top: 10px;
+    flex-wrap: wrap; /* Allow wrapping to new lines if needed */
+}
+
+/* Individual stat box */
+.module-performance-stat {
+    flex: 1 1 calc(33.33% - 10px); /* Flex-grow, flex-shrink, and basis for responsiveness */
+    text-align: center; /* Centers the text inside each stat */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px; /* Adds spacing between the stat boxes */
+    padding: 10px; /* Adds padding inside each stat box */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+    .module-performance-stat:last-child {
+        margin-right: 0; /* Removes margin from the last stat box */
+    }
+
+    .module-performance-stat p {
+        margin: 0;
+        font-size: 1rem;
+        color: #333;
+        font-weight: 500;
+        color: #464040;
+    }
+
+/* Style for the numeric values */
+#averageQuizScore, #completionRate, #certificateIssuance {
+    color: #660000;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* ACTIVE USERS */
+.activeUsersCount {
+    font-size: 6.5rem;
+    font-weight: 600;
+    color: #660000;
+    margin-top: 1rem;
+}
+
+#active-users-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: flex-start;
+    min-height: 10rem; /* Ensures a minimum height for stability */
+}
+
+.active-users-label-and-count-con {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Container for active users and module performance */
+.mod-perf-active-users-container {
+    display: flex;
+    justify-content: space-between; /* Aligns both containers side by side */
+    width: 98.2%; /* Makes sure it takes the full width */
+    gap: 1rem; /* Adds space between the two containers */
+}
+
+/* Set a minimum width for the two containers */
+#active-users-container, #mod-perf-container {
+    flex: 1; /* Allow each container to grow equally */
+}
+
+
+
+
+
+
+
+.col-1-feedback-satistfaction-container {
+    width: 70%; /* Set this to a smaller width */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.col-2-emp-course-container {
+    width: 30.5%; /* Set this to a larger width */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.all-analytics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feedback-emp-course-satisfaction {
+    min-height: 30rem; /* Minimum height for the container */
+    display: flex;
+    flex-direction: column; /* Arrange heading and canvas vertically */
+}
+
+    .feedback-emp-course-satisfaction h2 {
+        font-size: 1.5rem;
+        margin-bottom: 10px; /* Space between heading and canvas */
+    }
+
+    /* Make canvas responsive */
+    .feedback-emp-course-satisfaction canvas {
+        width: 100%; /* Take full width of the container */
+        flex-grow: 1; /* Allow the canvas to grow */
+        height: auto; /* Maintain aspect ratio */
+        max-height: 400px; /* Optional: set a max height for larger charts */
+    }
+
+/* Smaller canvas for Course Associations */
+.smaller-course-association {
+    height: 30rem; /* Set a smaller minimum height */
+}
+
+    .smaller-course-association canvas {
+        min-height: 10rem !important; /* Set a smaller max height for the canvas */
+        width: auto;
+    }
+
