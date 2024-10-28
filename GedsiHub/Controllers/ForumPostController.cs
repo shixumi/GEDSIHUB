@@ -9,9 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize(Roles = "Student,Employee,Admin")]
     public class ForumPostController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +22,8 @@ namespace GedsiHub.Controllers
         {
             _context = context;
         }
+
+        // ****************************** FORUM POSTS: VIEWING ******************************
 
         // GET: ForumPost/Index - Display all posts
         public async Task<IActionResult> Index()
@@ -73,6 +77,8 @@ namespace GedsiHub.Controllers
 
             return View(viewModel);
         }
+
+        // ****************************** FORUM POSTS: CREATION ******************************
 
         // GET: ForumPost/Create
         [HttpGet]
@@ -139,6 +145,8 @@ namespace GedsiHub.Controllers
             TempData["SuccessMessage"] = "Post created successfully!";
             return RedirectToAction(nameof(Index));
         }
+
+        // ****************************** FORUM POSTS: EDITING ******************************
 
         // GET: ForumPost/Edit/{id}
         [HttpGet]
@@ -222,6 +230,8 @@ namespace GedsiHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // ****************************** FORUM POSTS: DELETION ******************************
+
         // GET: ForumPost/Delete/{id}
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
@@ -251,6 +261,8 @@ namespace GedsiHub.Controllers
             TempData["SuccessMessage"] = "Post deleted successfully!";
             return RedirectToAction(nameof(Index));
         }
+
+        // ****************************** HELPER METHODS FOR RBAC ******************************
 
         private bool IsUserAuthorized(string userId)
         {

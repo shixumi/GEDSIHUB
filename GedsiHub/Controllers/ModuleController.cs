@@ -1,5 +1,6 @@
 ﻿using GedsiHub.Data;
 using GedsiHub.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
 {
+    [Authorize]
     public class ModuleController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,7 +22,9 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
-        // Reusable method to fetch a module by ID
+        // ******************* FETCH MODULE BY ID *******************
+
+        // Helper: Fetch a module by its ID including its lessons
         private async Task<Module> GetModuleByIdAsync(int id)
         {
             return await _context.Modules
@@ -28,14 +32,18 @@ namespace GedsiHub.Controllers
                                  .FirstOrDefaultAsync(m => m.ModuleId == id);
         }
 
-        // GET: Modules
+        // ******************* MODULE LISTING *******************
+
+        // GET: Display the list of all modules
         public async Task<IActionResult> Index()
         {
             var modules = await _context.Modules.Include(m => m.Lessons).ToListAsync();
             return View(modules);
         }
 
-        // GET: Module Details
+        // ******************* MODULE DETAILS *******************
+
+        // GET: Display detailed information about a module including its lessons and assessments
         public async Task<IActionResult> Details(int id)
         {
             // Fetch the module and include its lessons and assessments
@@ -59,15 +67,19 @@ namespace GedsiHub.Controllers
             return View(module);
         }
 
-        // GET: Create a new Module
+        // ******************* MODULE CREATION *******************
+
+        // GET: Display form for creating a new module
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Create a new Module with improved error handling
+        // POST: Handle submission of new module creation with error handling
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Title,Description,Status,Color")] Module module)
         {
             if (!ModelState.IsValid)
@@ -100,7 +112,10 @@ namespace GedsiHub.Controllers
             return View(module);  // Return the view if an exception occurs
         }
 
-        // GET: Edit a Module
+        // ******************* MODULE EDITING *******************
+
+        // GET: Display form to edit an existing module
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var module = await GetModuleByIdAsync(id);
@@ -112,7 +127,7 @@ namespace GedsiHub.Controllers
             return View(module);
         }
 
-        // POST: Edit a Module with improved error handling
+        // POST: Handle submission of module editing with error handling
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ModuleId,Title,Description,Status,Color,CreatedDate,LastModifiedDate")] Module module)
@@ -154,7 +169,10 @@ namespace GedsiHub.Controllers
             return View(module);
         }
 
-        // DELETE: Module
+        // ******************* MODULE DELETION *******************
+
+        // GET: Confirm deletion of a module
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var module = await GetModuleByIdAsync(id);
@@ -166,8 +184,10 @@ namespace GedsiHub.Controllers
             return View(module);
         }
 
+        // POST: Handle deletion of a module
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var module = await _context.Modules.FindAsync(id);
@@ -180,9 +200,11 @@ namespace GedsiHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Publish a Module
+        // ******************* MODULE BUTTONS *******************
+        // POST: Publish a module by changing its status to Published
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Publish(int id)
         {
             var module = await _context.Modules.FindAsync(id);
@@ -193,15 +215,17 @@ namespace GedsiHub.Controllers
 
             module.Status = ModuleStatus.Published;
             module.LastModifiedDate = DateTime.UtcNow;
-                _context.Update(module);
-                await _context.SaveChangesAsync();
 
-            return View(module);
+            _context.Update(module);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // POST: Unpublish a Module
+        // POST: Unpublish a module by changing its status to Unpublished
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Unpublish(int id)
         {
             var module = await _context.Modules.FindAsync(id);
@@ -218,9 +242,10 @@ namespace GedsiHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Toggle status between Published and Unpublished
+        // POST: Toggle module status between Published and Unpublished
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ToggleStatus(int id)
         {
             var module = await _context.Modules.FindAsync(id);
@@ -240,6 +265,7 @@ namespace GedsiHub.Controllers
         // POST: Update the color of a module
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateColor(int id, string color)
         {
             var module = await _context.Modules.FindAsync(id);
@@ -268,6 +294,7 @@ namespace GedsiHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // ******************* HELPER: CHECK IF MODULE EXISTS *******************
         private bool ModuleExists(int id)
         {
             return _context.Modules.Any(e => e.ModuleId == id);

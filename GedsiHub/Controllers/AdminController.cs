@@ -26,7 +26,10 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
-        // Admin Dashboard
+        // ****************************** ADMIN DASHBOARD ******************************
+
+        // GET: Admin/Index
+        // This action displays the Admin dashboard with basic statistics about users and activity logs.
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Admin accessed the dashboard.");
@@ -56,7 +59,10 @@ namespace GedsiHub.Controllers
             }
         }
 
-        // User Management with Search and Filter (Active/Inactive)
+        // ****************************** USER MANAGEMENT ******************************
+
+        // GET: Admin/UserManagement
+        // This action displays a list of users with search and filter options (e.g., active/inactive users).
         public async Task<IActionResult> UserManagement(string search = "", bool? isActive = null)
         {
             _logger.LogInformation("Admin accessed the User Management page with search term: {SearchTerm} and filter: {IsActive}", search, isActive);
@@ -101,7 +107,10 @@ namespace GedsiHub.Controllers
             }
         }
 
-        // Edit User
+        // ****************************** EDIT USER ******************************
+
+        // GET: Admin/EditUser/{id}
+        // This action allows the Admin to load a specific user for editing, showing their details such as admin status and activity state.
         public async Task<IActionResult> EditUser(string id)
         {
             _logger.LogInformation("Admin attempting to edit user with ID: {UserId}", id);
@@ -127,6 +136,8 @@ namespace GedsiHub.Controllers
             return View(viewModel);
         }
 
+        // POST: Admin/EditUser
+        // This action updates the user details in the system, including toggling admin status or active state.
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
@@ -185,7 +196,10 @@ namespace GedsiHub.Controllers
             }
         }
 
-        // Delete User
+        // ****************************** USER DELETION ******************************
+
+        // GET: Admin/DeleteUser/{id}
+        // Display confirmation page for deleting a user. Only admins can delete a user.
         public async Task<IActionResult> DeleteUser(string id)
         {
             _logger.LogInformation("Admin attempting to delete user with ID: {UserId}", id);
@@ -206,6 +220,8 @@ namespace GedsiHub.Controllers
             return View(viewModel);
         }
 
+        // POST: Admin/DeleteUserConfirmed
+        // This action deletes the user from the database after confirmation. Only admins can delete a user.
         [HttpPost, ActionName("DeleteUser")]
         public async Task<IActionResult> DeleteUserConfirmed(string id)
         {
@@ -242,7 +258,10 @@ namespace GedsiHub.Controllers
             }
         }
 
-        // Activity Logs with Filters (Admin Name and Date Range)
+        // ****************************** ACTIVITY LOGS ******************************
+
+        // GET: Admin/ActivityLogs
+        // This action displays the activity logs with optional filters (admin name and date range).
         public async Task<IActionResult> ActivityLogs(string adminName = "", DateTime? startDate = null, DateTime? endDate = null)
         {
             _logger.LogInformation("Admin accessed the Activity Logs page with adminName: {AdminName}, startDate: {StartDate}, endDate: {EndDate}", adminName, startDate, endDate);
