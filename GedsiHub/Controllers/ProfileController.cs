@@ -3,6 +3,7 @@
 using GedsiHub.Data;
 using GedsiHub.Models;
 using GedsiHub.ViewModels;
+using GedsiHub.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GedsiHub.Controllers
 {
@@ -32,6 +32,12 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
+        // Helper Method to Process Fields
+        private string ProcessField(string? field)
+        {
+            return string.IsNullOrWhiteSpace(field) ? "N/A" : field.Trim();
+        }
+
         // ****************************** PROFILE VIEWING ******************************
 
         // GET: Profile
@@ -49,6 +55,8 @@ namespace GedsiHub.Controllers
 
             var profileViewModel = new UserProfileViewModel
             {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 UserType = userType,
                 Honorifics = user.Honorifics,
                 LivedName = user.LivedName,
@@ -59,6 +67,22 @@ namespace GedsiHub.Controllers
                 GenderIdentity = user.GenderIdentity,
                 ProfilePicturePath = user.ProfilePicturePath
             };
+
+            // Set LivedName to FirstName + LastName if null or empty
+            if (string.IsNullOrWhiteSpace(profileViewModel.LivedName))
+            {
+                profileViewModel.LivedName = $"{profileViewModel.FirstName} {profileViewModel.LastName}";
+            }
+
+            // Set other fields to "N/A" if null or empty
+            profileViewModel.Honorifics = ProcessField(profileViewModel.Honorifics);
+            profileViewModel.Pronouns = ProcessField(profileViewModel.Pronouns);
+            profileViewModel.Program = ProcessField(profileViewModel.Program);
+            profileViewModel.EmployeeType = ProcessField(profileViewModel.EmployeeType);
+            profileViewModel.EmploymentStatus = ProcessField(profileViewModel.EmploymentStatus);
+            profileViewModel.BranchOfficeSectionUnit = ProcessField(profileViewModel.BranchOfficeSectionUnit);
+            profileViewModel.Position = ProcessField(profileViewModel.Position);
+            profileViewModel.Sector = ProcessField(profileViewModel.Sector);
 
             if (userType == "Student")
             {
@@ -87,6 +111,26 @@ namespace GedsiHub.Controllers
                     profileViewModel.Sector = employee.Sector;
                 }
             }
+
+            // **Fetch Recent Posts**
+            var recentPosts = await _context.ForumPosts
+                .Where(p => p.UserId == user.Id)
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(5) // Limit to 5 recent posts
+                .ToListAsync(); // Fetch data first
+
+            // **Project to RecentPostDto In-Memory**
+            var recentPostDtos = recentPosts.Select(p => new RecentPostDto
+            {
+                PostId = p.PostId,
+                Title = p.Title,
+                ContentSnippet = p.Content.Length > 100 ? p.Content.Substring(0, 100) + "..." : p.Content,
+                ImagePath = string.IsNullOrWhiteSpace(p.ImagePath) ? "/images/default-post.png" : p.ImagePath,
+                Flair = string.IsNullOrWhiteSpace(p.Flair) ? "No Flair" : p.Flair,
+                RelativeCreatedAt = DateTimeHelper.GetRelativeTime(p.CreatedAt)
+            }).ToList();
+
+            profileViewModel.RecentPosts = recentPostDtos;
 
             return View(profileViewModel);
         }
@@ -273,7 +317,7 @@ namespace GedsiHub.Controllers
             if (isEmployee)
                 return "Employee";
 
-            return "Unknown";
+            return "Admin"; // Assuming non-Student/Employee users are Admins
         }
     }
 }
