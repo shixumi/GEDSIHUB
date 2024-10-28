@@ -156,7 +156,7 @@ app.MapHub<AnalyticsHub>("/analyticsHub");
 // Map Controller Routes
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
 // Specific Route for Chatbot
 app.MapControllerRoute(

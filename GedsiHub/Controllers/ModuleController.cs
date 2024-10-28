@@ -22,6 +22,12 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
+        // Helper Method to Check if User is Admin
+        private bool IsUserAdmin()
+        {
+            return User.IsInRole("Admin");
+        }
+
         // ******************* FETCH MODULE BY ID *******************
 
         // Helper: Fetch a module by its ID including its lessons
@@ -34,10 +40,19 @@ namespace GedsiHub.Controllers
 
         // ******************* MODULE LISTING *******************
 
-        // GET: Display the list of all modules
+        // GET: Display the list of modules
         public async Task<IActionResult> Index()
         {
-            var modules = await _context.Modules.Include(m => m.Lessons).ToListAsync();
+            IQueryable<Module> modulesQuery = _context.Modules.Include(m => m.Lessons);
+
+            if (!IsUserAdmin())
+            {
+                // Learners see only published modules
+                modulesQuery = modulesQuery.Where(m => m.Status == ModuleStatus.Published);
+            }
+
+            var modules = await modulesQuery.OrderBy(m => m.PositionInt).ToListAsync();
+
             return View(modules);
         }
 
@@ -55,6 +70,20 @@ namespace GedsiHub.Controllers
             if (module == null)
             {
                 return NotFound();
+            }
+
+            if (module.Status == ModuleStatus.Unpublished && !IsUserAdmin())
+            {
+                // Learners cannot access unpublished modules
+                return NotFound();
+            }
+
+            // For Learners, filter lessons based on their publication status
+            if (!IsUserAdmin())
+            {
+                module.Lessons = module.Lessons
+                    .Where(l => l.IsPublished)
+                    .ToList();
             }
 
             // For each lesson, check if it has content
