@@ -324,15 +324,15 @@
     display: inline-block;
 }
 
-.form-control {
-    min-width: 40.3rem; /* Make it responsive to the parent container */
-    padding: 10px;
+/*.form-control {
+    min-width: 40.3rem;*/ /* Make it responsive to the parent container */
+    /*padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
-    height: 3rem; /* Maintain the height */
-    box-sizing: border-box; /* Include padding and border in the width calculation */
-}
+    height: 3rem;*/ /* Maintain the height */
+    /*box-sizing: border-box;*/ /* Include padding and border in the width calculation */
+/*}*/
 
 /* Flex container for the stats to align them horizontally */
 .module-performance-stats-container {

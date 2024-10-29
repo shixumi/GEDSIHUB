@@ -27,7 +27,7 @@
         <!-- Create Assessment Button -->
         @if (User.IsInRole("Admin") && Model.Assessment == null)
         {
-            <a asp-controller="Assessment" asp-action="Create" asp-route-moduleId="@Model.ModuleId" class="create_assessment_button btn btn-primary">
+            <a asp-controller="Assessment" asp-action="Create" asp-route-moduleId="@Model.ModuleId" class="create_assessment_button">
                 Create Assessment
             </a>
         }
