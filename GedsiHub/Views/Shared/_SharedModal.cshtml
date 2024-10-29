@@ -1,0 +1,23 @@
+﻿@model GedsiHub.ViewModels.ForumPostViewModel
+
+<div class="modal fade" id="confirmDeleteModal-@Model.PostId" tabindex="-1" aria-labelledby="confirmDeleteModalLabel-@Model.PostId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel-@Model.PostId">Delete post?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the post titled "<strong>@Model.Title</strong>"?
+            </div>
+            <div class="modal-footer">
+                <form asp-action="DeleteConfirmed" method="post">
+                    @Html.AntiForgeryToken() <!-- Anti-forgery token to secure the POST request -->
+                    <input type="hidden" name="id" value="@Model.PostId" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

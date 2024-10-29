@@ -38,7 +38,7 @@
         <!-- Preview of the H5P content -->
         @if (!string.IsNullOrEmpty(Model.H5PEmbedCode))
         {
-            <div class="embed-responsive responsive-iframe">
+            <div id="responsive-iframe "class="embed-responsive responsive-iframe">
                 @Html.Raw(Model.H5PEmbedCode)
             </div>
         }
@@ -46,9 +46,6 @@
         <!-- Preview of the text content -->
         @if (!string.IsNullOrEmpty(Model.TextContent))
         {
-            @* <div class="text-content-preview">
-        <p>@Model.TextContent</p>
-        </div> *@
             <div class="tinyMCE_preview">
                 @Html.Raw(Model.TextContent)
             </div>
@@ -63,71 +60,28 @@
         }
 
         <!-- Buttons for managing lesson content -->
-        <div class="lesson_content_buttons">
-
-            <!-- Edit button -->
-            <a asp-action="Edit" asp-controller="LessonContent" asp-route-id="@Model.ContentId" class="editLessonContentButton">
-                <i class="f-icon la la-edit"></i>Edit
-            </a>
-
-
-            <!-- Delete button -->
-            <form asp-action="Delete" method="post" class="d-inline">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="id" value="@Model.ContentId" />
-                <button type="submit" class="deleteLessonContentButton">
-                    <i class="f-icon la la-trash"></i> Delete
-                </button>
-            </form>
-            
-        </div>
-
-    </div>
-    <div class="lesson-content-preview">
-        <h2>@Model.Lesson.Title</h2>
-
-        <!-- Preview of the H5P content -->
-        @if (!string.IsNullOrEmpty(Model.H5PEmbedCode))
+        @if (User.IsInRole("Admin"))
         {
-            <div class="responsive-iframe">
-                @Html.Raw(Model.H5PEmbedCode)
+            <div class="lesson_content_buttons">
+
+                <!-- Edit button -->
+                <a asp-action="Edit" asp-controller="LessonContent" asp-route-id="@Model.ContentId" class="editLessonContentButton">
+                    <i class="f-icon la la-edit"></i>Edit
+                </a>
+
+
+                <!-- Delete button -->
+                <form asp-action="Delete" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.ContentId" />
+                    <button type="submit" class="deleteLessonContentButton">
+                        <i class="f-icon la la-trash"></i> Delete
+                    </button>
+                </form>
+
             </div>
         }
 
-        <!-- Preview of the text content -->
-        @if (!string.IsNullOrEmpty(Model.TextContent))
-        {
-            @* <div class="text-content-preview">
-        <p>@Model.TextContent</p>
-        </div> *@
-            <div class="responsive-iframe">
-                @Html.Raw(Model.TextContent)
-            </div>
-        }
-
-        <!-- Preview of the image content -->
-        @if (!string.IsNullOrEmpty(Model.ImageUrl))
-        {
-            <div class="image-content-preview">
-                <img src="@Model.ImageUrl" alt="Lesson Image" />
-            </div>
-        }
-
-        <!-- Buttons for managing lesson content -->
-        <div class="lesson-content-buttons">
-            <!-- Edit button -->
-            <a asp-action="Edit" asp-controller="LessonContent" asp-route-id="@Model.ContentId" class="btn btn-warning">
-                Edit
-            </a>
-
-
-            <!-- Delete button -->
-            <form asp-action="DeleteConfirmed" method="post" class="d-inline">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-            
-        </div>
     </div>
 
 </div>
