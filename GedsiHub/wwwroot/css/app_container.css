@@ -15,7 +15,7 @@
   scroll-behavior: smooth;
 }
 
-.background {
+/*.background {
     flex-grow: 1;
     height: 100vh;
     background: #EFF0F4;
@@ -27,6 +27,25 @@
     scroll-behavior: smooth;
     border-top-left-radius: 40px;
     transition: all 0.3s ease;
+}*/
+
+.background {
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+    position: absolute;
+    margin-left: 307px;
+    width: calc(100% - 307px);
+    background: #EFF0F4;
+    margin-top: -40px;
+    border-top-left-radius: 40px;
+    border-color: #464040;
+    padding-left: 70px;
+    padding-right: 70px;
+    padding-bottom: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    flex: 1 0 auto;
 }
 
 .container-forum{

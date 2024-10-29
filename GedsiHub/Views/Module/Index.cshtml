@@ -235,8 +235,8 @@
 <!-- Modal Structure for Deleting Modules -->
 @foreach (var module in Model)
 {
-    <div class="modal fade" id="moduleConfirmDeleteModal-@module.ModuleId" tabindex="0" aria-labelledby="moduleConfirmDeleteModalLabel-@module.ModuleId" aria-hidden="true">
-        <div class="modal-dialog-centered" role="document">
+    <div class="modal fade" id="moduleConfirmDeleteModal-@module.ModuleId" tabindex="-1" aria-labelledby="moduleConfirmDeleteModalLabel-@module.ModuleId" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="moduleConfirmDeleteModalLabel-@module.ModuleId">Delete Module?</h5>
@@ -250,7 +250,7 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@module.ModuleId" />
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
                     </form>
                 </div>
             </div>

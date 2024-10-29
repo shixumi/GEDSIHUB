@@ -85,81 +85,92 @@
 
     </header>
 
-   <div class="layout_container d-flex" style="min-height: 100vh;">
+    <div class="background">
+        @RenderBody()
+    </div>
 
-
-        <!-- Sidebar -->
-        <div class="sidebar_container d-flex flex-column">
-            <div class="sidebar d-flex flex-column" style="width: 100%; max-width: 350px;">
-                <!-- Dashboard Button -->
-                <div class="sidebar_button dashboard_button d-flex align-items-center" id="SidebarButton_Dashboard">
-                    <a asp-controller="Dashboard" asp-action="Index" class="d-flex align-items-center text-decoration-none">
-                        <div class="icon_container">
-                            <img class="sidebar_icon" src="~/images/Dashboard_Dark.png" alt="Dashboard Icon" />
-                        </div>
-                        <div class="label_container">
-                            <span class="sidebar_label">Dashboard</span>
-                        </div>
-                    </a>
+    <!-- Sidebar -->
+    <div class="sidebar_container d-flex flex-column" style="width: 350px;height: 700px;">
+        <div class="sidebar" style="width: 300px;">
+            <div class="d-xxl-flex align-items-xxl-center dashboard_container" id="SidebarButton_Dashboard">
+                <div class="col-xxl-5 d-xxl-flex justify-content-xxl-center" style="width: 90px;">
+                    <img id="sidebar_icons" class="dashboard_icon" src="~/images/Dashboard_Dark.png" style="width: 43px;" />
                 </div>
-
-                <!-- Modules Button -->
-                <div class="sidebar_button modules_button d-flex align-items-center" id="SidebarButton_Modules">
-                    <div class="icon_container">
-                        <img class="sidebar_icon" src="~/images/Modules_Dark.png" alt="Modules Icon" />
-                    </div>
-                    <div class="label_container">
-                        <span class="sidebar_label">Modules</span>
-                    </div>
+                <div class="col">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Dashboard
+                    </span>
                 </div>
-
-                <!-- Leaderboard Button -->
-                <div class="sidebar_button leaderboard_button d-flex align-items-center" id="SidebarButton_Leaderboard">
-                    <div class="icon_container">
-                        <img class="sidebar_icon" src="~/images/Leaderboard_Dark.png" alt="Leaderboard Icon" />
-                    </div>
-                    <div class="label_container">
-                        <span class="sidebar_label">Leaderboard</span>
-                    </div>
-                </div>
-
-                <!-- Forum Button (Active State) -->
-                <div class="sidebar_button forum_button d-flex align-items-center" id="SidebarButton_Forum">
-                    <div class="icon_container">
-                        <img class="sidebar_icon" src="~/images/Forum_Dark.png" alt="Forum Icon" />
-                    </div>
-                    <div class="label_container">
-                        <span class="sidebar_label">Forum</span>
-                    </div>
-                </div>
-
-                <!-- Feedback Button -->
-                <div class="sidebar_button feedback_button d-flex align-items-center" id="SidebarButton_Feedback">
-                    <div class="icon_container">
-                        <img class="sidebar_icon" src="~/images/Feedback_Dark.png" alt="Feedback Icon" />
-                    </div>
-                    <div class="label_container">
-                        <span class="sidebar_label">Feedback</span>
-                    </div>
-                </div>
-
-                    <!-- Logout Button -->
-                    <div class="sidebar_button logout_button d-flex align-items-center" id="SidebarButton_Logout" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                        <div class="icon_container">
-                            <img class="sidebar_icon" src="~/images/Logout_Dark.png" alt="Logout Icon" />
-                        </div>
-                        <div class="label_container">
-                            <span class="sidebar_label">Logout</span>
-                        </div>
-                    </div>
             </div>
-        </div>
 
-        <!-- Background (Main Content Area) -->
-        <div class="background">
-                @RenderBody()
+            <div id="SidebarButton_Modules" class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" style="color: #464040;">
+                <div class="col-xxl-5 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Modules_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Modules
+                    </span>
+                </div>
+            </div>
+
+            <!-- Leaderboard Button -->
+            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Leaderboard" style="color: #464040;">
+                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Leaderboard_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Leaderboard
+                    </span>
+                </div>
+            </div>
+
+            <!-- Forum Button -->
+            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Forum" style="color: #464040;">
+                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Forum_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Forum
+                    </span>
+                </div>
+            </div>
+
+            <!-- Submit Button Feedback -->
+            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Feedback" style="color: #464040;">
+                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                    <img src="~/images/Feedback_Dark.png" style="width: 43px;color: #464040;" />
+                </div>
+                <div class="col" style="color: #464040;">
+                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                        Feedback
+                    </span>
+                </div>
+            </div>
+
+            <!-- Logout button with modal trigger -->
+            <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#logoutModal" style="text-decoration: none; background: none; border: none;">
+                <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Logout" style="color: #464040; cursor: pointer;">
+                    <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                        <img src="~/images/Logout_Dark.png" style="width: 43px;color: #464040;" />
+                    </div>
+                    <div class="col logout-lbl" style="color: #464040;">
+                        <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                            Logout
+                        </span>
+                    </div>
+                </div>
+            </button>
+
         </div>
-   </div>
+    </div>
+@* 
+   <div class="layout_container d-flex" style="min-height: 100vh;"> *@
+
+
+        
 
 
 
@@ -185,7 +196,6 @@
             </div>
         </div>
     </div>
-
 
 
 
