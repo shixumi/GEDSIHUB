@@ -46,9 +46,6 @@
         <!-- Preview of the text content -->
         @if (!string.IsNullOrEmpty(Model.TextContent))
         {
-            @* <div class="text-content-preview">
-        <p>@Model.TextContent</p>
-        </div> *@
             <div class="tinyMCE_preview">
                 @Html.Raw(Model.TextContent)
             </div>

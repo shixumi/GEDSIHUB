@@ -36,14 +36,14 @@
     <link rel="stylesheet" href="~/css/notification.css" />
     <link rel="stylesheet" href="~/css/leaderboard.css" />
     <link rel="stylesheet" href="~/css/adminDashboard.css" />
+    <link rel="stylesheet" href="~/css/chatbot.css" />
     <link rel="stylesheet" href="~/css/generateReport.css" />
 
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-
-
-
+    <!-- Font Awesome for robot icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
           crossorigin="anonymous">
 
@@ -177,8 +177,69 @@
 @* 
    <div class="layout_container d-flex" style="min-height: 100vh;"> *@
 
+    <!-- Chatbot Floating Button and Interface -->
+    <div class="chatbot-container">
+        <!-- Floating Chatbot Button -->
+        <button class="chatbot-button" id="chatbotToggle">
+            <i class="fas fa-praying-hands chatbot-icon"></i> <!-- Using Font Awesome for the robot icon -->
+        </button>
 
-        
+        <!-- Chatbot Interface -->
+        <div class="chatbot-interface" id="chatbotInterface">
+            <div class="chatbot-header">
+                Talk to GAD!
+                <button class="chatbot-exit" id="chatbotExit">&times;</button> <!-- Exit Button -->
+            </div>
+            <div class="chatbot-body overflow-auto">
+                <!-- Chat bubble message -->
+                <h6>Select an option:</h6>
+                <div id="chatOptions" class="d-flex justify-content-between align-content-center mb-2">
+                    
+                    <button id="faqButton" class="btn btn-primary">FAQs</button>
+                    <button id="modulesButton" class="btn btn-primary">Modules</button>
+                    <button id="contactButton" class="btn btn-primary">Contact</button>
+
+                </div>
+                <!-- FAQ Section -->
+                <div id="faqSection" class="mt-4" style="display: none;">
+                    <h5>Frequently Asked Questions</h5>
+                    <ul id="faqList" class="list-group"></ul>
+                </div>
+
+                <!-- Modules Section -->
+                <div id="modulesSection" class="mt-4" style="display: none;">
+                    <h5>Available Modules</h5>
+                    <ul id="modulesList" class="list-group"></ul>
+                </div>
+
+                <!-- Contact Section -->
+                <div id="contactSection" class="mt-4" style="display: none;">
+                    <h5>Contact Information</h5>
+                    <div id="contactInfo">Fetching contact info...</div>
+                </div>
+
+                <!-- Chat Message -->
+                <div class="chat-message mt-3">
+                    <div class="message-bubble">
+                        <img src="https://picsum.photos/50/50" alt="Bot Avatar" class="bot-avatar" />
+                        <div class="d-flex align-items-center">
+                            <p class="message-text">Hello, how may I help you?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chatbot Footer -->
+            <div class="chatbot-footer">
+                <div class="chat-input">
+                    <input type="text" class="chat-text-input" placeholder="Ask me something..." />
+                    <button class="btn chat-send-button" type="button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -252,6 +313,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
+    <script src="~/js/chatbot.js"></script>
     <script src="~/js/global.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     

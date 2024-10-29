@@ -80,7 +80,6 @@
         padding: 0px;
         border-radius: 50%;
         border: none;
-        margin: 10px;
     }
 
 
@@ -243,8 +242,18 @@
         margin-right: 0;
     }
 
+    .btn-outline-danger {
+        border-radius: 1.5rem;
+    }
 
 
-   
-
-}
+    .report_input_textarea {
+        display: block;
+        border-radius: 0.7rem;
+        width: 100%;
+        border-width: 0.075rem;
+        border: 0.075rem solid #9C9C9C;
+        padding: 0.8rem;
+        font-size: 1.1rem;
+        margin-bottom: .5rem;
+    }

@@ -1,7 +1,7 @@
 ﻿@model GedsiHub.Models.Module
 @{
     Layout = "_LayoutApp";
-    ViewData["Title"] = "Module Details";
+    ViewData["Title"] = "User Profile";
 }
 
 <!-- Module Details -->
@@ -27,7 +27,7 @@
         <!-- Create Assessment Button -->
         @if (User.IsInRole("Admin") && Model.Assessment == null)
         {
-            <a asp-controller="Assessment" asp-action="Create" asp-route-moduleId="@Model.ModuleId" class="create_assessment_button btn btn-primary">
+            <a asp-controller="Assessment" asp-action="Create" asp-route-moduleId="@Model.ModuleId" class="create_assessment_button">
                 Create Assessment
             </a>
         }
@@ -71,20 +71,17 @@
                     <text>...</text>
                 }
             </span>
-            <div class="button_container">
-                <!-- Delete Lesson Button -->
+            <div class="button_container @(User.IsInRole("Admin") ? "" : "justify-content-end")">
                 @if (User.IsInRole("Admin"))
                 {
+                    <!-- Delete Lesson Button -->
                     <a class="lesson-ftr-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@lesson.LessonId">
                         <div id="DeleteLesson">
                             <img class="Delete" src="~/images/Delete.png" />
                             <span>Delete</span>
                         </div>
                     </a>
-                }
 
-                @if (User.IsInRole("Admin"))
-                {
                     <!-- Edit Lesson Button -->
                     <a asp-action="Edit" asp-controller="Lesson" asp-route-id="@lesson.LessonId" class="lesson-ftr-btn">
                         <div id="EditLesson">

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using OfficeOpenXml;
 using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.Runtime.InteropServices;
@@ -106,6 +107,11 @@ static extern bool SetDllDirectory(string lpPathName);
 
 
 var app = builder.Build();
+
+// ========================================
+// 4.1 Configure EPPlus
+// ========================================
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 // ========================================
 // 5. Seed Roles and Initial Data
