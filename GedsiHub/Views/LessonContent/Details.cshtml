@@ -38,7 +38,7 @@
         <!-- Preview of the H5P content -->
         @if (!string.IsNullOrEmpty(Model.H5PEmbedCode))
         {
-            <div class="embed-responsive responsive-iframe">
+            <div id="responsive-iframe "class="embed-responsive responsive-iframe">
                 @Html.Raw(Model.H5PEmbedCode)
             </div>
         }

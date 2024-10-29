@@ -1,10 +1,11 @@
-﻿using GedsiHub.Data;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+using GedsiHub.Data;
 using GedsiHub.Models;
 using Microsoft.EntityFrameworkCore;
-using QuestPDF.Fluent;
-using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace GedsiHub.Services
@@ -12,13 +13,17 @@ namespace GedsiHub.Services
     public class CertificateService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConverter _converter;
         private readonly EmailSender _emailSender;
+        private readonly IWebHostEnvironment _webHostEnvironment;  // For accessing wwwroot
 
-        // Constructor with optional EmailSender for migrations
-        public CertificateService(ApplicationDbContext context, EmailSender emailSender)
+        // Constructor with IWebHostEnvironment for image path resolution
+        public CertificateService(ApplicationDbContext context, IConverter converter, EmailSender emailSender, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _converter = converter;
             _emailSender = emailSender;
+            _webHostEnvironment = webHostEnvironment;  // Store the web host environment
         }
 
         // Method to generate and store certificate
@@ -34,14 +39,13 @@ namespace GedsiHub.Services
             }
 
             // Check if a certificate has already been issued
-            var existingCertificate = await _context.Certificates
-                .FirstOrDefaultAsync(c => c.UserId == userId && c.ModuleId == moduleId);
+            //var existingCertificate = await _context.Certificates
+            //    .FirstOrDefaultAsync(c => c.UserId == userId && c.ModuleId == moduleId);
 
-            // For testing, comment out this block to allow re-issuing of certificates
-            // if (existingCertificate != null)
-            // {
-            //     throw new Exception("Certificate already issued for this module.");
-            // }
+            //if (existingCertificate != null)
+            //{
+            //    throw new Exception("Certificate already issued for this module.");
+            //}
 
             // Generate the PDF certificate
             var certificateData = new CertificateData
@@ -60,21 +64,154 @@ namespace GedsiHub.Services
             {
                 UserId = userId,
                 ModuleId = moduleId,
-                CertificateUrl = "", // If storing URL (otherwise, save file in storage)
+                CertificateUrl = "",
                 IssueDate = DateTime.UtcNow
             };
 
             _context.Certificates.Add(certificate);
             await _context.SaveChangesAsync();
 
-            // After the certificate has been generated and saved, send the email
+            // Send the email after certificate generation
             if (!string.IsNullOrEmpty(user.Email))
             {
                 await SendCertificateEmail(user.Email, "Your Certificate of Completion", pdfBytes, "certificate.pdf");
             }
 
-            // Return the generated PDF bytes
             return pdfBytes;
+        }
+
+        // Generate certificate PDF using DinkToPdf
+        private byte[] GenerateCertificatePdf(CertificateData data)
+        {
+            // Get the image path from wwwroot
+            var base64Image = GetBase64StringForImage("images/certificate_bg.png");
+
+            var htmlContent = GenerateCertificateHtml(data, base64Image);
+
+            var doc = new HtmlToPdfDocument()
+            {
+                GlobalSettings = {
+                    ColorMode = ColorMode.Color,
+                    Orientation = Orientation.Landscape, // Landscape mode for certificate
+                    PaperSize = PaperKind.A4,
+                },
+                Objects = {
+                    new ObjectSettings()
+                    {
+                        PagesCount = true,
+                        HtmlContent = htmlContent,
+                        WebSettings = { DefaultEncoding = "utf-8" }
+                    }
+                }
+            };
+
+            return _converter.Convert(doc);
+        }
+
+        // Convert image to Base64 for embedding in HTML
+        private string GetBase64StringForImage(string imgRelativePath)
+        {
+            // Resolve the physical path to the image in the wwwroot folder
+            var imgFullPath = Path.Combine(_webHostEnvironment.WebRootPath, imgRelativePath);
+
+            // Check if the file exists
+            if (!File.Exists(imgFullPath))
+            {
+                throw new FileNotFoundException("The certificate background image was not found.", imgFullPath);
+            }
+
+            // Read the image as byte array and convert to Base64
+            byte[] imageArray = System.IO.File.ReadAllBytes(imgFullPath);
+            return Convert.ToBase64String(imageArray);
+        }
+
+        // HTML template for certificate
+
+        private string GenerateCertificateHtml(CertificateData data, string base64Image)
+        {
+            return $@"
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    text-align: center;
+                    position: relative;
+                    height: 100%;
+                    width: 100%;
+                    background-image: url('data:image/png;base64,{base64Image}');
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }}
+                .certificate-container {{
+                    position: absolute;
+                    top: 60%;  /* Adjusted top to move the text lower */
+                    left: 20%; /* Center horizontally */
+                    transform: translateX(-50%); /* Only translate horizontally */
+                    width: 70%; /* Adjust width */
+                    padding: 20px;
+                    /* Transparent background */
+                }}
+                h1 {{
+                    font-size: 35px;
+                    color: #800080; /* Purple color for header */
+                    margin: 0;
+                }}
+                .content {{
+                    font-size: 20px;
+                    color: #800080; /* Purple for content text */
+                }}
+                .content .name {{
+                    font-size: 28px;
+                    color: #800080;
+                    font-weight: bold;
+                    margin: 10px 0;
+                }}
+                .content .course {{
+                    font-size: 22px;
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                }}
+                .footer {{
+                    margin-top: 30px;
+                    font-size: 18px;
+                    color: #800080; /* Purple for footer text */
+                    text-align: left;
+                    display: flex;
+                    justify-content: space-between;
+                }}
+                .footer .signature {{
+                    padding-left: 40px;
+                }}
+                .footer .date {{
+                    padding-right: 40px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class='certificate-container'>
+                <h1>Certificate of Completion</h1>
+                <div class='content'>
+                    <p>This certifies that</p>
+                    <p class='name'>{data.FullName}</p>
+                    <p>has successfully completed the module</p>
+                    <p class='course'>{data.CourseTitle}</p>
+                    <p>on {data.CompletionDate.ToString("MMMM dd, yyyy")}</p>
+                </div>
+                <div class='footer'>
+                    <div class='signature'>
+                        <p>Signature: _______________</p>
+                    </div>
+                    <div class='date'>
+                        <p>Date: _______________</p>
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>";
         }
 
         // Method to send certificate via email
@@ -82,7 +219,6 @@ namespace GedsiHub.Services
         {
             if (_emailSender != null)
             {
-                // Log the email sending attempt for debugging purposes
                 Console.WriteLine($"Sending email to {email} with subject {subject}");
 
                 try
@@ -92,7 +228,6 @@ namespace GedsiHub.Services
                 }
                 catch (Exception ex)
                 {
-                    // Log any errors that occur during the email sending process
                     Console.WriteLine($"Error sending email: {ex.Message}");
                     throw;
                 }
@@ -102,80 +237,9 @@ namespace GedsiHub.Services
                 Console.WriteLine("Email sender service is not available.");
             }
         }
-
-        // Method to generate the PDF certificate
-        private byte[] GenerateCertificatePdf(CertificateData data)
-        {
-            var document = Document.Create(container =>
-            {
-                container.Page(page =>
-                {
-                    page.Size(PageSizes.A4.Landscape()); // Set the page to landscape orientation
-                    page.Margin(2, Unit.Centimetre); // Page margin
-                    page.PageColor(Colors.White);
-                    page.DefaultTextStyle(x => x.FontSize(20));
-
-                    // Defining the content within a bordered section
-                    page.Content().Padding(20).Column(column =>
-                    {
-                        column.Spacing(20);
-
-                        // Border around the whole content section
-                        column.Item().Border(2).BorderColor(Colors.Black).Padding(20).Column(contentColumn =>
-                        {
-                            contentColumn.Spacing(20);
-
-                            // Header section
-                            contentColumn.Item().AlignCenter().Text("Certificate of Completion")
-                                .FontSize(40)
-                                .SemiBold()
-                                .FontColor(Color.FromHex("#007BFF")); // Blue color
-
-                            // Certificate details
-                            contentColumn.Item().AlignCenter().Text($"This is to certify that")
-                                .FontSize(24)
-                                .FontColor(Colors.Black);
-
-                            contentColumn.Item().AlignCenter().Text($"{data.FullName}")
-                                .Bold()
-                                .FontSize(36)
-                                .FontColor(Color.FromHex("#007BFF")); // Blue color
-
-                            contentColumn.Item().AlignCenter().Text($"has successfully completed the module")
-                                .FontSize(24)
-                                .FontColor(Colors.Black);
-
-                            contentColumn.Item().AlignCenter().Text($"{data.CourseTitle}")
-                                .Bold()
-                                .FontSize(32)
-                                .FontColor(Color.FromHex("#007BFF")); // Blue color
-
-                            contentColumn.Item().AlignCenter().Text($"on {data.CompletionDate.ToString("MMMM dd, yyyy")}")
-                                .FontSize(20)
-                                .FontColor(Colors.Black);
-
-                            // Footer with signature and date placeholders
-                            contentColumn.Item().Height(40); // Space before the footer
-                            contentColumn.Item().Row(row =>
-                            {
-                                row.RelativeColumn().Text("Signature: _______________").FontSize(20);
-                                row.RelativeColumn().AlignRight().Text("Date: _______________").FontSize(20);
-                            });
-                        });
-                    });
-
-                    // Bottom Footer (e.g., Organization name)
-                    page.Footer().AlignCenter().Text("GEDSI Hub")
-                        .FontSize(16)
-                        .FontColor(Color.FromHex("#808080")); // Gray color
-                });
-            });
-
-            return document.GeneratePdf();
-        }
     }
 
-    // CertificateData DTO used to pass certificate details
+    // CertificateData DTO for passing certificate details
     public class CertificateData
     {
         public string FirstName { get; set; }
