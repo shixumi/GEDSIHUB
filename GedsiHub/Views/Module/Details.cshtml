@@ -73,39 +73,45 @@
             </span>
             <div class="button_container">
                 <!-- Delete Lesson Button -->
-                <a class="lesson-ftr-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@lesson.LessonId">
-                    <div id="DeleteLesson">
-                        <img class="Delete" src="~/images/Delete.png" />
-                        <span>Delete</span>
-                    </div>
-                </a>
-
-                <!-- Edit Lesson Button -->
-                <a asp-action="Edit" asp-controller="Lesson" asp-route-id="@lesson.LessonId" class="lesson-ftr-btn">
-                    <div id="EditLesson">
-                        <img class="Edit" src="~/images/Edit.png" alt="Edit Icon" />
-                        <span>Edit</span>
-                    </div>
-                </a>
-
-                <!-- Toggle button for publish/unpublish lesson -->
-                <form asp-action="TogglePublish" asp-controller="Lesson" asp-route-id="@lesson.LessonId" method="post">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn lesson-ftr-btn">
-                        <div id="toggleButtonPublishUnpublishLesson">
-                            @if (lesson.IsPublished)
-                            {
-                                <img class="PublishIcon" src="~/images/Unpublish.png" alt="Unpublish Icon" />
-                                <span>Unpublish</span>
-                            }
-                            else
-                            {
-                                <img class="PublishIcon" src="~/images/Publish.png" alt="Publish Icon" />
-                                <span>Publish</span>
-                            }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="lesson-ftr-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@lesson.LessonId">
+                        <div id="DeleteLesson">
+                            <img class="Delete" src="~/images/Delete.png" />
+                            <span>Delete</span>
                         </div>
-                    </button>
-                </form>
+                    </a>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <!-- Edit Lesson Button -->
+                    <a asp-action="Edit" asp-controller="Lesson" asp-route-id="@lesson.LessonId" class="lesson-ftr-btn">
+                        <div id="EditLesson">
+                            <img class="Edit" src="~/images/Edit.png" alt="Edit Icon" />
+                            <span>Edit</span>
+                        </div>
+                    </a>
+
+                    <!-- Toggle button for publish/unpublish lesson -->
+                    <form asp-action="TogglePublish" asp-controller="Lesson" asp-route-id="@lesson.LessonId" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn lesson-ftr-btn">
+                            <div id="toggleButtonPublishUnpublishLesson">
+                                @if (lesson.IsPublished)
+                                {
+                                    <img class="PublishIcon" src="~/images/Unpublish.png" alt="Unpublish Icon" />
+                                    <span>Unpublish</span>
+                                }
+                                else
+                                {
+                                    <img class="PublishIcon" src="~/images/Publish.png" alt="Publish Icon" />
+                                    <span>Publish</span>
+                                }
+                            </div>
+                        </button>
+                    </form>
+                }
 
                 <!-- Go to lesson button -->
                 @if (lesson.HasContent)
@@ -136,54 +142,57 @@
                             </button>
                         </span>
                     }
-                    
+
                 }
             </div>
         </div>
     }
 
+
     <!-- If there are lessons in the module, display add new lesson button -->
-    @if (Model.Lessons.Any())
+    @if (User.IsInRole("Admin"))
     {
-        <a asp-action="Create" asp-controller="Lesson" asp-route-moduleId="@Model.ModuleId">
-            <div id="addNewLesson" class="container d-xxl-flex addNewLesson">
-                <div>
-                    <img class="add_icon_lesson" src="~/images/Add.png" />
-                    <span style="font-size: 1.05875rem;">Add New Lesson</span>
+        @if (Model.Lessons.Any())
+        {
+            <a asp-action="Create" asp-controller="Lesson" asp-route-moduleId="@Model.ModuleId">
+                <div id="addNewLesson" class="container d-xxl-flex addNewLesson">
+                    <div>
+                        <img class="add_icon_lesson" src="~/images/Add.png" />
+                        <span style="font-size: 1.05875rem;">Add New Lesson</span>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        }
     }
 
     <!-- Assessment Section -->
-    <div class="assessment-section" style="margin-top: 5rem">
-        <span id="added_module_title" class="added_module_title">Assessment</span>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="assessment-section" style="margin-top: 5rem">
+            <span id="added_module_title" class="added_module_title">Assessment</span>
 
-        @if (Model.Assessment == null)
-        {
-            <div class="module-desc-text">
-                No assessment has been added for this module.
-            </div>
-        }
-        else
-        {
-                <div class="assessment-details mb-5">
-                <h3>@Model.Assessment.Title</h3>
-                <p>@Model.Assessment.Description</p>
+            @if (Model.Assessment == null)
+            {
+                <div class="module-desc-text">
+                    No assessment has been added for this module.
                 </div>
-        
+            }
+            else
+            {
+                <div class="assessment-details mb-5">
+                    <h3>@Model.Assessment.Title</h3>
+                    <p>@Model.Assessment.Description</p>
+                </div>
+
                 <!-- H5P Embed -->
                 <div class="responsive-iframe">
                     @Html.Raw(Model.Assessment.H5PEmbedCode)
                 </div>
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-controller="Assessment" asp-action="Edit" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-warning mt-3">Edit Assessment</a>
-                    <a asp-controller="Assessment" asp-action="Delete" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-danger mt-3">Delete Assessment</a>
-                }
-        }
-    
-    </div>
+                <a asp-controller="Assessment" asp-action="Edit" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-warning mt-3">Edit Assessment</a>
+                <a asp-controller="Assessment" asp-action="Delete" asp-route-id="@Model.Assessment.AssessmentId" class="btn btn-danger mt-3">Delete Assessment</a>
+            }
+        </div>
+    }
 </div>
 
 <!-- Delete lesson modal for each lesson -->
