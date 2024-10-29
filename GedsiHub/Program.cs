@@ -6,11 +6,13 @@ using GedsiHub.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using QuestPDF.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using DinkToPdf.Contracts;
+using DinkToPdf;
+using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,9 +88,22 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // ========================================
-// 4. Configure QuestPDF License
+// 4. Configure DinkToPdf
 // ========================================
-QuestPDF.Settings.License = LicenseType.Community; // Sets the QuestPDF license to the community version
+var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "wkhtmltox", "bin");
+
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+    // Use SetDllDirectory to set the folder where wkhtmltox.dll resides
+    SetDllDirectory(wkhtmltoxPath);
+}
+
+var converter = new SynchronizedConverter(new PdfTools());
+builder.Services.AddSingleton(typeof(IConverter), converter);
+
+[DllImport("kernel32.dll", SetLastError = true)]
+static extern bool SetDllDirectory(string lpPathName);
+
 
 var app = builder.Build();
 
