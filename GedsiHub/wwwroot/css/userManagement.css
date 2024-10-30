@@ -8,6 +8,7 @@
     padding-right: 3.125rem;
     font-size: 1.015625rem;
     min-width: 26.5625rem;
+    margin-bottom: 1rem;
 }
 
     #userManagementSearch::placeholder, #moduleSearch {
@@ -45,6 +46,7 @@
     border: none;
     background: none;
     margin-left: -3rem; /* Position button over the padded space */
+    margin-bottom: 1rem;
     cursor: pointer;
 }
 

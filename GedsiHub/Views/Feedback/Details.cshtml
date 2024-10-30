@@ -5,7 +5,131 @@
 }
 
 
-<h2>Feedback Details</h2>
+ 
+<div>
+    <h1 id="addNewModule_HeaderTitle" class="modules_title" style="color: #464040;">Feedback Responses</h1>
+    <div style="height: 1px;background: rgb(183,186,199);border-color: #9C9C9C;"></div>
+    <div class="container feedback-container">
+        
+        <div class="userinfo-actions-feedback-container">
+            <div class="feedback-details">
+                <div>
+                    <span class="submitted-by-text">Submitted by:</span>
+                    <span>@Model.UserName</span>
+                </div>
+                <div>
+                    <span class="date-text">Date:</span>
+                    <span>@Model.Date.ToShortDateString()</span>
+                </div>
+            </div>
+            <div class="feedback-actions">
+                
+                <a href="@Url.Action("MarkAsResolved", new { id = Model.Id })" id="marked-as-resolved-button" type="button"><img src="~/images/Check.png" />Mark as Resolved</a>
+                <a href="@Url.Action("Delete", new { id = Model.Id })" class="delete-user-feedback-button" type="button"> <img src="~/images/Delete.png" />Delete</a>
+            </div>
+        </div>
+        <div class="user-response-container">
+            <div class="type-desc-issue-con">
+                <div class="text-input-container-type-of-issue">
+                    <span>1. Type of Issue</span>
+                    <input id="type-of-issue-holder" class="holder" type="text" disabled value="@Model.Type" />
+                </div>
+                <div class="text-input-issue-desc">
+                    <span>3. Detailed Description of the Issue</span>
+                    <textarea id="issue-desc-holder" class="holder" disabled>@Model.Description</textarea>
+                </div>
+            </div>
+            <div class="area-evidence-container">
+                <div class="text-input-container-affected-area">
+                    <span>2. Affected Area</span>
+                    <input id="affected-area-holder" class="holder" type="text" disabled/>
+                </div>
+                <div class="input-text-evidence">
+                    <span>4. Evidence (Optional)</span>
+                    <input id="evidence-holder" class="holder" type="text" disabled/>
+                </div>
+            </div>
+        </div>
+        <div class="feedback-response-button-container">
+            <button id="back-previous-response-button" type="button">Back</button>
+            <button id="next-response-button" type="button">Next</button>
+        </div>
+    </div>
+</div> 
+
+
+
+
+
+
+
+
+
+    
+    <div class="container feedback-container">
+        <div class="userinfo-actions-feedback-container">
+            <div class="feedback-details">
+                <div>
+                    <span class="submitted-by-text">Submitted by:</span>
+                    <span>Name</span>
+                </div>
+                <div>
+                    <span class="date-text">Date:</span>
+                    <span>Date</span>
+                </div>
+            </div>
+            <div class="feedback-actions">
+                <button id="marked-as-resolved-button" class="btn btn-primary" type="button">
+                    <img src="~/images/Check.png" />Mark as Resolved
+                </button>
+                <button class="delete-user-feedback-button" type="button">
+                    <img src="~/images/Delete.png" />Delete
+                </button>
+            </div>
+        </div>
+        <div class="user-response-container">
+            <div class="type-desc-issue-con">
+                <div class="text-input-container-type-of-issue">
+                    <span>1. Type of Suggestion</span>
+                    <input id="type-of-issue-holder" class="holder" type="text" disabled />
+                </div>
+                <div class="text-input-issue-desc">
+                    <span>2. Detailed Description of the Issue</span>
+                    <textarea id="issue-desc-holder" class="holder" disabled></textarea>
+                </div>
+            </div>
+            <div class="area-evidence-container" style="margin-top: 0;">
+                <div class="input-text-evidence">
+                    <span>3. Evidence (Optional)</span>
+                    <input id="evidence-holder" class="holder" type="text" style="max-width: 23.5rem;" disabled />
+                </div>
+            </div>
+        </div>
+        <div class="feedback-response-button-container" style="margin-top: 3rem;">
+            <button id="back-previous-response-button" type="button">Back</button>
+            <button id="next-response-button" type="button">Next</button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+@* <h2>Feedback Details</h2>
 
 <p><strong>User:</strong> @Model.UserName</p>
 <p><strong>Date:</strong> @Model.Date.ToShortDateString()</p>
@@ -13,4 +137,4 @@
 <p><strong>Description:</strong> @Model.Description</p>
 
 <a href="@Url.Action("MarkAsResolved", new { id = Model.Id })" class="btn btn-secondary">Mark as Resolved</a>
-<a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger">Delete</a>
+<a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger">Delete</a> *@

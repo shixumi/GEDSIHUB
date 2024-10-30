@@ -191,7 +191,10 @@
     .file-input-feedback-form::-webkit-file-upload-button {
         background-color: #E0E1E7 !important;
         color: #464040 !important;
-        border: none !important;
+        border-right: 1px solid #464040 !important;
+        border-top: none !important;
+        border-left: none !important;
+        border-bottom: none !important;
         padding: 17px 20px !important;
         border-radius: 10px 0 0 10px !important;
         cursor: pointer !important;
@@ -217,7 +220,8 @@
 
 .area-evidence-container {
     width: 100%;
-    display: block;
+    display: flex;
+    margin-top: 2rem;
 }
 
 .custom-file-label {

@@ -1,0 +1,38 @@
+﻿.report-gen-module-container {
+    position: relative;
+}
+
+    .report-gen-module-container select {
+        width: 70%;
+        height: 2.5rem;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        box-shadow: inset 0px 3px 4px #d9d9d9;
+        border-radius: 0.5rem;
+        padding: 0 1rem;
+        transition: border-color 0.3s ease, border-width 0.3s ease;
+        outline: none;
+        background-color: #fff;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDZMMTAgMTVMMSA2IiBzdHJva2U9IiM0NjQwNDAiIHN0cm9rZS13aWR0aD0iMiIgLz4KPC9zdmc+Cg==');
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 12px;
+        color: #464040;
+        border: 1px solid #939393;
+    }
+
+
+
+.report-gen-module-container {
+  flex-direction: column;
+}
+
+.report-gen-module-container span {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.metrics-include-checkbox-label {
+  align-items: center;
+}
