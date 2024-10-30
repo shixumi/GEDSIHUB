@@ -4,5 +4,5 @@
 
     // Change the button text based on visibility
     const spanElement = this.querySelector('span');
-    spanElement.innerHTML = additionalDetails.classList.contains('show') ? '< Back' : 'View More >';
+    spanElement.innerHTML = additionalDetails.classList.contains('show') ? '< View Less' : 'View More >';
 });

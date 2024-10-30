@@ -62,10 +62,22 @@
         margin-bottom: 0.2rem;
     }
 
-    #view-user-feedback-button img, .delete-user-feedback-button img, #marked-as-resolved-button img {
-        width: 1.5rem;
-        margin-right: 0.4rem;
-    }
+
+
+
+
+
+
+
+
+
+
+
+#view-user-feedback-button img, .delete-user-feedback-button img,
+#mark-as-resolved-button img, #marked-as-resolved-button img {
+    width: 1.5rem;
+    margin-right: 0.4rem;
+}
 
     #view-user-feedback-button {
         background: rgba(82,160,53,0.3);
@@ -75,14 +87,18 @@
         background: rgba(102,0,0,0.3);
     }
 
-    #view-user-feedback-button, .delete-user-feedback-button, #marked-as-resolved-button {
-        border-radius: 1.5rem;
-        border: none;
-        padding: 0.3rem 1.5rem;
-        font-weight: 500;
-        transition: all 0.2s ease;
-        color: #464040;
+    #mark-as-resolved-button {
+        background-color: #e6e6e6;
     }
+
+#view-user-feedback-button, .delete-user-feedback-button, #mark-as-resolved-button, #marked-as-resolved-button {
+    border-radius: 1.5rem;
+    border: none;
+    padding: 0.3rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: #464040;
+}
 
         #view-user-feedback-button:hover {
             background-color: #b4f39d;
@@ -92,56 +108,22 @@
             background-color: #f0adad;
         }
 
-        #view-user-feedback-button:active, .delete-user-feedback-button:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-    .view-delete-button-container {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
+    #mark-as-resolved-button:hover, #marked-as-resolved-button:hover {
+        background-color: #edf1ff;
     }
 
-    .feedback-responses-table {
-        font-size: 1.2rem;
-        user-select: none;
+    #view-user-feedback-button:active, .delete-user-feedback-button:active, #mark-as-resolved-button:active, #marked-as-resolved-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-        .feedback-responses-table th {
-            color: #464040;
-        }
+.button-container-feedback {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
 
-    .date-feedback-label, .type-of-issue-feedback-label, .actions-feedback-label {
-        text-align: center;
-        color: #464040;
-        font-weight: 700;
-    }
-
-    #date-feedback-response, #type-of-issue-feedback-response {
-        text-align: center;
-        vertical-align: middle;
-        color: #464040;
-    }
-
-    .user-name-feedback-label, .type-of-issue-feedback-label {
-        font-weight: 500;
-    }
-
-    #type-of-issue-feedback-response {
-        color: #9C9C9C;
-    }
-
-    #username-feedback-response {
-        vertical-align: middle;
-    }
-
-    .checkbox-container {
-        display: flex;
-        height: 100%;
-        margin-top: 13px;
-    }
-
+   
 
 
 input[type="checkbox"] {
@@ -178,10 +160,6 @@ input[type="checkbox"] {
 
 
 
-
-    .feedback-responses-table th, .feedback-responses-table td {
-        border: none;
-    }
 
 
     #searchResponse {
@@ -221,31 +199,84 @@ input[type="checkbox"] {
     }
 
 
-#mark-as-resolved-button {
-    font-weight: 500;
-    border-radius: 1.5rem;
-    border: none;
-    padding: 0.3rem 1.5rem;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-    color: #464040;
-    background-color: #e6e6e6;
-    border: none;
-    width: rem;
-    font-size: 1.2rem;
+/* Style for the tab navigation container */
+.tab-navigation {
+    display: flex;
+    margin-bottom: 20px;
 }
 
-    #mark-as-resolved-button:hover {
-        background-color: #edf1ff;
+/* Style for each tab item */
+.tab-item {
+    position: relative;
+    margin-right: 20px;
+}
+
+/* Style for each tab link */
+.tab-link {
+    text-decoration: none;
+    padding: 10px 15px;
+    color: black;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+    font-weight: 600;
+    color: #464040;
+}
+
+    /* Hover effect */
+    .tab-link:hover {
+        color: #7C0A02;
     }
 
-    #mark-as-resolved-button:active {
-        transform: scale(0.95);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Active effect: underline for the clicked tab */
+    .tab-link.active::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background-color: #7C0A02;
+        border-radius: 10px;
+        width: 100%;
+        transition: width 0.3s ease-in-out, background-color 0.3s ease;
     }
 
-    #mark-as-resolved-button img {
-        width: 1.3rem;
-        margin-right: 0.5rem;
+    /* Change the text color for active tab */
+    .tab-link.active {
+        color: #7C0A02;
+        transition: color 0.3s ease;
     }
 
+    /* Default state of the underline when the tab is not active */
+    .tab-link::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background-color: transparent;
+        width: 0%;
+        transition: width 0.3s ease-in-out, background-color 0.3s ease;
+    }
+
+/* Hide inactive tab content */
+.tab-pane {
+    display: none;
+}
+
+    /* Show active tab content */
+    .tab-pane.active {
+        display: block;
+    }
+
+
+.centered-td {
+    text-align: center !important;
+}
+
+
+.bigger-space-td {
+    width: 25% !important;
+}

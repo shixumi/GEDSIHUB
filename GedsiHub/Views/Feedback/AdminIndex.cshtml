@@ -86,3 +86,134 @@
     </tbody>
 </table>
  *@
+
+
+
+
+
+
+
+<!-- Conditional display based on the user's role -->
+@if (User.IsInRole("Admin"))
+{
+    <!-- Admin View -->
+    <div class="feedback-dashboard">
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="feedbackTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="complaint-tab" data-bs-toggle="tab" href="#complaints" role="tab" aria-controls="complaints" aria-selected="true">
+                    Complaints
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="suggestion-tab" data-bs-toggle="tab" href="#suggestions" role="tab" aria-controls="suggestions" aria-selected="false">
+                    Suggestions
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tabs Content -->
+        <div class="tab-content" id="feedbackTabContent">
+            <!-- Complaints Tab -->
+            <div class="tab-pane fade show active" id="complaints" role="tabpanel" aria-labelledby="complaint-tab">
+                <div class="table-responsive feedback-responses-table">
+                    <table class="table">
+                        <thead>
+                            <tr class="feedback-table-label">
+                                <th class="select-all-checkbox"><input type="checkbox" /></th>
+                                <th class="user-name-feedback-label"><strong>User Name</strong></th>
+                                <th class="date-feedback-label">Date</th>
+                                <th class="type-of-issue-feedback-label"><strong>Type of Issue</strong></th>
+                                <th class="actions-feedback-label"><strong>Actions</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Complaints)
+                            {
+                                <tr class="row-feedback-response">
+                                    <td class="checkbox-container"><input type="checkbox" /></td>
+                                    <td>@item.UserName</td>
+                                    <td>@item.Date.ToShortDateString()</td>
+                                    <td>@item.Type</td>
+                                    <td class="view-delete-button-container">
+                                        <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-success">
+                                            <img src="~/images/View_Green.png" /> View
+                                        </a>
+                                        <a href="@Url.Action("MarkAsResolved", new { id = item.Id })" class="btn btn-secondary">
+                                            Mark as Resolved
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger">
+                                            <img src="~/images/Delete.png" /> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Suggestions Tab -->
+            <div class="tab-pane fade" id="suggestions" role="tabpanel" aria-labelledby="suggestion-tab">
+                <div class="table-responsive feedback-responses-table">
+                    <table class="table">
+                        <thead>
+                            <tr class="feedback-table-label">
+                                <th class="select-all-checkbox"><input type="checkbox" /></th>
+                                <th class="user-name-feedback-label"><strong>User Name</strong></th>
+                                <th class="date-feedback-label">Date</th>
+                                <th class="type-of-issue-feedback-label"><strong>Type of Suggestion</strong></th>
+                                <th class="actions-feedback-label"><strong>Actions</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Suggestions)
+                            {
+                                <tr class="row-feedback-response">
+                                    <td class="checkbox-container"><input type="checkbox" /></td>
+                                    <td>@item.UserName</td>
+                                    <td>@item.Date.ToShortDateString()</td>
+                                    <td>@item.Type</td>
+                                    <td class="view-delete-button-container">
+                                        <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-success">
+                                            <img src="~/images/View_Green.png" /> View
+                                        </a>
+                                        <a href="@Url.Action("MarkAsResolved", new { id = item.Id })" class="btn btn-secondary">
+                                            Mark as Resolved
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger">
+                                            <img src="~/images/Delete.png" /> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- User (Students/Employees) View -->
+    <div>
+        <div class="feedback-title-searcbar-con">
+            <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">Feedback Responses</h1>
+        </div>
+        <hr>
+        <div class="report-sugg-con">
+            <span class="provide-feedback-guide-text">We value your input and are committed to improving our website. Please choose the type of feedback you would like to provide.</span>
+            <div class="container complaint-nav-con">
+                <span class="label-for-feedback-card">Report a Complaint</span>
+                <span>If you have encountered any problems or bugs on our website, please let us know. Your report will help us make the site better for everyone.</span>
+                <a href="@Url.Action("Complaint", "Feedback")" class="go-to-button-feedback">Go to Complaint Form</a>
+            </div>
+            <div class="container complaint-nav-con">
+                <span class="label-for-feedback-card">Submit a Suggestion</span>
+                <span>Do you have an idea or suggestion to enhance our website? We would love to hear from you! Share your thoughts on new features, improvements, or changes.</span>
+                <a href="@Url.Action("Suggestion", "Feedback")" class="go-to-button-feedback">Go to Suggestion Form</a>
+            </div>
+        </div>
+    </div>
+}

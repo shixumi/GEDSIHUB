@@ -2,7 +2,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 3rem;
 }
 
     .userinfo-actions-feedback-container span {
@@ -26,6 +25,7 @@
 
 .text-input-container-type-of-issue span, .text-input-container-affected-area span, .text-input-issue-desc span, .input-text-evidence span {
     display: block;
+    font-weight: 500;
 }
 
 .type-desc-issue-con, .area-evidence-container {
@@ -34,10 +34,10 @@
 }
 
 .holder {
-    height: 3rem;
+    height: 4rem;
     border: 1px solid #464040;
     box-shadow: inset 0px 3px 4px #d9d9d9;
-    border-radius: 25px;
+    border-radius: 17px;
     padding: 20px;
     transition: border-color 0.3s ease, border-width 0.3s ease;
     outline: none;
@@ -64,6 +64,7 @@
 }
 
 .feedback-response-button-container {
+    margin-top: 2rem;
     display: flex;
     justify-content: space-between;
 }
@@ -71,7 +72,6 @@
 #back-previous-response-button, #next-response-button {
     height: 4.296875rem;
     width: 17.1875rem;
-    margin-top: 1.7rem;
     border-radius: 50px;
     font-weight: 700;
     font-size: 1.5625rem;

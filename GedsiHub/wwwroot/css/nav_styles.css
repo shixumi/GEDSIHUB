@@ -7,6 +7,11 @@
   margin-right: 12px;
 }
 
+    .notification_icon:active {
+        transform: scale(0.95);     
+    }
+
+
 .profile_icon {
   width: 35px;
   height: 35px;
@@ -18,6 +23,10 @@
   height: 42px;
   border-radius: 50px;
 }
+
+    .profile_icon_span:active {
+        transform: scale(0.95);
+    }
 
 .gedsihub_name {
   margin-left: 14px;
