@@ -158,6 +158,9 @@
 }
 
 #ManageUsersButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: none;
     border: 2px solid #464040;
     border-radius: 3rem;
@@ -189,6 +192,7 @@
 .manage-user-and-gen-rep-con {
     display: flex;
     gap: 1rem;
+    margin-bottom: -0.8rem;
 }
 
 #AnalyticsButton {

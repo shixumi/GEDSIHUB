@@ -6,6 +6,10 @@
     width: 100%;
 }
 
+.module_break{
+    margin-top: 0.38rem;
+}
+
 #addModuleTopButton {
     background: #660000;
     color: #fff;

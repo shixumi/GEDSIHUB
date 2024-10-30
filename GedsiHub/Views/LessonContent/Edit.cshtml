@@ -35,26 +35,6 @@
         <!-- Container for Creating Lesson -->
         <div class="cms_white_base_container">
 
-            <!-- Placeholders -->
-            <!-- Content Type Selection (for review) -->
-            <div class="form-group mb-3">
-                <span asp-for="ContentType" class="lesson_content_text">Content Type</span>
-                @Html.DropDownListFor(
-                         model => model.ContentType,
-                         new SelectList(Enum.GetValues(typeof(ContentTypeEnum))),
-                         "-- Select Content Type --",
-                         new { @class = "form-control", @id = "ContentTypeSelectEdit" }
-                         )
-                <span asp-validation-for="ContentType" class="text-danger"></span>
-            </div>
-
-            <!--  Position Input (for review) -->
-            <div class="form-group mb-3">
-                <span asp-for="PositionInt" class="lesson_content_text">Position</span>
-                <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
-                <span asp-validation-for="PositionInt" class="text-danger"></span>
-            </div>
-
             <!-- Media Upload Container -->
             <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
                 <img class="upload_icon" src="~/images/Upload.png" />
@@ -68,12 +48,20 @@
             <!-- or -->
             <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
 
+            
             <!-- H5P Link Input -->
-            <textarea asp-for="H5PEmbedCode" class="url_input_textarea" placeholder="Paste H5P link here" id="h5pEditorCreate">@Model.H5PEmbedCode</textarea>
+            <span class="lesson_content_text">H5P Embed Link</span>
+            <textarea asp-for="H5PEmbedCode" class="url_input_textarea" rows="4" placeholder="Paste H5P link here" id="h5pEditorCreate">@Model.H5PEmbedCode</textarea>
             <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
+            <small class="form-text text-muted">
+                To embed H5P content, paste the iframe embed code provided by H5P here.
+            </small>
+
 
             <!-- Label -->
             <span class="lesson_content_text">Lesson Content</span>
+
+            <br />
 
             <!-- TinyMCE TextArea -->
             <textarea asp-for="TextContent" id="tinymce_textarea" class="tinymce_textarea">@Model.TextContent</textarea>
@@ -92,28 +80,13 @@
             </div>
             
 
-            <!-- Text Content -->
-            <div class="form-group mb-3 content-type-group" id="TextContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.Text ? "block" : "none")">
-                <span asp-for="TextContent" class="lesson_content_text">Text Content</span>
-                <textarea asp-for="TextContent" class="form-control" id="textEditorEdit">@Model.TextContent</textarea>
-                <span asp-validation-for="TextContent" class="text-danger"></span>
-            </div>
+            
 
-            <!-- Image Content -->
-            <div class="form-group mb-3 content-type-group" id="ImageContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.Image ? "block" : "none")">
-                <span asp-for="ImageUrl" class="lesson_content_text">Image URL</span>
-                <input asp-for="ImageUrl" class="form-control" placeholder="Enter image URL" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-
-            <!-- H5P Content -->
-            <div class="form-group mb-3 content-type-group" id="H5PContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.H5P ? "block" : "none")">
-                <span asp-for="H5PEmbedCode" class="lesson_content_textl">H5P Embed Code</span>
-                <textarea asp-for="H5PEmbedCode" class="form-control" id="h5pEditorEdit">@Model.H5PEmbedCode</textarea>
-                <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
-                <small class="form-text text-muted">
-                    To embed H5P content, paste the iframe embed code provided by H5P here.
-                </small>
+            <!--  Position Input (for review) -->
+            <div class="form-group mb-3">
+                <span asp-for="PositionInt" class="lesson_content_text">Position</span>
+                <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
+                <span asp-validation-for="PositionInt" class="text-danger"></span>
             </div>
 
             <form asp-action="Edit" method="post">
@@ -125,69 +98,16 @@
 
                 <!-- Cancel and Save Changes Button -->
                 <div class="cancel_save_con">
-                    <a asp-action="Details" asp-controller="LessonContent" asp-route-id="@Model.LessonId" id="cancelLessonContentButton" class="btn btn-secondary fw-bolder">Cancel</a>
+                    <a asp-action="Details" asp-controller="LessonContent" asp-route-id="@Model.LessonId" id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton">Cancel</a>
 
-                    <button type="submit" class="btn btn-success" asp-action="Edit" asp-route-id="@Model.ContentId">Save Changes</button>
+                    <button type="submit" class="SaveButton" asp-action="Edit" asp-route-id="@Model.ContentId">Save Changes</button>
+
                 </div>
             </form>
         </div>
     </form>
     
 
-</div>
-<div class="modal-header">
-    <h5 class="modal-title">Edit Content</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-    <form asp-action="Edit" method="post">
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="ContentId" />
-
-        <div class="form-group mb-3">
-            <label asp-for="ContentType" class="control-label">Content Type</label>
-            @Html.DropDownListFor(
-                     model => model.ContentType,
-                     new SelectList(Enum.GetValues(typeof(ContentTypeEnum))),
-                     "-- Select Content Type --",
-                     new { @class = "form-control", @id = "ContentTypeSelectEdit"}
-                     )
-            <span asp-validation-for="ContentType" class="text-danger"></span>
-        </div>
-
-        <!-- Text Content -->
-        <div class="form-group mb-3 content-type-group" id="TextContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.Text ? "block" : "none")">
-            <label asp-for="TextContent" class="control-label">Text Content</label>
-            <textarea asp-for="TextContent" class="form-control" id="textEditorEdit">@Model.TextContent</textarea>
-            <span asp-validation-for="TextContent" class="text-danger"></span>
-        </div>
-
-        <!-- Image Content -->
-        <div class="form-group mb-3 content-type-group" id="ImageContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.Image ? "block" : "none")">
-            <label asp-for="ImageUrl" class="control-label">Image URL</label>
-            <input asp-for="ImageUrl" class="form-control" placeholder="Enter image URL" />
-            <span asp-validation-for="ImageUrl" class="text-danger"></span>
-        </div>
-
-        <!-- H5P Content -->
-        <div class="form-group mb-3 content-type-group" id="H5PContentGroupEdit" style="display: @(Model.ContentType == ContentTypeEnum.H5P ? "block" : "none")">
-            <label asp-for="H5PEmbedCode" class="control-label">H5P Embed Code</label>
-            <textarea asp-for="H5PEmbedCode" class="form-control" id="h5pEditorEdit">@Model.H5PEmbedCode</textarea>
-            <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
-            <small class="form-text text-muted">
-                To embed H5P content, paste the iframe embed code provided by H5P here.
-            </small>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="PositionInt" class="control-label">Position</label>
-            <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
-            <span asp-validation-for="PositionInt" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-    </form>
 </div>
 
 @section Scripts {
