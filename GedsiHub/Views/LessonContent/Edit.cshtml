@@ -35,6 +35,27 @@
         <!-- Container for Creating Lesson -->
         <div class="cms_white_base_container">
 
+
+            <!-- Placeholders -->
+            <!-- Content Type Selection (for review) to be removed soonest! -->
+            <div class="form-group mb-3">
+                <span asp-for="ContentType" class="lesson_content_text">Content Type</span>
+                @Html.DropDownListFor(
+                         model => model.ContentType,
+                         new SelectList(Enum.GetValues(typeof(ContentTypeEnum))),
+                         "-- Select Content Type --",
+                         new { @class = "form-control", @id = "ContentTypeSelectEdit" }
+                         )
+                <span asp-validation-for="ContentType" class="text-danger"></span>
+            </div>
+            <!--  Position Input (for review) -->
+            <div class="form-group mb-3">
+                <span asp-for="PositionInt" class="lesson_content_text">Position</span>
+                <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
+                <span asp-validation-for="PositionInt" class="text-danger"></span>
+            </div>
+
+
             <!-- Media Upload Container -->
             <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
                 <img class="upload_icon" src="~/images/Upload.png" />
