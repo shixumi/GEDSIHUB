@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace GedsiHub.Models
 {
@@ -22,9 +23,10 @@ namespace GedsiHub.Models
         public string H5PEmbedCode { get; set; }
 
         // Foreign Key to Module
+        [Required]
         public int ModuleId { get; set; }
 
-        // Navigation Property (Remove [Required] if present)
+        [ValidateNever]
         public Module Module { get; set; }
 
         // Timestamps

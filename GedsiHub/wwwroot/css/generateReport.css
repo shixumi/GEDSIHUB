@@ -1,0 +1,223 @@
+﻿.generate-report-container {
+    background: #ffffff;
+    padding: 30px;
+    padding-top: 10px;
+    padding-bottom: 50px;
+    max-height: 120rem;
+    margin-left: 0px;
+    border-radius: 30px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+    .generate-report-container span {
+        color: #464040;
+    }
+
+    .generate-report-container h1 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #464040;
+        padding: 1.5rem 0 0.5rem 0;
+    }
+
+.report-inside-container {
+    background: #fdfcfc;
+    max-height: 55rem;
+    padding: 20px 35px;
+    margin-left: 0px;
+    border-radius: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #bcbcbc;
+    display: flex;
+}
+
+.filter-label-select {
+    display: flex;
+}
+
+.col-1-filter {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 10rem;
+}
+
+.col-2-filter {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 15%;
+}
+
+.container-of-cols {
+    display: flex;
+    width: 95%;
+    justify-content: space-between;
+}
+
+.filter-label-select, .filter-label-number, .filter-label-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+    .filter-label-select span, .filter-label-number span, .filter-label-text span {
+        margin-right: 0.5rem;
+        font-weight: 500;
+    }
+
+
+    .filter-label-select select {
+        width: 24rem;
+        height: 2.5rem;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        box-shadow: inset 0px 3px 4px #d9d9d9;
+        border-radius: 0.5rem;
+        padding: 0 1rem;
+        transition: border-color 0.3s ease, border-width 0.3s ease;
+        outline: none;
+        color: #464040;
+        background-color: #fff;
+        background-size: 12px;
+        border: 1px solid #939393;
+        background-color: #fff;
+    }
+
+
+    .filter-label-select::after {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 12px;
+        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDZMMTAgMTVMMSA2IiBzdHJva2U9IiM0NjQwNDAiIHN0cm9rZS13aWR0aD0iMiIgLz4KPC9zdmc+Cg==');
+        background-size: 12px;
+    }
+
+#dateRangeSelect, #numberInput, #textInputSection, #textInputPosition {
+    width: 24rem;
+    height: 2.5rem;
+    box-shadow: inset 0px 3px 4px #d9d9d9;
+    border-radius: 0.5rem;
+    padding: 0 1rem;
+    transition: border-color 0.3s ease, border-width 0.3s ease;
+    outline: none;
+    color: #464040;
+    background-size: 12px;
+    border: 1px solid #939393;
+}
+
+
+.col-1-filter select {
+    width: 24rem;
+}
+
+#studentFields, #employeeFields {
+    display: none;
+}
+
+.con-of-cols-include-report {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+.include-checkbox-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+    .include-checkbox-label input[type="checkbox"] {
+        margin-right: 1.5rem;
+    }
+
+#employeeCheckboxField, #studentCheckboxField {
+    display: none;
+}
+
+.generate-report-button, .generate-report-cancel-button {
+    border: none;
+    background: none;
+    color: white;
+    padding: 0.7rem 2rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-radius: 2rem;
+    width: 17rem;
+    height: 4rem;
+    transition: all 0.2s ease;
+}
+
+.generate-report-button {
+    background-color: #660000;
+}
+
+    .generate-report-button:hover {
+        background-color: #920000;
+    }
+
+    .generate-report-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        background-color: #920000;
+        border-style: none;
+    }
+
+.generate-report-cancel-button {
+    border: 2px solid #464040;
+    color: #464040;
+}
+
+    .generate-report-cancel-button:hover {
+        border: 3px solid #464040;
+    }
+
+    .generate-report-cancel-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+
+
+.gen-report-button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4rem;
+}
+
+
+
+/* Style to make sure the calendar container does not affect the layout */
+#customDateContainer {
+    display: none; /* Hidden by default */
+    position: absolute; /* Ensure it appears over other content without affecting layout */
+    z-index: 1000; /* Make sure it appears on top of other content */
+
+
+}
+
+.filter-label-select {
+    position: relative; /* Ensure the container is positioned relative to this */
+}
+
+/* Customize the inline calendar appearance */
+.flatpickr-calendar {
+    width: 300px; /* Adjust the size of the calendar */
+    margin-left: 6.7rem;
+    margin-top: -1rem;
+    
+}
+
+
