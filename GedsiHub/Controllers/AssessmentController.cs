@@ -30,6 +30,7 @@ namespace GedsiHub.Controllers
         {
             _logger.LogInformation($"Creating assessment for ModuleId: {moduleId}");
 
+            // Load the module and its assessment
             var module = _context.Modules.Include(m => m.Assessment).FirstOrDefault(m => m.ModuleId == moduleId);
             if (module == null)
             {
@@ -40,13 +41,14 @@ namespace GedsiHub.Controllers
             if (module.Assessment != null)
             {
                 _logger.LogInformation($"Assessment already exists for ModuleId: {moduleId}, redirecting to edit.");
-                // Redirect to Edit if Assessment already exists
                 return RedirectToAction("Edit", new { id = module.Assessment.AssessmentId });
             }
 
+            // Create a new assessment and pass the module object
             var assessment = new Assessment
             {
-                ModuleId = moduleId
+                ModuleId = moduleId,
+                Module = module
             };
 
             return View(assessment);
@@ -61,6 +63,7 @@ namespace GedsiHub.Controllers
         {
             _logger.LogInformation("Creating new assessment.");
 
+            // Ensure ModelState validation
             if (!ModelState.IsValid)
             {
                 _logger.LogError("ModelState is invalid. Logging validation errors...");
@@ -68,10 +71,10 @@ namespace GedsiHub.Controllers
                 {
                     _logger.LogError($"Validation Error: {error.ErrorMessage}");
                 }
-
-                return View(assessment);
+                return View(assessment); // Return the view with validation errors.
             }
 
+            // Retrieve the module by ModuleId and assign it to the assessment
             var module = await _context.Modules.FindAsync(assessment.ModuleId);
             if (module == null)
             {
@@ -80,23 +83,27 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
+            // Assign the module to the assessment object, since it won't be submitted in the form
             assessment.Module = module;
 
             try
             {
+                // Add the new assessment to the context
                 _logger.LogInformation($"Saving new assessment for ModuleId: {assessment.ModuleId}");
                 _context.Assessments.Add(assessment);
                 await _context.SaveChangesAsync();
+
+                // Log success and redirect to details page of the module
                 _logger.LogInformation($"Assessment created successfully for ModuleId: {assessment.ModuleId} with AssessmentId: {assessment.AssessmentId}");
+                return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
             }
             catch (Exception ex)
             {
+                // Log any exception encountered during the save process
                 _logger.LogError($"Error saving assessment: {ex.Message}");
                 ModelState.AddModelError(string.Empty, "An error occurred while saving the assessment. Please try again.");
                 return View(assessment);
             }
-
-            return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
         }
 
         // ****************************** EDIT ASSESSMENT ******************************

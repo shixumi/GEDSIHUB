@@ -13,18 +13,20 @@
         <li class="breadcrumb-item">
             <!-- Proceed to list of modules page -->
             <a asp-controller="Module" asp-action="Index"><span>Modules</span></a>
+        </li>
 
-        </li>
-        <li class="breadcrumb-item">
-            <!-- Proceed to list of lessons page (Module/Details) -->
-            <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId">
-                <span asp-controller="Module" id="module_number" class="module_number">Module.Title</span>
-            </a>
-        </li>
+        @if (Model.Module != null)
+        {
+            <li class="breadcrumb-item">
+                <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId">
+                    <span asp-controller="Module" id="module_number" class="module_number">@Model.Module.Title</span>
+                </a>
+            </li>
+        }
+
         <!-- Current lesson page -->
         <li class="breadcrumb-item">
             <a asp-action="Create" asp-controller="LessonContent" asp-route-Id="@Model.ModuleId"><span>Create Assessment</span></a>
-            
         </li>
     </ol>
 
