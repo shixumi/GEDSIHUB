@@ -348,8 +348,6 @@
     border-top-right-radius: 30px;
 }
 
-
-
     .additional-details.show {
         right: 0; /* Slide in */
         opacity: 1; /* Fade in */
