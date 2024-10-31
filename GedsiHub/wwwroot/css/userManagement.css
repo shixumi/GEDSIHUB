@@ -193,7 +193,7 @@
 }
 
     .select-container select {
-        text-align: right;
+        text-align: center;
         outline: none;
         border: none;
         padding-right: 2.5rem;

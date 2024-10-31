@@ -29,6 +29,7 @@
                 </a>
             }
 
+
             <!-- View Toggle Buttons using Bootstrap Pills -->
             <ul class="nav nav-pills module_list_grid_view" id="viewTabs" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -143,6 +144,14 @@
                         }
                     </div>
                 }
+                @if (User.IsInRole("Admin"))
+                {
+                    <!-- Add New Module Button -->
+                    <a asp-action="Create" class="btn add-new-module">
+                        <img class="d-xxl-flex add_icon" src="~/images/Add.png" /> Add New Module
+                    </a>
+                }
+                
             </div>
         </div>
 
@@ -167,7 +176,7 @@
                     <tbody>
                         @foreach (var module in Model)
                         {
-                            <tr>
+                            <tr class="module-table-rows">
                                 <!-- Module Title -->
                                 <td class="module-content text-start">
                                     <a asp-action="Details" asp-route-id="@module.ModuleId" class="module-title-link text-decoration-none">
@@ -223,6 +232,15 @@
                                         }
                                     </td>
                                 }
+                            </tr>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <!-- "Add New Module" Row - Entire Row Clickable -->
+                            <tr style="cursor: pointer;" onclick="location.href='@Url.Action("Create")';">
+                                <td colspan="4" class="text-start text-muted" style="padding: 15px 8px 15px 8px">
+                                    <i class="la la-plus"></i> Add New Module
+                                </td>
                             </tr>
                         }
                     </tbody>

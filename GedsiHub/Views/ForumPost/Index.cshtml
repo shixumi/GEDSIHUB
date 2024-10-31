@@ -68,6 +68,11 @@
                             <div class="h7">@post.RelativeCreatedAt</div>
                         </div>
                     </div>
+
+                    <!-- Report Button for Post -->
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#reportPostModal">
+                        <i class="la la-flag"></i> Report
+                    </button>
                 </div>
             </div>
 
@@ -146,4 +151,27 @@
             </div>
         </div>
     }
+
+
+    <!-- Modal for Reporting Post -->
+    <div class="modal fade" id="reportPostModal" tabindex="-1" aria-labelledby="reportPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportPostModalLabel">Report Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Reason for Reporting</label>
+                            <textarea name="reason" class="form-control report_input_textarea" rows="3" placeholder="Enter reason for reporting..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary modal-del-btn">Submit Report</button>
+                    </div>
+            </div>
+        </div>
+    </div>
 </div>

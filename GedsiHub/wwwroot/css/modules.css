@@ -552,3 +552,11 @@
 .modules-actions-con {
     display: flex;
 }
+
+.module-table-rows {
+    height: 3.5rem;
+}
+
+.modern-table {
+    margin-top: 2.5rem !important;
+}
