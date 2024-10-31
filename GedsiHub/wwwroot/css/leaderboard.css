@@ -4,17 +4,20 @@
     gap: 1.5rem;
 }
 
-.module-lead-con, .rank-lead-con {
-    background: #ffffff;
-    min-height: 40rem;
-    padding: 40px;
+.module-lead-con, .rank-lead-con {   
+    min-height: 49rem;   
     margin-top: 34px;
     margin-left: 0px;
-    border-radius: 30px;
-    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 30px; 
     width: 100%;
     box-sizing: border-box;
     color: #464040;
+}
+
+.module-lead-con {
+    background: #ffffff;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    padding: 40px;
 }
 
 .module-lead-con {
@@ -24,6 +27,7 @@
 
 .rank-lead-con {
     width: 75%;
+    min-height: 45rem;
 }
 
 .module-lead-con {
@@ -96,6 +100,8 @@
     border: none;
     overflow-x: hidden;
     overflow-y: hidden;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    width: 100%;
 }
 
     #leaderboard-table th, #leaderboard-table td {

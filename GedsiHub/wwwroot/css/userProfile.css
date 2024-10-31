@@ -53,7 +53,7 @@
 }
 
     .profile-container img {
-        width: 5rem;
+        width: 6.5rem;
     }
 
 .camera-container {
@@ -273,6 +273,8 @@
     top: 24px; /* Position it at the top */
     right: 24px; /* Align it to the right side */
     transition: all 0.2s ease;
+    z-index: 10;
+    cursor: pointer;
 }
 
     #editUserProfileButtton:hover {
@@ -338,11 +340,11 @@
 .additional-details {
     position: absolute; /* Position it absolutely within the table container */
     top: 0; /* Align to the top */
-    right: 1%; /* Start off-screen to the right */
+    right: 3%; /* Start off-screen to the right */
     transition: right 0.5s ease, opacity 0.5s ease; /* Smooth slide effect */
     opacity: 0; /* Initially hidden */
-    background: white; /* Ensure background */
-    width: 60%; /* Full width */
+    background: none; /* Ensure background */
+    width: 65%; /* Full width */
     z-index: 2; /* Ensure it is above the user profile table */
     padding: 1rem; /* Add some padding for content */
     border-top-right-radius: 30px;
@@ -352,3 +354,4 @@
         right: 0; /* Slide in */
         opacity: 1; /* Fade in */
     }
+

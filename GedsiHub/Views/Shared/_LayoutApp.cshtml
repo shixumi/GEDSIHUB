@@ -39,6 +39,10 @@
     <link rel="stylesheet" href="~/css/chatbot.css" />
     <link rel="stylesheet" href="~/css/generateReport.css" />
     <link rel="stylesheet" href="~/css/generateModuleReport.css" />
+    <link rel="stylesheet" href="~/css/editProfile.css" />
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
 
 
     <!-- Flatpickr CSS -->
@@ -83,7 +87,7 @@
                     </span>
                     <span class="d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center navbar-text profile_icon_span">
                         <a asp-controller="Profile" asp-action="Index" title="View Profile" aria-label="View Profile">
-                            <img class="d-xxl-flex profile_icon" src="~/images/Account.png" alt="Profile Icon" />
+                            <img class="d-xxl-flex profile_icon" src="~/images/User.png" alt="Profile Icon" />
                         </a>
                     </span>
 
@@ -311,6 +315,11 @@
     <script src="~/js/ToggleUserFieldsReports.js"></script>
     <script src="~/js/DateRange.js"></script>
     <script src="~/js/selectAllCheckbox.js"></script>
+    <script src="~/js/reportsButtonToggle.js"></script>
+    <script src="~/js/ProfilePictureUpload.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
 
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
