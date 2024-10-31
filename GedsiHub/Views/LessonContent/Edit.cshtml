@@ -26,7 +26,7 @@
     <!-- Lesson Title: Should be fetch from the Lesson.Title -->
     <span id="added_module_title" class="added_module_title">@ViewBag.LessonTitle</span>
 
-    <form asp-action="Create" method="post">
+    <form asp-action="Edit" method="post">
         @Html.AntiForgeryToken()
 
         <!-- Ensure LessonId is passed correctly -->
@@ -34,27 +34,6 @@
 
         <!-- Container for Creating Lesson -->
         <div class="cms_white_base_container">
-
-
-            <!-- Placeholders -->
-            <!-- Content Type Selection (for review) to be removed soonest! -->
-            <div class="form-group mb-3">
-                <span asp-for="ContentType" class="lesson_content_text">Content Type</span>
-                @Html.DropDownListFor(
-                         model => model.ContentType,
-                         new SelectList(Enum.GetValues(typeof(ContentTypeEnum))),
-                         "-- Select Content Type --",
-                         new { @class = "form-control", @id = "ContentTypeSelectEdit" }
-                         )
-                <span asp-validation-for="ContentType" class="text-danger"></span>
-            </div>
-            <!--  Position Input (for review) -->
-            <div class="form-group mb-3">
-                <span asp-for="PositionInt" class="lesson_content_text">Position</span>
-                <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
-                <span asp-validation-for="PositionInt" class="text-danger"></span>
-            </div>
-
 
             <!-- Media Upload Container -->
             <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
@@ -69,15 +48,13 @@
             <!-- or -->
             <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
 
-            
             <!-- H5P Link Input -->
             <span class="lesson_content_text">H5P Embed Link</span>
-            <textarea asp-for="H5PEmbedCode" class="url_input_textarea" rows="4" placeholder="Paste H5P link here" id="h5pEditorCreate">@Model.H5PEmbedCode</textarea>
+            <textarea asp-for="H5PEmbedCode" class="url_input_textarea" rows="4" placeholder="Paste H5P link here" id="h5pEditorEdit">@Model.H5PEmbedCode</textarea>
             <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
             <small class="form-text text-muted">
                 To embed H5P content, paste the iframe embed code provided by H5P here.
             </small>
-
 
             <!-- Label -->
             <span class="lesson_content_text">Lesson Content</span>
@@ -99,75 +76,27 @@
                 <input type="file" id="uploadText" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
                 <label for="uploadText" class="uploadButtonLabel"> Upload</label>
             </div>
-            
 
-            
+            <!-- Cancel and Save Changes Button -->
+            <div class="cancel_save_con">
+                <a asp-action="Details" asp-controller="LessonContent" asp-route-id="@Model.LessonId" id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton">Cancel</a>
 
-            <!--  Position Input (for review) -->
-            <div class="form-group mb-3">
-                <span asp-for="PositionInt" class="lesson_content_text">Position</span>
-                <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
-                <span asp-validation-for="PositionInt" class="text-danger"></span>
+                <button type="submit" class="SaveButton" asp-action="Edit" asp-route-id="@Model.ContentId">Save Changes</button>
             </div>
-
-            <form asp-action="Edit" method="post">
-                @Html.AntiForgeryToken()
-
-                <!-- Ensure LessonId is passed correctly -->
-                <input type="hidden" asp-for="LessonId" />
-                <input type="hidden" asp-for="ContentId" />
-
-                <!-- Cancel and Save Changes Button -->
-                <div class="cancel_save_con">
-                    <a asp-action="Details" asp-controller="LessonContent" asp-route-id="@Model.LessonId" id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton">Cancel</a>
-
-                    <button type="submit" class="SaveButton" asp-action="Edit" asp-route-id="@Model.ContentId">Save Changes</button>
-
-                </div>
-            </form>
         </div>
     </form>
-    
-
 </div>
 
 @section Scripts {
     <script>
         // Initialize TinyMCE for Text Content
         tinymce.init({
-            selector: '#textEditorEdit',
+            selector: '#tinymce_textarea',
             plugins: 'link image code',
             toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | link image',
             height: 200,
             menubar: false,
             statusbar: false
-        });
-
-        // Initialize TinyMCE for H5P Embed Code
-        tinymce.init({
-            selector: '#h5pEditorEdit',
-            plugins: 'link image code',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | link image',
-            height: 200,
-            menubar: false,
-            statusbar: false
-        });
-
-        // Show/Hide Content Fields Based on Content Type Selection
-        document.getElementById('ContentTypeSelectEdit').addEventListener('change', function () {
-            var selected = this.value;
-            var groups = document.querySelectorAll('.content-type-group');
-            groups.forEach(function (group) {
-                group.style.display = 'none';
-            });
-
-            if (selected === 'Text') {
-                document.getElementById('TextContentGroupEdit').style.display = 'block';
-            } else if (selected === 'Image') {
-                document.getElementById('ImageContentGroupEdit').style.display = 'block';
-            } else if (selected === 'H5P') {
-                document.getElementById('H5PContentGroupEdit').style.display = 'block';
-            }
         });
     </script>
 }

@@ -9,9 +9,6 @@ namespace GedsiHub.Models
         [Key]
         public int ContentId { get; set; }
 
-        [Required]
-        public ContentTypeEnum ContentType { get; set; } // Enum to specify content type
-
         // Properties for Text Content
         public string? TextContent { get; set; } // Stores HTML-formatted text
 
@@ -22,7 +19,8 @@ namespace GedsiHub.Models
         [DataType(DataType.Html)]
         public string? H5PEmbedCode { get; set; } // Stores the iframe embed code
 
-        public int PositionInt { get; set; } // Determines the order of content within the lesson
+        [Range(0, int.MaxValue, ErrorMessage = "Position must be a non-negative number.")]
+        public int PositionInt { get; set; }
 
         // Foreign Key to Lesson
         [ForeignKey("Lesson")]
@@ -31,12 +29,5 @@ namespace GedsiHub.Models
 
         // Navigation Property
         public virtual Lesson? Lesson { get; set; }
-    }
-
-    public enum ContentTypeEnum
-    {
-        Text = 1,
-        Image = 2,
-        H5P = 3
     }
 }
