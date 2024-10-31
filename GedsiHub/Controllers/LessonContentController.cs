@@ -28,27 +28,23 @@ namespace GedsiHub.Controllers
         // This action allows users to go to a lesson's content. If the content exists, they are redirected to the content details page.
         // If no content exists and the user is an Admin, they are redirected to the content creation page.
         // Non-admin users are redirected to the module details if content does not exist.
-        [Authorize(Roles = "Student, Employee, Admin")] 
+        [Authorize(Roles = "Student, Employee, Admin")]
         public async Task<IActionResult> GoToLesson(int lessonId)
         {
-            // Check if a LessonContent exists for the given LessonId
             var existingLessonContent = await _context.LessonContents
                                                       .AsNoTracking()
                                                       .FirstOrDefaultAsync(lc => lc.LessonId == lessonId);
 
             if (existingLessonContent != null)
             {
-                // If LessonContent exists, redirect to its Details page
                 return RedirectToAction("Details", new { id = existingLessonContent.ContentId });
             }
             else if (User.IsInRole("Admin"))
             {
-                // Only allow Admins to go to the Create page if no content exists
                 return RedirectToAction("Create", new { lessonId = lessonId });
             }
             else
             {
-                // For non-Admins, if no content exists, redirect back to Module Details
                 return RedirectToAction("Details", "Module", new { id = lessonId });
             }
         }
@@ -70,9 +66,6 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
-            _logger.LogInformation($"Lesson with ID {lessonId} found. Proceeding to view.");
-
-            // Set ViewBag properties
             ViewBag.LessonId = lessonId;
             ViewBag.ModuleId = lesson.ModuleId;
             ViewBag.LessonTitle = lesson.Title;
@@ -86,8 +79,8 @@ namespace GedsiHub.Controllers
         // Handles the submission of the form for creating new lesson content. Only Admins have access.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]  // Only Admins can submit LessonContent creation
-        public async Task<IActionResult> Create(LessonContent lessonContent)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(LessonContent lessonContent, IFormFile? uploadFile) // uploadFile is used only in this method
         {
             _logger.LogInformation($"Attempting to create Lesson Content for Lesson ID {lessonContent.LessonId}");
 
@@ -102,13 +95,60 @@ namespace GedsiHub.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Model state is invalid while creating lesson content.");
+
+                foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    _logger.LogWarning($"Validation Error: {modelError.ErrorMessage}");
+                }
+
                 return View("Create", lessonContent);
             }
 
             ValidateLessonContent(lessonContent);
+
+            // Only process file upload if a file is uploaded
+            if (uploadFile != null && uploadFile.Length > 0)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp4", ".mov", ".avi", ".pdf", ".docx" };
+                var fileExtension = Path.GetExtension(uploadFile.FileName).ToLowerInvariant();
+
+                long maxFileSize = fileExtension switch
+                {
+                    ".jpg" or ".jpeg" or ".png" or ".gif" => 5 * 1024 * 1024, // 5 MB for images
+                    ".mp4" or ".mov" or ".avi" => 100 * 1024 * 1024, // 100 MB for videos
+                    ".pdf" or ".docx" => 10 * 1024 * 1024, // 10 MB for documents
+                    _ => 0
+                };
+
+                if (uploadFile.Length > maxFileSize)
+                {
+                    ModelState.AddModelError("FileSize", $"File size should not exceed {maxFileSize / (1024 * 1024)} MB for {fileExtension} files.");
+                    return View("Create", lessonContent);
+                }
+
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/lesson/{lessonContent.LessonId}");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(uploadFile.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await uploadFile.CopyToAsync(stream);
+                }
+
+                lessonContent.ImageUrl = $"/images/lesson/{lessonContent.LessonId}/{uniqueFileName}";
+            }
+
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Content validation failed for the new Lesson Content.");
+
+                foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    _logger.LogWarning($"Validation Error: {modelError.ErrorMessage}");
+                }
+
                 return View("Create", lessonContent);
             }
 
@@ -155,7 +195,7 @@ namespace GedsiHub.Controllers
         // Handles the submission of the form for editing existing lesson content. Only Admins have access.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]  // Only Admins can submit LessonContent edits
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, LessonContent lessonContent)
         {
             if (id != lessonContent.ContentId)
@@ -218,8 +258,6 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
-            _logger.LogInformation($"Displaying details for Lesson Content ID {id}.");
-
             ViewBag.ModuleId = lessonContent.Lesson.ModuleId;
             ViewBag.ModuleTitle = lessonContent.Lesson.Module?.Title ?? "Untitled Module";
             ViewBag.LessonTitle = lessonContent.Lesson.Title;
@@ -234,7 +272,7 @@ namespace GedsiHub.Controllers
         // Handles the confirmation and deletion of a lesson content by its ID. Only Admins have access.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]  // Only Admins can delete LessonContent
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             _logger.LogInformation($"Attempting to delete Lesson Content with ID {id}.");
@@ -266,43 +304,21 @@ namespace GedsiHub.Controllers
         // Utility method to validate H5P embed code
         private bool IsValidH5PEmbed(string embedCode)
         {
-            if (string.IsNullOrWhiteSpace(embedCode))
-                return false;
-
-            embedCode = embedCode.Trim();
-            return embedCode.StartsWith("<iframe", System.StringComparison.OrdinalIgnoreCase) &&
-                   embedCode.Contains("src=\"https://h5p.org");
+            return !string.IsNullOrWhiteSpace(embedCode) && embedCode.Trim().StartsWith("<iframe", StringComparison.OrdinalIgnoreCase);
         }
 
-        // Extracted validation logic to a separate method to avoid repetition.
-        // Validates the lesson content based on its type (e.g., Text, Image, H5P).
+        // Updated validation method without ContentType validation
         private void ValidateLessonContent(LessonContent lessonContent)
         {
-            switch (lessonContent.ContentType)
-            {
-                case ContentTypeEnum.Text:
-                    if (string.IsNullOrWhiteSpace(lessonContent.TextContent))
-                        ModelState.AddModelError("TextContent", "Text content is required.");
-                    break;
+            if (string.IsNullOrWhiteSpace(lessonContent.TextContent))
+                ModelState.AddModelError("TextContent", "Text content is required.");
 
-                case ContentTypeEnum.Image:
-                    if (string.IsNullOrWhiteSpace(lessonContent.ImageUrl))
-                        ModelState.AddModelError("ImageUrl", "Image URL is required.");
-                    else if (!Uri.IsWellFormedUriString(lessonContent.ImageUrl, UriKind.Absolute))
-                        ModelState.AddModelError("ImageUrl", "Please enter a valid image URL.");
-                    break;
+            if (!string.IsNullOrWhiteSpace(lessonContent.ImageUrl) &&
+                !Uri.IsWellFormedUriString(lessonContent.ImageUrl, UriKind.Absolute))
+                ModelState.AddModelError("ImageUrl", "Please enter a valid image URL.");
 
-                case ContentTypeEnum.H5P:
-                    if (string.IsNullOrWhiteSpace(lessonContent.H5PEmbedCode))
-                        ModelState.AddModelError("H5PEmbedCode", "H5P embed code is required.");
-                    else if (!IsValidH5PEmbed(lessonContent.H5PEmbedCode))
-                        ModelState.AddModelError("H5PEmbedCode", "Please enter a valid H5P iframe embed code from h5p.org.");
-                    break;
-
-                default:
-                    ModelState.AddModelError("ContentType", "Invalid content type.");
-                    break;
-            }
+            if (!IsValidH5PEmbed(lessonContent.H5PEmbedCode))
+                ModelState.AddModelError("H5PEmbedCode", "Please enter a valid iframe embed code.");
         }
     }
 }

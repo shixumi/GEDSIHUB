@@ -25,7 +25,7 @@
     <!-- Lesson Title: Should be fetch from the Lesson.Title -->
     <span id="added_module_title" class="added_module_title">@ViewBag.LessonTitle</span>
 
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
 
         <!-- Ensure LessonId is passed correctly -->
@@ -38,41 +38,6 @@
                 <span id="lesson_number_inwcon">@ViewBag.LessonNumber</span>
                 <span id="lesson_title">@ViewBag.LessonTitle</span>
             </div>
-
-            <!-- Placeholders -->
-            <!-- Content Type Selection (for review) -->
-            <div class="form-group mb-3">
-                <label asp-for="ContentType" class="control-label">Content Type</label>
-                <select asp-for="ContentType" class="form-control" id="ContentTypeSelectCreate">
-                    <option value="">-- Select Content Type --</option>
-                    <option value="Text">Text</option>
-                    <option value="Image">Image</option>
-                    <option value="H5P">H5P Embed</option>
-                </select>
-                <span asp-validation-for="ContentType" class="text-danger"></span>
-            </div>
-
-
-            <!-- Position Input (for review) -->
-            <div class="form-group mb-3">
-                <label asp-for="PositionInt" class="control-label">Position</label>
-                <input asp-for="PositionInt" class="form-control" placeholder="Enter position number" />
-                <span asp-validation-for="PositionInt" class="text-danger"></span>
-            </div>
-
-
-            <!-- Media Upload Container -->
-            <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Media_Upload_Container">
-                <img class="upload_icon" src="~/images/Upload.png" />
-                <span class="upload_text">Drag and Drop Files or Click to Upload Media</span>
-                <input asp-for="ImageUrl" type="file" id="uploadMedia" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
-                <label for="uploadMedia" class="uploadButtonLabel">Upload</label>
-                <div id="MediaPreviewContainer"></div>
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-
-            <!-- or -->
-            <span class="d-xxl-flex justify-content-xxl-center or_text">or</span>
 
             <!-- H5P Link Input -->
             <textarea asp-for="H5PEmbedCode" class="url_input_textarea" placeholder="Paste H5P link here" id="h5pEditorCreate"></textarea>
@@ -91,10 +56,12 @@
             <div class="container d-xxl-flex justify-content-xxl-center Upload_Container" id="Lesson_Content_Upload_Container">
                 <img class="upload_icon" src="~/images/Upload.png" />
                 <span class="upload_text">Drag and Drop Files or Click to Upload Text or Images</span>
-                <input type="file" id="uploadText" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
-                <label for="uploadText" class="uploadButtonLabel"> Upload</label>
-            </div>
+                <input type="file" name="uploadFile" id="uploadFile" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
+                <label for="uploadFile" class="uploadButtonLabel"> Upload</label>
 
+                <!-- Container for displaying the preview -->
+                <div id="MediaPreviewContainer"></div>
+            </div>
 
             <!-- Cancel and Save Button -->
             <div class="cancel_save_con">
@@ -110,48 +77,64 @@
 
 </div>
 
-@* @section Scripts {
+@section Scripts {
     <script>
-        //Adding a function to initialize content type behavior
-        function initializeContentTypeSwitcher() {
-            var selectElement = document.getElementById('ContentTypeSelectCreate');
-            if (!selectElement) return;
+        // Initialize TinyMCE for Text Content
+        tinymce.init({
+            selector: '#tinymce_textarea',
+            plugins: 'link image code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | link image',
+            height: 200,
+            menubar: false,
+            statusbar: false
+        });
 
-            selectElement.addEventListener('change', function () {
-                var selected = this.value;
-                var groups = document.querySelectorAll('.content-type-group');
-                groups.forEach(function (group) {
-                    group.style.display = 'none';
-                });
+        // Preview selected media
+        // Ensure script runs after all page elements have loaded
+        window.addEventListener("load", function () {
+            const uploadInput = document.getElementById('uploadText');
+            const previewContainer = document.getElementById('MediaPreviewContainer');
 
-                if (selected === 'Text') {
-                    document.getElementById('TextContentGroupCreate').style.display = 'block';
-                } else if (selected === 'Image') {
-                    document.getElementById('ImageContentGroupCreate').style.display = 'block';
-                } else if (selected === 'H5P') {
-                    document.getElementById('H5PContentGroupCreate').style.display = 'block';
+            // Check that both the upload input and preview container exist
+            if (!uploadInput) {
+                console.warn("Upload input (uploadText) not found.");
+                return;
+            }
+            if (!previewContainer) {
+                console.warn("Preview container (MediaPreviewContainer) not found.");
+                return;
+            }
+
+            // Event listener for file selection
+            uploadInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                previewContainer.innerHTML = ''; // Clear previous content
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        // Create and append preview based on file type
+                        if (file.type.startsWith("image/")) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.style.maxWidth = "100%";
+                            previewContainer.appendChild(img);
+                        } else if (file.type.startsWith("video/")) {
+                            const video = document.createElement('video');
+                            video.src = e.target.result;
+                            video.controls = true;
+                            video.style.maxWidth = "100%";
+                            previewContainer.appendChild(video);
+                        } else {
+                            console.warn("Unsupported file type for preview.");
+                        }
+                    };
+                    reader.onerror = function (error) {
+                        console.error("File could not be read:", error);
+                    };
+                    reader.readAsDataURL(file); // Convert file to data URL for preview
                 }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            initializeContentTypeSwitcher();
-            tinymce.init({
-                selector: '#textEditorCreate',
-                plugins: 'link image code',
-                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | code | link image',
-                height: 200,
-                menubar: false,
-                statusbar: false
-            });
-            tinymce.init({
-                selector: '#h5pEditorCreate',
-                plugins: 'link image code',
-                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | link image',
-                height: 200,
-                menubar: false,
-                statusbar: false
             });
         });
     </script>
-} *@
+}
