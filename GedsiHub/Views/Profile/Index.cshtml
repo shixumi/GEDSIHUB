@@ -12,10 +12,8 @@
                     <div class="all-user-info-con">
                         <div class="col-1-user-profile">
                             <div class="profile-container">
-                                <img src="~/images/Account_Bigger.png" alt="User Profile Image" />
-                                <div class="camera-container">
-                                    <img src="~/images/Camera.png" alt="Camera Icon" />
-                                </div>
+                                <img src="~/images/User.png" alt="User Profile Image" />
+                                
                             </div>
                             <span class="role-user-profile">@Model.UserType</span>
                             <span class="name-user-profile">@Model.LivedName</span>
@@ -29,9 +27,17 @@
                         <div class="vertical-line"></div>
                         <div>
                             <div class="col-2-con">
-                                <button id="editUserProfileButtton" type="button" onclick="location.href='@Url.Action("Edit", "Profile")'">
-                                    <img src="~/images/Edit_Green.png" alt="Edit Icon" width="13" height="13" /> Edit Profile
-                                </button>
+
+
+
+                            
+                            <a id="editUserProfileButtton" onclick="location.href='@Url.Action("Edit", "Profile")'">
+                                <img src="~/images/Edit_Green.png" alt="Edit Icon" width="13" height="13" /> Edit Profile
+                            </a>
+
+
+
+
                                 <div class="user-profile-table-container">
                                     <table class="user-profile-table">
                                         <tbody>
@@ -69,19 +75,9 @@
                                 <!-- Additional details section -->
                                 <div class="additional-details">
                                     <div class="user-profile-table-container">
-                                        <button id="editUserProfileButtton" type="button">
-                                            <img src="~/images/Edit_Green.png" alt="Edit Icon" width="13" height="13" /> Edit Profile
-                                        </button>
+                                        
                                         <table class="user-profile-table">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Indigenous Community</td>
-                                                    <td>Yes</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Differently Abled</td>
-                                                    <td>No</td>
-                                                </tr>
+                                            <tbody>                                              
                                                 <tr>
                                                     <td>College</td>
                                                     <td>Some College</td>
@@ -94,6 +90,14 @@
                                                     <td>Section</td>
                                                     <td>A</td>
                                                 </tr>
+                                            <tr>
+                                                <td>Indigenous Community</td>
+                                                <td>Yes</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Differently Abled</td>
+                                                <td>No</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>

@@ -46,8 +46,13 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedAccount = true;
     options.User.RequireUniqueEmail = true;
 })
+
+
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddSingleton<WatershedApiService>(provider =>
+    new WatershedApiService("b109c998b9c38f", "Nt82DWbPgYThi8", "26324"));
 
 // ========================================
 // 3. Register Application Services

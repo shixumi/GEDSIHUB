@@ -1,0 +1,229 @@
+﻿.edit-profile-con-of-con {
+    max-height: 100%;
+}
+
+.edit-profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.row-edit-profile {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+    .row-edit-profile span {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .row-edit-profile input[type="text"], input[type="Date"], Select {
+        border: 1px solid #464040;
+        border-radius: 0.8rem;
+        height: 3rem;
+        width: 100%;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .row-edit-profile select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDZMMTAgMTVMMSA2IiBzdHJva2U9IiM0NjQwNDAiIHN0cm9rZS13aWR0aD0iMiIgLz4KPC9zdmc+Cg==') no-repeat right 1rem center;
+        background-size: 12px;
+    }
+
+.lived-name-con {
+    width: 50%;
+}
+
+.phone-num-con {
+    width: 24%;
+}
+
+.birthday-con {
+    width: 24%;
+}
+
+.sex-con, .gender-con, .pronouns-con, .honorifics-con, .indigenous-con, .diff-abled-con, .sector-con, .branch-con, .position-con {
+    width: 100%;
+}
+
+.edit-profile-button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+}
+
+.edit-profile-back-button, .edit-profile-save-button {
+    height: 4rem;
+    width: 15rem;
+    margin-top: 1.3rem;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1.4rem;
+    transition: all 0.2s ease;
+    border-style: none;
+}
+
+.edit-profile-back-button {
+    border: 1px solid #464040;
+    background-color: #ffffff;
+    color: #464040;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .edit-profile-back-button:hover {
+        border: 0.15625rem solid #464040;
+        color: #464040;
+    }
+
+    .edit-profile-back-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+    }
+
+.edit-profile-save-button {
+    background-color: #660000;
+    color: #ffffff;
+}
+
+    .edit-profile-save-button:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }
+
+    .edit-profile-save-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 0.15625rem 0.625rem rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        background-color: #920000;
+        border-style: none;
+    }
+
+
+
+
+
+
+
+/* Profile picture upload container */
+.profile-picture-upload {
+    position: relative;
+    display: inline-block; /* Allows positioning within the flow of content */
+
+}
+
+/* Profile picture container styling */
+.edit-profile-pic-container {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .edit-profile-pic-container img {
+        width: 100%; /* Make the image cover the container */
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+
+
+
+/* Camera icon container styling */
+.edit-camera-container {
+    position: absolute;
+    background-color: #d9d9d9;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    bottom: 1rem; /* Position the camera icon at the bottom */
+    left: 5.8rem; /* Position the camera icon to the right */
+    transform: translate(20%, 20%); /* Adjust positioning to make it appear slightly outside */
+    transition: all 0.2s ease;
+    user-select: none;
+    z-index: 20;
+    cursor: pointer; /* Make it clear that this is clickable */
+}
+
+    .edit-camera-container:active {
+        transform: scale(0.95); /* Slight scale effect on click */
+    }
+
+    .edit-camera-container img {
+        width: 1.7rem;
+        height: auto;
+        opacity: 0.8;
+    }
+
+.edit-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 35rem;
+    max-width: 90%;
+    height: auto;
+    max-height: 80%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    overflow: hidden;
+}
+
+#editProfilePicture {
+    width: 100%;
+    max-width: 25rem;
+    height: auto;
+    max-height: 20rem;
+    object-fit: contain;
+}
+
+.edit-btn {
+    background-color: #660000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+    .edit-btn:hover {
+        background-color: #218838;
+    }
+
+#editProfilePictureInput {
+    display: none;
+}
+
+
