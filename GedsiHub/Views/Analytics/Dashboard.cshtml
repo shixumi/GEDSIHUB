@@ -15,9 +15,11 @@
 <div class="feedback-title-searcbar-con">
     <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">@ViewData["Title"]</h1>
     <div class="manage-user-and-gen-rep-con">
-        <button id="GenerateReportButton" type="button">
+        <button id="GenerateReportButton" type="button" onclick="location.href='@Url.Action("Demographic", "Reports")'">
             <img src="~/images/Graph.png" alt="Generate Report" /> Generate Report
         </button>
+
+
     </div>
 
 </div>

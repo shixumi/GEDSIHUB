@@ -1,5 +1,7 @@
-using GedsiHub.Models;
+// Controllers/HomeController.cs
+using GedsiHub.Models; // Ensure this using directive is present
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace GedsiHub.Controllers
@@ -26,7 +28,7 @@ namespace GedsiHub.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

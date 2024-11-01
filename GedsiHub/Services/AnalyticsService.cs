@@ -1,22 +1,95 @@
 ﻿// Services/AnalyticsService.cs
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GedsiHub.Data;
-using GedsiHub.Models;
+using GedsiHub.Models; // Ensure this using directive is present
 using Microsoft.EntityFrameworkCore;
+using GedsiHub.ViewModels;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace GedsiHub.Services
 {
     public class AnalyticsService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<AnalyticsService> _logger;
+        private readonly HttpClient _httpClient;
+        private readonly string _lrsEndpoint;
+        private readonly string _lrsUsername;
+        private readonly string _lrsPassword;
 
-        public AnalyticsService(ApplicationDbContext context)
+        public AnalyticsService(ApplicationDbContext context, ILogger<AnalyticsService> logger, IConfiguration configuration)
         {
             _context = context;
+            _logger = logger;
+
+            _lrsEndpoint = configuration["LRS:Endpoint"]; // e.g., https://your-lrs-endpoint.com/xapi/statements
+            _lrsUsername = configuration["LRS:Username"];
+            _lrsPassword = configuration["LRS:Password"];
+
+            _httpClient = new HttpClient();
+            var byteArray = System.Text.Encoding.ASCII.GetBytes($"{_lrsUsername}:{_lrsPassword}");
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+        }
+
+        // Leaderboard
+
+        // Single Method: Get Leaderboard
+        public async Task<List<LeaderboardViewModel>> GetLeaderboardAsync(string scope, int? moduleId = null)
+        {
+            IQueryable<UserActivity> query = _context.UserActivities
+                .Where(ua => ua.ActivityType.Contains("completed") && ua.Success == true);
+
+            if (scope == "Module" && moduleId.HasValue)
+            {
+                query = query.Where(ua => ua.ModuleId == moduleId.Value);
+            }
+
+            var groupedData = await query
+                .GroupBy(ua => ua.UserId)
+                .Select(g => new LeaderboardViewModel
+                {
+                    UserId = g.Key,
+                    TotalTimeSpent = g.Sum(ua => ua.TimeSpentSeconds ?? 0.0), // double to double
+                    TotalScore = g.Sum(ua => ua.Score ?? 0.0)                // double to double
+                })
+                .ToListAsync();
+
+            // Fetch user names in bulk to avoid N+1 problem
+            var userIds = groupedData.Select(ld => ld.UserId).ToList();
+            var users = await _context.Users
+                .Where(u => userIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id, u => u.UserName);
+
+            // Assign user names
+            foreach (var entry in groupedData)
+            {
+                entry.UserName = users.ContainsKey(entry.UserId) ? users[entry.UserId] : "Unknown";
+            }
+
+            // Ordering: Higher TimeSpent ranks higher, then higher Score
+            var orderedLeaderboard = groupedData
+                .OrderByDescending(ld => ld.TotalTimeSpent)
+                .ThenByDescending(ld => ld.TotalScore)
+                .Take(10)
+                .ToList();
+
+            return orderedLeaderboard;
+        }
+
+        // Helper Method to Extract User ID from mbox
+        private string ExtractUserIdFromMbox(string mbox)
+        {
+            // Assuming mbox is in the format 'mailto:user@example.com'
+            if (mbox.StartsWith("mailto:"))
+            {
+                return mbox.Substring(7).ToLower();
+            }
+            return mbox.ToLower();
         }
 
         // User Engagement Metrics
@@ -51,44 +124,6 @@ namespace GedsiHub.Services
                 .Where(ul => ul.UserId == userId)
                 .Select(ul => ul.LoginTime.Date)
                 .Distinct()
-                .CountAsync();
-        }
-
-        // Performance Metrics
-
-        public async Task<double> GetAverageQuizScoreAsync(int moduleId)
-        {
-            var scores = await _context.UserEngagements
-                .Where(ue => ue.ModuleId == moduleId && ue.QuizScore > 0)
-                .Select(ue => ue.QuizScore)
-                .ToListAsync();
-
-            if (!scores.Any())
-                return 0.0;
-
-            return scores.Average();
-        }
-
-        public async Task<double> GetModuleCompletionRateAsync(int moduleId)
-        {
-            var totalUsers = await _context.Enrollments
-                .Where(e => e.ModuleId == moduleId)
-                .CountAsync();
-
-            if (totalUsers == 0)
-                return 0.0;
-
-            var completedUsers = await _context.UserEngagements
-                .Where(ue => ue.ModuleId == moduleId && ue.IsModuleCompleted)
-                .CountAsync();
-
-            return (double)completedUsers / totalUsers * 100;
-        }
-
-        public async Task<int> GetCertificateIssuanceRateAsync(int moduleId)
-        {
-            return await _context.Certificates
-                .Where(c => c.ModuleId == moduleId)
                 .CountAsync();
         }
 
@@ -167,7 +202,7 @@ namespace GedsiHub.Services
 
             return new UserProgressDto
             {
-                ProgressPercentage = progress.ProgressPercentage,
+                ProgressPercentage = (double)progress.ProgressPercentage, // Explicit conversion
                 IsCompleted = progress.IsCompleted
             };
         }
@@ -196,6 +231,115 @@ namespace GedsiHub.Services
             return new UserSegmentationDto
             {
                 Segments = segments
+            };
+        }
+
+        // New Method: Get Completion Rate per Module
+        public async Task<double> GetModuleCompletionRateAsync(int moduleId)
+        {
+            var totalUsers = await _context.UserActivities
+                .Where(ua => ua.ModuleId == moduleId)
+                .Select(ua => ua.UserId)
+                .Distinct()
+                .CountAsync();
+
+            if (totalUsers == 0)
+                return 0.0;
+
+            var completedUsers = await _context.UserActivities
+                .Where(ua => ua.ModuleId == moduleId && ua.ActivityType.Contains("completed") && ua.Success == true)
+                .Select(ua => ua.UserId)
+                .Distinct()
+                .CountAsync();
+
+            return ((double)completedUsers / totalUsers) * 100; // Ensure all are double
+        }
+
+        // New Method: Get Number of Certificates Issued per Module
+        public async Task<int> GetCertificateIssuanceRateAsync(int moduleId)
+        {
+            return await _context.Certificates
+                .Where(c => c.ModuleId == moduleId)
+                .CountAsync();
+        }
+
+        // New Method: Get Average Quiz Score per Module
+        public async Task<double> GetAverageQuizScoreAsync(int moduleId)
+        {
+            var scores = await _context.UserActivities
+                .Where(ua => ua.ModuleId == moduleId && ua.ActivityType.Contains("completed") && ua.Score.HasValue)
+                .Select(ua => ua.Score.Value)
+                .ToListAsync();
+
+            if (!scores.Any())
+                return 0.0;
+
+            return scores.Average(); // Already double
+        }
+
+        // New Method: Get the Count of Modules to Do for a User
+        public async Task<int> GetModulesToDoCountAsync(string userId)
+        {
+            var completedModuleIds = await _context.UserActivities
+                .Where(ua => ua.UserId == userId && ua.ActivityType.Contains("completed") && ua.Success == true)
+                .Select(ua => ua.ModuleId)
+                .Distinct()
+                .ToListAsync();
+
+            var modulesToDoCount = await _context.Modules
+                .Where(m => m.Status == ModuleStatus.Published && !completedModuleIds.Contains(m.ModuleId))
+                .CountAsync();
+
+            return modulesToDoCount;
+        }
+
+        // User Dashboard
+
+        public async Task<UserDashboardViewModel> GetUserDashboardAsync(string userId)
+        {
+            // Fetch completed modules (published)
+            var completedModules = await _context.UserActivities
+                .Where(ua => ua.UserId == userId && ua.ActivityType.Contains("completed") && ua.Success == true)
+                .Select(ua => ua.ModuleId)
+                .Distinct()
+                .ToListAsync();
+
+            // Count total published modules
+            var totalModules = await _context.Modules
+                .Where(m => m.Status == ModuleStatus.Published)
+                .CountAsync();
+
+            // Count modules to do (published and not completed)
+            var modulesToDoCount = await GetModulesToDoCountAsync(userId);
+
+            var completedCount = completedModules.Count;
+
+            // Calculate streak
+            var recentActivities = await _context.UserActivities
+                .Where(ua => ua.UserId == userId)
+                .OrderByDescending(ua => ua.Timestamp)
+                .ToListAsync();
+
+            int streak = 0;
+            DateTime today = DateTime.UtcNow.Date;
+            foreach (var activity in recentActivities)
+            {
+                if (activity.Timestamp.Date == today.AddDays(-streak))
+                {
+                    streak++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return new UserDashboardViewModel
+            {
+                ModulesToDoCount = modulesToDoCount,
+                CompletedModulesCount = completedCount,
+                TotalModules = totalModules,
+                CurrentStreak = streak
             };
         }
 
@@ -242,8 +386,6 @@ namespace GedsiHub.Services
                 .ToListAsync();
         }
 
-
-
         // Method to get Total Learners
         public async Task<int> GetTotalLearnersAsync()
         {
@@ -270,6 +412,15 @@ namespace GedsiHub.Services
         {
             return await _context.Modules.CountAsync();
         }
+
+        // New Method: Get Published Modules
+        public async Task<List<Module>> GetPublishedModulesAsync()
+        {
+            return await _context.Modules
+                .Where(m => m.Status == ModuleStatus.Published)
+                .OrderBy(m => m.PositionInt)
+                .ToListAsync();
+        }
     }
 
     // DTO Classes
@@ -284,7 +435,6 @@ namespace GedsiHub.Services
         public string CourseName { get; set; }
         public int Count { get; set; }
     }
-
 
     public class SatisfactionDto
     {
@@ -322,7 +472,7 @@ namespace GedsiHub.Services
 
     public class UserProgressDto
     {
-        public decimal ProgressPercentage { get; set; }
+        public double ProgressPercentage { get; set; } // Ensured double type
         public bool IsCompleted { get; set; }
     }
 

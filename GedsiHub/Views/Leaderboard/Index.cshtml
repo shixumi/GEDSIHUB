@@ -1,4 +1,4 @@
-﻿@{
+﻿@* @{
     Layout = "_LayoutApp";
     ViewData["Title"] = "Leaderboard";
 }
@@ -10,6 +10,9 @@
             <button id="overallLeaderboard" class="leaderboard-sidebar" type="button">Overall</button>
             <button id="perModuleLeaderboard" class="leaderboard-sidebar" type="button">Module 1</button>
         </div>
+
+
+         Leaderboard
         <div class="container rank-lead-con">
             <div class="leaderboard-head-con">
                 <span class="leaderboard-text">Leaderboard</span>
@@ -29,78 +32,110 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><img src="~/images/1st_Place_Medal.png" alt="1st Place Medal" /></td>
-                                <td>
-                                    <div></div>Alex Porlares
-                                </td>
-                                <td>100</td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/images/2nd Place Medal.png" alt="2nd Place Medal" /></td>
-                                <td>
-                                    <div></div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><img src="~/images/3rd Place Medal.png" alt="3rd Place Medal" /></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>
-                                    <div></div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>
-                                    <div></div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>
-                                    <div></div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>
-                                    <div></div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>
-                                    <div></div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>
-                                    <div></div>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>
-                                    <div></div>
-                                </td>
-                                <td></td>
-                            </tr>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>@Model[i].UserName</td>
+                                    <td>@Model[i].TotalScore</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
+ *@
+
+@model GedsiHub.ViewModels.LeaderboardPageViewModel
+
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Leaderboard";
+}
+
+<div class="leaderboard-container">
+    <!-- Sidebar for Leaderboard Selection -->
+    <div class="container module-lead-con"
+        <span class="view-lead-text">View Leaderboard</span>
+        <ul class="list-group">
+            <!-- Overall Leaderboard Link -->
+            <li class="leaderboard-sidebar  @(Model.SelectedModuleId == "Overall" ? "active" : "")">
+                <a asp-controller="Leaderboard" asp-action="Index" asp-route-scope="Overall">
+                    Overall
+                </a>
+            </li>
+            
+            <!-- Module-Specific Leaderboard Links -->
+            @foreach (var module in Model.PublishedModules)
+            {
+                    <li class="leaderboard-sidebar  @(Model.SelectedModuleId == module.ModuleId.ToString() ? "active" : "")">
+                    <a asp-controller="Leaderboard" asp-action="Index" asp-route-scope="Module" asp-route-moduleId="@module.ModuleId">
+                        @module.Title
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Leaderboard Display Area -->
+    <div class="container rank-lead-con">
+        <!-- Display Error Message if Any -->
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <!-- Leaderboard Header -->
+        <div class="leaderboard-head-con">
+            <span class="leaderboard-text">@Model.SelectedModuleName</span>
+            <span id="leaderboard-filter">
+                Filter
+                <img src="~/images/Filter.png" alt="Filter" />
+            </span>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="inside-container-leaderboard">
+            <div id="leaderboard-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.LeaderboardEntries != null && Model.LeaderboardEntries.Any())
+                        {
+                            @for (int i = 0; i < Model.LeaderboardEntries.Count; i++)
+                            {
+                                var entry = Model.LeaderboardEntries[i];
+                                var timeSpent = TimeSpan.FromSeconds(entry.TotalTimeSpent);
+                                string formattedTime = $"{(int)timeSpent.TotalHours}h {timeSpent.Minutes}m {timeSpent.Seconds}s";
+
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>@entry.UserName</td>
+                                    <td>@formattedTime</td>
+                                    <td>@entry.TotalScore</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">No leaderboard data available for the selected scope.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>

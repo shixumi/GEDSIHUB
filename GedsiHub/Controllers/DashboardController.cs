@@ -1,8 +1,8 @@
 ﻿// Controllers/DashboardController.cs
-
 using GedsiHub.Data;
 using GedsiHub.Models;
 using GedsiHub.ViewModels;
+using GedsiHub.Services; // Ensure this namespace is included
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,15 +18,18 @@ namespace GedsiHub.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<DashboardController> _logger;
+        private readonly AnalyticsService _analyticsService; // Inject AnalyticsService
 
         public DashboardController(
             UserManager<ApplicationUser> userManager,
             ApplicationDbContext context,
-            ILogger<DashboardController> logger)
+            ILogger<DashboardController> logger,
+            AnalyticsService analyticsService) // Add AnalyticsService to constructor
         {
             _userManager = userManager;
             _context = context;
             _logger = logger;
+            _analyticsService = analyticsService;
         }
 
         // Main Dashboard entry point that checks the role and redirects accordingly
@@ -97,28 +100,15 @@ namespace GedsiHub.Controllers
 
             try
             {
-                // Example data for the User Dashboard
-                // Customize based on your requirements
-
-                var completedModules = await _context.Modules
-                    .Where(m => m.ModuleId > 1) // Replace with appropriate filter, e.g., m.UserId == user.Id && m.IsCompleted
-                    .CountAsync();
-
-                var totalModules = await _context.Modules
-                    .Where(m => m.ModuleId > 1) // Replace with appropriate filter, e.g., m.UserId == user.Id
-                    .CountAsync();
-
-                // **Set a fixed streak value for testing**
-                int fixedStreak = 9; // You can change this value to test different streak lengths
-
-                // **Assign the fixed streak value instead of calculating it**
-                var currentStreak = Task.FromResult(fixedStreak);
+                // Fetch the dashboard data using AnalyticsService
+                var dashboardData = await _analyticsService.GetUserDashboardAsync(user.Id);
 
                 var userDashboardViewModel = new UserDashboardViewModel
                 {
-                    CompletedModules = completedModules,
-                    TotalModules = totalModules,
-                    CurrentStreak = currentStreak.Result
+                    ModulesToDoCount = dashboardData.ModulesToDoCount,
+                    CompletedModulesCount = dashboardData.CompletedModulesCount,
+                    TotalModules = dashboardData.TotalModules,
+                    CurrentStreak = dashboardData.CurrentStreak
                     // Add more properties as needed
                 };
 
