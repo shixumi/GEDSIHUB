@@ -40,11 +40,11 @@
 }
 
 .phone-num-con {
-    width: 24%;
+    width: 25%;
 }
 
 .birthday-con {
-    width: 24%;
+    width: 25%;
 }
 
 .sex-con, .gender-con, .pronouns-con, .honorifics-con, .indigenous-con, .diff-abled-con, .sector-con, .branch-con, .position-con {
@@ -151,9 +151,8 @@
     align-items: center;
     justify-content: center;
     border: 2px solid white;
-    bottom: 1rem; /* Position the camera icon at the bottom */
-    left: 5.8rem; /* Position the camera icon to the right */
-    transform: translate(20%, 20%); /* Adjust positioning to make it appear slightly outside */
+    bottom: 0.5rem; /* Position the camera icon at the bottom */
+    left: 6.5rem; /* Position the camera icon to the right */  
     transition: all 0.2s ease;
     user-select: none;
     z-index: 20;
