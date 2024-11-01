@@ -39,11 +39,10 @@ namespace GedsiHub.Data
         public DbSet<Feedback> Feedbacks { get; set; }
 
         // DbSets for the Analytics
-
+        public DbSet<XApiStatement> XApiStatements { get; set; }
+        public DbSet<UserActivity> UserActivities { get; set; }
         public DbSet<UserLogin> UserLogins { get; set; }
         public DbSet<ModuleActivity> ModuleActivities { get; set; }
-        public DbSet<UserEngagement> UserEngagements { get; set; }
-        public DbSet<UserFeedback> UserFeedbacks { get; set; }
         public DbSet<ActiveUser> ActiveUsers { get; set; }
 
         // DbSets for Admin Dashboard
@@ -60,6 +59,15 @@ namespace GedsiHub.Data
             builder.Entity<ActiveUser>()
                 .HasIndex(au => au.ConnectionId)
                 .IsUnique();
+
+            builder.Entity<XApiStatement>()
+                .HasIndex(x => x.UserId);
+
+            builder.Entity<XApiStatement>()
+                .HasIndex(x => x.ModuleId);
+
+            builder.Entity<XApiStatement>()
+                .HasIndex(x => x.Timestamp);
 
             // Seed College Departments
             builder.Entity<CollegeDepartment>().HasData(

@@ -922,7 +922,8 @@
                     <img src="~/images/Modules_To_Do.png" alt="Modules To Do" />
                 </div>
                 <div class="no-of-mod-to-do-con">
-                    <h1 class="no-of-mod">@Model.TotalModules - @Model.CompletedModules</h1>
+                    <!-- Display the count instead of listing modules -->
+                    <h1 class="no-of-mod">@Model.ModulesToDoCount</h1>
                     <span class="mod-text-dashboard">MODULES TO DO</span>
                 </div>
             </div>
@@ -933,7 +934,7 @@
                     <img src="~/images/Completed_Modules.png" alt="Completed Modules" />
                 </div>
                 <div class="no-of-comp-mod-con">
-                    <h1 class="no-of-mod">@Model.CompletedModules</h1>
+                    <h1 class="no-of-mod">@Model.CompletedModulesCount / @Model.TotalModules</h1>
                     <span class="mod-text-dashboard">COMPLETED MODULES</span>
                 </div>
             </div>
@@ -969,3 +970,6 @@
         </div>
     </div>
 </div>
+
+
+<script src="~/js/analytics-dashboard.js"></script>

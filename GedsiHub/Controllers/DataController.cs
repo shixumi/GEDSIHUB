@@ -1,27 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/DataController.cs
+using GedsiHub.Models; // Correct reference
+using GedsiHub.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
-public class DataController : Controller
+namespace GedsiHub.Controllers
 {
-    private readonly WatershedApiService _apiService;
-
-    public DataController(WatershedApiService apiService)
+    public class DataController : Controller
     {
-        _apiService = apiService;
-    }
+        private readonly WatershedApiService _apiService;
+        private readonly ILogger<DataController> _logger;
 
-    public async Task<IActionResult> Index()
-    {
-        try
+        public DataController(WatershedApiService apiService, ILogger<DataController> logger)
         {
-            string xAPIData = await _apiService.GetXAPIDataAsync();
-            // Process the xAPI data or pass it to the view
-            return View("Index", xAPIData);
+            _apiService = apiService;
+            _logger = logger;
         }
-        catch (Exception ex)
+
+        public async Task<IActionResult> Index()
         {
-            // Handle errors
-            return View("Error", ex.Message);
+            try
+            {
+                LrsResponse lrsResponse = await _apiService.GetXAPIDataAsync();
+                // Pass the LrsResponse object directly to the view
+                return View("Index", lrsResponse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch xAPI data from Watershed.");
+                return View("Error", ex.Message);
+            }
         }
     }
 }

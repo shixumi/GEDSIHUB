@@ -1,3 +1,4 @@
+// Program.cs
 using GedsiHub.Data;
 using GedsiHub.Models;
 using GedsiHub.Services;
@@ -14,12 +15,11 @@ using OfficeOpenXml;
 using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.Runtime.InteropServices;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ========================================
 // 1. Configure Logging with Serilog
-// ========================================
 builder.Host.UseSerilog((context, configuration) =>
 {
     configuration
@@ -29,9 +29,7 @@ builder.Host.UseSerilog((context, configuration) =>
     // Add other sinks as needed (e.g., File, Seq)
 });
 
-// ========================================
 // 2. Configure Database and Identity
-// ========================================
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
@@ -45,26 +43,43 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedAccount = true;
     options.User.RequireUniqueEmail = true;
 })
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
+builder.Services.AddHttpClient<WatershedApiService>(client =>
+{
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
 
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddSingleton<WatershedApiService>(provider =>
-    new WatershedApiService("b109c998b9c38f", "Nt82DWbPgYThi8", "26324"));
-
-// ========================================
 // 3. Register Application Services
-// ========================================
+// Removed incorrect AddHttpClient for XApiEnrichmentMiddleware
+// builder.Services.AddHttpClient<XApiEnrichmentMiddleware>();
 
+// Do NOT register XApiEnrichmentMiddleware manually
+// builder.Services.AddScoped<XApiEnrichmentMiddleware>();
 
-// Add Razor Pages and MVC with global authorization filter
+// Register other services
+builder.Services.AddScoped<AnalyticsService>();
+builder.Services.AddScoped<XApiService>();
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+builder.Services.AddHostedService<StaleActiveUserCleanupService>();
+
+// Register SignalR
+builder.Services.AddSignalR();
+
+// Register Controllers and Razor Pages with global authorization filter
 builder.Services.AddControllersWithViews(options =>
 {
     var policy = new AuthorizationPolicyBuilder()
                      .RequireAuthenticatedUser()
                      .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
+})
+.AddRazorPagesOptions(options =>
+{
+    // Exclude Identity pages from the global authorization policy
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Register");
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -74,28 +89,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 
-// Register EmailSender and CertificateService
-builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.AddTransient<EmailSender>();
-builder.Services.AddTransient<CertificateService>();
-
-
-// Register Analytics Services
-builder.Services.AddScoped<SignInManager<ApplicationUser>, ApplicationSignInManager>();
-builder.Services.AddScoped<AnalyticsService>();
-builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
-builder.Services.AddHostedService<StaleActiveUserCleanupService>();
-
-// Register SignalR
-builder.Services.AddSignalR();
-
-// Register Controllers and Razor Pages
-builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// ========================================
-// 4. Configure DinkToPdf
-// ========================================
+// Configure DinkToPdf
 var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "wkhtmltox", "bin");
 
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -110,17 +106,12 @@ builder.Services.AddSingleton(typeof(IConverter), converter);
 [DllImport("kernel32.dll", SetLastError = true)]
 static extern bool SetDllDirectory(string lpPathName);
 
-
 var app = builder.Build();
 
-// ========================================
 // 4.1 Configure EPPlus
-// ========================================
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-// ========================================
 // 5. Seed Roles and Initial Data
-// ========================================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -149,10 +140,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// ========================================
 // 6. Configure Middleware Pipeline
-// ========================================
-
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -172,12 +160,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// ========================================
 // 7. Map Endpoints
-// ========================================
 
 // Map SignalR Hubs
 app.MapHub<AnalyticsHub>("/analyticsHub");
+
+// Add the XApiEnrichmentMiddleware
+app.UseMiddleware<XApiEnrichmentMiddleware>();
 
 // Map Controller Routes
 app.MapControllerRoute(
@@ -196,6 +185,7 @@ app.MapRazorPages();
 // Run the Application
 app.Run();
 
+// Seed Admin User
 async Task SeedAdminUser(UserManager<ApplicationUser> userManager, string adminEmail, string adminPassword)
 {
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
@@ -219,6 +209,7 @@ async Task SeedAdminUser(UserManager<ApplicationUser> userManager, string adminE
     }
 }
 
+// Seed Student User
 async Task SeedStudentUser(UserManager<ApplicationUser> userManager, ApplicationDbContext context, string studentEmail, string studentPassword)
 {
     var studentUser = await userManager.FindByEmailAsync(studentEmail);
@@ -255,6 +246,7 @@ async Task SeedStudentUser(UserManager<ApplicationUser> userManager, Application
     }
 }
 
+// Seed Employee User
 async Task SeedEmployeeUser(UserManager<ApplicationUser> userManager, ApplicationDbContext context, string employeeEmail, string employeePassword)
 {
     var employeeUser = await userManager.FindByEmailAsync(employeeEmail);
