@@ -188,51 +188,80 @@
 
         <!-- Chatbot Interface -->
         <div class="chatbot-interface" id="chatbotInterface">
+
+            <!-- Chatbot Header -->
             <div class="chatbot-header">
                 Talk to GAD!
                 <button class="chatbot-exit" id="chatbotExit">&times;</button> <!-- Exit Button -->
             </div>
-            <div class="chatbot-body overflow-auto">
-                <!-- Chat bubble message -->
-                <h6>Select an option:</h6>
-                <div id="chatOptions" class="d-flex justify-content-between align-content-center mb-2">
-                    
-                    <button id="faqButton" class="btn btn-primary">FAQs</button>
-                    <button id="modulesButton" class="btn btn-primary">Modules</button>
-                    <button id="contactButton" class="btn btn-primary">Contact</button>
 
+            <!-- Chatbot Body -->
+            <div class="chatbot-body overflow-auto">    
+                <!-- Choices Message -->
+                <!-- User Chat Message -->
+                <div class="option-chat-message d-flex mt-3">
+                    <div class="option-message-bubble">
+                        <p class="message-text">Hello, how may I help you? eyowww</p>
+                    </div>
                 </div>
-                <!-- FAQ Section -->
-                <div id="faqSection" class="mt-4" style="display: none;">
+
+                @*
+                <!-- Chat Message -->
+                <div class="chat-message d-flex mt-3">
+                    <img src="https://picsum.photos/50/50" alt="Bot Avatar" class="bot-avatar" />
+                    <div class="message-bubble">
+                        <p class="message-text">Hello, how may I help you?</p>
+                    </div>
+                </div>
+
+                <!-- User Chat Message -->
+                <div class="user-chat-message d-flex mt-3">
+                    <div class="user-message-bubble">
+                        <p class="message-text">Hello, how may I help you?</p>
+                    </div>
+                </div>
+
+                
+                
+                *@
+@*              <!-- FAQ Section -->
+                <div id="faqSection" style="display: none;">
                     <h5>Frequently Asked Questions</h5>
                     <ul id="faqList" class="list-group"></ul>
-                </div>
+                </div> 
 
                 <!-- Modules Section -->
-                <div id="modulesSection" class="mt-4" style="display: none;">
+                <div id="modulesSection" style="display: none;">
                     <h5>Available Modules</h5>
                     <ul id="modulesList" class="list-group"></ul>
                 </div>
 
                 <!-- Contact Section -->
-                <div id="contactSection" class="mt-4" style="display: none;">
+                <div id="contactSection" style="display: none;">
                     <h5>Contact Information</h5>
                     <div id="contactInfo">Fetching contact info...</div>
                 </div>
+*@
 
-                <!-- Chat Message -->
-                <div class="chat-message mt-3">
-                    <div class="message-bubble">
-                        <img src="https://picsum.photos/50/50" alt="Bot Avatar" class="bot-avatar" />
-                        <div class="d-flex align-items-center">
-                            <p class="message-text">Hello, how may I help you?</p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Chatbot Footer -->
             <div class="chatbot-footer">
+
+                <!-- Chat bubble message -->
+                <div id="chatOptions" class="d-flex justify-content-between align-content-center mb-2">
+
+                    <button id="faqButton" class="btn btn-primary">FAQs</button>
+                    <button id="modulesButton" class="btn btn-primary">Modules</button>
+                    <button id="contactButton" class="btn btn-primary">Contact</button>
+                    
+                    <!-- Reset Chat Button -->
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="fas fa-sync-alt reset-icon" id="resetButton"></i>
+                    </div>
+                    
+                </div>
+
                 <div class="chat-input">
                     <input type="text" class="chat-text-input" placeholder="Ask me something..." />
                     <button class="btn chat-send-button" type="button">

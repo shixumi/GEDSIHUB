@@ -7,6 +7,7 @@
     z-index: 9999;
 }
 
+/* Chatbot Button with Click Smooth Shrink Animation */
 .chatbot-button {
     background-color: #660000;
     border: none;
@@ -19,25 +20,41 @@
     color: white;
     cursor: pointer;
     box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth transition */
 }
+
+    /* Smooth shrink effect on click */
+    .chatbot-button.shrink {
+        transform: scale(0.9);
+    }
 
 .chatbot-icon {
     font-size: 1.875rem;
     color: white;
 }
 
+/* Chatbot Interface Animation - Grow from Bottom-Right */
 .chatbot-interface {
     display: none;
     position: fixed;
     bottom: 5.625rem;
     right: 2rem;
-    width: 21.875rem;
+    width: 25rem;
     background-color: white;
     border-radius: 1.2rem;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     z-index: 10000;
-    transition: transform 0.16s linear, opacity 0.08s linear;
+    transform-origin: bottom right;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.25s ease, opacity 0.3s ease;
 }
+
+    /* Show Animation - Scale up from bottom-right */
+    .chatbot-interface.show {
+        transform: scale(1);
+        opacity: 1;
+    }
 
 /* Header styling */
 .chatbot-header {
@@ -67,17 +84,25 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    overflow-y: auto; /* Enable scrolling when content overflows */
+    overflow-y: auto;
+}
+
+#chatOptions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-right: 0.4rem;
 }
 
 #chatOptions .btn-primary {
-    border-radius: 1rem;
+    border-radius: 0.8rem;
     background-color: #f1f1f1;
-    padding: 0.4rem 1rem;
+    padding: 0.2rem 1.5rem;
     color: #464040;
     font-weight: 500;
     border: none;
     box-shadow: 0 0.0625rem 0.25rem rgba(0, 0, 0, 0.3);
+
 }
 
 .chatbot-body ul {
@@ -86,12 +111,14 @@
     display: flex;
     flex-direction: column;
     justify-content: start;
+    margin-top: 1.5rem;
 }
 
 .chatbot-body li {
     border: 1px dashed #e8e8e8;
     text-align: center;
 }
+
 /* Footer styling */
 .chatbot-footer {
     padding: 0.625rem 1rem;
@@ -99,28 +126,121 @@
     background-color: #fff;
     border: none;
     border-radius: 0 0 1.2rem 1.2rem;
-}   
+}
 
 /* Message bubble */
 .message-bubble {
     display: flex;
     align-items: center;
     background-color: #f1f1f1;
-    padding: 0.625rem;
-    border-radius: 0.9375rem;
-    margin-bottom: 0.625rem;
+    padding: 0.625rem 0.9rem;
+    border-radius: 1.5rem;
     box-shadow: 0 0.0625rem 0.25rem rgba(0, 0, 0, 0.1);
 }
 
+.user-message-bubble {
+    display: flex;
+    align-items: center;
+    background-color: rgba(102, 0, 0, 0.90);
+    color: #fff;
+    padding: 0.625rem 0.9rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 0.0625rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.option-message-bubble {
+    display: flex;
+    align-items: center;
+    text-align: start;
+    background-color: transparent;
+    color: #660000;
+    padding: 0.625rem 0.9rem;
+    border-radius: 1.5rem;
+    border: 0.5px solid rgb(102, 0, 0, 0.7);
+}
+
+.contact-message-bubble {
+    align-items: center;
+    background-color: transparent;
+    color: #660000;
+    padding: 0.625rem 0.9rem;
+    border-radius: 1.5rem;
+    border: 0.5px solid rgb(102, 0, 0, 0.7);
+}
+
 .message-text {
-    margin-left: 0.625rem;
     margin-bottom: 0;
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Include background-color for smooth transition */
+}
+
+.contact-message-text {
+    margin-bottom: 0;
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Include background-color for smooth transition */
+}
+.contact-message-text:hover{
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+
+}
+
+
+.chat-input {
+    display: flex;
+    justify-content: space-between;
+}
+.chat-message {
+    display: flex;
+    gap: 0.8rem;
+    align-items: end;
+    margin-right: 4rem;
+}
+
+.user-chat-message {
+    display: flex;
+    justify-content: end;
+    gap: 0.8rem;
+    align-items: end;
+    margin-left: 3.5rem;
+}
+
+.option-chat-message {
+    flex-wrap: wrap;
+    justify-content: end;
+    gap: 0.8rem;
+    align-items: end;
+    margin-left: 3.5rem;
+}
+
+.option-chat-message a:hover {
+    color: #660000;
+    transform: scale(1.05);
+    cursor: pointer;
+
+}
+
+.option-message-bubble:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
 }
 
 .bot-avatar {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
+}
+
+.reset-icon {
+    color: #464040;
+    background-color: transparent;
+    font-size: 1.2rem;
+}
+
+.reset-icon:hover {
+    color: #660000;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
 }
 
 /* Chat input area */
@@ -154,17 +274,43 @@
         font-size: 1.25rem;
     }
 
-
-
 #contactInfo ul {
-    list-style: none; /* Removes bullets */
-    padding-left: 0; /* Removes default padding */
+    list-style: none;
+    padding-left: 0;
     border-radius: 0.5rem;
+    animation: 
 }
 
 #contactInfo li {
     margin: 0;
     padding: 1rem;
     text-align: start;
+}
 
+
+/* Common styles for hidden and visible states */
+.hidden-section {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    display: none;
+}
+
+.visible-section {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    display: block;
+}
+
+/* Fade-in effect for message bubbles */
+.fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
 }
