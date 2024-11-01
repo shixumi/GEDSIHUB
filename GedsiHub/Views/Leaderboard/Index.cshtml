@@ -58,11 +58,11 @@
 
 <div class="leaderboard-container">
     <!-- Sidebar for Leaderboard Selection -->
-    <div class="container module-lead-con"
+    <div class="container module-lead-con">
         <span class="view-lead-text">View Leaderboard</span>
         <ul class="list-group">
             <!-- Overall Leaderboard Link -->
-            <li class="leaderboard-sidebar  @(Model.SelectedModuleId == "Overall" ? "active" : "")">
+            <li class="leaderboard-sidebar leaderboard-sidebar-text  @(Model.SelectedModuleId == "Overall" ? "active" : "")">
                 <a asp-controller="Leaderboard" asp-action="Index" asp-route-scope="Overall">
                     Overall
                 </a>
@@ -71,7 +71,7 @@
             <!-- Module-Specific Leaderboard Links -->
             @foreach (var module in Model.PublishedModules)
             {
-                    <li class="leaderboard-sidebar  @(Model.SelectedModuleId == module.ModuleId.ToString() ? "active" : "")">
+                <li class="leaderboard-sidebar  leaderboard-sidebar-text @(Model.SelectedModuleId == module.ModuleId.ToString() ? "active" : "")">
                     <a asp-controller="Leaderboard" asp-action="Index" asp-route-scope="Module" asp-route-moduleId="@module.ModuleId">
                         @module.Title
                     </a>
@@ -91,10 +91,6 @@
         <!-- Leaderboard Header -->
         <div class="leaderboard-head-con">
             <span class="leaderboard-text">@Model.SelectedModuleName</span>
-            <span id="leaderboard-filter">
-                Filter
-                <img src="~/images/Filter.png" alt="Filter" />
-            </span>
         </div>
 
         <!-- Leaderboard Table -->

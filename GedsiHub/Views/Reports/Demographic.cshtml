@@ -44,22 +44,22 @@
             <div class="report-inside-container">
                 <div class="container-of-cols">
                     <div class="col-1-filter">
-                        <div class="filter-label-select">
+                        <div class="filter-label-date">
                             <span>Date Range:</span>
-                            @Html.DropDownListFor(model => model.DateRange, Model.DateRangeOptions, "Select a Date Range", new { @id = "dateRangeSelect" })
-                            @Html.ValidationMessageFor(model => model.DateRange, "", new { @class = "text-danger" })
-                        </div>
+                           @*  @Html.DropDownListFor(model => model.DateRange, Model.DateRangeOptions, "Select a Date Range", new { @id = "dateRangeSelect" })
+                            @Html.ValidationMessageFor(model => model.DateRange, "", new { @class = "text-danger" }) *@
 
-                        <!-- Custom date range fields -->
-                        <div id="customDateContainer" style="display: none; margin-top: 1rem;">
-                            <label for="CustomStartDate">Start Date:</label>
-                            @Html.TextBoxFor(model => model.CustomStartDate, new { @class = "custom-date-field", type = "date" })
+                            @* <!-- Custom date range fields -->
+                            <div id="customDateContainer" style="display: none; margin-top: 1rem;">
+                            </div> *@
+                            
+                            @Html.TextBoxFor(model => model.CustomStartDate, new {  type = "date" })
                             @Html.ValidationMessageFor(model => model.CustomStartDate, "", new { @class = "text-danger" })
 
-                            <label for="CustomEndDate">End Date:</label>
-                            @Html.TextBoxFor(model => model.CustomEndDate, new { @class = "custom-date-field", type = "date" })
+                            <span>to</span>
+                            @Html.TextBoxFor(model => model.CustomEndDate, new { type = "date" })
                             @Html.ValidationMessageFor(model => model.CustomEndDate, "", new { @class = "text-danger" })
-                        </div>
+                       </div>
 
                         <div class="filter-label-select">
                             <span>Campus:</span>

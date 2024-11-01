@@ -1,22 +1,19 @@
-﻿// Function to handle the underline effect when a button is clicked
-document.querySelectorAll('.leaderboard-sidebar').forEach(button => {
-    button.addEventListener('click', function () {
-        // Remove the active class from all buttons
-        document.querySelectorAll('.leaderboard-sidebar').forEach(btn => btn.classList.remove('active'));
+﻿// Function to handle the underline effect when a sidebar item is clicked
+document.querySelectorAll('.leaderboard-sidebar').forEach(sidebarItem => {
+    sidebarItem.addEventListener('click', function (event) {
+        // Prevent the default action if needed, or let it proceed to navigate
+        event.preventDefault();
 
-        // Add the active class to the clicked button
+        // Remove the active class from all sidebar items
+        document.querySelectorAll('.leaderboard-sidebar').forEach(item => item.classList.remove('active'));
+
+        // Add the active class to the clicked sidebar item
         this.classList.add('active');
-    });
-});
 
-
-// Function to handle the underline effect when a tab is clicked
-document.querySelectorAll('.tab-link').forEach(tab => {
-    tab.addEventListener('click', function () {
-        // Remove the active class from all tabs
-        document.querySelectorAll('.tab-link').forEach(tab => tab.classList.remove('active'));
-
-        // Add the active class to the clicked tab
-        this.classList.add('active');
+        // Navigate to the link inside the sidebar item
+        const link = this.querySelector('a');
+        if (link) {
+            window.location.href = link.href; // Redirect to the link's URL
+        }
     });
 });
