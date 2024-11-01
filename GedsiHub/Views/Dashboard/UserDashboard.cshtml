@@ -18,13 +18,17 @@
 
 <div>
     <div class="feedback-title-searcbar-con">
-        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040; padding-bottom: 0.5rem;">Generate Module Report </h1>
+        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040; padding-bottom: 0.5rem;">Reports </h1>
     </div>
     <hr style="margin-top: -0.2rem; padding-bottom: 1rem;">
 
-    <span>Select a module and metrics to generate your report.<br /></span>
+    
     <div class="container generate-report-container">
-        <h1>Select Module</h1>
+        <div class="report-toggle-container">
+            <div id="generateDemoReportButton" class="report-toggle-button active"><img src="~/images/Demographics.png" /><span>Generate Demographic Report</span></div>
+            <div id="generateModReportButton" class="report-toggle-button"><img src="~/images/Book.png" /><span>Generate Module Report</span></div>
+        </div>
+        <h1 style="margin-top: 1rem;">Select Module</h1>
         <div class="report-inside-container report-gen-module-container"><span>Choose a module to generate the report:</span>
             <select class="report-gen-select-module">
                 <optgroup label="This is a group">
@@ -137,13 +141,7 @@
 
 <!--GENERATE DEMOGRAPHIC REPORT-->
 
-<div>
-    <div class="feedback-title-searcbar-con">
-        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040; padding-bottom: 0.5rem;">Generate Demographic Report</h1>
-    </div>
-    <hr style="margin-top: -0.1rem; padding-bottom: 1rem;">
-    <span>Select the desired filters and options to generate your report.<br /></span>
-    
+
     <div class="container generate-report-container">
         <h1>Filters</h1>
         <div class="report-inside-container">
@@ -618,7 +616,6 @@
             <button class="generate-report-cancel-button" type="button">Cancel</button>
         </div>
     </div>
-</div>
 
 
 
