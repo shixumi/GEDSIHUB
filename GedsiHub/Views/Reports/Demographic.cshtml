@@ -1,0 +1,241 @@
+﻿@model GedsiHub.ViewModels.DemographicReportViewModel
+
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Generate Demographic Report";
+}
+
+<!-- GENERATE DEMOGRAPHIC REPORT -->
+<div>
+    <div class="feedback-title-searcbar-con">
+        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040; padding-bottom: 0.5rem;">
+            Generate Demographic Report
+        </h1>
+    </div>
+
+    <!-- Display message if no users are found -->
+    @if (TempData["NoDataMessage"] != null)
+    {
+        <div class="alert alert-warning" role="alert">
+            @TempData["NoDataMessage"]
+        </div>
+    }
+
+    <!-- Display error message if there is a validation or processing error -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <hr style="margin-top: -0.1rem; padding-bottom: 1rem;">
+    <span>Select the desired filters and options to generate your report.<br /></span>
+
+    <form asp-action="Demographic" method="post">
+        @Html.AntiForgeryToken()
+
+        <div id="loading-spinner" style="display: none;">
+            <img src="~/images/spinner.gif" alt="Loading..." />
+        </div>
+
+        <div class="container generate-report-container">
+            <h1>Filters</h1>
+            <div class="report-inside-container">
+                <div class="container-of-cols">
+                    <div class="col-1-filter">
+                        <div class="filter-label-select">
+                            <span>Date Range:</span>
+                            @Html.DropDownListFor(model => model.DateRange, Model.DateRangeOptions, "Select a Date Range", new { @id = "dateRangeSelect" })
+                            @Html.ValidationMessageFor(model => model.DateRange, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Custom date range fields -->
+                        <div id="customDateContainer" style="display: none; margin-top: 1rem;">
+                            <label for="CustomStartDate">Start Date:</label>
+                            @Html.TextBoxFor(model => model.CustomStartDate, new { @class = "custom-date-field", type = "date" })
+                            @Html.ValidationMessageFor(model => model.CustomStartDate, "", new { @class = "text-danger" })
+
+                            <label for="CustomEndDate">End Date:</label>
+                            @Html.TextBoxFor(model => model.CustomEndDate, new { @class = "custom-date-field", type = "date" })
+                            @Html.ValidationMessageFor(model => model.CustomEndDate, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="filter-label-select">
+                            <span>Campus:</span>
+                            <select name="Campus">
+                                <option value="" disabled selected>Select a PUP Campus</option>
+                                @foreach (var campus in Model.CampusOptions)
+                                {
+                                    <option value="@campus.Value">@campus.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="filter-label-select">
+                            <span>Age Group:</span>
+                            <select name="AgeGroup">
+                                <option value="" disabled selected>Select Age Group</option>
+                                @foreach (var age in Model.AgeGroupOptions)
+                                {
+                                    <option value="@age.Value">@age.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-2-filter">
+                        <div class="filter-label-select">
+                            <span>Sex:</span>
+                            <select name="Sex">
+                                <option value="" disabled selected>Select Sex</option>
+                                @foreach (var sex in Model.SexOptions)
+                                {
+                                    <option value="@sex.Value">@sex.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="filter-label-select">
+                            <span>Gender Identity:</span>
+                            <select name="GenderIdentity">
+                                <option value="" disabled selected>Select Gender Identity</option>
+                                @foreach (var gender in Model.GenderIdentityOptions)
+                                {
+                                    <option value="@gender.Value">@gender.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="filter-label-select">
+                            <span>Type of User:</span>
+                            <select name="UserType" id="userType" onchange="toggleUserFields()">
+                                <option value="select" disabled selected>Select User Type</option>
+                                @foreach (var userType in Model.UserTypeOptions)
+                                {
+                                    <option value="@userType.Value">@userType.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h1>Include in Report</h1>
+            <div class="report-inside-container">
+                <div class="con-of-cols-include-report">
+                    <div id="col-1-include-in-report" class="col-include-in-report">
+                        <div class="include-checkbox-label">
+                            <input type="checkbox" id="selectAllGroup1" />
+                            <span>Select All</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBoxFor(m => m.IncludeIdNumber, new { @class = "checkbox-item-group1" })
+                            <span>ID Number</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBoxFor(m => m.IncludeName, new { @class = "checkbox-item-group1" })
+                            <span>Name</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBoxFor(m => m.IncludeWebmail, new { @class = "checkbox-item-group1" })
+                            <span>Webmail</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBoxFor(m => m.IncludePhoneNumber, new { @class = "checkbox-item-group1" })
+                            <span>Phone Number</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBoxFor(m => m.IncludeDateOfBirth, new { @class = "checkbox-item-group1" })
+                            <span>Date of Birth</span>
+                        </div>
+                    </div>
+                    <div id="col-2-include-in-report" class="col-include-in-report">
+                        <div class="include-checkbox-label">
+                            @Html.CheckBoxFor(m => m.IncludeAge, new { @class = "checkbox-item-group1" })
+                            <span>Age</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBoxFor(m => m.IncludeSex, new { @class = "checkbox-item-group1" })
+                            <span>Sex</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBoxFor(m => m.IncludeGender, new { @class = "checkbox-item-group1" })
+                            <span>Gender</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBox("IncludeIndigenousCommunity", false, new { @class = "checkbox-item-group1" })
+                            <span>Indigenous Community</span>
+                        </div>
+                        <div class="include-checkbox-label">
+                            @Html.CheckBox("IncludeDifferentlyAbled", false, new { @class = "checkbox-item-group1" })
+                            <span>Differently Abled</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h1>Report Options</h1>
+            <div class="report-inside-container report-options-container">
+                <div class="col-1-filter">
+                    <div class="filter-label-select">
+                        <span>Group By:</span>
+                        <select name="GroupBy">
+                            <option value="none" selected>None</option>
+                            <option value="age">Age</option>
+                            <option value="sex">Sex</option>
+                            <option value="gender">Gender Identity</option>
+                        </select>
+                    </div>
+                    <div class="filter-label-select">
+                        <span>Sort By:</span>
+                        <select name="SortBy">
+                            <option value="name" selected>Name</option>
+                            <option value="age">Age</option>
+                            <option value="date">Date</option>
+                        </select>
+                    </div>
+                    <div class="filter-label-select">
+                        <span>File Format:</span>
+                        <select name="FileFormat" required>
+                            <option value="CSV">CSV</option>
+                            <option value="PDF">PDF</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gen-report-button-container">
+                <button class="generate-report-button" type="submit">Generate Report</button>
+                <button class="generate-report-cancel-button" type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@await Html.PartialAsync("_ValidationScriptsPartial")
+
+<!-- Custom Date Picker Script -->
+<script>
+    // Show loading spinner on form submit
+    document.querySelector("form").addEventListener("submit", function () {
+        document.getElementById("loading-spinner").style.display = "block";
+    });
+
+    // Handle custom date range visibility
+    document.addEventListener("DOMContentLoaded", function () {
+        const dateRangeSelect = document.getElementById("dateRangeSelect");
+        const customDateContainer = document.getElementById("customDateContainer");
+
+        dateRangeSelect.addEventListener("change", function () {
+            if (this.value === "custom") {
+                customDateContainer.style.display = "block";
+            } else {
+                customDateContainer.style.display = "none";
+            }
+        });
+
+        // Initially hide the custom date container
+        customDateContainer.style.display = "none";
+    });
+</script>

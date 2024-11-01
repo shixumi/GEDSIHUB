@@ -1,186 +1,242 @@
-﻿// Log a message when the script is loaded
-console.log("JavaScript Loaded: Starting to fetch data...");
-
-// Function to reset the chatbot state
+﻿// Function to reset the chatbot to the initial state
 function resetChatbotState() {
-    // Hide all sections (FAQ, Modules, Contact)
-    document.getElementById('faqSection').style.display = 'none';
-    document.getElementById('modulesSection').style.display = 'none';
-    document.getElementById('contactSection').style.display = 'none';
+    clearChatBody();
+    displayMessageBubble('Welcome to GEDSI HUB! How may I help you today?'); // Display initial "Hello" message
 
-    // Show the options section again
-    document.getElementById('chatOptions').style.display = 'block';
-
-    // Clear any input in the text field
-    document.querySelector('.chat-text-input').value = '';
-
-    // Clear any dynamically added content (like FAQs, Modules, or Contact info)
-    document.getElementById('faqList').innerHTML = '';
-    document.getElementById('modulesList').innerHTML = '';
-    document.getElementById('contactInfo').innerHTML = 'Fetching contact info...';
-
-    // Show the chat message again when chatbot is reset
-    const chatMessage = document.querySelector('.chat-message');
-    if (chatMessage) {
-        chatMessage.style.display = 'block';
-    }
 }
 
-// Function to hide chat message
-function hideChatMessage() {
-    const chatMessage = document.querySelector('.chat-message');
-    if (chatMessage) {
-        chatMessage.style.display = 'none';
-    }
+// Function to clear the chatbot body
+function clearChatBody() {
+    const chatbotBody = document.querySelector('.chatbot-body');
+    chatbotBody.innerHTML = ''; // Clear all content from the chatbot body
 }
 
-// Toggle chatbot interface
-document.getElementById('chatbotToggle').addEventListener('click', function() {
-    const chatbotInterface = document.getElementById('chatbotInterface');
-    chatbotInterface.style.display = (chatbotInterface.style.display === 'block') ? 'none' : 'block';
+// Function to display a message in a chat bubble
+function displayMessageBubble(message) {
+    const chatbotBody = document.querySelector('.chatbot-body');
+
+    const chatMessage = document.createElement('div');
+    chatMessage.classList.add('chat-message', 'd-flex', 'mt-3', 'fade-in');
+
+    const botAvatar = document.createElement('img');
+    botAvatar.src = 'https://picsum.photos/50/50';
+    botAvatar.classList.add('bot-avatar');
+
+    const messageBubble = document.createElement('div');
+    messageBubble.classList.add('message-bubble');
+
+    const messageText = document.createElement('p');
+    messageText.classList.add('message-text');
+    messageText.textContent = message;
+
+    messageBubble.appendChild(messageText);
+    chatMessage.appendChild(botAvatar);
+    chatMessage.appendChild(messageBubble);
+
+    chatbotBody.appendChild(chatMessage);
+    chatbotBody.scrollTop = chatbotBody.scrollHeight; // Scroll to the bottom
+
+    // Delay for animation
+    setTimeout(() => {
+        chatMessage.classList.add('show'); // Trigger fade-in effect
+    }, 50); // Adjust delay as needed
+}
+
+// Function to display user message labels
+function displayUserMessageLabel(label) {
+    const chatbotBody = document.querySelector('.chatbot-body');
+
+    const userMessage = document.createElement('div');
+    userMessage.classList.add('user-chat-message', 'd-flex', 'mt-3', 'fade-in');
+
+    const messageBubble = document.createElement('div');
+    messageBubble.classList.add('user-message-bubble');
+
+    const messageText = document.createElement('p');
+    messageText.classList.add('message-text');
+    messageText.textContent = label;
+
+    messageBubble.appendChild(messageText);
+    userMessage.appendChild(messageBubble);
+    chatbotBody.appendChild(userMessage);
+    chatbotBody.scrollTop = chatbotBody.scrollHeight; // Scroll to the bottom
+
+    // Delay for animation
+    setTimeout(() => {
+        userMessage.classList.add('show'); // Trigger fade-in effect
+    }, 50); // Adjust delay as needed
+}
+
+
+// Event listener for FAQ button
+document.getElementById('faqButton').addEventListener('click', function () {
+    // <for review> clearChatBody();
+    displayUserMessageLabel("Frequently Asked Questions");
+    loadFAQs();
 });
 
-// Close button logic: reset the chatbot state and hide the interface
-document.getElementById('chatbotExit').addEventListener('click', function() {
-    const chatbotInterface = document.getElementById('chatbotInterface');
-    chatbotInterface.style.display = 'none';
-
-    // Reset the chatbot state
-    resetChatbotState();
+// Event listener for Modules button
+document.getElementById('modulesButton').addEventListener('click', function () {
+    // <for review> clearChatBody();
+    displayUserMessageLabel("Modules");
+    loadModules();
 });
 
-// Function to fetch contact information
-async function loadContactInfo() {
-    try {
-        console.log("Fetching contact info...");
-        const response = await fetch('/api/chatbot/contact', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        });
+// Event listener for Contact button
+document.getElementById('contactButton').addEventListener('click', function () {
+    // <for review> clearChatBody();
+    displayUserMessageLabel("Contact Information");
+    loadContactInfo();
+});
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+// Close button logic
+document.getElementById('chatbotExit').addEventListener('click', function () {
+    const chatbotInterface = document.getElementById('chatbotInterface');
+    chatbotInterface.classList.remove('show');
+    setTimeout(() => (chatbotInterface.style.display = 'none'), 300);
+    resetChatbotState(); // Reset to initial state
+});
 
-        const data = await response.json();
-        console.log("Contact Info Response Data:", data);
+// Reset button logic
+document.getElementById('resetButton').addEventListener('click', function () {
+    resetChatbotState(); // Reset the chatbot
+});
 
-        // Access contactInfo object correctly
-        const contact = data.contactInfo;
-        document.getElementById('contactInfo').innerHTML = `
-        <ul>
-            <li class="list-group-item"><strong>Email:</strong> ${contact.supportEmail ?? 'N/A'}</li>
-            <li class="list-group-item"><strong>Phone:</strong> ${contact.phoneNumber ?? 'N/A'}</li>
-            <li class="list-group-item"><strong>Facebook:</strong> <a href="${contact.facebook}" target="_blank">@gadpup</a></li>
-            <li class="list-group-item"><strong>TikTok:</strong> <a href="${contact.tikTok}" target="_blank">@pup.gado</a></li>
-            <li class="list-group-item"><strong>Instagram:</strong> <a href="${contact.instagram}" target="_blank">@pupgadofficial</a></li>
-            <li class="list-group-item"><strong>X (Twitter):</strong> <a href="${contact.x}" target="_blank">@PUPGADO</a></li>
-            <li class="list-group-item"><strong>Website:</strong> <a href="${contact.website}" target="_blank">Website</a></li>
-        </ul>
-        `;
-    } catch (error) {
-        console.error('Error fetching contact info:', error);
-        document.getElementById('contactInfo').innerText = 'Error fetching contact info';
-    }
-}
-
-// Function to fetch FAQs
+// Function to load FAQs
 async function loadFAQs() {
-    try {
-        console.log("Fetching FAQs...");
-        const response = await fetch('/api/chatbot/faqs', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        });
+    const chatbotBody = document.querySelector('.chatbot-body');
+    const faqList = document.createElement('div');
+    faqList.classList.add('option-chat-message', 'd-flex', 'mt-3', 'fade-in');
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+    try {
+        const response = await fetch('/api/chatbot/faqs', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
-        console.log("FAQs Response Data:", data);
+        data.faqs.forEach((faq) => {
 
-        const faqList = document.getElementById('faqList');
-        faqList.innerHTML = ''; // Clear previous data
-        data.faqs.forEach(faq => {
-            const li = document.createElement('li');
-            li.classList.add('list-group-item');
-            const answer = faq.answer ? faq.answer.replace(/'/g, "\\'") : "Answer not available";
-            li.innerHTML = `
-                <button class="btn btn-link" onclick="alert('Answer: ${answer}')">
-                    ${faq.question}
-                </button>
-            `;
-            faqList.appendChild(li);
+
+            const button = document.createElement('button');
+            button.classList.add('option-message-bubble');
+            button.textContent = faq.question;
+            button.addEventListener('click', function () {
+                displayMessageBubble(faq.answer);
+            });
+
+            
+            faqList.appendChild(button);
         });
     } catch (error) {
         console.error('Error fetching FAQs:', error);
-        document.getElementById('faqList').innerText = 'Error fetching FAQs';
+        faqList.innerText = 'Error fetching FAQs';
     }
+
+    chatbotBody.appendChild(faqList);
+    chatbotBody.scrollTop = chatbotBody.scrollHeight; // Scroll to the bottom
+
+    // Delay for animation
+    setTimeout(() => {
+        faqList.classList.add('show'); // Trigger fade-in effect
+    }, 50); // Adjust delay as needed
 }
 
-// Function to fetch Modules
-async function loadModules() {
-    try {
-        console.log("Fetching Modules...");
-        const response = await fetch('/api/chatbot/modules', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+// Event listener for the chatbot toggle button
+document.getElementById('chatbotToggle').addEventListener('click', function () {
+    const chatbotInterface = document.getElementById('chatbotInterface');
+    const chatbotButton = document.querySelector('.chatbot-button');
+
+    chatbotButton.classList.add('shrink'); // Add shrink animation
+    setTimeout(() => chatbotButton.classList.remove('shrink'), 200);
+
+    if (!chatbotInterface.classList.contains('show')) {
+        chatbotInterface.style.display = 'block';
+        setTimeout(() => chatbotInterface.classList.add('show'), 50);
+    } else {
+        chatbotInterface.classList.remove('show');
+
+    }
+});
+
+
+// Function to load modules
+async function loadModules() {
+    const chatbotBody = document.querySelector('.chatbot-body');
+    const modulesList = document.createElement('div');
+    modulesList.classList.add('option-chat-message', 'd-flex', 'mt-3', 'fade-in');
+
+    try {
+        const response = await fetch('/api/chatbot/modules', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
-        console.log("Modules Response Data:", data);
-
-        const modulesList = document.getElementById('modulesList');
-        modulesList.innerHTML = ''; // Clear previous data
-        data.modules.forEach(module => {
-            const li = document.createElement('li');
-            li.classList.add('list-group-item');
-            li.innerHTML = `<button class="btn btn-link">${module.title}</button>`;
-            modulesList.appendChild(li);
+        data.modules.forEach((module) => {
+            const button = document.createElement('a');
+            button.classList.add('option-message-bubble');
+            button.textContent = `${module.title}`;
+            modulesList.appendChild(button);
         });
     } catch (error) {
         console.error('Error fetching Modules:', error);
-        document.getElementById('modulesList').innerText = 'Error fetching Modules';
+        modulesList.innerText = 'Error fetching Modules';
     }
+
+    chatbotBody.appendChild(modulesList);
+    chatbotBody.scrollTop = chatbotBody.scrollHeight; // Scroll to the bottom
+
+    // Delay for animation
+    setTimeout(() => {
+        modulesList.classList.add('show'); // Trigger fade-in effect
+    }, 50); // Adjust delay as needed
 }
 
-// Initialize event listeners for chatbot options
-function initializeEventListeners() {
-    // Event Listeners for buttons
-    document.getElementById('faqButton').addEventListener('click', function () {
-        document.getElementById('faqSection').style.display = 'block';
-        document.getElementById('modulesSection').style.display = 'none';
-        document.getElementById('contactSection').style.display = 'none';
-        loadFAQs();
-        hideChatMessage();  // Hide chat message when FAQ button is clicked
-    });
+// Function to load contact information
+async function loadContactInfo() {
+    const chatbotBody = document.querySelector('.chatbot-body');
+    const contactInfo = document.createElement('div');
+    contactInfo.classList.add('option-chat-message', 'd-flex', 'mt-3', 'fade-in');
 
-    document.getElementById('modulesButton').addEventListener('click', function () {
-        document.getElementById('faqSection').style.display = 'none';
-        document.getElementById('modulesSection').style.display = 'block';
-        document.getElementById('contactSection').style.display = 'none';
-        loadModules();
-        hideChatMessage();  // Hide chat message when Modules button is clicked
-    });
+    try {
+        const response = await fetch('/api/chatbot/contact', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-    document.getElementById('contactButton').addEventListener('click', function () {
-        document.getElementById('faqSection').style.display = 'none';
-        document.getElementById('modulesSection').style.display = 'none';
-        document.getElementById('contactSection').style.display = 'block';
-        loadContactInfo();
-        hideChatMessage();  // Hide chat message when Contact button is clicked
-    });
+        const data = await response.json();
+        const contact = data.contactInfo;
+        contactInfo.innerHTML = `
+            <div class="contact-message-bubble">
+                <p class="contact-message-text"><strong>Email:</strong> ${contact.supportEmail ?? 'N/A'}</p>
+                <p class="contact-message-text"><strong>Phone:</strong> ${contact.phoneNumber ?? 'N/A'}</p>
+                <p class="contact-message-text">
+                    <strong>Facebook:</strong> <a href="${contact.facebook}" target="_blank">@gadpup</a>
+                </p>
+                <p class="contact-message-text">
+                    <strong>TikTok:</strong> <a href="${contact.tikTok}" target="_blank">@pup.gado</a>
+                </p>
+                <p class="contact-message-text">
+                    <strong>Instagram:</strong> <a href="${contact.instagram}" target="_blank">@pupgadofficial</a>
+                </p>
+                <p class="contact-message-text">
+                    <strong>X (Twitter):</strong> <a href="${contact.x}" target="_blank">@PUPGADO</a>
+                </p>
+                <p class="contact-message-text">
+                    <strong>Website:</strong> <a href="${contact.website}" target="_blank">pup.gado.com.ph</a>
+                </p>
+            </div>
+            `;
+    } catch (error) {
+        console.error('Error fetching contact info:', error);
+        contactInfo.innerText = 'Error fetching contact info';
 
-    // Initially hide sections
-    document.getElementById('faqSection').style.display = 'none';
-    document.getElementById('modulesSection').style.display = 'none';
-    document.getElementById('contactSection').style.display = 'none';
+    }
+
+    chatbotBody.appendChild(contactInfo);
+    chatbotBody.scrollTop = chatbotBody.scrollHeight; // Scroll to the bottom
+
+    // Delay for animation
+    setTimeout(() => {
+        contactInfo.classList.add('show'); // Trigger fade-in effect
+    }, 50); // Adjust delay as needed
 }
 
-// Ensure the DOM is fully loaded before running the script
-document.addEventListener('DOMContentLoaded', initializeEventListeners);
+// Initialize event listeners on page load
+document.addEventListener('DOMContentLoaded', resetChatbotState);

@@ -47,9 +47,13 @@
         <div id="create_new_lesson_container" class="container d-xxl-flex AddLessonContainer">
             <div id="add_new_lesson_container" class="d-xxl-flex justify-content-xxl-center align-items-xxl-center add_new_lesson_container">
                 <span class="no_lessons_added_text">No lessons have been added yet</span>
-                <a asp-action="Create" asp-controller="Lesson" asp-route-moduleId="@Model.ModuleId" class="btn create_lesson_button">
-                    <img id="add_icon_create_lesson" src="/images/Add_White.png" /> Create Lesson
-                </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Create" asp-controller="Lesson" asp-route-moduleId="@Model.ModuleId" class="btn create_lesson_button">
+                        <img id="add_icon_create_lesson" src="/images/Add_White.png" /> Create Lesson
+                    </a>
+                }
+                
             </div>
         </div>
     }
