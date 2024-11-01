@@ -1,4 +1,7 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+﻿// Removed from the integration since this is no longer needed
+
+
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize the inline date range picker (keep it hidden by default)
     const datePicker = flatpickr("#inlineDatePicker", {
         mode: "range",          // Enable range selection

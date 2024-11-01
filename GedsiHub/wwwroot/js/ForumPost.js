@@ -1,12 +1,11 @@
-
-
-
 // JavaScript to update the file name in the label
+// CONSOLE ERROR: Uncaught TypeError: Cannot read properties of null (reading 'addEventListener')
+/*
 document.getElementById('imageUpload').addEventListener('change', function () {
     var fileName = this.files[0] ? this.files[0].name : "No file chosen";
     document.getElementById('fileLabel').textContent = fileName;
 });
-
+*/
 
 
 
@@ -16,7 +15,10 @@ let files = [];
 const input = document.getElementById('ImageFile');
 const previewContainer = document.getElementById('previewContainer');
 
+// ERROR: ForumPost.js:19  Uncaught TypeError: Cannot read properties of null (reading 'addEventListener')
 // Listen for file input changes
+
+/*
 input.addEventListener('change', () => {
     const file = input.files[0]; // Only accept one file at a time for this example
 
@@ -25,6 +27,7 @@ input.addEventListener('change', () => {
         showImage();    // Display the image preview
     }
 });
+*/
 
 const showImage = () => {
     let imageHTML = '';
@@ -50,25 +53,3 @@ const removeImage = () => {
     input.value = ''; // Clear the file input
     previewContainer.innerHTML = ''; // Remove the image from the preview
 }
-
-
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const img = document.querySelector('.post-img');
-    const container = document.querySelector('.post-img-container');
-
-    img.onload = function () {
-        const imgWidth = img.naturalWidth;
-        const imgHeight = img.naturalHeight;
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
-
-        // Check if the image fits inside the container
-        if (imgWidth <= containerWidth && imgHeight <= containerHeight) {
-            container.classList.add('rounded-corners');
-        } else {
-            container.classList.remove('rounded-corners');
-        }
-    };
-});

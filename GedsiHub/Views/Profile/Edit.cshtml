@@ -22,26 +22,26 @@
         
         <form asp-action="Edit" enctype="multipart/form-data" method="post" class="edit-profile-form">
             <div class="edit-profile-container">
-                    <div class="profile-picture-upload">
-                        <div class="edit-profile-pic-container">
-                            <img id="editCroppedImage" src="~/images/User.png" alt="User Profile Image">                   
-                        </div>
-                        
-                        <div class="edit-camera-container" onclick="document.getElementById('editProfilePictureInput').click()">
-                            <img src="~/images/Camera.png" alt="Camera Icon" width="1rem" height="auto">
-                        </div>
-                        <input asp-for="ProfilePicture"  type="file" id="editProfilePictureInput" accept="image/*">                    
-                    </div>
+                 <div class="profile-picture-upload">
+                     <div class="edit-profile-pic-container">
+                         <img id="editCroppedImage" src="~/images/User.png" alt="User Profile Image">                   
+                     </div>
+                     
+                     <div class="edit-camera-container" onclick="document.getElementById('editProfilePictureInput').click()">
+                         <img src="~/images/Camera.png" alt="Camera Icon" width="1rem" height="auto">
+                     </div>
+                     <input asp-for="ProfilePicture"  type="file" id="editProfilePictureInput" accept="image/*">                    
+                 </div>
                 
 
 
-                    <div class="edit-modal" id="editCropModal">
-                        <div class="edit-modal-content">
-                            <h3>Crop Your Image</h3>
-                            <img id="editProfilePicture" alt="Profile Picture for Cropping">
-                            <button id="editCropButton" class="edit-btn">Crop Image</button>
-                        </div>
-                    </div>
+                 <div class="edit-modal" id="editCropModal">
+                     <div class="edit-modal-content">
+                         <h3>Crop Your Image</h3>
+                         <img id="editProfilePicture" alt="Profile Picture for Cropping">
+                         <button id="editCropButton" class="edit-btn">Crop Image</button>
+                     </div>
+                 </div>
             
 
                 <div class="row-edit-profile">    
@@ -346,6 +346,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/js/ProfilePictureUpload.js"></script>
 }
 
 

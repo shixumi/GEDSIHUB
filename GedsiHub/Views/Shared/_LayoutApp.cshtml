@@ -152,7 +152,25 @@
                 </div>
             </div>
 
-            <!-- Submit Button Feedback -->
+
+            @if (User.IsInRole("Admin"))
+            {
+                <!-- Reports Button -->
+                <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Reports" style="color: #464040;">
+                    <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
+                        <img src="~/images/Reports_Dark.png" style="width: 43px;color: #464040;" />
+                    </div>
+                    <div class="col" style="color: #464040;">
+                        <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
+                            Reports
+                        </span>
+                    </div>
+                </div>
+
+            }
+            
+
+            <!-- Feedback Button -->
             <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Feedback" style="color: #464040;">
                 <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
                     <img src="~/images/Feedback_Dark.png" style="width: 43px;color: #464040;" />
@@ -208,45 +226,6 @@
                         <p class="message-text">Hello, how may I help you? eyowww</p>
                     </div>
                 </div>
-
-                @*
-                <!-- Chat Message -->
-                <div class="chat-message d-flex mt-3">
-                    <img src="https://picsum.photos/50/50" alt="Bot Avatar" class="bot-avatar" />
-                    <div class="message-bubble">
-                        <p class="message-text">Hello, how may I help you?</p>
-                    </div>
-                </div>
-
-                <!-- User Chat Message -->
-                <div class="user-chat-message d-flex mt-3">
-                    <div class="user-message-bubble">
-                        <p class="message-text">Hello, how may I help you?</p>
-                    </div>
-                </div>
-
-                
-                
-                *@
-@*              <!-- FAQ Section -->
-                <div id="faqSection" style="display: none;">
-                    <h5>Frequently Asked Questions</h5>
-                    <ul id="faqList" class="list-group"></ul>
-                </div> 
-
-                <!-- Modules Section -->
-                <div id="modulesSection" style="display: none;">
-                    <h5>Available Modules</h5>
-                    <ul id="modulesList" class="list-group"></ul>
-                </div>
-
-                <!-- Contact Section -->
-                <div id="contactSection" style="display: none;">
-                    <h5>Contact Information</h5>
-                    <div id="contactInfo">Fetching contact info...</div>
-                </div>
-*@
-
             </div>
 
             <!-- Chatbot Footer -->
@@ -331,7 +310,6 @@
     <script src="~/js/PublishUnpublishLessontoggle.js"></script>
     <script src="~/js/Sidebar.js"></script>
     <script src="~/js/tinymce-init.js"></script>
-    <script src="~/js/ForumPost.js"></script>
     <script src="~/js/PublishUnpublishModuletoggle.js"></script>
     <script src="~/js/PublishUnpublishAssessmenttoggle.js"></script>
     <script src="~/js/ModalInitalization.js"></script>
@@ -342,10 +320,8 @@
     <script src="~/js/UnderlineToggling.js"></script>
     <script src="~/js/ProfileViewMoreFunction.js"></script>
     <script src="~/js/ToggleUserFieldsReports.js"></script>
-    <script src="~/js/DateRange.js"></script>
     <script src="~/js/selectAllCheckbox.js"></script>
     <script src="~/js/reportsButtonToggle.js"></script>
-    <script src="~/js/ProfilePictureUpload.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 

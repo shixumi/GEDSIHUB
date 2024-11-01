@@ -70,21 +70,18 @@ function displayUserMessageLabel(label) {
 
 // Event listener for FAQ button
 document.getElementById('faqButton').addEventListener('click', function () {
-    // <for review> clearChatBody();
     displayUserMessageLabel("Frequently Asked Questions");
     loadFAQs();
 });
 
 // Event listener for Modules button
 document.getElementById('modulesButton').addEventListener('click', function () {
-    // <for review> clearChatBody();
     displayUserMessageLabel("Modules");
     loadModules();
 });
 
 // Event listener for Contact button
 document.getElementById('contactButton').addEventListener('click', function () {
-    // <for review> clearChatBody();
     displayUserMessageLabel("Contact Information");
     loadContactInfo();
 });

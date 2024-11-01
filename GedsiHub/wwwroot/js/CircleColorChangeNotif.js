@@ -5,10 +5,10 @@ const circleColors = ['#FF6663', '#FEB144', '#f7e788', '#91d694', '#9ECBCF', '#8
 function addNotificationRow(content, timeAgo, tableClass) {
     const tableBody = document.querySelector(`.${tableClass} tbody`);
 
-    if (!tableBody) {
-        console.error(`Table with class ${tableClass} not found.`);
-        return;
-    }
+    //if (!tableBody) {
+    //    console.error(`Table with class ${tableClass} not found.`);
+    //    return;
+    //}
 
     // Create new row
     const newRow = document.createElement('tr');
@@ -41,9 +41,12 @@ function addNotificationRow(content, timeAgo, tableClass) {
     tableBody.appendChild(newRow);
 }
 
+// ERROR: Table with class less-important-notif-table not found.
 // Example usage for both tables, each starting with red, orange, yellow, etc.
+/*
 addNotificationRow('The new module "Understanding Workplace Inclusivity" has been successfully published.', '1h ago', 'important-notif-table');
 addNotificationRow('Another important update.', '2h ago', 'important-notif-table');
 
 addNotificationRow('The less important module has been published.', '1h ago', 'less-important-notif-table');
 addNotificationRow('Another less important update.', '2h ago', 'less-important-notif-table');
+*/
