@@ -1,5 +1,6 @@
 using GedsiHub.Data;
 using GedsiHub.Models;
+using GedsiHub.Repositories;
 using GedsiHub.Services;
 using GedsiHub.Seeders;
 using GedsiHub.Hubs;
@@ -68,12 +69,10 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
-
 // Register EmailSender and CertificateService
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<EmailSender>();
 builder.Services.AddTransient<CertificateService>();
-
 
 // Register Analytics Services
 builder.Services.AddScoped<SignInManager<ApplicationUser>, ApplicationSignInManager>();
@@ -87,6 +86,9 @@ builder.Services.AddSignalR();
 // Register Controllers and Razor Pages
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// Register ReportRepository
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
 
 // ========================================
 // 4. Configure DinkToPdf

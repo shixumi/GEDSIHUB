@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241031075756_AddCampusToApplicationUser")]
+    partial class AddCampusToApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -648,12 +651,6 @@ namespace GedsiHub.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("created_date")
-                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("DATE")
@@ -1406,7 +1403,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 1,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 31, 14, 23, 0, 114, DateTimeKind.Utc).AddTicks(8043),
+                            CreatedDate = new DateTime(2024, 10, 31, 7, 57, 55, 768, DateTimeKind.Utc).AddTicks(2698),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             PositionInt = 0,
                             Status = 0,
@@ -1416,7 +1413,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 2,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 31, 14, 23, 0, 114, DateTimeKind.Utc).AddTicks(8044),
+                            CreatedDate = new DateTime(2024, 10, 31, 7, 57, 55, 768, DateTimeKind.Utc).AddTicks(2699),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             PositionInt = 0,
                             Status = 0,
@@ -1426,7 +1423,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 3,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 31, 14, 23, 0, 114, DateTimeKind.Utc).AddTicks(8046),
+                            CreatedDate = new DateTime(2024, 10, 31, 7, 57, 55, 768, DateTimeKind.Utc).AddTicks(2733),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             PositionInt = 0,
                             Status = 0,
@@ -1436,7 +1433,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 4,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 31, 14, 23, 0, 114, DateTimeKind.Utc).AddTicks(8048),
+                            CreatedDate = new DateTime(2024, 10, 31, 7, 57, 55, 768, DateTimeKind.Utc).AddTicks(2735),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
                             Status = 0,
@@ -1446,7 +1443,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 5,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 31, 14, 23, 0, 114, DateTimeKind.Utc).AddTicks(8050),
+                            CreatedDate = new DateTime(2024, 10, 31, 7, 57, 55, 768, DateTimeKind.Utc).AddTicks(2737),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             PositionInt = 0,
                             Status = 0,
@@ -1456,7 +1453,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 6,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 31, 14, 23, 0, 114, DateTimeKind.Utc).AddTicks(8051),
+                            CreatedDate = new DateTime(2024, 10, 31, 7, 57, 55, 768, DateTimeKind.Utc).AddTicks(2739),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             PositionInt = 0,
                             Status = 0,
@@ -1466,7 +1463,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 7,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 10, 31, 14, 23, 0, 114, DateTimeKind.Utc).AddTicks(8053),
+                            CreatedDate = new DateTime(2024, 10, 31, 7, 57, 55, 768, DateTimeKind.Utc).AddTicks(2740),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             PositionInt = 0,
                             Status = 0,

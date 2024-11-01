@@ -312,6 +312,11 @@ namespace GedsiHub.Data
             builder.Entity<ModuleActivity>()
                 .HasIndex(ma => ma.UserId);
 
+            builder.Entity<ApplicationUser>()
+                .Property(u => u.CreatedDate)
+                .HasDefaultValueSql("GETUTCDATE()")
+                .ValueGeneratedOnAdd();
+
             // **Configure Certificate relationships**
             builder.Entity<Certificate>(entity =>
             {
@@ -482,6 +487,8 @@ namespace GedsiHub.Data
                       .HasForeignKey(s => s.CollegeDeptId)
                       .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
             });
+
+
 
             
         }
