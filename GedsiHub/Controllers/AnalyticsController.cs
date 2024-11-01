@@ -43,9 +43,28 @@ namespace GedsiHub.Controllers
             var employeeLearners = await _analyticsService.GetEmployeeLearnersAsync();
             var totalModules = await _analyticsService.GetTotalModulesAsync();
 
+            // Fetch module-specific metrics
+            var moduleMetrics = new List<ModuleMetricsViewModel>();
+            foreach (var module in modules)
+            {
+                var completionRate = await _analyticsService.GetModuleCompletionRateAsync(module.ModuleId);
+                var certificatesIssued = await _analyticsService.GetCertificateIssuanceRateAsync(module.ModuleId);
+                var averageQuizScore = await _analyticsService.GetAverageQuizScoreAsync(module.ModuleId);
+
+                moduleMetrics.Add(new ModuleMetricsViewModel
+                {
+                    ModuleId = module.ModuleId,
+                    ModuleName = module.Title,
+                    CompletionRate = completionRate,
+                    CertificatesIssued = certificatesIssued,
+                    AverageQuizScore = averageQuizScore
+                });
+            }
+
             var viewModel = new AnalyticsDashboardViewModel
             {
                 Modules = modules,
+                ModuleMetrics = moduleMetrics,
                 TotalLearners = totalLearners,
                 StudentLearners = studentLearners,
                 EmployeeLearners = employeeLearners,
@@ -74,14 +93,12 @@ namespace GedsiHub.Controllers
         [HttpGet("GetModulePerformance")]
         public async Task<IActionResult> GetModulePerformance(int moduleId)
         {
-            var averageQuizScore = await _analyticsService.GetAverageQuizScoreAsync(moduleId);
-            var completionRate = await _analyticsService.GetModuleCompletionRateAsync(moduleId);
+
             var certificateIssuance = await _analyticsService.GetCertificateIssuanceRateAsync(moduleId);
 
             var performance = new
             {
-                AverageQuizScore = averageQuizScore,
-                CompletionRate = completionRate,
+
                 CertificateIssuance = certificateIssuance
             };
 
@@ -171,6 +188,7 @@ namespace GedsiHub.Controllers
         [Range(0.1, double.MaxValue, ErrorMessage = "Time spent must be greater than 0.")]
         public double TimeSpent { get; set; } // Time in seconds
     }
+
 
 
 }

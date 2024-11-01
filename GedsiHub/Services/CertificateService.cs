@@ -80,25 +80,170 @@ namespace GedsiHub.Services
             return pdfBytes;
         }
 
-        // Generate certificate PDF using DinkToPdf
+        // Generate certificate PDF using DinkToPdf with provided HTML
         private byte[] GenerateCertificatePdf(CertificateData data)
         {
-            // Get the image path from wwwroot
-            var base64Image = GetBase64StringForImage("images/certificate_bg.png");
+            // Resolve image paths from wwwroot
+            var pupLogoPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "PUPLogo.png");
+            var gadoLogoPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "GADO_Logo_w-Border.png");
+            var badgePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "badge.png");
 
-            var htmlContent = GenerateCertificateHtml(data, base64Image);
+            // Check if the images exist
+            if (!File.Exists(pupLogoPath) || !File.Exists(gadoLogoPath) || !File.Exists(badgePath))
+            {
+                throw new FileNotFoundException("One or more images for the certificate were not found.");
+            }
+
+            // Convert images to Base64 for embedding in HTML
+            string pupLogoBase64 = Convert.ToBase64String(File.ReadAllBytes(pupLogoPath));
+            string gadoLogoBase64 = Convert.ToBase64String(File.ReadAllBytes(gadoLogoPath));
+            string badgeBase64 = Convert.ToBase64String(File.ReadAllBytes(badgePath));
+
+            // Populate the HTML content with the provided data and embedded images
+            string htmlContent = $@"
+            <!DOCTYPE html>
+            <html lang='en'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Certificate of Completion</title>
+                <style>
+                    @page {{
+                        size: 11in 8.5in; /* Landscape size */
+                        margin: 0; /* No margin for full use of the page */
+                    }}
+                    body {{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        background-color: #f0f0f0;
+                        font-family: 'Poppins', serif;
+                    }}
+                    .certificate {{
+                        width: 11in;
+                        height: 8.5in;
+                        padding-top: 40px;
+                        border: 25px solid transparent;
+                        border-image: radial-gradient(circle, #001f83, #1a2b44) 1;
+                        background-color: #f5f4ec;
+                        text-align: center;
+                        position: relative;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                        overflow: hidden;
+                    }}
+                    .logo-container {{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin-top: 30px;
+                    }}
+                    .logo {{
+                        width: 80px;
+                        display: block;
+                        margin: 0 10px;
+                    }}
+                    h1 {{
+                        font-size: 50px;
+                        margin-bottom: 0;
+                        font-family: 'Cursive', serif;
+                        color: #1a2b44;
+                        letter-spacing: 1px;
+                        font-weight: 700;
+                    }}
+                    h2 {{
+                        font-size: 30px;
+                        padding-top: 50px;
+                        color: #000000;
+                        font-family: 'Cursive', serif;
+                        font-weight: 100;
+                    }}
+                    .recipient {{
+                        font-size: 55px;
+                        margin: 20px 0;
+                        font-family: 'Cursive', serif;
+                        font-style: italic;
+                    }}
+                    .underline {{
+                        width: 70%;
+                        height: 3px;
+                        background-color: #1a2b44;
+                        margin: 10px auto;
+                    }}
+                    .content {{
+                        font-size: 25px;
+                        line-height: 1.5;
+                        margin: 20px 0;
+                        color: #000000;
+                        font-family: 'Cursive', serif;
+                        font-style: italic;
+                    }}
+                    .signature {{
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 100px;
+                        padding: 0 15%;
+                        font-family: 'Cursive', sans-serif;
+                        position: relative;
+                    }}
+                    .signature div {{
+                        text-align: center;
+                    }}
+                    .signature div span {{
+                        display: block;
+                        margin-top: 10px;
+                        font-weight: bold;
+                    }}
+                    .badge {{
+                        width: 150px;
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        top: calc(75% - 30px);
+                        display: block;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class='certificate'>
+                    <div class='logo-container'>
+                        <img src='data:image/png;base64,{pupLogoBase64}' alt='PUP Logo' class='logo'>
+                        <img src='data:image/png;base64,{gadoLogoBase64}' alt='GADO Logo' class='logo'>
+                    </div>
+                    <h1>CERTIFICATE OF COMPLETION</h1>
+                    <h2>This certificate is proudly awarded to</h2>
+                    <div class='recipient'>{data.FullName}</div>
+                    <div class='underline'></div>
+                    <div class='content'>
+                        For the successful completion of the <strong>{data.CourseTitle}</strong> module.<br>
+                        Completed on <strong>{data.CompletionDate:MMMM dd, yyyy}</strong>.
+                    </div>
+                    <div class='signature'>
+                        <div>
+                            <span>___________________________</span>
+                            Signature
+                        </div>
+                        <div>
+                            <span>___________________________</span>
+                            Date
+                        </div>
+                    </div>
+                    <img src='data:image/png;base64,{badgeBase64}' alt='Badge' class='badge'>
+                </div>
+            </body>
+            </html>";
 
             var doc = new HtmlToPdfDocument()
             {
                 GlobalSettings = {
                     ColorMode = ColorMode.Color,
                     Orientation = Orientation.Landscape, // Landscape mode for certificate
-                    PaperSize = PaperKind.A4,
+                    PaperSize = PaperKind.Letter,
+                    Margins = new MarginSettings { Top = 0, Bottom = 0, Left = 0, Right = 0 }
                 },
                 Objects = {
-                    new ObjectSettings()
+                    new ObjectSettings
                     {
-                        PagesCount = true,
                         HtmlContent = htmlContent,
                         WebSettings = { DefaultEncoding = "utf-8" }
                     }
@@ -106,112 +251,6 @@ namespace GedsiHub.Services
             };
 
             return _converter.Convert(doc);
-        }
-
-        // Convert image to Base64 for embedding in HTML
-        private string GetBase64StringForImage(string imgRelativePath)
-        {
-            // Resolve the physical path to the image in the wwwroot folder
-            var imgFullPath = Path.Combine(_webHostEnvironment.WebRootPath, imgRelativePath);
-
-            // Check if the file exists
-            if (!File.Exists(imgFullPath))
-            {
-                throw new FileNotFoundException("The certificate background image was not found.", imgFullPath);
-            }
-
-            // Read the image as byte array and convert to Base64
-            byte[] imageArray = System.IO.File.ReadAllBytes(imgFullPath);
-            return Convert.ToBase64String(imageArray);
-        }
-
-        // HTML template for certificate
-
-        private string GenerateCertificateHtml(CertificateData data, string base64Image)
-        {
-            return $@"
-        <html>
-        <head>
-            <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    margin: 0;
-                    padding: 0;
-                    text-align: center;
-                    position: relative;
-                    height: 100%;
-                    width: 100%;
-                    background-image: url('data:image/png;base64,{base64Image}');
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-position: center;
-                }}
-                .certificate-container {{
-                    position: absolute;
-                    top: 60%;  /* Adjusted top to move the text lower */
-                    left: 20%; /* Center horizontally */
-                    transform: translateX(-50%); /* Only translate horizontally */
-                    width: 70%; /* Adjust width */
-                    padding: 20px;
-                    /* Transparent background */
-                }}
-                h1 {{
-                    font-size: 35px;
-                    color: #800080; /* Purple color for header */
-                    margin: 0;
-                }}
-                .content {{
-                    font-size: 20px;
-                    color: #800080; /* Purple for content text */
-                }}
-                .content .name {{
-                    font-size: 28px;
-                    color: #800080;
-                    font-weight: bold;
-                    margin: 10px 0;
-                }}
-                .content .course {{
-                    font-size: 22px;
-                    font-weight: bold;
-                    margin-bottom: 5px;
-                }}
-                .footer {{
-                    margin-top: 30px;
-                    font-size: 18px;
-                    color: #800080; /* Purple for footer text */
-                    text-align: left;
-                    display: flex;
-                    justify-content: space-between;
-                }}
-                .footer .signature {{
-                    padding-left: 40px;
-                }}
-                .footer .date {{
-                    padding-right: 40px;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class='certificate-container'>
-                <h1>Certificate of Completion</h1>
-                <div class='content'>
-                    <p>This certifies that</p>
-                    <p class='name'>{data.FullName}</p>
-                    <p>has successfully completed the module</p>
-                    <p class='course'>{data.CourseTitle}</p>
-                    <p>on {data.CompletionDate.ToString("MMMM dd, yyyy")}</p>
-                </div>
-                <div class='footer'>
-                    <div class='signature'>
-                        <p>Signature: _______________</p>
-                    </div>
-                    <div class='date'>
-                        <p>Date: _______________</p>
-                    </div>
-                </div>
-            </div>
-        </body>
-        </html>";
         }
 
         // Method to send certificate via email

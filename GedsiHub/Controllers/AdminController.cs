@@ -220,12 +220,12 @@ namespace GedsiHub.Controllers
             return View(viewModel);
         }
 
-        // POST: Admin/DeleteUserConfirmed
         // This action deletes the user from the database after confirmation. Only admins can delete a user.
-        [HttpPost, ActionName("DeleteUser")]
+        // POST: Admin/DeleteUserConfirmed
+        [HttpPost]
         public async Task<IActionResult> DeleteUserConfirmed(string id)
         {
-            _logger.LogInformation("Admin confirmed deletion of user with ID: {UserId}", id);
+            _logger.LogInformation("DeleteUserConfirmed called for user with ID: {UserId}", id);
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)

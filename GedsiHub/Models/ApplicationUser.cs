@@ -59,12 +59,20 @@ namespace GedsiHub.Models
         [Column("date_of_birth", TypeName = "DATE")]
         public DateTime DateOfBirth { get; set; } // Birthday
 
+        [StringLength(100)]
+        [Column("campus")]
+        public string Campus { get; set; } = "Sta. Mesa, Manila (Main Campus)";
+
         [StringLength(200)]
         [Column("profile_picture_path")]
         public string ProfilePicturePath { get; set; } = string.Empty; // Profile Picture Path
 
         [Column("is_active")]
         public bool IsActive { get; set; } = false; // Account activation status
+
+        [Required]
+        [Column("created_date", TypeName = "DATETIME")]
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow; // User registration date
 
         // Navigation properties for extended tables
         public virtual Admin Admin { get; set; }  // Ensure Admin is referenced properly
