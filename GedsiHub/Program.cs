@@ -1,6 +1,7 @@
 // Program.cs
 using GedsiHub.Data;
 using GedsiHub.Models;
+using GedsiHub.Repositories;
 using GedsiHub.Services;
 using GedsiHub.Seeders;
 using GedsiHub.Hubs;
@@ -19,17 +20,20 @@ using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ========================================
 // 1. Configure Logging with Serilog
+// ========================================
 builder.Host.UseSerilog((context, configuration) =>
 {
     configuration
         .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext()
         .WriteTo.Console();
-    // Add other sinks as needed (e.g., File, Seq)
 });
 
+// ========================================
 // 2. Configure Database and Identity
+// ========================================
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
@@ -46,28 +50,34 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// ========================================
+// 3. Configure External Services and API Clients
+// ========================================
 builder.Services.AddHttpClient<WatershedApiService>(client =>
 {
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 
-// 3. Register Application Services
-// Removed incorrect AddHttpClient for XApiEnrichmentMiddleware
-// builder.Services.AddHttpClient<XApiEnrichmentMiddleware>();
-
-// Do NOT register XApiEnrichmentMiddleware manually
-// builder.Services.AddScoped<XApiEnrichmentMiddleware>();
-
-// Register other services
+// ========================================
+// 4. Register Application Services
+// ========================================
 builder.Services.AddScoped<AnalyticsService>();
-builder.Services.AddScoped<XApiService>();
+builder.Services.AddScoped<XApiService>(); // Register XApiService
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddHostedService<StaleActiveUserCleanupService>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<EmailSender>(); // Ensure EmailSender is registered
+builder.Services.AddTransient<CertificateService>();
 
-// Register SignalR
+builder.Services.AddScoped<SignInManager<ApplicationUser>, ApplicationSignInManager>();
+
+// Correctly register IHubContext for SignalR
 builder.Services.AddSignalR();
 
-// Register Controllers and Razor Pages with global authorization filter
+// ========================================
+// 5. Configure Razor Pages and MVC with Global Authorization
+// ========================================
 builder.Services.AddControllersWithViews(options =>
 {
     var policy = new AuthorizationPolicyBuilder()
@@ -77,10 +87,11 @@ builder.Services.AddControllersWithViews(options =>
 })
 .AddRazorPagesOptions(options =>
 {
-    // Exclude Identity pages from the global authorization policy
     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Register");
 });
+
+builder.Services.AddRazorPages();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -88,15 +99,13 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
-
-builder.Services.AddRazorPages();
-
-// Configure DinkToPdf
+// ========================================
+// 6. Configure DinkToPdf for PDF Generation
+// ========================================
 var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "wkhtmltox", "bin");
 
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 {
-    // Use SetDllDirectory to set the folder where wkhtmltox.dll resides
     SetDllDirectory(wkhtmltoxPath);
 }
 
@@ -106,30 +115,28 @@ builder.Services.AddSingleton(typeof(IConverter), converter);
 [DllImport("kernel32.dll", SetLastError = true)]
 static extern bool SetDllDirectory(string lpPathName);
 
+// ========================================
+// 7. Configure Middleware and Seed Data
+// ========================================
 var app = builder.Build();
 
-// 4.1 Configure EPPlus
+// Configure EPPlus License
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-// 5. Seed Roles and Initial Data
+// Seed Roles and Initial Data
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
-        // Retrieve services needed for seeding
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var context = services.GetRequiredService<ApplicationDbContext>();
 
-        // Seed roles using your RoleSeeder
         var roleSeeder = new RoleSeeder(roleManager);
         await roleSeeder.SeedRolesAsync();
 
-        // Seed Admin user
         await SeedAdminUser(userManager, "admin@gado.com", "AdminPassword123!");
-
-        // Seed separate Student and Employee users
         await SeedStudentUser(userManager, context, "student@gado.com", "StudentPassword123!");
         await SeedEmployeeUser(userManager, context, "employee@gado.com", "EmployeePassword123!");
     }
@@ -140,7 +147,9 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// 6. Configure Middleware Pipeline
+// ========================================
+// 8. Configure Middleware Pipeline
+// ========================================
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -153,39 +162,28 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
-// Authentication & Authorization Middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 7. Map Endpoints
-
-// Map SignalR Hubs
-app.MapHub<AnalyticsHub>("/analyticsHub");
-
-// Add the XApiEnrichmentMiddleware
-app.UseMiddleware<XApiEnrichmentMiddleware>();
-
-// Map Controller Routes
+// ========================================
+// 9. Map Endpoints
+// ========================================
+app.MapHub<AnalyticsHub>("/analyticsHub"); // Map SignalR Hub
+app.UseMiddleware<XApiEnrichmentMiddleware>(); // Add custom middleware
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Dashboard}/{action=Index}/{id?}");
-
-// Specific Route for Chatbot
 app.MapControllerRoute(
     name: "chatbot",
     pattern: "Chatbot",
     defaults: new { controller = "Chatbot", action = "Index" });
-
-// Map Razor Pages
 app.MapRazorPages();
-
-// Run the Application
 app.Run();
 
-// Seed Admin User
+// ========================================
+// 10. Helper Methods for Seeding Users
+// ========================================
 async Task SeedAdminUser(UserManager<ApplicationUser> userManager, string adminEmail, string adminPassword)
 {
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
@@ -197,7 +195,7 @@ async Task SeedAdminUser(UserManager<ApplicationUser> userManager, string adminE
             Email = adminEmail,
             FirstName = "Admin",
             LastName = "User",
-            IsActive = true, // Set as active
+            IsActive = true,
             EmailConfirmed = true
         };
 
@@ -209,7 +207,6 @@ async Task SeedAdminUser(UserManager<ApplicationUser> userManager, string adminE
     }
 }
 
-// Seed Student User
 async Task SeedStudentUser(UserManager<ApplicationUser> userManager, ApplicationDbContext context, string studentEmail, string studentPassword)
 {
     var studentUser = await userManager.FindByEmailAsync(studentEmail);
@@ -221,7 +218,7 @@ async Task SeedStudentUser(UserManager<ApplicationUser> userManager, Application
             Email = studentEmail,
             FirstName = "Student",
             LastName = "User",
-            IsActive = true, // Set as active
+            IsActive = true,
             EmailConfirmed = true
         };
 
@@ -230,14 +227,13 @@ async Task SeedStudentUser(UserManager<ApplicationUser> userManager, Application
         {
             await userManager.AddToRoleAsync(newUser, "Student");
 
-            // Create a student record
             var student = new Student
             {
                 UserId = newUser.Id,
                 Year = 1,
                 Section = "A",
-                CollegeDeptId = 1, // Assuming you have this data in CollegeDepartment
-                CourseId = 1 // Assuming you have this data in Course
+                CollegeDeptId = 1,
+                CourseId = 1
             };
 
             context.Students.Add(student);
@@ -246,7 +242,6 @@ async Task SeedStudentUser(UserManager<ApplicationUser> userManager, Application
     }
 }
 
-// Seed Employee User
 async Task SeedEmployeeUser(UserManager<ApplicationUser> userManager, ApplicationDbContext context, string employeeEmail, string employeePassword)
 {
     var employeeUser = await userManager.FindByEmailAsync(employeeEmail);
@@ -258,7 +253,7 @@ async Task SeedEmployeeUser(UserManager<ApplicationUser> userManager, Applicatio
             Email = employeeEmail,
             FirstName = "Employee",
             LastName = "User",
-            IsActive = true, // Set as active
+            IsActive = true,
             EmailConfirmed = true
         };
 
@@ -267,7 +262,6 @@ async Task SeedEmployeeUser(UserManager<ApplicationUser> userManager, Applicatio
         {
             await userManager.AddToRoleAsync(newUser, "Employee");
 
-            // Create an employee record
             var employee = new Employee
             {
                 UserId = newUser.Id,
