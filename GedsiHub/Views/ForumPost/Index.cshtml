@@ -91,11 +91,15 @@
                     <span class="badge rounded-pill">@post.Flair</span>
                 }
 
+                @if (!string.IsNullOrEmpty(post.ModuleTitle))
+                {
+                    <span class="badge bg-primary">@post.ModuleTitle</span>
+                }
+
                 <!-- Card Title -->
                 <a asp-action="Details" asp-route-id="@post.PostId">
                     <h4 class="card-title">@post.Title</h4>
                 </a>
-
 
                 <!-- Card Text -->
                 <p class="card-text">
