@@ -58,20 +58,28 @@
                                     <td class="report-content">@report.ReportedByName</td>
                                     <td class="report-content">@report.Reason</td>
                                     <td class="report-content">@report.CreatedAt.ToShortDateString()</td>
-                                    <td class="report-content view-delete-button-container">
-                                        <!-- View button to go to post details -->
-                                        <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" class="btn btn-sm btn-info">View</a>
-
+                                    <td class="report-content button-container-feedback">
+                                       
                                         <!-- Dismiss button -->
                                         <form asp-action="DismissPostReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-secondary">Dismiss</button>
+                                            <button type="submit" class="btn" id="dismiss-user-feedback-button">
+                                                <img src="~/images/Dismiss.png" />Dismiss
+                                            </button>
                                         </form>
+
+                                        <!-- View button to go to post details -->
+                                        <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" id="view-user-feedback-button">
+                                            <img src="~/images/View_Green.png" />View
+                                        </a>
+
 
                                         <!-- Delete button -->
                                         <form asp-action="DeletePost" asp-route-id="@report.PostId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                            <button type="submit" id="delete-user-feedback-button" class="delete-user-feedback-button action-button">
+                                                <img src="~/images/Delete.png" /> Delete
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>
@@ -93,13 +101,13 @@
             <div class="feedback-responses-table">
                 <table class="table">
                     <thead>
-                        <tr class="feedback-table-label">
-                            <th class="select-all-checkbox"><input type="checkbox" /></th>
-                            <th><strong>Comment Content</strong></th>
-                            <th><strong>Reported By</strong></th>
-                            <th><strong>Reason</strong></th>
-                            <th><strong>Date</strong></th>
-                            <th><strong>Actions</strong></th>
+                        <tr class="viewReports-table-label">
+                            <th class="viewReport-header-label select-all-checkbox"><input type="checkbox" /></th>
+                            <th class="viewReport-header-label text-start">Comment Content</th>
+                            <th class="viewReport-header-label">Reported By</th>
+                            <th class="viewReport-header-label">Reason</th>
+                            <th class="viewReport-header-label">Date</th>
+                            <th class="viewReport-header-label">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,26 +115,33 @@
                         {
                             @foreach (var report in Model.ReportedComments)
                             {
-                                <tr class="row-feedback-response">
-                                    <td class="checkbox-container"><input type="checkbox" /></td>
-                                    <td>@report.CommentContent</td>
-                                    <td>@report.ReportedByName</td>
-                                    <td>@report.Reason</td>
-                                    <td>@report.CreatedAt.ToShortDateString()</td>
-                                    <td class="view-delete-button-container">
-                                        <!-- View button to go to the post details where the comment is located -->
-                                        <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" class="btn btn-sm btn-info">View</a>
-
+                                <tr class="report-table-rows">
+                                    <td class="report-content checkbox-container"><input type="checkbox" /></td>
+                                    <td class="report-content text-start">@report.CommentContent</td>
+                                    <td class="report-content">@report.ReportedByName</td>
+                                    <td class="report-content">@report.Reason</td>
+                                    <td class="report-content">@report.CreatedAt.ToShortDateString()</td>
+                                    <td class="report-content button-container-feedback">
+                                       
                                         <!-- Dismiss button -->
                                         <form asp-action="DismissCommentReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-secondary">Dismiss</button>
+                                            <button type="submit" class="btn" id="dismiss-user-feedback-button">
+                                                <img src="~/images/Dismiss.png"/> Dismiss
+                                            </button>
                                         </form>
+
+                                        <!-- View button to go to the post details where the comment is located -->
+                                        <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" id="view-user-feedback-button">
+                                            <img src="~/images/View_Green.png" /> View
+                                        </a>
 
                                         <!-- Delete button -->
                                         <form asp-action="DeleteComment" asp-route-id="@report.CommentId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                            <button type="submit" id="delete-user-feedback-button" class="delete-user-feedback-button action-button">
+                                                <img src="~/images/Delete.png" />Delete
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>

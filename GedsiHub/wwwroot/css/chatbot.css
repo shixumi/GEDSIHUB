@@ -229,11 +229,11 @@
 }
 
 .contact-chat-message {
-    flex-wrap: wrap;
+    display: flex;
     justify-content: end;
     gap: 0.8rem;
     align-items: end;
-    margin-left: 3.5rem;
+    margin-right: 4rem;
 }
 
 .contact-chat-message a:hover {

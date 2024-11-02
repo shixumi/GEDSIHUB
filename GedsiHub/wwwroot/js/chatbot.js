@@ -229,6 +229,14 @@ async function loadContactInfo() {
     const contactInfo = document.createElement('div');
     contactInfo.classList.add('contact-chat-message', 'd-flex', 'mt-3', 'fade-in');
 
+    const botAvatar = document.createElement('img');
+    botAvatar.src = '/images/Talk_to_GAD.png';
+    botAvatar.classList.add('bot-avatar');
+    botAvatar.style.backgroundColor = '#660000';
+    botAvatar.style.width = '2.5rem';
+    botAvatar.style.height = '2.5rem';
+    botAvatar.style.objectFit = 'cover';
+
     try {
         const response = await fetch('/api/chatbot/contact', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
@@ -260,6 +268,7 @@ async function loadContactInfo() {
         contactInfo.innerText = 'Error fetching contact info';
     }
 
+    contactInfo.prepend(botAvatar);
     chatbotBody.appendChild(contactInfo);
     chatbotBody.scrollTop = chatbotBody.scrollHeight; // Scroll to the bottom
 
