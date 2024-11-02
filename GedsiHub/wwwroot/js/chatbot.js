@@ -1,9 +1,14 @@
-﻿// Function to reset the chatbot to the initial state
+﻿// Variable to track if the user can send a new message
+let canSendMessage = true;
+
+// Cooldown time in milliseconds (e.g., 2000 ms = 2 seconds)
+const messageCooldown = 1500;
+
+// Function to reset the chatbot to the initial state
 function resetChatbotState() {
     clearChatBody();
     clearChatOptionFooter();
     displayMessageBubble('Welcome to GEDSI HUB! How may I help you today?'); // Display initial "Hello" message
-
 }
 
 // Function to clear the chatbot body
@@ -14,13 +19,15 @@ function clearChatBody() {
 
 function clearChatOptionFooter() {
     const chatbotOptionFooter = document.querySelector('.chatbot-Option-Footer');
-    chatbotOptionFooter.innerHTML = ''; // Clear all content from the chatbot body
+    chatbotOptionFooter.innerHTML = ''; // Clear all content from the chatbot footer
 }
 
 // Function to display a message in a chat bubble
 function displayMessageBubble(message) {
-    const chatbotBody = document.querySelector('.chatbot-body');
+    // Prevent sending a message if cooldown is active
+    if (!canSendMessage) return;
 
+    const chatbotBody = document.querySelector('.chatbot-body');
     const chatMessage = document.createElement('div');
     chatMessage.classList.add('chat-message', 'd-flex', 'mt-3', 'fade-in');
 
@@ -49,10 +56,16 @@ function displayMessageBubble(message) {
     setTimeout(() => {
         chatMessage.classList.add('show'); // Trigger fade-in effect
     }, 50); // Adjust delay as needed
+
+    // Start cooldown
+    startCooldown();
 }
 
 // Function to display user message labels
 function displayUserMessageLabel(label) {
+    // Prevent sending a message if cooldown is active
+    if (!canSendMessage) return;
+
     const chatbotBody = document.querySelector('.chatbot-body');
 
     const userMessage = document.createElement('div');
@@ -74,8 +87,18 @@ function displayUserMessageLabel(label) {
     setTimeout(() => {
         userMessage.classList.add('show'); // Trigger fade-in effect
     }, 50); // Adjust delay as needed
+
+    // Start cooldown
+    startCooldown();
 }
 
+// Function to start the cooldown period
+function startCooldown() {
+    canSendMessage = false; // Set cooldown to active
+    setTimeout(() => {
+        canSendMessage = true; // Reset cooldown
+    }, messageCooldown);
+}
 
 // Event listener for FAQ button
 document.getElementById('faqButton').addEventListener('click', function () {
@@ -111,9 +134,6 @@ document.getElementById('resetButton').addEventListener('click', function () {
     resetChatbotState(); // Reset the chatbot
 });
 
-
-
-
 // Event listener for the chatbot toggle button
 document.getElementById('chatbotToggle').addEventListener('click', function () {
     const chatbotInterface = document.getElementById('chatbotInterface');
@@ -127,10 +147,8 @@ document.getElementById('chatbotToggle').addEventListener('click', function () {
         setTimeout(() => chatbotInterface.classList.add('show'), 50);
     } else {
         chatbotInterface.classList.remove('show');
-
     }
 });
-
 
 // Function to load FAQs
 async function loadFAQs() {
@@ -144,8 +162,6 @@ async function loadFAQs() {
 
         const data = await response.json();
         data.faqs.forEach((faq) => {
-
-
             const button = document.createElement('button');
             button.classList.add('option-message-bubble');
             button.textContent = faq.question;
@@ -153,11 +169,9 @@ async function loadFAQs() {
                 displayMessageBubble(faq.answer);
             });
 
-
             faqList.appendChild(button);
         });
     } catch (error) {
-        console.error('Error fetching FAQs:', error);
         faqList.innerText = 'Error fetching FAQs';
     }
 
@@ -177,19 +191,25 @@ async function loadModules() {
     modulesList.classList.add('option-chat-message', 'd-flex', 'mt-3', 'fade-in');
 
     try {
-        console.log("Fetching Modules...");
         const response = await fetch('/api/chatbot/modules', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
+
         data.modules.forEach((module) => {
-            const button = document.createElement('a');
-            button.classList.add('option-message-bubble');
-            button.textContent = `${module.title}`;
-            modulesList.appendChild(button);
+            // Create a button for each module
+            const moduleButton = document.createElement('button');
+            moduleButton.classList.add('option-message-bubble', 'module-button');
+            moduleButton.textContent = module.title;
+
+            // Add click event listener to display the module description
+            moduleButton.addEventListener('click', function () {
+                displayMessageBubble(module.description); // Display the description
+            });
+
+            modulesList.appendChild(moduleButton);
         });
     } catch (error) {
-        console.error('Error fetching Modules:', error);
         modulesList.innerText = 'Error fetching Modules';
     }
 
@@ -236,9 +256,7 @@ async function loadContactInfo() {
             </div>
             `;
     } catch (error) {
-        console.error('Error fetching contact info:', error);
         contactInfo.innerText = 'Error fetching contact info';
-
     }
 
     chatbotBody.appendChild(contactInfo);
