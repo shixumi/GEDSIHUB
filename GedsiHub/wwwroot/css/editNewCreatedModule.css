@@ -66,6 +66,15 @@
     top: -0.9625rem;
 }
 
+#added_assessment_title {
+    color: #464040;
+    font-size: 1.71875rem;
+    font-weight: 600;
+    position: relative;
+    top: -0.9625rem;
+    margin-bottom: -2rem;
+}
+
 #add_new_lesson_container {
     height: 100%;
     width: 100%;

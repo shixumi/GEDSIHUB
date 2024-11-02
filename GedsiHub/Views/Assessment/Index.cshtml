@@ -1,0 +1,75 @@
+﻿@model GedsiHub.Models.Assessment
+
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Take the Assessment";
+}
+
+
+<!-- Assessment Details Page -->
+<div>
+    <!-- Breadcrumbs -->
+    <ol class="breadcrumb" id="breadcrumb">
+        <li class="breadcrumb-item">
+            <!-- Proceed to list of module page (Module/Index) -->
+            <a asp-controller="Module" asp-action="Index"><span>Modules</span></a>
+
+        </li>
+        <li class="breadcrumb-item">
+            <!-- Proceed to list of lesson page (Module/Details) -->
+
+            <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId">
+                <span id="module_number" class="module_number">@ViewBag.ModuleTitle</span>
+            </a>
+        </li>
+        <!-- Current lesson page -->
+        <li class="breadcrumb-item">
+            <span id="cms_lesson_breadcrumb">Lesson<span id="lesson_number" class="module_number">@Model.Title</span></span>
+        </li>
+    </ol>
+
+
+    <!-- Lesson Title: Should be fetch from the Lesson.Title -->
+    <span id="added_module_title" class="added_module_title">@Model.Title</span>
+
+
+    <!-- White Container -->
+    <div class="cms_white_base_container">
+        <!-- Preview of the H5P content -->
+        @if (!string.IsNullOrEmpty(Model.H5PEmbedCode))
+        {
+            <div id="responsive-iframe " class="embed-responsive responsive-iframe">
+                @Html.Raw(Model.H5PEmbedCode)
+            </div>
+        }
+
+       
+
+        <!-- Buttons for managing lesson content -->
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="lesson_content_buttons">
+
+               @*<!-- asp-action="Edit" asp-controller="LessonContent" asp-route-id="@Model.ContentId" *@
+
+                <!-- Edit button -->
+                <a class="editLessonContentButton">
+                    <i class="f-icon la la-edit"></i>Edit
+                </a>
+
+
+                <!-- Delete button -->
+                @* <form asp-action="Delete" method="post" class="d-inline"> *@
+                   @*  @Html.AntiForgeryToken() *@
+                    @* <input type="hidden" name="id" value="@Model.ContentId" /> *@
+                    <button type="submit" class="deleteLessonContentButton">
+                        <i class="f-icon la la-trash"></i> Delete
+                    </button>
+               @* @*  </form> *@ 
+
+            </div>
+        }
+
+    </div>
+
+</div>

@@ -9,7 +9,7 @@ function setActiveSidebar() {
         'addNewModule.html': 'SidebarButton_Modules',
         '/Leaderboard': 'SidebarButton_Leaderboard', // Fixed path
         '/ForumPost': 'SidebarButton_Forum',
-        '/Reports': 'SidebarButton_Reports',
+        '/Reports/Demographic': 'SidebarButton_Reports',
         '/Feedback': 'SidebarButton_Feedback'
     };
 
@@ -29,7 +29,7 @@ function setupSidebarButtonActions() {
         'SidebarButton_Modules': '/Module',
         'SidebarButton_Leaderboard': '/Leaderboard',
         'SidebarButton_Forum': '/ForumPost',
-        'SidebarButton_Reports': '/Reports',
+        'SidebarButton_Reports': '/Reports/Demographic',
         'SidebarButton_Feedback': '/Feedback'
     };
 

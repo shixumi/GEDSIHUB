@@ -18,8 +18,8 @@
         
         <li class="breadcrumb-item">
             <!-- Proceed to list of lessons page (Module/Details) -->
-            <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId">
-                <span asp-controller="Module" id="module_number" class="module_number">Module.Title</span>
+            <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId">
+                <span id="module_number" class="module_number">@ViewBag.ModuleTitle</span>
             </a>
         </li>
         <!-- Current lesson page -->

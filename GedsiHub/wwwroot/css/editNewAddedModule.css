@@ -13,7 +13,7 @@
     overflow: hidden; 
 }
 
-#edit_new_lesson_container, #edit_assessment_container {
+#edit_new_lesson_container {
     background: #ffffff;
     width: 65%;
     height: auto !important;
@@ -29,6 +29,21 @@
     overflow: hidden; /* Prevent overflow */
 }
 
+#edit_assessment_container {
+    background: #ffffff;
+    width: 65%;
+    height: auto !important;
+    border-radius: 1.5625rem;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0rem 0.3125rem 0.9375rem rgba(0, 0, 0, 0.2);
+    margin-top: 0.5rem;
+    margin-left: 0;
+    margin-right: auto;
+    overflow: hidden; /* Prevent overflow */
+}
 .go_to_button {
     display: flex;
     justify-content: center;
@@ -144,25 +159,25 @@
     margin-left: 0;
 }
 
-    .addNewLesson div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.addNewLesson div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    .addNewLesson:hover {
-        transform: scale(1.01);
-        color: #464040;
-        border: 0.1875rem solid #464040;
-        box-shadow: inset 0 0 1.125rem rgba(124,124,124,0.2);
-    }
+.addNewLesson:hover {
+    transform: scale(1.01);
+    color: #464040;
+    border: 0.1875rem solid #464040;
+    box-shadow: inset 0 0 1.125rem rgba(124,124,124,0.2);
+}
 
-    .addNewLesson:active {
-        color: #464040;
-        transform: scale(0.99);
-        transition: transform 0.3s ease;
-        box-shadow: inset 0 0 1.125rem rgba(124,124,124,0.2);
-    }
+.addNewLesson:active {
+    color: #464040;
+    transform: scale(0.99);
+    transition: transform 0.3s ease;
+    box-shadow: inset 0 0 1.125rem rgba(124,124,124,0.2);
+}
 
 .add_icon_lesson {
     width: 6.25rem;
@@ -213,14 +228,14 @@
 
 }
 
-    .button_container div:hover {
-        transform: scale(1.03);
-    }
+.button_container div:hover {
+    transform: scale(1.03);
+}
 
-    .button_container div:active {
-        transform: scale(0.99);
-        transition: transform 0.3s ease;
-    }
+.button_container div:active {
+    transform: scale(0.99);
+    transition: transform 0.3s ease;
+}
 
 
 #publishLesson, #publishAssessment {
