@@ -61,7 +61,7 @@ namespace GedsiHub.Controllers
         // GET: Display detailed information about a module including its lessons and assessments
         public async Task<IActionResult> Details(int id)
         {
-            // Fetch the module and include its lessons and assessments
+            // Fetch the module and include its lessons and assessment
             var module = await _context.Modules
                 .Include(m => m.Lessons)
                 .Include(m => m.Assessment)
@@ -72,13 +72,19 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
+            // Check if the module is unpublished and the user is not an admin
             if (module.Status == ModuleStatus.Unpublished && !IsUserAdmin())
             {
-                // Learners cannot access unpublished modules
                 return NotFound();
             }
 
-            // For Learners, filter lessons based on their publication status
+            // Ensure that Lessons list is initialized, even if empty
+            if (module.Lessons == null)
+            {
+                module.Lessons = new List<Lesson>();
+            }
+
+            // Filter lessons based on their publication status for non-admin users
             if (!IsUserAdmin())
             {
                 module.Lessons = module.Lessons
@@ -86,11 +92,11 @@ namespace GedsiHub.Controllers
                     .ToList();
             }
 
-            // For each lesson, check if it has content
+            // Check if each lesson has content
             foreach (var lesson in module.Lessons)
             {
                 lesson.HasContent = await _context.LessonContents
-                    .AnyAsync(lc => lc.LessonId == lesson.LessonId); // Check if the lesson has content
+                    .AnyAsync(lc => lc.LessonId == lesson.LessonId);
             }
 
             return View(module);
