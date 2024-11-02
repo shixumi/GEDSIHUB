@@ -2,7 +2,7 @@
     background: #ffffff;
     min-height: 43rem;
     max-height: 43rem; /* Sets a maximum height */
-    padding: 50px;
+    padding: 30px 50px 50px 50px !important;
     margin-top: 25px;
     margin-left: 0px;
     border-radius: 30px;
