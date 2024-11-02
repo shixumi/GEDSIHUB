@@ -59,7 +59,7 @@
     justify-content: space-between;
 }
 
-.filter-label-select, .filter-label-number, .filter-label-text {
+.filter-label-select, .filter-label-number, .filter-label-text, .filter-label-date {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -71,8 +71,6 @@
         margin-right: 0.5rem;
         font-weight: 500;
     }
-
-
     .filter-label-select select {
         width: 24rem;
         height: 2.5rem;
@@ -86,26 +84,14 @@
         outline: none;
         color: #464040;
         background-color: #fff;
-        background-size: 12px;
         border: 1px solid #939393;
-        background-color: #fff;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDZMMTAgMTVMMSA2IiBzdHJva2U9IiM0NjQwNDAiIHN0cm9rZS13aWR0aD0iMiIgLz4KPC9zdmc+Cg==');
+        background-repeat: no-repeat; /* Prevent background image from repeating */
+        background-position: right 1rem center; /* Position the background image */
+        background-size: 12px; /* Set the size of the background image */
     }
 
-
-    .filter-label-select::after {
-        content: "";
-        pointer-events: none;
-        position: absolute;
-        top: 50%;
-        right: 1rem;
-        transform: translateY(-50%);
-        width: 12px;
-        height: 12px;
-        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDZMMTAgMTVMMSA2IiBzdHJva2U9IiM0NjQwNDAiIHN0cm9rZS13aWR0aD0iMiIgLz4KPC9zdmc+Cg==');
-        background-size: 12px;
-    }
-
-#dateRangeSelect, #numberInput, #textInputSection, #textInputPosition {
+ #numberInput, #textInputSection, #textInputPosition {
     width: 24rem;
     height: 2.5rem;
     box-shadow: inset 0px 3px 4px #d9d9d9;
@@ -222,5 +208,19 @@
 }
 
 
+.filter-label-date input[type="Date"] {
+    width: 11.3rem;
+    height: 2.5rem;
+    box-shadow: inset 0px 3px 4px #d9d9d9;
+    border-radius: 0.5rem;
+    padding: 0 1rem;
+    transition: border-color 0.3s ease, border-width 0.3s ease;
+    outline: none;
+    color: #464040;
+    background-size: 12px;
+    border: 1px solid #939393;
+}
 
-
+.filter-label-date span {
+    font-weight: 500;
+}
