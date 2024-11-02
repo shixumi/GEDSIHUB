@@ -95,12 +95,13 @@
 }
 
 .role-user-profile, .label-col-1-user-profile, .date-joined-user-profile {
-    color: #ffffb7;
+    
 }
 
 .label-col-1-user-profile {
     font-size: 0.7rem;
     margin-top: -0.6rem;
+    color: white;
 }
 
 .name-user-profile {
@@ -135,8 +136,9 @@
 }
 
     .th-user-profile th:nth-child(1), .user-profile-table td:nth-child(1) {
-        font-weight: 500;
+        font-weight: 550;
         text-align: left;
+        color: #660000;
     }
 
 .user-profile-table-container {
@@ -366,17 +368,15 @@
     flex-direction: column;
 }
 
-/* Additional details styling */
 .additional-details {
-    position: absolute; /* Position it absolutely within the table container */
-    top: 0; /* Align to the top */
-    left: 45%; /* Start off-screen to the right */
-    transition: right 0.5s ease, opacity 0.5s ease; /* Smooth slide effect */
-    opacity: 0; /* Initially hidden */
-    background: none; /* Ensure background */
-    width: 25%; /* Full width */
-    z-index: 2; /* Ensure it is above the user profile table */
-    padding: 1rem; /* Add some padding for content */
+    position: absolute;
+    top: 0;
+    left: 35%;
+    transition: right 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+    background: none;
+    width: 64%;
+    z-index: 2;
     border-top-right-radius: 30px;
 }
 
@@ -387,4 +387,8 @@
 
 .post-snippet {
     margin-bottom: 0.2rem;
+}
+
+.additional-details .user-profile-table td {
+    width: 29rem;
 }
