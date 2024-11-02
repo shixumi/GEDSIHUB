@@ -5,27 +5,37 @@
     ViewData["Title"] = "Reported Posts and Comments";
 }
 
+<div class="feedback-title-searcbar-con">
+    <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">@ViewData["Title"]</h1>
+</div>
+<hr class="custom-hr">
 <!-- Admin View -->
-<div class="feedback-dashboard">
-    <!-- Tabs Navigation -->
-    <ul class="nav nav-tabs" id="reportsTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="post-reports-tab" data-bs-toggle="tab" href="#post-reports" role="tab" aria-controls="post-reports" aria-selected="true">
-                Reported Posts
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="comment-reports-tab" data-bs-toggle="tab" href="#comment-reports" role="tab" aria-controls="comment-reports" aria-selected="false">
-                Reported Comments
-            </a>
-        </li>
-    </ul>
-
+<div class="feedback-container">
+    
     <!-- Tabs Content -->
     <div class="tab-content" id="reportsTabContent">
+        <div class="feedback-header-buttons">
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="reportsTab" role="tablist">
+            <li class="nav-item">
+                <a class="tab-link active" id="complaint-tab" data-bs-toggle="tab" href="#post-reports" role="tab" aria-controls="post-reports" aria-selected="true">
+                    Reported Posts
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="tab-link" id="suggestion-tab" data-bs-toggle="tab" href="#comment-reports" role="tab" aria-controls="comment-reports" aria-selected="false">
+                    Reported Comments
+                </a>
+            </li>
+        </ul>
+        </div>
+
         <!-- Reported Posts Tab -->
         <div class="tab-pane fade show active" id="post-reports" role="tabpanel" aria-labelledby="post-reports-tab">
-            <div class="table-responsive feedback-responses-table">
+
+
+
+            <div class="feedback-responses-table">
                 <table class="table">
                     <thead>
                         <tr class="feedback-table-label">
@@ -80,7 +90,7 @@
 
         <!-- Reported Comments Tab -->
         <div class="tab-pane fade" id="comment-reports" role="tabpanel" aria-labelledby="comment-reports-tab">
-            <div class="table-responsive feedback-responses-table">
+            <div class="feedback-responses-table">
                 <table class="table">
                     <thead>
                         <tr class="feedback-table-label">

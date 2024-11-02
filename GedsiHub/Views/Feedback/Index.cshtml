@@ -18,13 +18,13 @@
 {
     <div>
         <div class="feedback-title-searcbar-con">
-            <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">Feedback Responses</h1>
+            <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">@ViewData["Title"]</h1>
             <div class="con-search-feedback">
                 <input id="searchResponse" type="search" placeholder="Search feedback by keyword, user, or date..." />
                 <img class="search-icon-feedback" src="~/images/Search_Small.png" />
             </div>
         </div>
-        <hr style="margin-top: -0.2rem;">
+        <hr class="custom-hr">
         <div class="feedback-container">
             <div class="feedback-header-buttons">
                 <div class="complain-suggestion-con">
@@ -53,8 +53,8 @@
             <!-- Tabs Content -->
             <div class="tab-content" id="feedbackTabContent">
                 <!-- Complaints Tab -->
-                <div class="tab-pane  active" id="complaints" role="tabpanel" aria-labelledby="complaint-tab">                   
-                        <table class="table">
+                <div class="tab-pane fade show active" id="complaints" role="tabpanel" aria-labelledby="complaint-tab">
+                    <table class="table">
                             <thead>
                             <tr class="feedback-table-label">
                                 <th class="um-header-label">Select</th>
@@ -91,7 +91,7 @@
             </div>
 
             <!-- Suggestions Tab -->
-            <div class="tab-pane" id="suggestions" role="tabpanel" aria-labelledby="suggestion-tab">
+            <div class="tab-pane fade" id="suggestions" role="tabpanel" aria-labelledby="suggestion-tab">
                     <table class="table">
                         <thead>
                             <tr class="feedback-table-label">

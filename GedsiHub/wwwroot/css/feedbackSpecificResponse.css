@@ -58,13 +58,14 @@
 }
 
 #issue-desc-holder {
-    min-height: 8rem !important;
+    min-height: 4rem;
+    max-height: 8rem !important;
     overflow-y: auto;
     resize: none;
 }
 
 .feedback-response-button-container {
-    margin-top: 2rem;
+    margin-top: 4rem;
     display: flex;
     justify-content: space-between;
 }
