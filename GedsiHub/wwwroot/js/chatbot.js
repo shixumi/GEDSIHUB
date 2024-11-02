@@ -30,6 +30,7 @@ function displayMessageBubble(message) {
     botAvatar.style.backgroundColor = '#660000';
     botAvatar.style.width = '2.5rem';
     botAvatar.style.height = '2.5rem';
+    botAvatar.style.objectFit = 'cover';
 
     const messageBubble = document.createElement('div');
     messageBubble.classList.add('message-bubble');
