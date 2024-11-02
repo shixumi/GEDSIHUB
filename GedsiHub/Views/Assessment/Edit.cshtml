@@ -17,14 +17,15 @@
         </li>
         
         <li class="breadcrumb-item">
-            <!-- Proceed to list of lessons page (Module/Details) -->
-            <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId">
+            <!-- Link to Module Details using Model.ModuleId -->
+            <a asp-controller="Module" asp-action="Details" asp-route-id="@Model.ModuleId">
                 <span id="module_number" class="module_number">@ViewBag.ModuleTitle</span>
             </a>
         </li>
-        <!-- Current lesson page -->
-        <li class="breadcrumb-item">
-            <a asp-action="Edit"><span>Edit Assessment</span></a>
+
+        <!-- Current Page: Edit Assessment -->
+        <li class="breadcrumb-item active">
+            <span>Edit Assessment</span>
         </li>
     </ol>
 
