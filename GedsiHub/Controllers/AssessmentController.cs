@@ -106,24 +106,52 @@ namespace GedsiHub.Controllers
             }
         }
 
+        // ****************************** SHOW ASSESSMENT ******************************
+        // GET: Assessment/Details/{id}
+        public async Task<IActionResult> Details(int id)
+        {
+            // Load the assessment and its associated module
+            var assessment = await _context.Assessments
+                .Include(a => a.Module)
+                .FirstOrDefaultAsync(a => a.AssessmentId == id);
+
+            if (assessment == null)
+            {
+                _logger.LogWarning($"Details: Assessment with ID {id} not found.");
+                return NotFound();
+            }
+
+            // Pass the module information to the view using ViewBag
+            ViewBag.ModuleId = assessment.ModuleId;
+            ViewBag.ModuleTitle = assessment.Module?.Title ?? "Unknown Module";
+
+            return View(assessment);
+        }
+
         // ****************************** EDIT ASSESSMENT ******************************
 
         // GET: Assessment/Edit/{id}
         // Displays the form to edit an existing assessment by its ID.
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
                 _logger.LogWarning("Edit assessment: Assessment ID is null.");
                 return BadRequest();
             }
 
-            var assessment = await _context.Assessments.FindAsync(id);
+            var assessment = await _context.Assessments
+                .Include(a => a.Module) // Include the module to get the module title
+                .FirstOrDefaultAsync(a => a.AssessmentId == id.Value);
+
             if (assessment == null)
             {
                 _logger.LogWarning($"Edit assessment: Assessment with ID {id} not found.");
                 return NotFound();
             }
+
+            // Set the module title in ViewBag for the breadcrumbs
+            ViewBag.ModuleTitle = assessment.Module?.Title ?? "Unknown Module";
 
             return View(assessment);
         }
@@ -147,6 +175,7 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
+            // Ensure the module is valid before proceeding
             var module = await _context.Modules.FindAsync(assessment.ModuleId);
             if (module == null)
             {
@@ -155,12 +184,13 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
+            // Assign the module to the assessment
             assessment.Module = module;
 
             try
             {
                 _logger.LogInformation($"Updating assessment with ID {id} for ModuleId: {assessment.ModuleId}");
-                _context.Update(assessment);
+                _context.Update(assessment); // Update the assessment in the database
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Assessment with ID {id} updated successfully.");
             }
@@ -184,6 +214,7 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
+            // Redirect to the Module Details page after a successful update
             return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
         }
 
@@ -214,7 +245,7 @@ namespace GedsiHub.Controllers
 
         // POST: Assessment/Delete/{id}
         // Handles the confirmation and deletion of an assessment.
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
