@@ -103,102 +103,72 @@
     <div class="background">
         @RenderBody()
     </div>
-
     <!-- Sidebar -->
-    <div class="sidebar_container d-flex flex-column" style="width: 350px;height: 700px;">
-        <div class="sidebar" style="width: 300px;">
-            <div class="d-xxl-flex align-items-xxl-center dashboard_container" id="SidebarButton_Dashboard">
-                <div class="col-xxl-5 d-xxl-flex justify-content-xxl-center" style="width: 90px;">
-                    <img id="sidebar_icons" class="dashboard_icon" src="~/images/Dashboard_Dark.png" style="width: 43px;" />
+    <div class="sidebar_container">
+        <div class="sidebar">
+            <!-- Dashboard Button -->
+            <div class="dashboard_container" id="SidebarButton_Dashboard">
+                <div class="icon-container">
+                    <img class="sidebar_icon" src="~/images/Dashboard_Dark.png" alt="Dashboard Icon" />
                 </div>
-                <div class="col">
-                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
-                        Dashboard
-                    </span>
-                </div>
+                <span class="sidebar_label">Dashboard</span>
             </div>
 
-            <div id="SidebarButton_Modules" class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" style="color: #464040;">
-                <div class="col-xxl-5 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
-                    <img src="~/images/Modules_Dark.png" style="width: 43px;color: #464040;" />
+            <!-- Modules Button -->
+            <div class="dashboard_container" id="SidebarButton_Modules">
+                <div class="icon-container">
+                    <img class="sidebar_icon" src="~/images/Modules_Dark.png" alt="Modules Icon" />
                 </div>
-                <div class="col" style="color: #464040;">
-                    <span class="d-xxl-flex justify-content-xxl-start sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
-                        Modules
-                    </span>
-                </div>
+                <span class="sidebar_label">Modules</span>
             </div>
 
             <!-- Leaderboard Button -->
-            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Leaderboard" style="color: #464040;">
-                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
-                    <img src="~/images/Leaderboard_Dark.png" style="width: 43px;color: #464040;" />
+            <div class="dashboard_container" id="SidebarButton_Leaderboard">
+                <div class="icon-container">
+                    <img class="sidebar_icon" src="~/images/Leaderboard_Dark.png" alt="Leaderboard Icon" />
                 </div>
-                <div class="col" style="color: #464040;">
-                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
-                        Leaderboard
-                    </span>
-                </div>
+                <span class="sidebar_label">Leaderboard</span>
             </div>
 
             <!-- Forum Button -->
-            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Forum" style="color: #464040;">
-                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
-                    <img src="~/images/Forum_Dark.png" style="width: 43px;color: #464040;" />
+            <div class="dashboard_container" id="SidebarButton_Forum">
+                <div class="icon-container">
+                    <img class="sidebar_icon" src="~/images/Forum_Dark.png" style="width: 35px; height: auto; alt="Forum Icon" />
                 </div>
-                <div class="col" style="color: #464040;">
-                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
-                        Forum
-                    </span>
-                </div>
+                <span class="sidebar_label">Forum</span>
             </div>
-
 
             @if (User.IsInRole("Admin"))
             {
                 <!-- Reports Button -->
-                <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Reports" style="color: #464040;">
-                    <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
-                        <img src="~/images/Reports_Dark.png" style="width: 43px;color: #464040;" />
+                <div class="dashboard_container" id="SidebarButton_Reports">
+                    <div class="icon-container">
+                        <img class="sidebar_icon" src="~/images/Reports_Dark.png" style="width: 45px; height: auto;" alt="Reports Icon" />
                     </div>
-                    <div class="col" style="color: #464040;">
-                        <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
-                            Reports
-                        </span>
-                    </div>
+                    <span class="sidebar_label">Reports</span>
                 </div>
-
             }
-            
 
             <!-- Feedback Button -->
-            <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Feedback" style="color: #464040;">
-                <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
-                    <img src="~/images/Feedback_Dark.png" style="width: 43px;color: #464040;" />
+            <div class="dashboard_container" id="SidebarButton_Feedback">
+                <div class="icon-container">
+                    <img class="sidebar_icon" src="~/images/Feedback_Dark.png" style="width: 37px; height: auto; alt="Feedback Icon" />
                 </div>
-                <div class="col" style="color: #464040;">
-                    <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
-                        Feedback
-                    </span>
-                </div>
+                <span class="sidebar_label">Feedback</span>
             </div>
 
-            <!-- Logout button with modal trigger -->
-            <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#logoutModal" style="text-decoration: none; background: none; border: none;">
-                <div class="d-xxl-flex justify-content-xxl-center align-items-xxl-center dashboard_container" id="SidebarButton_Logout" style="color: #464040; cursor: pointer;">
-                    <div class="col-xxl-4 d-xxl-flex justify-content-xxl-center align-items-xxl-start" style="color: #464040;width: 90px;">
-                        <img src="~/images/Logout_Dark.png" style="width: 43px;color: #464040;" />
+            <!-- Logout Button with Modal Trigger -->
+            <button type="button" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                <div class="dashboard_container" id="SidebarButton_Logout">
+                    <div class="icon-container">
+                        <img class="sidebar_icon" src="~/images/Logout_Dark.png" alt="Logout Icon" />
                     </div>
-                    <div class="col logout-lbl" style="color: #464040;">
-                        <span class="d-xxl-flex justify-content-xxl-start align-items-xxl-center sidebar_label" style="text-align: right;font-size: 18px;color: #464040;">
-                            Logout
-                        </span>
-                    </div>
+                    <span class="sidebar_label">Logout</span>
                 </div>
             </button>
-
         </div>
     </div>
+
 @* 
    <div class="layout_container d-flex" style="min-height: 100vh;"> *@
 

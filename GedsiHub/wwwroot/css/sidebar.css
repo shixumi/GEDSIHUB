@@ -54,6 +54,8 @@ a, a:hover, a:focus {
   align-items: stretch;
 }
 
+
+
 /*
 
 .layout_container {
@@ -222,127 +224,257 @@ a, a:hover, a:focus {
     }
 }
 
-*/
+*
 
 
 
 /* Sidebar Styles */
+.sidebar_container {
+    width: 350px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: none;
+    color: #fff;
+    transition: all 0.3s;
+}
 
+.sidebar {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.dashboard_container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: #464040;
+    transition: background-color 0.3s;
+}
+
+    .dashboard_container:hover {
+        background-color: #6d7fcc;
+    }
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px; /* Reduced width to provide more space for text */
+}
+
+.sidebar_icon {
+    width: 43px;
+}
+
+.sidebar_label {
+    flex: 1; /* Makes the text take up the remaining space */
+    font-size: 18px;
+    text-align: left;
+    color: #464040;
+    padding-left: 10px; /* Adds spacing between the icon and text */
+}
+
+button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+/* Sidebar Styles */
 #sidebar {
-  min-width: 250px;
-  max-width: 250px;
-  background: #7386D5;
-  color: #fff;
-  transition: all 0.3s;
+    min-width: 250px;
+    max-width: 250px;
+    background: #7386D5;
+    color: #fff;
+    transition: width 0.3s ease; /* Transition for width changes */
 }
 
-#sidebar .sidebar-header {
-  padding: 20px;
-  background: #6d7fcc;
+    #sidebar .sidebar-header {
+        padding: 20px;
+        background: #6d7fcc;
+        transition: background 0.3s ease;
+    }
+
+    #sidebar ul.components {
+        padding: 20px 0;
+        border-bottom: 1px solid #47748b;
+    }
+
+.dashboard_container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px;
+    color: #fff;
+    transition: transform 0.6s ease, background-color 0.6s ease; /* Increased duration for smoother effect */
+    cursor: pointer;
+    border-radius: 10px; /* Rounded corners for a modern look */
+    transform-origin: center; /* Ensures scaling starts from the center */
 }
 
-#sidebar ul.components {
-  padding: 20px 0;
-  border-bottom: 1px solid #47748b;
-}
+    .dashboard_container:hover {
+        background-color: #660000; /* Darker red for hover effect */
+        transform: scale(1.08); /* Slightly increase scale for hover */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    }
+
+    .dashboard_container img {
+        width: 40px;
+        transition: filter 0.4s ease, transform 0.4s ease; /* Increased duration */
+    }
+
+    .dashboard_container span {
+        font-size: 1.25rem;
+        padding-left: 12px;
+        transition: color 0.4s ease; /* Increased duration */
+    }
+
+    /* Hover Effects */
+    .dashboard_container:hover img {
+        filter: invert(1) brightness(2) contrast(200%);
+    }
+
+    .dashboard_container:hover span {
+        color: #fff; /* Change text color to white on hover */
+    }
+
+    /* Active State */
+    #sidebar ul li.active .dashboard_container,
+    .dashboard_container.active {
+        background-color: #660000; /* Dark red for active state */
+        color: #fff;
+        transform: scale(1); /* No scaling for active state */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow for active state */
+    }
+
+        .dashboard_container.active img {
+            filter: invert(1) brightness(2) contrast(200%);
+        }
+
+        .dashboard_container.active span {
+            color: #fff;
+        }
 
 #sidebar ul li a {
-  padding: 10px;
-  font-size: 1.1em;
-  display: block;
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+    color: #fff;
+    transition: background 0.3s ease, color 0.3s ease; /* Combined transitions */
 }
 
-#sidebar ul li a:hover {
-  color: #7386D5;
-  background: #fff;
-}
+    #sidebar ul li a:hover {
+        color: #7386D5;
+        background: #fff;
+    }
 
-#sidebar ul li.active > a, a[aria-expanded="true"] {
-  color: #fff;
-  background: #6d7fcc;
+#sidebar ul li.active > a,
+a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+    transition: background 0.3s ease;
 }
 
 a[data-toggle="collapse"] {
-  position: relative;
+    position: relative;
+    transition: transform 0.3s ease; /* Added transition for smoother toggle */
 }
 
-a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
-  content: '\e259';
-  position: absolute;
-  right: 20px;
-  font-family: 'Glyphicons Halflings';
-  font-size: 0.6em;
+a[aria-expanded="false"]::before,
+a[aria-expanded="true"]::before {
+    content: '\e259';
+    position: absolute;
+    right: 20px;
+    font-family: 'Glyphicons Halflings';
+    font-size: 0.6em;
+    transition: transform 0.3s ease; /* Added smoother transition */
 }
 
 a[aria-expanded="true"]::before {
-  content: '\e260';
+    content: '\e260';
+    transform: rotate(180deg); /* Smooth rotation when expanded */
 }
 
 ul ul a {
-  font-size: 0.9em !important;
-  padding-left: 30px !important;
-  background: #6d7fcc;
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+    transition: background 0.3s ease, color 0.3s ease; /* Combined transitions */
 }
 
-/* Main Content */
+    ul ul a:hover {
+        background: #fff;
+        color: #7386D5;
+    }
 
+/* Main Content */
 #content {
-  padding: 20px;
-  min-height: 100vh;
-  transition: all 0.3s;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
 }
 
 /* Line Separator */
-
 .line {
-  width: 100%;
-  height: 1px;
-  border-bottom: 1px dashed #ddd;
-  margin: 40px 0;
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+    transition: width 0.3s ease;
 }
 
 /* Category Styles in Sidebar */
-
 .sidebar .category-title {
-  padding: 12px 20px;
-  padding-right: 46px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 20px;
+    padding-right: 46px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: border-bottom-color 0.3s ease;
 }
 
 .sidebar.sidebar-default .category-title {
-  border-bottom-color: #dee2e6;
+    border-bottom-color: #dee2e6;
+    transition: border-bottom-color 0.3s ease;
 }
 
-.sidebar.sidebar-default .category-title > span {
-  display: block;
-  text-transform: uppercase;
-  font-weight: 500;
-  font-size: 0.75rem;
-}
+    .sidebar.sidebar-default .category-title > span {
+        display: block;
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 0.75rem;
+        transition: color 0.3s ease;
+    }
 
 .sidebar .category-content .nav li > a {
-  font-size: 0.875rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  transition: background 0.15s linear, color 0.15s linear;
+    font-size: 0.875rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    transition: background 0.15s linear, color 0.15s linear; /* Duration adjustments */
 }
 
-.sidebar .category-content .nav li > a[data-toggle="collapse"] {
-  padding-right: 2rem;
-}
+    .sidebar .category-content .nav li > a[data-toggle="collapse"] {
+        padding-right: 2rem;
+        position: relative;
+        transition: all 0.3s ease;
+    }
 
-.sidebar .category-content .nav li > a[data-toggle="collapse"]:after {
-  position: absolute;
-  top: 0.5rem;
-  right: 1rem;
-  content: "\f105";
-  font-family: FontAwesome;
-  font-size: 1.5rem;
-  transition: transform 0.2s ease-in-out;
-}
+        .sidebar .category-content .nav li > a[data-toggle="collapse"]:after {
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            content: "\f105";
+            font-family: FontAwesome;
+            font-size: 1.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
 
 .sidebar .category-content .nav li ul > li a {
-  padding-left: 2.75rem;
+    padding-left: 2.75rem;
+    transition: all 0.3s ease;
 }
+
+
 
 /* Call to Action (CTA) Links */
 
