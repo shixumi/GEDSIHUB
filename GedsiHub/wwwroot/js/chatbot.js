@@ -25,8 +25,11 @@ function displayMessageBubble(message) {
     chatMessage.classList.add('chat-message', 'd-flex', 'mt-3', 'fade-in');
 
     const botAvatar = document.createElement('img');
-    botAvatar.src = 'https://picsum.photos/50/50';
+    botAvatar.src = '/images/Talk_to_GAD.png';
     botAvatar.classList.add('bot-avatar');
+    botAvatar.style.backgroundColor = '#660000';
+    botAvatar.style.width = '2.5rem';
+    botAvatar.style.height = '2.5rem';
 
     const messageBubble = document.createElement('div');
     messageBubble.classList.add('message-bubble');
