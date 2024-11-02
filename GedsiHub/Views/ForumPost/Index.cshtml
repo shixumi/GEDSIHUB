@@ -43,11 +43,20 @@
     }
 
     <!-- Create New Post Button -->
-    <div class="mb-3">
+    <div class="d-flex justify-content-between mb-3">
         <a asp-action="Create" class="d-flex create-btn">
             <img class="addIcon" src="~/images/Add_White.png" />
             Create New Post
         </a>
+        
+        @if(User.IsInRole("Admin"))
+        {
+            <a asp-action="ViewReports" asp-controller="Admin" class="d-flex view-reports-btn">
+                <i class="far fa-eye"></i>
+                View Reports
+            </a>
+        }
+        
     </div>
 
     <!-- Loop to display each post available in the database -->

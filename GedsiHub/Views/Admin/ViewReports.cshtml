@@ -10,7 +10,7 @@
 </div>
 <hr class="custom-hr">
 <!-- Admin View -->
-<div class="feedback-container">
+<div class="viewReports-container">
     
     <!-- Tabs Content -->
     <div class="tab-content" id="reportsTabContent">
@@ -38,13 +38,13 @@
             <div class="feedback-responses-table">
                 <table class="table">
                     <thead>
-                        <tr class="feedback-table-label">
-                            <th class="select-all-checkbox"><input type="checkbox" /></th>
-                            <th><strong>Post Title</strong></th>
-                            <th><strong>Reported By</strong></th>
-                            <th><strong>Reason</strong></th>
-                            <th><strong>Date</strong></th>
-                            <th><strong>Actions</strong></th>
+                        <tr class="viewReports-table-label">
+                            <th class="viewReport-header-label select-all-checkbox"><input type="checkbox" /></th>
+                            <th class="viewReport-header-label text-start">Post Title</th>
+                            <th class="viewReport-header-label">Reported By</th>
+                            <th class="viewReport-header-label">Reason</th>
+                            <th class="viewReport-header-label">Date</th>
+                            <th class="viewReport-header-label">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,13 +52,13 @@
                         {
                             @foreach (var report in Model.ReportedPosts)
                             {
-                                <tr class="row-feedback-response">
-                                    <td class="checkbox-container"><input type="checkbox" /></td>
-                                    <td>@report.PostTitle</td>
-                                    <td>@report.ReportedByName</td>
-                                    <td>@report.Reason</td>
-                                    <td>@report.CreatedAt.ToShortDateString()</td>
-                                    <td class="view-delete-button-container">
+                                <tr class="report-table-rows">
+                                    <td class="report-content checkbox-container"><input type="checkbox" /></td>
+                                    <td class="report-content text-start">@report.PostTitle</td>
+                                    <td class="report-content">@report.ReportedByName</td>
+                                    <td class="report-content">@report.Reason</td>
+                                    <td class="report-content">@report.CreatedAt.ToShortDateString()</td>
+                                    <td class="report-content view-delete-button-container">
                                         <!-- View button to go to post details -->
                                         <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" class="btn btn-sm btn-info">View</a>
 
@@ -80,7 +80,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="6">No reports found for posts.</td>
+                                <td class="report-table-rows" colspan="6">No reports found for posts.</td>
                             </tr>
                         }
                     </tbody>
