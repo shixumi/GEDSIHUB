@@ -220,6 +220,7 @@ input[type="checkbox"] {
     position: relative;
     transition: color 0.3s ease;
     font-weight: 600;
+    font-size: 1.2rem;
     color: #464040;
 }
 

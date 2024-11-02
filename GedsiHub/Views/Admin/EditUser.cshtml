@@ -13,11 +13,11 @@
             <h1 class="modules_title" style="color: #464040;">@Model.UserName</h1>
         </div>
     </div>
-    <hr>
+    <hr class="custom-hr">
 
     <form asp-action="EditUser" method="post">
     <input type="hidden" asp-for="Id" />
-    <div id="edit-user-container" class="container feedback-container" style="margin-top: 34px;">
+    <div id="edit-user-container" class="container feedback-container">
         <div id="username-email-con-eu">
             <div id="username-eu-con">
                     <label asp-for="UserName">Username</label>

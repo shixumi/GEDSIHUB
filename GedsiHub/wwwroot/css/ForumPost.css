@@ -113,7 +113,7 @@ body {
     /* Horizontal Line Style */
     .custom-hr {
         border: 1.5px solid #a6a7ab; /* Light gray line */
-        margin-top: 10px; /* Space between the search container and line */
+        margin-top: -3px; /* Space between the search container and line */
         margin-bottom: 18px; /* Space after the line */
         width: 100%; /* Full width of the container */
     }
