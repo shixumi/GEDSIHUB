@@ -32,12 +32,12 @@ namespace GedsiHub.Controllers
         // ****************************** FETCH AVAILABLE MODULES ******************************
 
         // GET: api/chatbot/modules
-        // API endpoint to fetch a list of all available modules. Only the module title is returned for simplicity.
+        // API endpoint to fetch a list of all available modules, including title and description.
         [HttpGet("api/chatbot/modules")]
         public async Task<IActionResult> GetModules()
         {
             var modules = await _context.Modules
-                .Select(m => new { m.Title })  // Select only the title for simplicity
+                .Select(m => new { m.Title, m.Description })  // Select both title and description
                 .ToListAsync();
 
             return Ok(new { modules });

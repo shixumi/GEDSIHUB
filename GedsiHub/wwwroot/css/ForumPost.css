@@ -29,6 +29,27 @@ body {
         padding: 10px 15px;
     }
 
+    .view-reports-btn {
+        background: #d8d8d8;
+        color: #464040;
+        border: none;
+        border-radius: 50px;
+        font-weight: 500;
+        height: 40px;
+        max-width: 180px;
+        font-size: 14px;
+        margin-top: 15px;
+        align-items: center;
+        padding: 10px 15px;
+        gap: 0.5rem;
+    }
+
+    .view-reports-btn:hover {
+        background: #b5b5b5;
+        color: #464040;
+
+    }
+
     .addIcon {
         width: 20px;
         margin-right: 10px;
