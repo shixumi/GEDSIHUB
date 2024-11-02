@@ -92,6 +92,7 @@
     justify-content: space-between;
     gap: 0.5rem;
     margin-right: 0.4rem;
+    margin-top: 0.5rem;
 }
 
 #chatOptions .btn-primary {
@@ -154,7 +155,7 @@
     text-align: start;
     background-color: transparent;
     color: #660000;
-    padding: 0.625rem 0.9rem;
+    padding: 0.3rem 0.6rem;
     border-radius: 1.5rem;
     border: 0.5px solid rgb(102, 0, 0, 0.7);
 }
@@ -205,6 +206,7 @@
     margin-left: 3.5rem;
 }
 
+/*
 .option-chat-message {
     flex-wrap: wrap;
     justify-content: end;
@@ -212,12 +214,38 @@
     align-items: end;
     margin-left: 3.5rem;
 }
+*/
+
+
+.option-chat-message {
+    max-width: 100%; /* Ensure the container takes full width */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent line breaks, making the content scroll horizontally */
+    padding: 10px; /* Add padding for better spacing */
+    border: none; /* Optional: Add a border for visibility */
+    border-radius: 5px; /* Optional: Rounded corners */
+    gap: 0.5rem;
+    margin-top: 0 !important;
+}
+
+.contact-chat-message {
+    flex-wrap: wrap;
+    justify-content: end;
+    gap: 0.8rem;
+    align-items: end;
+    margin-left: 3.5rem;
+}
+
+.contact-chat-message a:hover {
+    color: #660000;
+    transform: scale(1.05);
+    cursor: pointer;
+}
 
 .option-chat-message a:hover {
     color: #660000;
     transform: scale(1.05);
     cursor: pointer;
-
 }
 
 .option-message-bubble:hover {
