@@ -90,10 +90,12 @@
     padding: 3rem 3rem;
     min-width: 20rem;
     background: #660000;
+    max-height: 28rem;
+    border-radius: 30px 0 0 30px;
 }
 
 .role-user-profile, .label-col-1-user-profile, .date-joined-user-profile {
-    color: #737373;
+    color: #ffffb7;
 }
 
 .label-col-1-user-profile {
@@ -104,11 +106,13 @@
 .name-user-profile {
     font-size: 1.3rem;
     font-weight: 600;
+    color: white;
 }
 
 .pronouns-user-profile, .honorifics-user-profile, .role-user-profile, .date-joined-user-profile {
     font-size: 1rem;
     font-weight: 500;
+    color: white;
 }
 
 .date-joined-user-profile {
@@ -366,11 +370,11 @@
 .additional-details {
     position: absolute; /* Position it absolutely within the table container */
     top: 0; /* Align to the top */
-    right: 3%; /* Start off-screen to the right */
+    left: 45%; /* Start off-screen to the right */
     transition: right 0.5s ease, opacity 0.5s ease; /* Smooth slide effect */
     opacity: 0; /* Initially hidden */
     background: none; /* Ensure background */
-    width: 65%; /* Full width */
+    width: 25%; /* Full width */
     z-index: 2; /* Ensure it is above the user profile table */
     padding: 1rem; /* Add some padding for content */
     border-top-right-radius: 30px;
