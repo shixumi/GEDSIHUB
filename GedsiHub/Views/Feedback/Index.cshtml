@@ -67,9 +67,9 @@
                             <tbody>
                                 @foreach (var item in Model.Complaints)
                                 {
-                                    <tr class="row-feedback-response">
+                                    <tr class="um-table-rows">
                                     <td class="um-content"><input id="checkbox-feedback-response" type="checkbox" /></td>
-                                    <td class="um-content">@item.UserName</td>
+                                    <td class="um-content text-start">@item.UserName</td>
                                     <td class="um-content centered-td">@item.Date.ToShortDateString()</td>
                                     <td class="um-content">@item.Type</td>
                                     <td class="um-content button-container-feedback">
@@ -97,18 +97,18 @@
                             <tr class="feedback-table-label">
                                 <th class="um-header-label">Select</th>
                                 <th class="um-header-label">Username</th>
-                            <th class="um-header-label centered-td">Date</th>
-                            <th class="um-header-label bigger-space-td">Type of Suggestion</th>
+                                <th class="um-header-label centered-td">Date</th>
+                                <th class="um-header-label bigger-space-td">Type of Suggestion</th>
                                 <th class="um-header-label">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Suggestions)
                             {
-                                <tr class="row-feedback-response">
+                                <tr class="um-table-rows">
                                     <td class="um-content"><input id="checkbox-feedback-response" type="checkbox" /></td>
-                                    <td class="um-content">@item.UserName</td>
-                                <td class="um-content  centered-td">@item.Date.ToShortDateString()</td>
+                                    <td class="um-content text-start">@item.UserName</td>
+                                    <td class="um-content  centered-td">@item.Date.ToShortDateString()</td>
                                     <td class="um-content">@item.Type</td>
                                     <td class="um-content button-container-feedback">
                                         <a href="@Url.Action("MarkAsResolved", new { id = item.Id })" id="mark-as-resolved-button">

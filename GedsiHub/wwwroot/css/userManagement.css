@@ -67,29 +67,28 @@
     }
 
 .um-header-label {
-    font-weight: 600;
+    font-weight: 600 !important;
     text-align: center;
     vertical-align: middle;
     padding: 10px;
-    color: #464040;
+    color: #464040 !important;
 }
 
-    .um-header-label:nth-child(1), .um-header-label:nth-child(2), .um-header-label:nth-child(3) {
-        text-align: left;
-    }
+.um-table-rows {
+    height: 3.5rem;
+}
+
+
+.um-header-label:nth-child(2), .um-header-label:nth-child(3) {
+    text-align: left;
+}
 
 .um-content {
     text-align: center;
     vertical-align: middle;
     padding: 10px;
-    color: #464040;
+    color: #464040 !important;
 }
-
-    .um-content:nth-child(1), .um-content:nth-child(2), .um-content:nth-child(3) {
-        text-align: left;
-    }
-
-
 
 
 #um-edit-user-button, #um-delete-user-button {
@@ -239,14 +238,4 @@
         padding-top: 4px !important; 
         padding-bottom: 4px !important;
     }
-
-
-.um-header-label {
-    padding-top: 0;
-    padding-bottom: 0; /* Adjust these values as needed */
-    padding-left: 8px;
-    padding-right: 8px;
-    vertical-align: bottom;
-}
-
 

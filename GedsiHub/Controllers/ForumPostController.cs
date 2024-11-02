@@ -31,6 +31,7 @@ namespace GedsiHub.Controllers
         {
             var posts = await _context.ForumPosts
                 .Include(post => post.User)
+                .Include(post => post.Module)
                 .Include(post => post.ForumComments)
                 .Select(post => new ForumPostViewModel
                 {
@@ -45,7 +46,8 @@ namespace GedsiHub.Controllers
                     UserLastName = post.User.LastName,
                     UserId = post.UserId,
                     CommentCount = post.ForumComments.Count,
-                    RelativeCreatedAt = DateTimeHelper.GetRelativeTime(post.CreatedAt)
+                    RelativeCreatedAt = DateTimeHelper.GetRelativeTime(post.CreatedAt),
+                    ModuleTitle = post.Module != null ? post.Module.Title : null
                 })
                 .ToListAsync();
 
@@ -125,7 +127,7 @@ namespace GedsiHub.Controllers
                 Content = viewModel.Content,
                 CreatedAt = DateTime.UtcNow,
                 Flair = viewModel.Flair,
-                Tag = viewModel.ModuleId.ToString(),
+                ModuleId = viewModel.ModuleId,
                 PollOptions = string.IsNullOrWhiteSpace(viewModel.PollOptions) ? null : viewModel.PollOptions,
                 UserId = userId
             };
