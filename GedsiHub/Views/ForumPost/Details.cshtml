@@ -6,22 +6,6 @@
     ViewData["Title"] = Model.ForumPost.Title;
 }
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
 <div class="container-forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
     <!-- Breadcrumbs -->
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -30,6 +14,22 @@
             <li class="breadcrumb-item active" aria-current="page">@Model.ForumPost.Title</li>
         </ol>
     </nav>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <!--- Card Posts -->
     <div class="card gedf-card">
@@ -57,6 +57,11 @@
             @if (!string.IsNullOrWhiteSpace(Model.ForumPost.Flair))
             {
                 <span class="badge rounded-pill">@Model.ForumPost.Flair</span>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.ModuleTitle))
+            {
+                <span class="badge bg-primary">@Model.ModuleTitle</span>
             }
 
             <!-- Card Title -->

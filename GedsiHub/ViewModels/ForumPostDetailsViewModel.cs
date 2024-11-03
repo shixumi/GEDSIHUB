@@ -11,7 +11,8 @@ namespace GedsiHub.ViewModels
         public string UserLastName { get; set; }
         public string UserId { get; set; }
         public string Flair { get; set; }
-        
+        public string ModuleTitle { get; set; }
+
     }
 }
 
