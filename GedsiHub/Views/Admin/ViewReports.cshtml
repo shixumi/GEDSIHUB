@@ -59,12 +59,12 @@
                                     <td class="report-content">@report.Reason</td>
                                     <td class="report-content">@report.CreatedAt.ToShortDateString()</td>
                                     <td class="report-content button-container-feedback">
-                                       
-                                        <!-- Dismiss button -->
+
+                                        <!-- Dismiss button for post report -->
                                         <form asp-action="DismissPostReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn" id="dismiss-user-feedback-button">
-                                                <img src="~/images/Dismiss.png" />Dismiss
+                                                <img src="~/images/Dismiss.png" /> Dismiss
                                             </button>
                                         </form>
 
