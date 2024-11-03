@@ -63,7 +63,7 @@
     }
 
 
-#dismiss-user-feedback-button, #view-user-feedback-button img, .delete-user-feedback-button img,
+#dismiss-user-feedback-button img, #view-user-feedback-button img, .delete-user-feedback-button img,
 #mark-as-resolved-button img, #marked-as-resolved-button img {
     width: 1.5rem;
     margin-right: 0.4rem;
@@ -109,7 +109,7 @@
     background-color: #edf1ff;
 }
 
-    #view-user-feedback-button:active, .delete-user-feedback-button:active, #mark-as-resolved-button:active, #marked-as-resolved-button:active, #dismiss-user-feedback-button {
+    #dismiss-user-feedback-button:active, #view-user-feedback-button:active, .delete-user-feedback-button:active, #mark-as-resolved-button:active, #marked-as-resolved-button:active, #dismiss-user-feedback-button {
         transform: scale(0.95);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
