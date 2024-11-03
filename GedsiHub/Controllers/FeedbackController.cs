@@ -47,48 +47,63 @@ public class FeedbackController : Controller
 		return View();  // Views/Feedback/Complaint.cshtml
 	}
 
-	[Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
-	[HttpPost]
-	public async Task<IActionResult> SubmitComplaint(FeedbackComplaint model)
-	{
-		if (ModelState.IsValid)
-		{
-			var feedback = new Feedback
-			{
-				UserName = User.Identity.Name,
-				Date = DateTime.Now,
-				Type = model.TypeOfIssue,
-				FeedbackType = "Complaint",
-				Description = model.DetailedDescription
-			};
+    [Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
+    [HttpPost]
+    public async Task<IActionResult> SubmitComplaint(FeedbackComplaint model)
+    {
+        if (!ModelState.IsValid)
+        {
+            // If the model state is invalid, return to the view and show validation errors
+            return View("Complaint", model);
+        }
 
-			// Ensure the uploads directory exists
-			var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-			if (!Directory.Exists(uploadPath))
-			{
-				Directory.CreateDirectory(uploadPath);  // Create uploads directory if it doesn't exist
-			}
+        // Map properties from FeedbackComplaint to Feedback
+        var feedback = new Feedback
+        {
+            UserName = User.Identity.Name,
+            Date = DateTime.Now,
+            Type = model.TypeOfIssue,
+            FeedbackType = "Complaint",
+            Description = model.DetailedDescription,
+            AffectedArea = model.AffectedArea, // Ensure this is correctly set
+            IsResolved = false // Default to false, since the complaint is new
+        };
 
-			// Handle optional Evidence
-			if (model.Evidence != null)
-			{
-				var filePath = Path.Combine(uploadPath, model.Evidence.FileName);
-				using (var stream = new FileStream(filePath, FileMode.Create))
-				{
-					await model.Evidence.CopyToAsync(stream);
-				}
-			}
+        // Handle optional Evidence (file upload)
+        if (model.Evidence != null && model.Evidence.Length > 0)
+        {
+            // Define the upload path
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
 
-			_context.Feedbacks.Add(feedback);
-			await _context.SaveChangesAsync();
+            // Ensure the uploads directory exists
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
 
-			return RedirectToAction("Success");
-		}
+            // Create a unique file name to prevent overwriting existing files
+            var uniqueFileName = $"{Guid.NewGuid()}_{model.Evidence.FileName}";
+            var filePath = Path.Combine(uploadPath, uniqueFileName);
 
-		return View("Complaint", model);
-	}
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await model.Evidence.CopyToAsync(stream);
+            }
 
-	[Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
+            // Save the file path in the EvidencePath property
+            feedback.EvidencePath = $"/uploads/{uniqueFileName}"; // Ensure EvidencePath is set in the Feedback model
+        }
+
+        // Add the feedback to the database and save changes
+        _context.Feedbacks.Add(feedback);
+        await _context.SaveChangesAsync();
+
+        // Redirect to a success page or confirmation view
+        return RedirectToAction("Success");
+    }
+
+    [Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
 	public IActionResult Suggestion()
 	{
 		return View();  // Views/Feedback/Suggestion.cshtml
@@ -152,16 +167,31 @@ public class FeedbackController : Controller
 		return View(feedbacks);  // Views/Feedback/AdminIndex.cshtml
 	}
 
-	[Authorize(Roles = "Admin")]  // Accessible by Admins only
-	public IActionResult Details(int id)
-	{
-		var feedback = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
-		if (feedback == null) return NotFound();
+    [Authorize(Roles = "Admin")]  // Accessible by Admins only
+    public IActionResult Details(int id)
+    {
+        var feedback = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
+        if (feedback == null) return NotFound();
 
-		return View(feedback);  // Views/Feedback/Details.cshtml
-	}
+        // Map the Feedback object to the FeedbackDetailsViewModel
+        var viewModel = new FeedbackDetailsViewModel
+        {
+            Id = feedback.Id,
+            UserName = feedback.UserName,
+            Date = feedback.Date,
+            Type = feedback.Type,
+            FeedbackType = feedback.FeedbackType,
+            Description = feedback.Description,
+            IsResolved = feedback.IsResolved,
+            AffectedArea = feedback.AffectedArea, // Populate this as needed
+            EvidencePath = feedback.EvidencePath // Ensure this property is available in your Feedback model
+        };
 
-	[Authorize(Roles = "Admin")]  // Accessible by Admins only
+        return View(viewModel);  // Pass the ViewModel to the view
+    }
+
+
+    [Authorize(Roles = "Admin")]
 	public IActionResult MarkAsResolved(int id)
 	{
 		var feedback = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
@@ -170,10 +200,10 @@ public class FeedbackController : Controller
 		feedback.IsResolved = true;
 		_context.SaveChanges();
 
-		return RedirectToAction(nameof(AdminIndex));
-	}
+        return RedirectToAction(nameof(Index));
+    }
 
-	[Authorize(Roles = "Admin")]  // Accessible by Admins only
+	[Authorize(Roles = "Admin")]
 	public IActionResult Delete(int id)
 	{
 		var feedback = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
@@ -182,6 +212,6 @@ public class FeedbackController : Controller
 		_context.Feedbacks.Remove(feedback);
 		_context.SaveChanges();
 
-		return RedirectToAction(nameof(AdminIndex));
+		return RedirectToAction(nameof(Index));
 	}
 }

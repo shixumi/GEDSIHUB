@@ -22,4 +22,8 @@ public class Feedback
     public string Description { get; set; } // Detailed Description or Suggestion
 
     public bool IsResolved { get; set; } // Status
+
+    public string? AffectedArea { get; set; }
+
+    public string? EvidencePath { get; set; }
 }

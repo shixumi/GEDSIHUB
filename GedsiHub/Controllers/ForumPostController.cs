@@ -59,6 +59,7 @@ namespace GedsiHub.Controllers
         {
             var post = await _context.ForumPosts
                                      .Include(p => p.User)
+                                     .Include(p => p.Module)
                                      .Include(p => p.ForumComments)
                                      .ThenInclude(c => c.User)
                                      .FirstOrDefaultAsync(p => p.PostId == id);
@@ -75,7 +76,8 @@ namespace GedsiHub.Controllers
                 UserFirstName = post.User.FirstName,
                 UserLastName = post.User.LastName,
                 UserId = post.UserId,
-                Flair = post.Flair
+                Flair = post.Flair,
+                ModuleTitle = post.Module?.Title
             };
 
             return View(viewModel);
