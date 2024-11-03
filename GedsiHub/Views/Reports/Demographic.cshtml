@@ -889,28 +889,32 @@
 
 
 
-
-<!-- Custom Date Picker Script -->
-<script>
-    // Show loading spinner on form submit
-    document.querySelector("form").addEventListener("submit", function () {
-        document.getElementById("loading-spinner").style.display = "block";
-    });
-
-    // Handle custom date range visibility
-    document.addEventListener("DOMContentLoaded", function () {
-        const dateRangeSelect = document.getElementById("dateRangeSelect");
-        const customDateContainer = document.getElementById("customDateContainer");
-
-        dateRangeSelect.addEventListener("change", function () {
-            if (this.value === "custom") {
-                customDateContainer.style.display = "block";
-            } else {
-                customDateContainer.style.display = "none";
-            }
+ @section Scripts {
+    <!-- Custom Date Picker Script -->
+    <script>
+        // Show loading spinner on form submit
+        document.querySelector("form").addEventListener("submit", function () {
+            document.getElementById("loading-spinner").style.display = "block";
         });
 
-        // Initially hide the custom date container
-        customDateContainer.style.display = "none";
-    });
-</script>
+        // Handle custom date range visibility
+        document.addEventListener("DOMContentLoaded", function () {
+            const dateRangeSelect = document.getElementById("dateRangeSelect");
+            const customDateContainer = document.getElementById("customDateContainer");
+
+            dateRangeSelect.addEventListener("change", function () {
+                if (this.value === "custom") {
+                    customDateContainer.style.display = "block";
+                } else {
+                    customDateContainer.style.display = "none";
+                }
+            });
+
+            // Initially hide the custom date container
+            customDateContainer.style.display = "none";
+        });
+    </script>
+    <script src="~/js/selectAllCheckbox.js"></script>
+    <script src="~/js/reportsButtonToggle.js"></script>
+ }
+
