@@ -46,13 +46,13 @@
                 <!-- Nav Pills for Tabs -->
                 <ul class="nav nav-pills mb-3" id="reportTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="demographic-tab" data-bs-toggle="pill" data-bs-target="#demographic" type="button" role="tab" aria-controls="demographic" aria-selected="true">
+                    <button class="nav-link report-toggle-button active" id="demographic-tab" data-bs-toggle="pill" data-bs-target="#demographic" type="button" role="tab" aria-controls="demographic" aria-selected="true">
                             <img src="~/images/Demographics.png" />
                             Generate Demographic Report
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="module-tab" data-bs-toggle="pill" data-bs-target="#module" type="button" role="tab" aria-controls="module" aria-selected="false">
+                    <button class="nav-link report-toggle-button" id="module-tab" data-bs-toggle="pill" data-bs-target="#module" type="button" role="tab" aria-controls="module" aria-selected="false">
                             <img src="~/images/Book.png" />
                             Generate Module Report
                         </button>
@@ -63,18 +63,7 @@
 
 
 
-            <!-- Container for the reports generating -->
-            <div class="report-toggle-container">
-
-                <div id="generateDemoReportButton" class="report-toggle-button active">
-                    <img src="~/images/Demographics.png" />
-                    <span>Generate Demographic Report</span>
-                </div>
-                <div id="generateModReportButton" class="report-toggle-button">
-                    <img src="~/images/Book.png" />
-                    <span>Generate Module Report</span>
-                </div>
-            </div>
+          
             <!-- Tab Content -->
             <div class="tab-content" id="reportTabsContent">
 
@@ -257,7 +246,7 @@
 
                 <!-- Content for Module Report -->
                 <div class="tab-pane fade" id="module" role="tabpanel" aria-labelledby="module-tab">
-                    <h1 style="margin-top: 1rem;">Select Module</h1>
+                    <h1>Select Module</h1>
                     <div class="report-inside-container report-gen-module-container">
                         <span>Choose a module to generate the report:</span>
                         <select class="report-gen-select-module">
@@ -381,13 +370,6 @@
 
 
 
-<!--GENERATE MODULE REPORT-->
-
-
-    
-    <div class="container generate-report-container">
-        
-    </div>
 
 
 
