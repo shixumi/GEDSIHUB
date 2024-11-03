@@ -6,9 +6,10 @@ const messageCooldown = 1500;
 
 // Function to reset the chatbot to the initial state
 function resetChatbotState() {
+    canSendMessage = true; // Reset cooldown
     clearChatBody();
     clearChatOptionFooter();
-    displayMessageBubble('Welcome to GEDSI HUB! How may I help you today?'); // Display initial "Hello" message
+    displayMessageBubble('Welcome to GEDSI HUB! How may I help you today?');
 }
 
 // Function to clear the chatbot body
@@ -31,13 +32,13 @@ function displayMessageBubble(message) {
     const chatMessage = document.createElement('div');
     chatMessage.classList.add('chat-message', 'd-flex', 'mt-3', 'fade-in');
 
+    const conBotAvatar = document.createElement('div');
+    conBotAvatar.classList.add('bot-avatar-container');
+
     const botAvatar = document.createElement('img');
     botAvatar.src = '/images/Talk_to_GAD.png';
     botAvatar.classList.add('bot-avatar');
-    botAvatar.style.backgroundColor = '#660000';
-    botAvatar.style.width = '2.5rem';
-    botAvatar.style.height = '2.5rem';
-    botAvatar.style.objectFit = 'cover';
+
 
     const messageBubble = document.createElement('div');
     messageBubble.classList.add('message-bubble');
@@ -47,7 +48,8 @@ function displayMessageBubble(message) {
     messageText.textContent = message;
 
     messageBubble.appendChild(messageText);
-    chatMessage.appendChild(botAvatar);
+    chatMessage.appendChild(conBotAvatar);
+    conBotAvatar.appendChild(botAvatar);
     chatMessage.appendChild(messageBubble);
 
     chatbotBody.appendChild(chatMessage);
@@ -127,7 +129,7 @@ document.getElementById('chatbotExit').addEventListener('click', function () {
     const chatbotInterface = document.getElementById('chatbotInterface');
     chatbotInterface.classList.remove('show');
     setTimeout(() => (chatbotInterface.style.display = 'none'), 300);
-    resetChatbotState(); // Reset to initial state
+    // resetChatbotState(); // Reset to initial state
 });
 
 // Reset button logic
@@ -140,16 +142,20 @@ document.getElementById('chatbotToggle').addEventListener('click', function () {
     const chatbotInterface = document.getElementById('chatbotInterface');
     const chatbotButton = document.querySelector('.chatbot-button');
 
-    chatbotButton.classList.add('shrink'); // Add shrink animation
+    
+    chatbotButton.classList.add('shrink');
     setTimeout(() => chatbotButton.classList.remove('shrink'), 200);
 
     if (!chatbotInterface.classList.contains('show')) {
         chatbotInterface.style.display = 'block';
-        setTimeout(() => chatbotInterface.classList.add('show'), 50);
+        setTimeout(() => {
+            chatbotInterface.classList.add('show');
+        }, 50);
     } else {
         chatbotInterface.classList.remove('show');
     }
 });
+
 
 // Function to load FAQs
 async function loadFAQs() {
@@ -229,13 +235,12 @@ async function loadContactInfo() {
     const contactInfo = document.createElement('div');
     contactInfo.classList.add('contact-chat-message', 'd-flex', 'mt-3', 'fade-in');
 
+    const conBotAvatar = document.createElement('div');
+    conBotAvatar.classList.add('bot-avatar-container');
+
     const botAvatar = document.createElement('img');
     botAvatar.src = '/images/Talk_to_GAD.png';
     botAvatar.classList.add('bot-avatar');
-    botAvatar.style.backgroundColor = '#660000';
-    botAvatar.style.width = '2.5rem';
-    botAvatar.style.height = '2.5rem';
-    botAvatar.style.objectFit = 'cover';
 
     try {
         const response = await fetch('/api/chatbot/contact', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
@@ -267,9 +272,11 @@ async function loadContactInfo() {
     } catch (error) {
         contactInfo.innerText = 'Error fetching contact info';
     }
-
-    contactInfo.prepend(botAvatar);
+    
     chatbotBody.appendChild(contactInfo);
+    contactInfo.prepend(conBotAvatar);
+    conBotAvatar.appendChild(botAvatar);
+    
     chatbotBody.scrollTop = chatbotBody.scrollHeight; // Scroll to the bottom
 
     // Delay for animation

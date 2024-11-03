@@ -230,7 +230,6 @@
 
 .contact-chat-message {
     display: flex;
-    justify-content: end;
     gap: 0.8rem;
     align-items: end;
     margin-right: 4rem;
@@ -254,10 +253,18 @@
     transition: all 0.3s ease;
 }
 
-.bot-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
+.bot-avatar-container {
+    padding: 0.4rem;
     border-radius: 50%;
+    background-color: #660000;
+}
+
+.bot-avatar {
+    background-color: #660000;
+    width: 2rem;
+    height: 2rem;
+    object-fit: cover;
+
 }
 
 .reset-icon {
