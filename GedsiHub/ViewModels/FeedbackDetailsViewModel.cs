@@ -14,5 +14,8 @@ namespace GedsiHub.ViewModels
         public bool IsResolved { get; set; }
         public string AffectedArea { get; set; } // New property for the affected area
         public string EvidencePath { get; set; } // New property for the evidence path
+        public int? NextFeedbackId { get; set; }
+        public string Tab { get; set; }
+        public string Status { get; set; }
     }
 }

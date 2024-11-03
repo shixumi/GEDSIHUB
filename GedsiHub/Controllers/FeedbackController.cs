@@ -21,14 +21,20 @@ public class FeedbackController : Controller
     // ************** USER INTERFACE **************
 
     [Authorize]
-    public IActionResult Index()
+    public IActionResult Index(string tab = "complaints", string status = "unresolved")
     {
+        // Determine whether to show resolved or unresolved feedback
+        bool showResolved = status == "resolved";
+        ViewBag.ShowResolved = showResolved; // Set whether to show resolved feedback
+        ViewBag.ActiveTab = tab; // Set the active tab
+
+        // Fetch complaints and suggestions based on the resolved status
         var complaints = _context.Feedbacks
-            .Where(f => f.FeedbackType == "Complaint" && !f.IsResolved)
+            .Where(f => f.FeedbackType == "Complaint" && f.IsResolved == showResolved)
             .ToList();
 
         var suggestions = _context.Feedbacks
-            .Where(f => f.FeedbackType == "Suggestion" && !f.IsResolved)
+            .Where(f => f.FeedbackType == "Suggestion" && f.IsResolved == showResolved)
             .ToList();
 
         // Pass both lists to the view via a ViewModel
@@ -109,48 +115,62 @@ public class FeedbackController : Controller
 		return View();  // Views/Feedback/Suggestion.cshtml
 	}
 
-	[Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
-	[HttpPost]
-	public async Task<IActionResult> SubmitSuggestion(FeedbackSuggestion model)
-	{
-		if (ModelState.IsValid)
-		{
-			var feedback = new Feedback
-			{
-				UserName = User.Identity.Name,
-				Date = DateTime.Now,
-				Type = model.TypeOfSuggestion,
-				FeedbackType = "Suggestion",
-				Description = model.DescriptionOfSuggestion
-			};
+    [Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
+    [HttpPost]
+    public async Task<IActionResult> SubmitSuggestion(FeedbackSuggestion model)
+    {
+        if (!ModelState.IsValid)
+        {
+            // If the model state is invalid, return to the view and show validation errors
+            return View("Suggestion", model);
+        }
 
-			// Ensure the uploads directory exists
-			var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-			if (!Directory.Exists(uploadPath))
-			{
-				Directory.CreateDirectory(uploadPath);  // Create uploads directory if it doesn't exist
-			}
+        // Map properties from FeedbackSuggestion to Feedback
+        var feedback = new Feedback
+        {
+            UserName = User.Identity.Name,
+            Date = DateTime.Now,
+            Type = model.TypeOfSuggestion,
+            FeedbackType = "Suggestion",
+            Description = model.DescriptionOfSuggestion,
+            IsResolved = false // Default to false, since the suggestion is new
+        };
 
-			// Handle optional Attachment
-			if (model.Attachment != null)
-			{
-				var filePath = Path.Combine(uploadPath, model.Attachment.FileName);
-				using (var stream = new FileStream(filePath, FileMode.Create))
-				{
-					await model.Attachment.CopyToAsync(stream);
-				}
-			}
+        // Handle optional Attachment (file upload)
+        if (model.Attachment != null && model.Attachment.Length > 0)
+        {
+            // Define the upload path
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
 
-			_context.Feedbacks.Add(feedback);
-			await _context.SaveChangesAsync();
+            // Ensure the uploads directory exists
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
 
-			return RedirectToAction("Success");
-		}
+            // Create a unique file name to prevent overwriting existing files
+            var uniqueFileName = $"{Guid.NewGuid()}_{model.Attachment.FileName}";
+            var filePath = Path.Combine(uploadPath, uniqueFileName);
 
-		return View("Suggestion", model);
-	}
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await model.Attachment.CopyToAsync(stream);
+            }
 
-	public IActionResult Success()
+            // Save the file path in the EvidencePath property
+            feedback.EvidencePath = $"/uploads/{uniqueFileName}"; // Set EvidencePath
+        }
+
+        // Add the feedback to the database and save changes
+        _context.Feedbacks.Add(feedback);
+        await _context.SaveChangesAsync();
+
+        // Redirect to a success page or confirmation view
+        return RedirectToAction("Success");
+    }
+
+    public IActionResult Success()
 	{
 		return View();  // Views/Feedback/Success.cshtml
 	}
@@ -167,11 +187,17 @@ public class FeedbackController : Controller
 		return View(feedbacks);  // Views/Feedback/AdminIndex.cshtml
 	}
 
-    [Authorize(Roles = "Admin")]  // Accessible by Admins only
+    [Authorize(Roles = "Admin")]
     public IActionResult Details(int id)
     {
         var feedback = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
         if (feedback == null) return NotFound();
+
+        // Find the next feedback item
+        var nextFeedback = _context.Feedbacks
+            .Where(f => f.FeedbackType == feedback.FeedbackType && f.Id > id)
+            .OrderBy(f => f.Id)
+            .FirstOrDefault();
 
         // Map the Feedback object to the FeedbackDetailsViewModel
         var viewModel = new FeedbackDetailsViewModel
@@ -183,13 +209,13 @@ public class FeedbackController : Controller
             FeedbackType = feedback.FeedbackType,
             Description = feedback.Description,
             IsResolved = feedback.IsResolved,
-            AffectedArea = feedback.AffectedArea, // Populate this as needed
-            EvidencePath = feedback.EvidencePath // Ensure this property is available in your Feedback model
+            AffectedArea = feedback.AffectedArea,
+            EvidencePath = feedback.EvidencePath,
+            NextFeedbackId = nextFeedback?.Id
         };
 
         return View(viewModel);  // Pass the ViewModel to the view
     }
-
 
     [Authorize(Roles = "Admin")]
 	public IActionResult MarkAsResolved(int id)
