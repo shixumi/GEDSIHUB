@@ -33,15 +33,68 @@
 
         <!-- Container for Creating Lesson -->
         <div class="cms_white_base_container">
-            <div class="cms_lesson_title">
-                <span>Lesson</span>
-                <span id="lesson_number_inwcon">@ViewBag.LessonNumber</span>
-                <span id="lesson_title">@ViewBag.LessonTitle</span>
-            </div>
+            <div class="cms_lesson_title header-container">
+                <div>
+                    <span>Lesson</span>
+                    <span id="lesson_number_inwcon">@ViewBag.LessonNumber:</span>
+                    <span id="lesson_title">@ViewBag.LessonTitle</span>
+                </div>
 
+                <!-- Need Help with H5P Button -->
+                <button type="button" class="btn btn-info mt-2 info-modal-btn" data-bs-toggle="modal" data-bs-target="#h5pHelpModal">
+                    <i class="fa fa-info-circle"></i> Need help with H5P?
+                </button>
+
+            </div>
             <!-- H5P Link Input -->
             <textarea asp-for="H5PEmbedCode" class="url_input_textarea" placeholder="Paste H5P link here" id="h5pEditorCreate"></textarea>
             <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
+
+
+            <!-- H5P Help Modal -->
+            <div class="modal fade" id="h5pHelpModal" tabindex="-1" aria-labelledby="h5pHelpModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered h5p-guide-modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="h5pHelpModalLabel">Guide for Uploading H5P Content</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body h5p-body-guide">
+                            <p>Follow these simple steps to embed H5P content into your lesson:</p>
+                            <ol>
+                                <li>
+                                    <strong>Create Your H5P Content:</strong> Click the link below to create your H5P content. This will open in a new tab:<br>
+                                    <a href="https://gedsipup.h5p.com/content/create" target="_blank">https://gedsipup.h5p.com/content/create</a>
+                                </li>
+                                <li>
+                                    <strong>Learn How to Use H5P:</strong> Access a comprehensive guide on creating various H5P content types here:<br>
+                                    <a href="https://h5p.org/documentation/for-authors/tutorials" target="_blank">https://h5p.org/documentation/for-authors/tutorials</a>
+                                </li>
+                                <li>
+                                    <strong>Publish Your Content:</strong> Once your content is ready, click on "Publish" and copy the provided embed code.
+                                </li>
+                                <li>
+                                    <strong>Paste the Embed Code:</strong> Insert the H5P embed code into the text area labeled "Paste H5P link here."
+                                </li>
+                                <li>
+                                    <strong>Verify the Format:</strong> Ensure the embed code is correctly formatted and begins with <code>&lt;iframe&gt;</code>.
+                                </li>
+                                <li>
+                                    <strong>Add Additional Content (Optional):</strong> You can continue adding more lesson content using the text input box.
+                                </li>
+                                <li>
+                                    <strong>Save Your Work:</strong> Click the "Save" button to apply the content to your lesson.
+                                </li>
+                            </ol>
+                            <p>If you encounter any issues, please contact support or refer to the H5P documentation.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Label -->
             <span class="lesson_content_text">Lesson Content</span>

@@ -263,47 +263,61 @@ namespace GedsiHub.Controllers
         // GET: View all reports (Posts and Comments)
         public async Task<IActionResult> ViewReports()
         {
-            var postReports = await _context.ForumPostReports
-                .Include(r => r.ForumPost)
-                .Include(r => r.User)
-                .Select(r => new ReportedPostViewModel
-                {
-                    ReportId = r.ReportId,
-                    PostId = r.PostId,
-                    PostTitle = r.ForumPost.Title,
-                    ReportedByName = $"{r.User.FirstName} {r.User.LastName}",
-                    Reason = r.Reason,
-                    CreatedAt = r.CreatedAt
-                })
-                .ToListAsync();
+            _logger.LogInformation("ViewReports called");
 
-            var commentReports = await _context.ForumCommentReports
-                .Include(r => r.ForumComment)
-                .Include(r => r.User)
-                .Select(r => new ReportedCommentViewModel
-                {
-                    ReportId = r.ReportId,
-                    CommentId = r.CommentId,
-                    CommentContent = r.ForumComment.Content,
-                    ReportedByName = $"{r.User.FirstName} {r.User.LastName}",
-                    Reason = r.Reason,
-                    CreatedAt = r.CreatedAt,
-                    PostId = r.ForumComment.PostId // For linking to the post
-                })
-                .ToListAsync();
-
-            var viewModel = new AdminReportsViewModel
+            try
             {
-                ReportedPosts = postReports,
-                ReportedComments = commentReports
-            };
+                var postReports = await _context.ForumPostReports
+                    .Include(r => r.ForumPost)
+                    .Include(r => r.User)
+                    .Select(r => new ReportedPostViewModel
+                    {
+                        ReportId = r.ReportId,
+                        PostId = r.PostId,
+                        PostTitle = r.ForumPost.Title,
+                        ReportedByName = $"{r.User.FirstName} {r.User.LastName}",
+                        Reason = r.Reason,
+                        CreatedAt = r.CreatedAt
+                    })
+                    .ToListAsync();
 
-            return View(viewModel); // Ensure the correct model is passed here
+                var commentReports = await _context.ForumCommentReports
+                    .Include(r => r.ForumComment)
+                    .Include(r => r.User)
+                    .Select(r => new ReportedCommentViewModel
+                    {
+                        ReportId = r.ReportId,
+                        CommentId = r.CommentId,
+                        CommentContent = r.ForumComment.Content,
+                        ReportedByName = $"{r.User.FirstName} {r.User.LastName}",
+                        Reason = r.Reason,
+                        CreatedAt = r.CreatedAt,
+                        PostId = r.ForumComment.PostId
+                    })
+                    .ToListAsync();
+
+                _logger.LogInformation("ViewReports loaded successfully with {PostReportsCount} post reports and {CommentReportsCount} comment reports", postReports.Count, commentReports.Count);
+
+                var viewModel = new AdminReportsViewModel
+                {
+                    ReportedPosts = postReports,
+                    ReportedComments = commentReports
+                };
+
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while loading ViewReports");
+                return View("Error");
+            }
         }
 
         // POST: Delete the reported post
         [HttpPost]
-        public async Task<IActionResult> DeletePost(int postId)
+        [Route("Admin/DeletePost/{postId:int}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePost([FromRoute] int postId)
         {
             var post = await _context.ForumPosts.FindAsync(postId);
             if (post == null)
@@ -323,7 +337,9 @@ namespace GedsiHub.Controllers
 
         // POST: Delete the reported comment
         [HttpPost]
-        public async Task<IActionResult> DeleteComment(int commentId)
+        [Route("Admin/DeleteComment/{commentId:int}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteComment([FromRoute] int commentId)
         {
             var comment = await _context.ForumComments.FindAsync(commentId);
             if (comment == null)
@@ -343,10 +359,15 @@ namespace GedsiHub.Controllers
 
         // POST: Dismiss a post report
         [HttpPost]
-        public async Task<IActionResult> DismissPostReport(int reportId)
+        [Route("Admin/DismissPostReport/{reportId:int}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DismissPostReport([FromRoute] int reportId)
         {
             var report = await _context.ForumPostReports.FindAsync(reportId);
-            if (report == null) return NotFound();
+            if (report == null)
+            {
+                return NotFound();
+            }
 
             _context.ForumPostReports.Remove(report);
             await _context.SaveChangesAsync();
@@ -356,10 +377,15 @@ namespace GedsiHub.Controllers
 
         // POST: Dismiss a comment report
         [HttpPost]
-        public async Task<IActionResult> DismissCommentReport(int reportId)
+        [Route("Admin/DismissCommentReport/{reportId:int}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DismissCommentReport([FromRoute] int reportId)
         {
             var report = await _context.ForumCommentReports.FindAsync(reportId);
-            if (report == null) return NotFound();
+            if (report == null)
+            {
+                return NotFound();
+            }
 
             _context.ForumCommentReports.Remove(report);
             await _context.SaveChangesAsync();

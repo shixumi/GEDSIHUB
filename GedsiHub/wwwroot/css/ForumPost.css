@@ -207,6 +207,7 @@ body {
     /* Card Title */
     .card-title {
         margin-bottom: 18px;
+        color: #464040;
     }
 
     .card-text {
