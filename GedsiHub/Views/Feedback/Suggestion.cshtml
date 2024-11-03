@@ -56,35 +56,3 @@
         </form>
     </div>
 </div>
-
-
-
-@* <h2>Suggestion Form</h2>
-<form asp-action="SubmitSuggestion" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="TypeOfSuggestion">Type of Suggestion</label>
-        <select asp-for="TypeOfSuggestion" class="form-control">
-            <option value="Feature Request">Feature Request</option>
-            <option value="UI Improvement">UI Improvement</option>
-            <option value="Content Addition">Content Addition</option>
-            <option value="Performance Enhancement">Performance Enhancement</option>
-            <option value="Other">Other</option>
-        </select>
-        <span asp-validation-for="TypeOfSuggestion" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="DescriptionOfSuggestion">Description of Suggestion</label>
-        <textarea asp-for="DescriptionOfSuggestion" class="form-control"></textarea>
-        <span asp-validation-for="DescriptionOfSuggestion" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="Attachment">Attachment (optional)</label>
-        <input type="file" asp-for="Attachment" class="form-control" />
-        <span asp-validation-for="Attachment" class="text-danger"></span> <!-- No validation error if not provided -->
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit Suggestion</button>
-</form>
- *@

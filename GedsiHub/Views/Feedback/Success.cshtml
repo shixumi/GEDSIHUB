@@ -1,34 +1,28 @@
-﻿<!-- Views/Feedback/Success.cshtml -->
-@{
+﻿@{
     Layout = "_LayoutApp";
     ViewData["Title"] = "Success";
+
+    // Retrieve the feedback type from the query string
+    string feedbackType = Context.Request.Query["type"];
 }
 
-
 <div class="con-of-con-of-success-mess">
-    <div class="container success-message-container">
-        <img src="~/images/TaskCompleted.png" alt="Task Completed" />
-        <span class="text-submitted">Complaint Submitted!</span>
-        <span class="submitted-message">Thank you for submitting your <strong>complaint form</strong>. Your feedback is important to us and will be reviewed promptly. We appreciate your patience and understanding during this process.</span>
-        <a href="@Url.Action("Index", "Feedback")" id="complaintSubmittedDoneButton" class="submitted-done-button">Done</a>
-    </div>
+    @if (feedbackType == "Complaint")
+    {
+        <div class="container success-message-container">
+            <img src="~/images/TaskCompleted.png" alt="Task Completed" />
+            <span class="text-submitted">Complaint Submitted!</span>
+            <span class="submitted-message">Thank you for submitting your <strong>complaint form</strong>. Your feedback is important to us and will be reviewed promptly. We appreciate your patience and understanding during this process.</span>
+            <a href="@Url.Action("Index", "Feedback")" id="complaintSubmittedDoneButton" class="submitted-done-button">Done</a>
+        </div>
+    }
+    else if (feedbackType == "Suggestion")
+    {
+        <div class="container success-message-container">
+            <img src="~/images/TaskCompleted.png" alt="Task Completed" />
+            <span class="text-submitted">Suggestion Submitted!</span>
+            <span class="submitted-message">Thank you for sharing your suggestion with us. We value your input and will review it carefully to improve our services.</span>
+            <a href="@Url.Action("Index", "Feedback")" id="suggestionSubmittedDoneButton" class="submitted-done-button">Done</a>
+        </div>
+    }
 </div>
-
-
-<div class="con-of-con-of-success-mess">
-    <div class="container success-message-container">
-        <img src="~/images/TaskCompleted.png" alt="Task Completed" />
-        <span class="text-submitted">Suggestion Submitted!</span>
-        <span class="submitted-message">Thank you for sharing your suggestion with us. We value your input and will review it carefully to improve our services.</span>
-        <a href="@Url.Action("Index", "Feedback")" id="suggestionSubmittedDoneButton" class="submitted-done-button">Done</a>
-    </div>
-</div>
-
-
-
-
-
-@* <h2>Feedback Submitted Successfully!</h2>
-<p>Thank you for your feedback.</p>
-<a href="@Url.Action("Index", "Feedback")" class="btn btn-primary">Back to Feedback</a>
- *@

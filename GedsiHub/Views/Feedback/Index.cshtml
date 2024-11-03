@@ -5,14 +5,6 @@
     ViewData["Title"] = "Feedbacks";
 }
 
-
-
-
-
-
-
-
-
 <!-- Conditional display based on the user's role -->
 @if (User.IsInRole("Admin"))
 {
@@ -31,23 +23,28 @@
                     <!-- Tabs Navigation -->
                     <div class="tab-navigation" id="feedbackTab" role="tablist">
                         <div class="tab-item">
-                            <a class="tab-link active" id="complaint-tab" data-bs-toggle="tab" href="#complaints" role="tab" aria-controls="complaints" aria-selected="true">
+                            <a class="tab-link @(ViewBag.ActiveTab == "complaints" ? "active" : "")" id="complaint-tab" data-bs-toggle="tab" href="#complaints" role="tab" aria-controls="complaints" aria-selected="@(ViewBag.ActiveTab == "complaints")">
                                 Complaints
                             </a>
                         </div>
                         <div class="tab-item">
-                            <a class="tab-link" id="suggestion-tab" data-bs-toggle="tab" href="#suggestions" role="tab" aria-controls="suggestions" aria-selected="false">
+                            <a class="tab-link @(ViewBag.ActiveTab == "suggestions" ? "active" : "")" id="suggestion-tab" data-bs-toggle="tab" href="#suggestions" role="tab" aria-controls="suggestions" aria-selected="@(ViewBag.ActiveTab == "suggestions")">
                                 Suggestions
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="resolved-feedbacks-filter-con">
-                    <span class="view-resolved-feedbacks">View Resolved Feedbacks</span>
-                    <span class="filter">
-                        Filter
-                        <img src="~/images/Filter.png" width="25" height="23" />
-                    </span>
+                    <a href="@Url.Action("Index", "Feedback", new { tab = ViewBag.ActiveTab, status = ViewBag.ShowResolved ? "unresolved" : "resolved" })" class="view-resolved-feedbacks">
+                        @if (ViewBag.ShowResolved)
+                        {
+                            <span>View Unresolved Feedbacks</span>
+                        }
+                        else
+                        {
+                            <span>View Resolved Feedbacks</span>
+                        }
+                    </a>
                 </div>
             </div>
             <!-- Tabs Content -->

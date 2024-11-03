@@ -124,7 +124,52 @@
 }
 
 
+.h5p-guide-modal-dialog {
+    max-width: 800px; /* Set the desired width */
+    width: 100%;
+}
 
+.modal-body ol li {
+    line-height: 1.8rem;
+}
+
+.h5p-body-guide a {
+    color: #660000;
+}
+
+.info-modal-btn {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    font-size: 0.8rem;
+    border-radius: 2rem;
+    border: 1px solid #9c9c9c;
+    background: #660000;
+    padding: 0.4rem 1rem;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    gap: 0.5rem;
+}
+
+.info-modal-btn:hover {
+    background-color:#920000;
+    color: #fff;
+}
+
+
+.fa-info-circle {
+    font-size: 1.2rem;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+}
 /*.tinyMCE_preview {
     margin-top: 2rem;
 }*/

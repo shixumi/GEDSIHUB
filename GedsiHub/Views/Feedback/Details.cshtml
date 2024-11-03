@@ -1,16 +1,21 @@
-﻿<!-- Views/Feedback/Details.cshtml -->
+﻿@model GedsiHub.ViewModels.FeedbackDetailsViewModel
+
 @{
     Layout = "_LayoutApp";
     ViewData["Title"] = "Details";
+
+    // Determine the labels and fields based on FeedbackType
+    string issueOrSuggestion = Model.FeedbackType == "Complaint" ? "Issue" : "Suggestion";
+    string typeLabel = Model.FeedbackType == "Complaint" ? "Type of Issue" : "Type of Suggestion";
+    string descriptionLabel = Model.FeedbackType == "Complaint" ? "Detailed Description of the Issue" : "Description of Suggestion";
+    string affectedAreaLabel = "Affected Area"; // Only relevant for Complaints
 }
 
-
- 
 <div>
     <h1 id="addNewModule_HeaderTitle" class="modules_title" style="color: #464040;">Feedback Responses</h1>
     <hr class="custom-hr">
     <div class="container feedback-container">
-        
+
         <div class="userinfo-actions-feedback-container">
             <div class="feedback-details">
                 <div>
@@ -23,50 +28,68 @@
                 </div>
             </div>
             <div class="feedback-actions">
-                
-                <a href="@Url.Action("MarkAsResolved", new { id = Model.Id })" id="marked-as-resolved-button" type="button"><img src="~/images/Check.png" />Mark as Resolved</a>
-                <a href="@Url.Action("Delete", new { id = Model.Id })" class="delete-user-feedback-button" type="button"> <img src="~/images/Delete.png" />Delete</a>
+                <a href="@Url.Action("MarkAsResolved", new { id = Model.Id })" id="marked-as-resolved-button" type="button">
+                    <img src="~/images/Check.png" /> Mark as Resolved
+                </a>
+                <a href="@Url.Action("Delete", new { id = Model.Id })" class="delete-user-feedback-button" type="button">
+                    <img src="~/images/Delete.png" /> Delete
+                </a>
             </div>
         </div>
+
         <div class="user-response-container">
             <div class="type-desc-issue-con">
                 <div class="text-input-container-type-of-issue">
-                    <span>1. Type of Issue</span>
+                    <span>1. @typeLabel</span>
                     <input id="type-of-issue-holder" class="holder" type="text" disabled value="@Model.Type" />
                 </div>
+
                 <div class="text-input-issue-desc">
-                    <span>3. Detailed Description of the Issue</span>
+                    <span>2. @descriptionLabel</span>
                     <textarea id="issue-desc-holder" class="holder" disabled>@Model.Description</textarea>
                 </div>
             </div>
-            <div class="area-evidence-container">
-                <div class="text-input-container-affected-area">
-                    <span>2. Affected Area</span>
-                    <input id="affected-area-holder" class="holder" type="text" disabled value="@Model.AffectedArea" />
+
+            @if (Model.FeedbackType == "Complaint")
+            {
+                <div class="area-evidence-container">
+                    <div class="text-input-container-affected-area">
+                        <span>3. @affectedAreaLabel</span>
+                        <input id="affected-area-holder" class="holder" type="text" disabled value="@Model.AffectedArea" />
+                    </div>
                 </div>
-                <div class="input-text-evidence">
-                    <span>4. Evidence (Optional)</span>
-                    @if (!string.IsNullOrEmpty(Model.EvidencePath))
-                    {
-                        <img src="@Model.EvidencePath" alt="Evidence Image" class="evidence-image" />
-                    }
-                    else
-                    {
-                        <input id="evidence-holder" class="holder" type="text" disabled value="No Evidence" />
-                    }
-                </div>
+            }
+
+            <div class="input-text-evidence">
+                <span>3. Evidence (Optional)</span>
+                @if (!string.IsNullOrEmpty(Model.EvidencePath))
+                {
+                    <img src="@Model.EvidencePath" alt="Evidence Image" class="evidence-image" />
+                }
+                else
+                {
+                    <input id="evidence-holder" class="holder" type="text" disabled value="No Evidence" />
+                }
             </div>
         </div>
+
         <div class="feedback-response-button-container">
-            <button id="back-previous-response-button" type="button"
-                    onclick="location.href='@(
-            Model.FeedbackType == "Complaint"
-            ? Url.Action("Index", "Feedback") + "#complaints"
-            : Url.Action("Index", "Feedback") + "#suggestions"
-        )';">
+            <button id="back-previous-response-button" type="button" onclick="history.back();">
                 Back
             </button>
-            <button id="next-response-button" type="button">Next</button>
+
+            @if (Model.NextFeedbackId != null)
+            {
+                <button id="next-response-button" type="button" onclick="location.href='@Url.Action("Details", "Feedback", new { id = Model.NextFeedbackId })';">
+                    Next
+                </button>
+            }
+            else
+            {
+                <button id="next-response-button" type="button" class="btn btn-primary go_to_button" disabled>
+                    Next
+                </button>
+            }
         </div>
     </div>
-</div> 
+</div>

@@ -26,13 +26,24 @@ namespace GedsiHub.Controllers
 
         // ****************************** FORUM POSTS: VIEWING ******************************
 
-        // GET: ForumPost/Index - Display all posts
-        public async Task<IActionResult> Index()
+        // GET: ForumPost/Index - Display all posts or filter by module
+        public async Task<IActionResult> Index(int? moduleId)
         {
-            var posts = await _context.ForumPosts
+            // Start building the query
+            var query = _context.ForumPosts
                 .Include(post => post.User)
                 .Include(post => post.Module)
                 .Include(post => post.ForumComments)
+                .AsQueryable();
+
+            // Apply filtering by moduleId if provided
+            if (moduleId.HasValue)
+            {
+                query = query.Where(post => post.ModuleId == moduleId.Value);
+            }
+
+            // Project the query to ForumPostViewModel and execute
+            var posts = await query
                 .Select(post => new ForumPostViewModel
                 {
                     PostId = post.PostId,
@@ -47,7 +58,8 @@ namespace GedsiHub.Controllers
                     UserId = post.UserId,
                     CommentCount = post.ForumComments.Count,
                     RelativeCreatedAt = DateTimeHelper.GetRelativeTime(post.CreatedAt),
-                    ModuleTitle = post.Module != null ? post.Module.Title : null
+                    ModuleTitle = post.Module != null ? post.Module.Title : null,
+                    ModuleId = post.ModuleId // Include ModuleId for view reference
                 })
                 .ToListAsync();
 

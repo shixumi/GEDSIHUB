@@ -10,13 +10,13 @@
 
     <!-- Top Container -->
     <div class="d-flex justify-content-between align-items-center top-container">
-        <!-- Flair Filtering Form -->
+        @* <!-- Flair Filtering Form -->
         <select class="focus-ring focus-ring-light form-select custom-select">
             <option selected>All</option>
             <option value="1">One</option>
             <option value="2">Two</option>
             <option value="3">Three</option>
-        </select>
+        </select> *@
 
         <div class="input-group custom-search">
             <span class="input-group-text">
@@ -79,9 +79,8 @@
                     </div>
 
                     <!-- Report Button for Post -->
-                    <!-- Conditional Report Button (not visible to admin and post owner) -->
                     @if (!(User.Identity.IsAuthenticated &&
-                    (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value == post.UserId || User.IsInRole("Admin"))))
+                   (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value == post.UserId || User.IsInRole("Admin"))))
                     {
                         <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#reportPostModal-@post.PostId">
                             <i class="la la-flag"></i> Report
@@ -98,7 +97,9 @@
 
                 @if (!string.IsNullOrEmpty(post.ModuleTitle))
                 {
-                    <span class="badge bg-primary">@post.ModuleTitle</span>
+                    <a href="@Url.Action("Index", "ForumPost", new { moduleId = post.ModuleId })" class="badge bg-primary">
+                        @post.ModuleTitle
+                    </a>
                 }
 
                 <!-- Card Title -->
