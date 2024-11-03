@@ -106,7 +106,7 @@ public class FeedbackController : Controller
         await _context.SaveChangesAsync();
 
         // Redirect to a success page or confirmation view
-        return RedirectToAction("Success");
+        return RedirectToAction("Success", new { type = "Complaint" });
     }
 
     [Authorize(Roles = "Student, Employee")]  // Accessible by both Students and Employees
@@ -167,7 +167,7 @@ public class FeedbackController : Controller
         await _context.SaveChangesAsync();
 
         // Redirect to a success page or confirmation view
-        return RedirectToAction("Success");
+        return RedirectToAction("Success", new { type = "Suggestion" });
     }
 
     public IActionResult Success()
