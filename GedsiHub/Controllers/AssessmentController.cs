@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace GedsiHub.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class AssessmentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,10 +23,8 @@ namespace GedsiHub.Controllers
         }
 
         // ****************************** CREATE ASSESSMENT ******************************
-
+        [Authorize(Roles = "Admin")]
         // GET: Assessment/Create/{moduleId}
-        // Displays the form to create a new assessment for a specified module.
-        // If an assessment already exists for the module, it redirects to the edit page.
         public IActionResult Create(int moduleId)
         {
             _logger.LogInformation($"Creating assessment for ModuleId: {moduleId}");
@@ -55,15 +54,13 @@ namespace GedsiHub.Controllers
         }
 
         // POST: Assessment/Create
-        // Handles the submission of the form to create a new assessment.
-        // Validates the input and saves the new assessment to the database.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Title,Description,H5PEmbedCode,ModuleId")] Assessment assessment)
         {
             _logger.LogInformation("Creating new assessment.");
 
-            // Ensure ModelState validation
             if (!ModelState.IsValid)
             {
                 _logger.LogError("ModelState is invalid. Logging validation errors...");
@@ -71,7 +68,7 @@ namespace GedsiHub.Controllers
                 {
                     _logger.LogError($"Validation Error: {error.ErrorMessage}");
                 }
-                return View(assessment); // Return the view with validation errors.
+                return View(assessment);
             }
 
             // Retrieve the module by ModuleId and assign it to the assessment
@@ -83,23 +80,19 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
-            // Assign the module to the assessment object, since it won't be submitted in the form
             assessment.Module = module;
 
             try
             {
-                // Add the new assessment to the context
                 _logger.LogInformation($"Saving new assessment for ModuleId: {assessment.ModuleId}");
                 _context.Assessments.Add(assessment);
                 await _context.SaveChangesAsync();
 
-                // Log success and redirect to details page of the module
                 _logger.LogInformation($"Assessment created successfully for ModuleId: {assessment.ModuleId} with AssessmentId: {assessment.AssessmentId}");
                 return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
             }
             catch (Exception ex)
             {
-                // Log any exception encountered during the save process
                 _logger.LogError($"Error saving assessment: {ex.Message}");
                 ModelState.AddModelError(string.Empty, "An error occurred while saving the assessment. Please try again.");
                 return View(assessment);
@@ -108,6 +101,7 @@ namespace GedsiHub.Controllers
 
         // ****************************** SHOW ASSESSMENT ******************************
         // GET: Assessment/Details/{id}
+        [Authorize(Roles = "Student, Employee, Admin")]
         public async Task<IActionResult> Details(int id)
         {
             // Load the assessment and its associated module
@@ -124,14 +118,14 @@ namespace GedsiHub.Controllers
             // Pass the module information to the view using ViewBag
             ViewBag.ModuleId = assessment.ModuleId;
             ViewBag.ModuleTitle = assessment.Module?.Title ?? "Unknown Module";
+            ViewBag.AssessmentId = assessment.AssessmentId;
 
             return View(assessment);
         }
 
         // ****************************** EDIT ASSESSMENT ******************************
-
+        [Authorize(Roles = "Admin")]
         // GET: Assessment/Edit/{id}
-        // Displays the form to edit an existing assessment by its ID.
         public async Task<IActionResult> Edit(int? id)
         {
             if (!id.HasValue)
@@ -141,7 +135,7 @@ namespace GedsiHub.Controllers
             }
 
             var assessment = await _context.Assessments
-                .Include(a => a.Module) // Include the module to get the module title
+                .Include(a => a.Module)
                 .FirstOrDefaultAsync(a => a.AssessmentId == id.Value);
 
             if (assessment == null)
@@ -150,23 +144,21 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
-            // Set the module title in ViewBag for the breadcrumbs
             ViewBag.ModuleTitle = assessment.Module?.Title ?? "Unknown Module";
 
             return View(assessment);
         }
 
         // POST: Assessment/Edit/{id}
-        // Handles the submission of the form to edit an assessment.
-        // Validates the input and updates the assessment in the database.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("AssessmentId,Title,Description,H5PEmbedCode,ModuleId,CreatedDate,LastModifiedDate")] Assessment assessment)
         {
             if (id != assessment.AssessmentId)
             {
                 _logger.LogWarning($"Edit assessment: Assessment ID mismatch (id: {id}, AssessmentId: {assessment.AssessmentId}).");
-                return BadRequest();
+                return NotFound();
             }
 
             if (!ModelState.IsValid)
@@ -184,13 +176,12 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
-            // Assign the module to the assessment
             assessment.Module = module;
 
             try
             {
                 _logger.LogInformation($"Updating assessment with ID {id} for ModuleId: {assessment.ModuleId}");
-                _context.Update(assessment); // Update the assessment in the database
+                _context.Update(assessment);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation($"Assessment with ID {id} updated successfully.");
             }
@@ -214,14 +205,12 @@ namespace GedsiHub.Controllers
                 return View(assessment);
             }
 
-            // Redirect to the Module Details page after a successful update
             return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
         }
 
         // ****************************** DELETE ASSESSMENT ******************************
-
+        [Authorize(Roles = "Admin")]
         // GET: Assessment/Delete/{id}
-        // Displays the confirmation page to delete an assessment by its ID.
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -244,9 +233,9 @@ namespace GedsiHub.Controllers
         }
 
         // POST: Assessment/Delete/{id}
-        // Handles the confirmation and deletion of an assessment.
         [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var assessment = await _context.Assessments.FindAsync(id);
@@ -263,9 +252,71 @@ namespace GedsiHub.Controllers
             return NotFound();
         }
 
-        // ****************************** HELPER METHOD ******************************
+        // ****************************** SUBMIT ASSESSMENT ******************************
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student, Employee")]
+        public async Task<IActionResult> Submit(int assessmentId)
+        {
+            _logger.LogInformation($"User attempting to submit assessment with ID {assessmentId}.");
 
-        // Helper method to check if an assessment exists by ID.
+            // Get the current user
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Submit assessment: User not authenticated.");
+                return Unauthorized("User not authenticated.");
+            }
+
+            // Get the assessment
+            var assessment = await _context.Assessments
+                                           .Include(a => a.Module)
+                                           .FirstOrDefaultAsync(a => a.AssessmentId == assessmentId);
+            if (assessment == null)
+            {
+                _logger.LogWarning($"Submit assessment: Assessment with ID {assessmentId} not found.");
+                return NotFound("Assessment not found.");
+            }
+
+            // Get or create the UserProgress entry for the module
+            var userProgress = await _context.UserProgresses
+                .FirstOrDefaultAsync(up => up.UserId == userId && up.ModuleId == assessment.ModuleId);
+
+            if (userProgress == null)
+            {
+                userProgress = new UserProgress
+                {
+                    UserId = userId,
+                    ModuleId = assessment.ModuleId,
+                    ProgressPercentage = 100,
+                    IsCompleted = true,
+                    CompletedLessonIds = "" // Assuming assessment completes the module regardless of lesson completions
+                };
+                _context.UserProgresses.Add(userProgress);
+            }
+            else
+            {
+                userProgress.IsCompleted = true;
+                userProgress.ProgressPercentage = 100;
+                // Optionally, update CompletedLessonIds if needed
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                _logger.LogInformation($"User {userId} completed assessment for ModuleId {assessment.ModuleId}.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Submit assessment: Error updating UserProgress - {ex.Message}");
+                return StatusCode(500, "An error occurred while updating your progress.");
+            }
+
+            // Redirect to Module/Details/{ModuleId}
+            return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
+        }
+
+        // ****************************** HELPER METHOD ******************************
         private bool AssessmentExists(int id)
         {
             var exists = _context.Assessments.Any(e => e.AssessmentId == id);

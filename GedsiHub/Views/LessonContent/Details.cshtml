@@ -16,7 +16,7 @@
 
         </li>
         <li class="breadcrumb-item">
-            <!-- Proceed to list of lesson page (Module/Details) -->
+            <!-- Proceed to module details page (Module/Details) -->
 
             <a asp-action="Details" asp-controller="Module" asp-route-id="@ViewBag.ModuleId">
                 <span id="module_number" class="module_number">@ViewBag.ModuleTitle</span>
@@ -24,12 +24,12 @@
         </li>
         <!-- Current lesson page -->
         <li class="breadcrumb-item">
-            <span id="cms_lesson_breadcrumb">Lesson<span id="lesson_number" class="module_number">@ViewBag.LessonNumber</span></span>
+            <span id="cms_lesson_breadcrumb">Lesson <span id="lesson_number" class="module_number">@ViewBag.LessonNumber</span></span>
         </li>
     </ol>
 
 
-    <!-- Lesson Title: Should be fetch from the Lesson.Title -->
+    <!-- Lesson Title: Should be fetched from the Lesson.Title -->
     <span id="added_module_title" class="added_module_title">@Model.Lesson.Title</span>
 
 
@@ -38,7 +38,7 @@
         <!-- Preview of the H5P content -->
         @if (!string.IsNullOrEmpty(Model.H5PEmbedCode))
         {
-            <div id="responsive-iframe "class="embed-responsive responsive-iframe">
+            <div id="responsive-iframe" class="embed-responsive responsive-iframe">
                 @Html.Raw(Model.H5PEmbedCode)
             </div>
         }
@@ -82,6 +82,58 @@
             </div>
         }
 
+        @if (User.IsInRole("Student") || User.IsInRole("Employee"))
+        {
+            <button id="nextLessonBtn" style="display: none;">Proceed to Next Lesson</button>
+        }
+
+
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var videoDuration = 5; // Set to actual video duration in seconds (e.g., 300 for 5 minutes)
+            var nextLessonBtn = document.getElementById('nextLessonBtn');
+            var moduleId = @Html.Raw(Json.Serialize(ViewBag.ModuleId));
+
+            if (nextLessonBtn) {
+                nextLessonBtn.style.display = 'none';
+
+                setTimeout(function () {
+                    nextLessonBtn.style.display = 'block';
+                }, videoDuration * 1000); // Show after video duration
+
+                nextLessonBtn.addEventListener('click', function () {
+                    fetch('/Lesson/UpdateUserProgress', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            lessonId: @Model.Lesson.LessonId, // Ensure LessonId is accessible
+                            moduleId: @Model.Lesson.ModuleId   // Ensure ModuleId is accessible
+                                })
+                    }).then(response => {
+                        if (response.ok) {
+                            alert('Progress updated successfully!');
+                            // Redirect to Module/Details/ModuleId
+                            window.location.href = '@Url.Action("Details", "Module")/' + moduleId;
+                        } else {
+                            // Optionally, parse and display the error message from the server
+                            response.text().then(text => {
+                                console.error('Server Error:', text);
+                                alert('Failed to update progress. Please try again.');
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Fetch Error:', error);
+                        alert('An error occurred while updating progress. Please try again.');
+                    });
+                });
+            }
+        });
+    </script>
+}

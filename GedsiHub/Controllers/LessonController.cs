@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace GedsiHub.Controllers
 {
@@ -205,22 +206,27 @@ namespace GedsiHub.Controllers
         [Authorize(Roles = "Student, Employee, Admin")]
         public async Task<IActionResult> Details(int id)
         {
-            // Fetch the lesson by ID along with its related LessonContent
-            var lesson = await _context.Lessons
-                                       .Include(l => l.LessonContents)
-                                       .Include(l => l.Module) // Ensure Module is loaded
-                                       .FirstOrDefaultAsync(l => l.LessonId == id);
+            var lessonContent = await _context.LessonContents
+                                              .Include(lc => lc.Lesson)
+                                              .ThenInclude(l => l.Module)
+                                              .FirstOrDefaultAsync(lc => lc.ContentId == id);
 
-            if (lesson == null)
+            if (lessonContent == null)
             {
+                _logger.LogWarning($"LessonContent with ContentId {id} not found.");
                 return NotFound();
             }
 
-            // Set the ModuleId in ViewBag for potential use
-            ViewBag.ModuleId = lesson.ModuleId;
+            // Set ViewBag.ModuleId and ModuleTitle for redirection
+            ViewBag.ModuleId = lessonContent.Lesson.ModuleId;
+            ViewBag.ModuleTitle = lessonContent.Lesson.Module.Title;
+            ViewBag.LessonNumber = lessonContent.Lesson.LessonNumber;
 
-            return View(lesson);
+            return View(lessonContent);
         }
+
+
+
 
         // ****************************** TOGGLE PUBLISH STATUS ******************************
 
@@ -242,6 +248,80 @@ namespace GedsiHub.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", "Module", new { id = lesson.ModuleId });
+        }
+
+        // ****************************** UPDATE USER PROGRESS ******************************
+
+        // POST: Update User Progress
+        // Handles lesson completion and assessment completion
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserProgress([FromBody] ProgressUpdateDto dto)
+        {
+            if (dto == null || dto.ModuleId <= 0)
+            {
+                return BadRequest("Invalid data.");
+            }
+
+            // Retrieve the user's unique identifier
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not found.");
+            }
+
+            // Retrieve or create the UserProgress entry for the module
+            var userProgress = await _context.UserProgresses
+                .FirstOrDefaultAsync(up => up.UserId == userId && up.ModuleId == dto.ModuleId);
+
+            if (userProgress == null)
+            {
+                userProgress = new UserProgress
+                {
+                    UserId = userId,
+                    ModuleId = dto.ModuleId,
+                    ProgressPercentage = 0,
+                    IsCompleted = false,
+                    CompletedLessonIds = ""
+                };
+                _context.UserProgresses.Add(userProgress);
+            }
+
+            // Handle Lesson Completion
+            if (dto.LessonId > 0)
+            {
+                // Parse the CompletedLessonIds and add the new LessonId if not already present
+                var completedLessonIds = userProgress.CompletedLessonIds
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(idStr => int.Parse(idStr))
+                    .ToList();
+
+                if (!completedLessonIds.Contains(dto.LessonId))
+                {
+                    completedLessonIds.Add(dto.LessonId);
+                    userProgress.CompletedLessonIds = string.Join(",", completedLessonIds);
+
+                    // Calculate progress percentage based on completed lessons
+                    var totalLessons = await _context.Lessons
+                        .Where(l => l.ModuleId == dto.ModuleId)
+                        .CountAsync();
+
+                    var completedLessons = completedLessonIds.Count;
+                    userProgress.ProgressPercentage = totalLessons > 0
+                        ? Math.Round(((decimal)completedLessons / totalLessons) * 100, 2)
+                        : 0;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        // DTO for Progress Update
+        public class ProgressUpdateDto
+        {
+            public int LessonId { get; set; } // ID of the completed lesson
+            public int ModuleId { get; set; } // ID of the module containing the lesson
         }
 
         // ****************************** HELPER METHODS ******************************

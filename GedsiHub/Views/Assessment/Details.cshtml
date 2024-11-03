@@ -38,6 +38,17 @@
             </div>
         }
 
+        <!-- Assessment Submission Form -->
+        <form asp-action="Submit" asp-controller="Assessment" method="post" id="assessmentForm">
+            @Html.AntiForgeryToken()
+
+            <!-- Hidden field to pass the Assessment ID -->
+            <input type="hidden" name="assessmentId" value="@Model.AssessmentId" />
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary mt-3" id="submitAssessmentBtn">Submit Assessment</button>
+        </form>
+
         <!-- Buttons for managing assessment content (if user is Admin) -->
         @if (User.IsInRole("Admin"))
         {
@@ -59,3 +70,23 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var submitBtn = document.getElementById('submitAssessmentBtn');
+            var assessmentForm = document.getElementById('assessmentForm');
+
+            submitBtn.addEventListener('click', function (event) {
+                // Optional: Add any pre-submission validation here
+                // For example, ensure that the user has interacted with the H5P content
+
+                // Confirm submission
+                var confirmSubmit = confirm("Are you sure you want to submit the assessment?");
+                if (!confirmSubmit) {
+                    event.preventDefault(); // Prevent form submission if user cancels
+                }
+            });
+        });
+    </script>
+}

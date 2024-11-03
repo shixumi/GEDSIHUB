@@ -1,4 +1,4 @@
-﻿// UserProgress.cs
+﻿// Models/UserProgress.cs
 
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -28,8 +28,8 @@ namespace GedsiHub.Models
         [Column("progress_percentage", TypeName = "DECIMAL(5,2)")]
         public decimal ProgressPercentage { get; set; }
 
-        [Column("last_accessed", TypeName = "TIMESTAMP")]
-        public DateTime LastAccessed { get; set; } = DateTime.UtcNow;
+        [Column("completed_lesson_ids")]
+        public string CompletedLessonIds { get; set; } = "";
 
         [Column("is_completed")]
         public bool IsCompleted { get; set; }

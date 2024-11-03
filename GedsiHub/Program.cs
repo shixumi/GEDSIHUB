@@ -170,7 +170,6 @@ app.UseAuthorization();
 // 9. Map Endpoints
 // ========================================
 app.MapHub<AnalyticsHub>("/analyticsHub"); // Map SignalR Hub
-app.UseMiddleware<XApiEnrichmentMiddleware>(); // Add custom middleware
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Dashboard}/{action=Index}/{id?}");
