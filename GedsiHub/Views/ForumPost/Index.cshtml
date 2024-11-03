@@ -79,9 +79,14 @@
                     </div>
 
                     <!-- Report Button for Post -->
-                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#reportPostModal-@post.PostId">
-                        <i class="la la-flag"></i> Report
-                    </button>
+                    <!-- Conditional Report Button (not visible to admin and post owner) -->
+                    @if (!(User.Identity.IsAuthenticated &&
+                    (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value == post.UserId || User.IsInRole("Admin"))))
+                    {
+                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#reportPostModal-@post.PostId">
+                            <i class="la la-flag"></i> Report
+                        </button>
+                    }
                 </div>
             </div>
 
