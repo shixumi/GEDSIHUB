@@ -21,13 +21,31 @@
         </li>
         <!-- Current assessment title -->
         <li class="breadcrumb-item">
-            <span id="cms_lesson_breadcrumb">Lesson <span id="lesson_number" class="module_number">@Model.Title</span></span>
+            <span id="cms_lesson_breadcrumb"><span id="lesson_number" class="module_number">@Model.Title</span></span>
         </li>
     </ol>
 
     <!-- Assessment Title -->
     <span id="added_module_title" class="added_module_title">@Model.Title</span>
 
+
+
+    <div class="cms_white_base_container" style="margin-bottom: 3rem;">
+        <div class="d-flex align-content-center congratulatory-header">
+            
+            <h4 class="card-title">
+               
+                <img src="~/images/Party-popper.png" alt="Party Popper" class="party_popper_img" />
+                Congratulations on completing the
+                <span id="module_number" class="module_number">@ViewBag.ModuleTitle Module</span>
+                <img src="~/images/Party-popper.png" alt="Party Popper" class="party_popper_img" />
+            </h4>
+        </div>
+        <div>
+            <p class="card-text">To help reinforce what you've learned, please take a few moments to answer the following questions. This test is designed to assess your understanding of the material covered. Select or input your answers, and click "Submit" when you're ready. </p>
+        </div>
+    </div>
+        
     <!-- White Container for the assessment content -->
     <div class="cms_white_base_container">
         <!-- Preview of the H5P content -->

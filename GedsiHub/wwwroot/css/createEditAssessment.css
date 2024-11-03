@@ -41,3 +41,14 @@
 }
 
 
+.party_popper_img {
+    width: 2rem;
+    height: 2rem;
+}
+
+.congratulatory-header d-flex align-content-center {
+    display: flex;
+    align-content: center;
+    gap: 2rem;
+}
+
