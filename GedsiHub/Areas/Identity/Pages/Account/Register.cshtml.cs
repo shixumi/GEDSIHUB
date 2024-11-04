@@ -128,6 +128,8 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
+                    _logger.LogInformation("Activation Link: {CallbackUrl}", callbackUrl);
+
                     var emailBody = $@"
                     <!DOCTYPE html>
                     <html>
