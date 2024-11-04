@@ -178,6 +178,8 @@ app.MapControllerRoute(
     pattern: "Chatbot",
     defaults: new { controller = "Chatbot", action = "Index" });
 app.MapRazorPages();
+// Set URLs
+app.Urls.Add("http://*:8080");
 app.Run();
 
 // ========================================
