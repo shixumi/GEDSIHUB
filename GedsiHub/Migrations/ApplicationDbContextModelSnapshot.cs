@@ -1412,7 +1412,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 1,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 3, 18, 26, 32, 657, DateTimeKind.Utc).AddTicks(5927),
+                            CreatedDate = new DateTime(2024, 11, 4, 0, 55, 25, 115, DateTimeKind.Utc).AddTicks(5467),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             PositionInt = 0,
                             Status = 0,
@@ -1422,7 +1422,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 2,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 3, 18, 26, 32, 657, DateTimeKind.Utc).AddTicks(5930),
+                            CreatedDate = new DateTime(2024, 11, 4, 0, 55, 25, 115, DateTimeKind.Utc).AddTicks(5469),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             PositionInt = 0,
                             Status = 0,
@@ -1432,7 +1432,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 3,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 3, 18, 26, 32, 657, DateTimeKind.Utc).AddTicks(5932),
+                            CreatedDate = new DateTime(2024, 11, 4, 0, 55, 25, 115, DateTimeKind.Utc).AddTicks(5471),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             PositionInt = 0,
                             Status = 0,
@@ -1442,7 +1442,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 4,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 3, 18, 26, 32, 657, DateTimeKind.Utc).AddTicks(5934),
+                            CreatedDate = new DateTime(2024, 11, 4, 0, 55, 25, 115, DateTimeKind.Utc).AddTicks(5473),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
                             Status = 0,
@@ -1452,7 +1452,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 5,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 3, 18, 26, 32, 657, DateTimeKind.Utc).AddTicks(5937),
+                            CreatedDate = new DateTime(2024, 11, 4, 0, 55, 25, 115, DateTimeKind.Utc).AddTicks(5475),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             PositionInt = 0,
                             Status = 0,
@@ -1462,7 +1462,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 6,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 3, 18, 26, 32, 657, DateTimeKind.Utc).AddTicks(5939),
+                            CreatedDate = new DateTime(2024, 11, 4, 0, 55, 25, 115, DateTimeKind.Utc).AddTicks(5476),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             PositionInt = 0,
                             Status = 0,
@@ -1472,7 +1472,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 7,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 3, 18, 26, 32, 657, DateTimeKind.Utc).AddTicks(5941),
+                            CreatedDate = new DateTime(2024, 11, 4, 0, 55, 25, 115, DateTimeKind.Utc).AddTicks(5478),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             PositionInt = 0,
                             Status = 0,
@@ -1599,6 +1599,9 @@ namespace GedsiHub.Migrations
                     b.Property<decimal>("ProgressPercentage")
                         .HasColumnType("DECIMAL(5,2)")
                         .HasColumnName("progress_percentage");
+
+                    b.Property<int>("StreakCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()

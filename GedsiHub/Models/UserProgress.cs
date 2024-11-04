@@ -28,6 +28,8 @@ namespace GedsiHub.Models
         [Column("progress_percentage", TypeName = "DECIMAL(5,2)")]
         public decimal ProgressPercentage { get; set; }
 
+        public int StreakCount { get; set; }
+
         [Column("completed_lesson_ids")]
         public string CompletedLessonIds { get; set; } = "";
 
