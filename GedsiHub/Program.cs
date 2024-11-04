@@ -123,6 +123,8 @@ var app = builder.Build();
 // Configure EPPlus License
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
+// Program.cs
+
 // Seed Roles and Initial Data
 using (var scope = app.Services.CreateScope())
 {
@@ -132,10 +134,13 @@ using (var scope = app.Services.CreateScope())
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var context = services.GetRequiredService<ApplicationDbContext>();
+        var logger = services.GetRequiredService<ILogger<RoleSeeder>>(); // Get the logger
 
-        var roleSeeder = new RoleSeeder(roleManager);
-        await roleSeeder.SeedRolesAsync();
+        // Pass the logger to the RoleSeeder
+        var roleSeeder = new RoleSeeder(roleManager, logger);
+        await roleSeeder.SeedRolesAsync(); // This should create "Admin", "Student", "Employee" roles
 
+        // Now that roles exist, you can safely create users and assign roles
         await SeedAdminUser(userManager, "admin@gado.com", "AdminPassword123!");
         await SeedStudentUser(userManager, context, "student@gado.com", "StudentPassword123!");
         await SeedEmployeeUser(userManager, context, "employee@gado.com", "EmployeePassword123!");
@@ -146,6 +151,8 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while seeding roles or users.");
     }
 }
+
+
 
 // ========================================
 // 8. Configure Middleware Pipeline
@@ -178,8 +185,6 @@ app.MapControllerRoute(
     pattern: "Chatbot",
     defaults: new { controller = "Chatbot", action = "Index" });
 app.MapRazorPages();
-// Set URLs
-app.Urls.Add("http://*:8080");
 app.Run();
 
 // ========================================
