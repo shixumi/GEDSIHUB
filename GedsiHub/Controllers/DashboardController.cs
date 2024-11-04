@@ -120,6 +120,5 @@ namespace GedsiHub.Controllers
                 return View("Error");
             }
         }
-
     }
 }

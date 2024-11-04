@@ -313,6 +313,29 @@ namespace GedsiHub.Controllers
                 }
             }
 
+            // Update User's Streak
+            var today = DateTime.UtcNow.Date;
+            var recentActivity = await _context.UserActivities
+                .Where(ua => ua.UserId == userId)
+                .OrderByDescending(ua => ua.Timestamp)
+                .FirstOrDefaultAsync();
+
+            if (recentActivity == null || recentActivity.Timestamp.Date != today)
+            {
+                // If there's no activity for today, add a new entry and update the streak
+                _context.UserActivities.Add(new UserActivity
+                {
+                    UserId = userId,
+                    ModuleId = dto.ModuleId,
+                    ActivityType = "streak",
+                    Timestamp = DateTime.UtcNow,
+                    Success = true
+                });
+
+                // Fixed Line
+                userProgress.StreakCount += 1;
+            }
+
             await _context.SaveChangesAsync();
             return Ok();
         }
