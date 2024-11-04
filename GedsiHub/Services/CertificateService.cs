@@ -116,15 +116,16 @@ namespace GedsiHub.Services
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        height: 100vh;
+                        height: 100%;
                         background-color: #f0f0f0;
                         font-family: 'Poppins', serif;
                     }}
                     .certificate {{
-                        width: 11in;
-                        height: 8.5in;
-                        padding-top: 40px;
-                        border: 25px solid transparent;
+                        width: 95%;
+                        max-width: 11in;   
+                        height: auto;
+                        padding: 60px;
+                        border: 20px solid transparent;
                         border-image: radial-gradient(circle, #001f83, #1a2b44) 1;
                         background-color: #f5f4ec;
                         text-align: center;
@@ -228,7 +229,6 @@ namespace GedsiHub.Services
                             Date
                         </div>
                     </div>
-                    <img src='data:image/png;base64,{badgeBase64}' alt='Badge' class='badge'>
                 </div>
             </body>
             </html>";
@@ -237,15 +237,16 @@ namespace GedsiHub.Services
             {
                 GlobalSettings = {
                     ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Landscape, // Landscape mode for certificate
+                    Orientation = Orientation.Landscape,
                     PaperSize = PaperKind.Letter,
-                    Margins = new MarginSettings { Top = 0, Bottom = 0, Left = 0, Right = 0 }
+                    Margins = new MarginSettings { Top = 10, Bottom = 10, Left = 10, Right = 10 }
                 },
                 Objects = {
                     new ObjectSettings
                     {
                         HtmlContent = htmlContent,
-                        WebSettings = { DefaultEncoding = "utf-8" }
+                        WebSettings = { DefaultEncoding = "utf-8", LoadImages = true },
+                        UseLocalLinks = true
                     }
                 }
             };
