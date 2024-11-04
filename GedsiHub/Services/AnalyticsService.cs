@@ -294,13 +294,12 @@ namespace GedsiHub.Services
         }
 
         // User Dashboard
-
         public async Task<UserDashboardViewModel> GetUserDashboardAsync(string userId)
         {
-            // Fetch completed modules (published)
-            var completedModules = await _context.UserActivities
-                .Where(ua => ua.UserId == userId && ua.ActivityType.Contains("completed") && ua.Success == true)
-                .Select(ua => ua.ModuleId)
+            // Fetch completed modules using UserProgress
+            var completedModules = await _context.UserProgresses
+                .Where(up => up.UserId == userId && up.IsCompleted)
+                .Select(up => up.ModuleId)
                 .Distinct()
                 .ToListAsync();
 
@@ -310,9 +309,7 @@ namespace GedsiHub.Services
                 .CountAsync();
 
             // Count modules to do (published and not completed)
-            var modulesToDoCount = await GetModulesToDoCountAsync(userId);
-
-            var completedCount = completedModules.Count;
+            var modulesToDoCount = totalModules - completedModules.Count;
 
             // Calculate streak
             var recentActivities = await _context.UserActivities
@@ -337,7 +334,7 @@ namespace GedsiHub.Services
             return new UserDashboardViewModel
             {
                 ModulesToDoCount = modulesToDoCount,
-                CompletedModulesCount = completedCount,
+                CompletedModulesCount = completedModules.Count,
                 TotalModules = totalModules,
                 CurrentStreak = streak
             };

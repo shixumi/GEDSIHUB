@@ -312,8 +312,9 @@ namespace GedsiHub.Controllers
                 return StatusCode(500, "An error occurred while updating your progress.");
             }
 
-            // Redirect to Module/Details/{ModuleId}
-            return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
+            // Redirect to /Api/Certificate/userID/ModuleId
+            var redirectUrl = $"/Api/Certificate/{userId}/{assessment.ModuleId}";
+            return Redirect(redirectUrl);
         }
 
         // ****************************** HELPER METHOD ******************************
