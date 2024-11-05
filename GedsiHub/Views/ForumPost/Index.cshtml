@@ -92,12 +92,12 @@
             <div class="card-body">
                 @if (!string.IsNullOrWhiteSpace(post.Flair))
                 {
-                    <span class="badge rounded-pill">@post.Flair</span>
+                    <span class="badge rounded-pill flair-badge">@post.Flair</span>
                 }
 
                 @if (!string.IsNullOrEmpty(post.ModuleTitle))
                 {
-                    <a href="@Url.Action("Index", "ForumPost", new { moduleId = post.ModuleId })" class="badge bg-primary">
+                    <a href="@Url.Action("Index", "ForumPost", new { moduleId = post.ModuleId })" class="badge rounded-pill module-badge">
                         @post.ModuleTitle
                     </a>
                 }

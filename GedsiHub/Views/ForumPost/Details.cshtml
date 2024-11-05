@@ -63,12 +63,12 @@
         <div class="card-body">
             @if (!string.IsNullOrWhiteSpace(Model.ForumPost.Flair))
             {
-                <span class="badge rounded-pill">@Model.ForumPost.Flair</span>
+                <span class="badge rounded-pill flair-badge">@Model.ForumPost.Flair</span>
             }
 
             @if (!string.IsNullOrEmpty(Model.ModuleTitle))
             {
-                <span class="badge bg-primary">@Model.ModuleTitle</span>
+                <span class="badge rounded-pill module-badge">@Model.ModuleTitle</span>
             }
 
             <!-- Card Title -->

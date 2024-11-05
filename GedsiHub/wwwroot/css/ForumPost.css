@@ -194,14 +194,31 @@ body {
 
     }
 
-    .badge {
+    .flair-badge {
+        font-size: 10px;
+        margin-bottom: 10px;
+        padding: .70em 1em;
+        font-weight: 600;
+        background-color: transparent;
+        border: 1px solid #464040;
+        color: #464040;
+    }
+
+    .module-badge {
         font-size: 10px;
         margin-bottom: 10px;
         padding: .70em 1em;
         font-weight: 600;
         background-color: #ffdc4c;
         color: #464040;
+        border: 1px solid transparent;
     }
+
+        .module-badge:hover {
+            cursor: pointer;
+            background-color: #f3cf3b;
+        }
+
 
 
     /* Card Title */
