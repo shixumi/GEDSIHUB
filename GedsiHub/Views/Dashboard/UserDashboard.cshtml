@@ -348,13 +348,15 @@
                                 <div class="streak-circle @(day <= Model.CurrentStreak ? "filled" : "")">
                                     <svg class="bolt-icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none">
                                         <path d="M9 21.5L17.5 13L13 10L15 2.5L6.5 11L11 14L9 21.5Z" fill="currentColor"></path>
-                                    </svg>
+                                    </svg>                                
                                 </div>
-                                <span class="days-label-your-streak">@day</span>
+                                <span class="days-label-your-streak">@day</span>                              
                             </div>
-                        }
+                        }                      
                     </div>
+                    <img class="next-streak" src="~/images/Forward.png" alt="Next" style=" width: 2rem; height: auto; margin-top: -2.2rem; margin-right: -1.5rem;" /> 
                 </div>
+                
             </div>
 
             <!-- Streak Days -->
