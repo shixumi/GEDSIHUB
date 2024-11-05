@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="~/css/emailsent-fp.css" />
     <link rel="stylesheet" href="~/css/signup-form.css" />
     <link rel="stylesheet" href="~/css/errors.css" />
+    <link rel="stylesheet" href="~/css/spinner.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -66,10 +67,18 @@
             </div>
         </nav>
     </header>   
+    <!-- Spinner -->
+    <div id="spinner" class="flex-column justify-content-center align-items-center" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 1050;">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="mt-2">Loading...</span>
+    </div>
+
     <div>
         @RenderBody()
     </div>
-
+    
 
 @*
     <footer class="border-top footer text-muted">
@@ -85,6 +94,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/global.js"></script>
+    <script src="~/js/spinner.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -42,6 +42,7 @@
     <link rel="stylesheet" href="~/css/editProfile.css" />
     <link rel="stylesheet" href="~/css/errors.css" />
     <link rel="stylesheet" href="~/css/viewReports.css" />
+    <link rel="stylesheet" href="~/css/spinner.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
 
@@ -99,6 +100,21 @@
 
 
     </header>
+    <!-- Global Spinner -->
+    <div id="globalSpinner" class="d-flex justify-content-center align-items-center" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" class="flex-column justify-content-center align-items-center" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 1050;">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="mt-2">Loading...</span>
+    </div>
+
 
     <div class="background">
         @RenderBody()
@@ -169,6 +185,7 @@
         </div>
     </div>
 
+    
 @* 
    <div class="layout_container d-flex" style="min-height: 100vh;"> *@
 
@@ -292,6 +309,7 @@
     <script src="~/js/UnderlineToggling.js"></script>
     <script src="~/js/ProfileViewMoreFunction.js"></script>
     <script src="~/js/ToggleUserFieldsReports.js"></script>
+    <script src="~/js/spinner.js"></script>
     
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
