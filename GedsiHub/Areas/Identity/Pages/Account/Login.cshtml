@@ -37,7 +37,7 @@
             <div class="d-flex justify-content-between login-ftr">
                 <div class="form-check text-start">
                     <input class="form-check-input" asp-for="Input.RememberMe" id="formCheck-1" />
-                    <label class="form-check-label" asp-for="Input.RememberMe"></label>
+                    <label class="form-check-label" asp-for="Input.RememberMe" for="formCheck-1"></label>
                 </div>
                 <a asp-page="./ForgotPassword">Forgot Password?</a>
             </div>
@@ -46,6 +46,12 @@
             <div class="mb-3">
                 <button class="shadow-sm d-block w-100 submit-btn" type="submit" title="Click to login">Sign in</button>
             </div>
+
+            <!-- Register Link -->
+            <div class="maroon-link mb-3">
+                <p class="text-center">Don't have an account? <a asp-page="./Register">Register</a></p>
+            </div>
+            
         </form>
     </div>
 </section>

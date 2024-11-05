@@ -364,10 +364,7 @@ function showBranchOptions() {
             <option value="OVEP">Office of the Executive Vice President</option>
             <option value="ICTO">Information and Communications Technology Office</option>
             <option value="IDSA">Institute for Data and Statistical Analysis</option>
-            <option value="IAO">Internal Audit Office</option>
             <option value="IMO">Inspection Management Office</option>
-            <option value="OIA">Office of the International Affairs</option>
-            <option value="UPP">University Printing Press</option>
         `;
     } else if (sector === 'OVPAA') {
         branchOfficeSelect.innerHTML = `
