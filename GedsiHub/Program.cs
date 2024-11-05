@@ -96,7 +96,7 @@ builder.Services.AddRazorPages();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.AccessDeniedPath = "/Error/403";
 });
 
 // ========================================
@@ -172,6 +172,8 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 // ========================================
 // 9. Map Endpoints

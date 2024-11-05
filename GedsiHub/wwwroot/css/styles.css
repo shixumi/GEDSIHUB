@@ -91,6 +91,9 @@ body, html {
     text-decoration: none;
 }
 
+.submit-btn:hover {
+    background-color: #920000;
+}
 .cancel-btn {
     padding: 15px;
     border-radius: 10px;
