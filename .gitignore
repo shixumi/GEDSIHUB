@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /GedsiHub/appsettings.json
+/GedsiHub/appsettings.json
+/.gitignore
+/.gitignore
