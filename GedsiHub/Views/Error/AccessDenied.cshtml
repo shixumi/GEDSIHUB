@@ -3,13 +3,16 @@
     ViewData["Title"] = "403 Access Denied";
 }
 
-<div class="error-page text-center py-5">
+<div class="error-page">
     <div class="error-container">
-        <img src="~/images/403.png" alt="403 Error Image" class="img-fluid" />
-        <h1 class="mt-3 text-danger">403 ERROR</h1>
-        <p class="lead">Access Denied</p>
-        <p>Sorry, you don't have permission to access this file.</p>
-        <button class="btn btn-primary mt-3" onclick="window.history.back()">Go Back</button>
-        <a asp-action="UserDashboard" asp-controller="Dashboard" class="btn btn-secondary mt-3">Home Page</a>
+        <img src="~/images/403.png" alt="403 Error Image"/>
+        <span>403 ERROR</span>
+        <span>Access Denied</span>
+        <span>Sorry, you don&#39;t have permission to access this file.</span>
+        <div class="d-flex justify-content-between align-items-center column-gap-5">
+            <button class="error-go-back-button" onclick="window.history.back()">Go Back</button>
+            <a asp-action="UserDashboard" asp-controller="Dashboard" class="error-home-page-button">Home Page</a>
+        </div>
+        
     </div>
 </div>
