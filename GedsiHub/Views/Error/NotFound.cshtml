@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "404 Not Found";
+}
+
+<div class="error-page text-center py-5">
+    <div class="error-container">
+        <img src="~/images/404.png" alt="404 Error Image" class="img-fluid" />
+        <h1 class="mt-3 text-warning">404 ERROR</h1>
+        <p class="lead">Page Not Found</p>
+        <p>Oops! The page you're looking for doesn't exist. It might have been moved or deleted.</p>
+        <button class="btn btn-primary mt-3" onclick="window.history.back()">Go Back</button>
+        <a asp-action="UserDashboard" asp-controller="Dashboard" class="btn btn-secondary mt-3">Home Page</a>
+    </div>
+</div>

@@ -189,7 +189,7 @@ namespace GedsiHub.Controllers
                 Content = post.Content,
                 Flair = post.Flair,
                 ImagePath = post.ImagePath,
-                ModuleId = post.Tag != null ? int.Parse(post.Tag) : 0,
+                ModuleId = post.ModuleId,
                 Modules = modules,
                 PollOptions = post.PollOptions
             };
@@ -221,6 +221,7 @@ namespace GedsiHub.Controllers
             post.Title = viewModel.Title;
             post.Content = viewModel.Content;
             post.Flair = viewModel.Flair;
+            post.ModuleId = viewModel.ModuleId;
             post.PollOptions = string.IsNullOrWhiteSpace(viewModel.PollOptions) ? null : viewModel.PollOptions;
 
             // Save selected ModuleId as Tag or the appropriate property
