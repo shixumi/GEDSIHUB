@@ -17,10 +17,10 @@ namespace GedsiHub.ViewModels
         public string UserType { get; set; } // "Student" or "Employee"
 
         [Display(Name = "Honorifics")]
-        public string Honorifics { get; set; }
+        public string? Honorifics { get; set; }
 
         [Display(Name = "Lived Name")]
-        public string LivedName { get; set; }
+        public string? LivedName { get; set; }
 
         [Display(Name = "Pronouns")]
         public string Pronouns { get; set; }
@@ -67,7 +67,13 @@ namespace GedsiHub.ViewModels
 
         // Profile Picture
         [Display(Name = "Profile Picture")]
-        public string ProfilePicturePath { get; set; }
+        public string ProfilePicturePath { get; set; } = "/images/User.png";
+        public string College { get; set; }
+        public bool IsMemberOfIndigenousCommunity { get; set; }
+        public bool IsDisabled { get; set; }
+
+        [Display(Name = "Date Joined")]
+        public DateTime CreatedDate { get; set; }
 
         // Certificates
         public List<CertificateDto> Certificates { get; set; } = new List<CertificateDto>();

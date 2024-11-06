@@ -5,6 +5,16 @@
     ViewData["Title"] = "User Profile";
 }
 
+<style>
+    .profile-image-circle {
+        width: 100px; /* Adjust size as needed */
+        height: 100px; /* Ensure width and height are equal */
+        border-radius: 80%; /* Makes the image circular */
+        object-fit: cover; /* Ensures the image fills the circle */
+        overflow: hidden;
+    }
+</style>
+
     <div id="con-of-user-info-and-cert">
         <div class="recent-act-user-info-con">
             <div id="user-profile-con" class="user-profile-con">
@@ -12,8 +22,8 @@
                     <div class="all-user-info-con">
                         <div class="col-1-user-profile">
                             <div class="profile-container">
-                                <img src="~/images/User.png" alt="User Profile Image" />
-                                
+                            <img class="profile-image-circle" src="@(Model.ProfilePicturePath ?? Url.Content("~/images/User.png"))" alt="User Profile Image" />
+                              
                             </div>
                             <span class="role-user-profile">@Model.UserType</span>
                             <span class="name-user-profile">@Model.LivedName</span>
@@ -21,7 +31,8 @@
                             <span class="label-col-1-user-profile">Pronouns</span>
                             <span class="honorifics-user-profile">@Model.Honorifics</span>
                             <span class="label-col-1-user-profile">Honorifics</span>
-                            <span class="date-joined-user-profile">Date Joined</span>
+                            <span class="date-joined-user-profile">@Model.CreatedDate.ToString("MMMM dd, yyyy")</span>
+                            <span class="label-col-1-user-profile">Date Joined</span>
                             <div></div>
                         </div>
                         <div class="vertical-line"></div>
@@ -80,23 +91,23 @@
                                             <tbody>                                              
                                                 <tr>
                                                     <td>College</td>
-                                                    <td>Some College</td>
+                                                <td>@(Model.College ?? "N/A")</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Year</td>
-                                                    <td>2nd Year</td>
+                                                <td>@(Model.Year?.ToString() ?? "N/A")</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Section</td>
-                                                    <td>A</td>
+                                                <td>@(Model.Section ?? "N/A")</td>
                                                 </tr>
                                             <tr>
                                                 <td>Indigenous Community</td>
-                                                <td>Yes</td>
+                                                <td>@(Model.IsMemberOfIndigenousCommunity ? "Yes" : "No")</td>
                                             </tr>
                                             <tr>
                                                 <td>Differently Abled</td>
-                                                <td>No</td>
+                                                <td>@(Model.IsDisabled ? "Yes" : "No")</td>
                                             </tr>
                                             </tbody>
                                         </table>
