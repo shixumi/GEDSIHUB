@@ -1,4 +1,5 @@
 ﻿using GedsiHub.Models;
+using GedsiHub.Models.Quiz;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,6 @@ namespace GedsiHub.Data
         public DbSet<Module> Modules { get; set; }
         public DbSet<Lesson> Lessons { get; set; } 
         public DbSet<LessonContent> LessonContents { get; set; }
-        public DbSet<Assessment> Assessments { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         
         // DbSets for the Forum
@@ -41,6 +41,12 @@ namespace GedsiHub.Data
         public DbSet<NotificationUser> NotificationUsers { get; set; }
 
 
+        // Quiz App DbSets
+        public DbSet<GedsiHub.Models.Quiz.Exam> Exams { get; set; }
+        public DbSet<GedsiHub.Models.Quiz.Question> Questions { get; set; }
+        public DbSet<GedsiHub.Models.Quiz.Answer> Answers { get; set; }
+        public DbSet<GedsiHub.Models.Quiz.QuizResult> QuizResults { get; set; }
+        public DbSet<GedsiHub.Models.Quiz.Choice> Choices { get; set; }
         // DbSets for the Analytics
         public DbSet<XApiStatement> XApiStatements { get; set; }
         public DbSet<UserActivity> UserActivities { get; set; }
@@ -475,11 +481,25 @@ namespace GedsiHub.Data
 
             // Configure one-to-one relationship between Module and Assessment
             builder.Entity<Module>()
-                .HasOne(m => m.Assessment)
+                .HasOne(m => m.Exam)
                 .WithOne(a => a.Module)
-                .HasForeignKey<Assessment>(a => a.ModuleId)
+                .HasForeignKey<Exam>(a => a.ModuleId)
                 .OnDelete(DeleteBehavior.Cascade);
             ;
+
+            // Configure foreign key for Question in Answer
+            builder.Entity<Answer>()
+                .HasOne(a => a.Question)
+                .WithMany()
+                .HasForeignKey(a => a.QuestionID)
+                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete on Question
+
+            // Configure foreign key for Choice in Answer
+            builder.Entity<Answer>()
+                .HasOne(a => a.Choice)
+                .WithMany()
+                .HasForeignKey(a => a.ChoiceID)
+                .OnDelete(DeleteBehavior.Cascade);  // Allow cascading delete on Choice
 
             // **Configure Module relationships**
             builder.Entity<Module>(entity =>
@@ -499,9 +519,6 @@ namespace GedsiHub.Data
                       .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
             });
 
-
-
-            
         }
     }
 }

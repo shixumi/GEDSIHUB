@@ -1,13 +1,14 @@
 // Program.cs
 using GedsiHub.Data;
 using GedsiHub.Models;
+using GedsiHub.Models.Quiz;
 using GedsiHub.Repositories;
 using GedsiHub.Services;
+using GedsiHub.Services.Interfaces;
 using GedsiHub.Seeders;
 using GedsiHub.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -17,22 +18,12 @@ using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.Runtime.InteropServices;
 using System.Net.Http.Headers;
+using GedsiHub.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ========================================
-// 1. Configure Logging with Serilog
-// ========================================
-builder.Host.UseSerilog((context, configuration) =>
-{
-    configuration
-        .ReadFrom.Configuration(context.Configuration)
-        .Enrich.FromLogContext()
-        .WriteTo.Console();
-});
-
-// ========================================
-// 2. Configure Database and Identity
+// 1. Configure Database and Identity
 // ========================================
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -51,7 +42,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 // ========================================
-// 3. Configure External Services and API Clients
+// 2. Configure External Services and API Clients
 // ========================================
 builder.Services.AddHttpClient<WatershedApiService>(client =>
 {
@@ -59,7 +50,7 @@ builder.Services.AddHttpClient<WatershedApiService>(client =>
 });
 
 // ========================================
-// 4. Register Application Services
+// 3. Register Application Services
 // ========================================
 builder.Services.AddScoped<AnalyticsService>();
 builder.Services.AddScoped<XApiService>(); // Register XApiService
@@ -69,14 +60,33 @@ builder.Services.AddHostedService<StaleActiveUserCleanupService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<EmailSender>(); // Ensure EmailSender is registered
 builder.Services.AddTransient<CertificateService>();
+builder.Services.AddScoped<IExam<Exam>, ExamService<Exam>>();
+builder.Services.AddScoped<IQuestion<Question>, QuestionService<Question>>();
+builder.Services.AddScoped<IResult<QuizResult>, ResultService<QuizResult>>();
+builder.Services.AddScoped(typeof(IChoice<>), typeof(ChoiceService<>)); // Register ChoiceService
+builder.Services.AddScoped(typeof(IResult<>), typeof(ResultService<>)); // Register ResultServic
+builder.Services.AddScoped<IAnswerService, AnswerService>();
+
 
 builder.Services.AddScoped<SignInManager<ApplicationUser>, ApplicationSignInManager>();
 
 // Correctly register IHubContext for SignalR
 builder.Services.AddSignalR();
 
+// Configure logging (this is optional, as the default settings include Console and Debug)
+builder.Logging.ClearProviders(); // Optional: Clear default providers
+builder.Logging.AddConsole(); // Add console logging
+builder.Logging.AddDebug(); // Add debug logging (logs to Visual Studio output)
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Makes the cookie accessible only by the server
+    options.Cookie.IsEssential = true; // Required for GDPR compliance
+});
+
 // ========================================
-// 5. Configure Razor Pages and MVC with Global Authorization
+// 4. Configure Razor Pages and MVC with Global Authorization
 // ========================================
 builder.Services.AddControllersWithViews(options =>
 {
@@ -100,7 +110,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // ========================================
-// 6. Configure DinkToPdf for PDF Generation
+// 5. Configure DinkToPdf for PDF Generation
 // ========================================
 var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "wkhtmltox", "bin");
 
@@ -116,7 +126,7 @@ builder.Services.AddSingleton(typeof(IConverter), converter);
 static extern bool SetDllDirectory(string lpPathName);
 
 // ========================================
-// 7. Configure Middleware and Seed Data
+// 6. Configure Middleware and Seed Data
 // ========================================
 var app = builder.Build();
 
@@ -155,7 +165,7 @@ using (var scope = app.Services.CreateScope())
 
 
 // ========================================
-// 8. Configure Middleware Pipeline
+// 7. Configure Middleware Pipeline
 // ========================================
 if (app.Environment.IsDevelopment())
 {
@@ -167,6 +177,9 @@ else
     app.UseHsts();
 }
 
+
+
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -176,7 +189,7 @@ app.UseAuthorization();
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 // ========================================
-// 9. Map Endpoints
+// 8. Map Endpoints
 // ========================================
 app.MapHub<AnalyticsHub>("/analyticsHub");
 app.MapHub<NotificationHub>("/notificationHub");
@@ -191,7 +204,7 @@ app.MapRazorPages();
 app.Run();
 
 // ========================================
-// 10. Helper Methods for Seeding Users
+// 9. Helper Methods for Seeding Users
 // ========================================
 async Task SeedAdminUser(UserManager<ApplicationUser> userManager, string adminEmail, string adminPassword)
 {

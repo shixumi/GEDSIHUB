@@ -1,0 +1,12 @@
+﻿@model GedsiHub.ViewModels.QuizResultViewModel
+
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Assessment Result";
+}
+
+<h2>Assessment Result</h2>
+
+<p>Total Questions: @Model.TotalQuestions</p>
+<p>Correct Answers: @Model.CorrectAnswers</p>
+<p>Your Score: @Model.Score %</p>

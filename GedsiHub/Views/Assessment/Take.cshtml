@@ -1,0 +1,76 @@
+﻿@model GedsiHub.Models.Quiz.QnA
+
+@{
+    Layout = "_LayoutApp";
+    ViewData["Title"] = "Take Assessment";
+}
+
+<!-- Breadcrumbs -->
+<ol class="breadcrumb" id="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="Module" asp-action="Index">Modules</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a asp-controller="Module" asp-action="Details" asp-route-id="@Model.ExamID">Module Details</a>
+    </li>
+    <li class="breadcrumb-item active">Take Assessment</li>
+</ol>
+
+<h2>@Model.Exam</h2>
+
+<!-- Form to capture and submit answers -->
+<form asp-action="Submit" asp-controller="Assessment" method="post">
+    <input type="hidden" asp-for="ExamID" />
+
+    <div id="question-container">
+        @for (int i = 0; i < Model.questions.Count; i++)
+        {
+            <div class="question" style="display:@(i == 0 ? "block" : "none")" id="question-@i">
+                <h4>@Model.questions[i].QuestionText</h4>
+
+                <!-- Display choices as radio buttons -->
+                @foreach (var option in Model.questions[i].options)
+                {
+                    <div>
+                        <input type="radio" id="option-@i-@option.OptionID" name="responses[@i].SelectedOption" value="@option.OptionID" />
+                        <label for="option-@i-@option.OptionID">@option.Option</label>
+                        <input type="hidden" name="responses[@i].QuestionID" value="@Model.questions[i].QuestionID" />
+                        <input type="hidden" name="responses[@i].ExamID" value="@Model.ExamID" />
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <button type="button" onclick="showPrevious()" id="prevButton" style="display:none;">Previous</button>
+    <button type="button" onclick="showNext()">Next</button>
+    <button type="submit" style="display:none;" id="submitButton">Submit</button>
+</form>
+
+@section Scripts {
+    <script>
+        let currentQuestion = 0;
+        const totalQuestions = @Model.questions.Count;
+
+        function showQuestion(index) {
+            document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+            document.getElementById(`question-${index}`).style.display = 'block';
+            currentQuestion = index;
+
+            document.getElementById('prevButton').style.display = currentQuestion > 0 ? 'inline' : 'none';
+            document.getElementById('submitButton').style.display = currentQuestion === totalQuestions - 1 ? 'inline' : 'none';
+        }
+
+        function showNext() {
+            if (currentQuestion < totalQuestions - 1) {
+                showQuestion(currentQuestion + 1);
+            }
+        }
+
+        function showPrevious() {
+            if (currentQuestion > 0) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+    </script>
+}

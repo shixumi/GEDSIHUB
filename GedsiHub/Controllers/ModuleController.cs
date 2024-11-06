@@ -64,7 +64,7 @@ namespace GedsiHub.Controllers
             // Fetch the module and include its lessons and assessment
             var module = await _context.Modules
                 .Include(m => m.Lessons)
-                .Include(m => m.Assessment)
+                .Include(m => m.Exam)
                 .FirstOrDefaultAsync(m => m.ModuleId == id);
 
             if (module == null)
