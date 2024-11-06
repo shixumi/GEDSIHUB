@@ -29,6 +29,7 @@ namespace GedsiHub.Data
         public DbSet<Lesson> Lessons { get; set; } 
         public DbSet<LessonContent> LessonContents { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
+        public DbSet<CertificateFile> CertificateFiles { get; set; }
         
         // DbSets for the Forum
         public DbSet<ForumPost> ForumPosts { get; set; }

@@ -16,14 +16,16 @@ namespace GedsiHub.Services
         private readonly IConverter _converter;
         private readonly EmailSender _emailSender;
         private readonly IWebHostEnvironment _webHostEnvironment;  // For accessing wwwroot
+        private readonly ILogger<CertificateService> _logger;
 
         // Constructor with IWebHostEnvironment for image path resolution
-        public CertificateService(ApplicationDbContext context, IConverter converter, EmailSender emailSender, IWebHostEnvironment webHostEnvironment)
+        public CertificateService(ApplicationDbContext context, IConverter converter, EmailSender emailSender, IWebHostEnvironment webHostEnvironment, ILogger<CertificateService> logger)
         {
             _context = context;
             _converter = converter;
             _emailSender = emailSender;
             _webHostEnvironment = webHostEnvironment;  // Store the web host environment
+            _logger = logger;
         }
 
         // Method to generate and store certificate
@@ -33,19 +35,21 @@ namespace GedsiHub.Services
             var user = await _context.Users.FindAsync(userId);
             var module = await _context.Modules.FindAsync(moduleId);
 
+            _logger.LogInformation($"Generating certificate for UserID: {userId}, ModuleID: {moduleId}");
+
             if (user == null || module == null)
             {
                 throw new Exception("User or module not found.");
             }
 
             // Check if a certificate has already been issued
-            //var existingCertificate = await _context.Certificates
-            //    .FirstOrDefaultAsync(c => c.UserId == userId && c.ModuleId == moduleId);
+            var existingCertificate = await _context.Certificates
+                .FirstOrDefaultAsync(c => c.UserId == userId && c.ModuleId == moduleId);
 
-            //if (existingCertificate != null)
-            //{
-            //    throw new Exception("Certificate already issued for this module.");
-            //}
+            if (existingCertificate != null)
+            {
+                throw new Exception("Certificate already issued for this module.");
+            }
 
             // Generate the PDF certificate
             var certificateData = new CertificateData
@@ -59,19 +63,28 @@ namespace GedsiHub.Services
 
             var pdfBytes = GenerateCertificatePdf(certificateData);
 
-            // Save the certificate in the database
+            // Store the certificate in the database
             var certificate = new Certificate
             {
                 UserId = userId,
                 ModuleId = moduleId,
-                CertificateUrl = "",
                 IssueDate = DateTime.UtcNow
             };
 
             _context.Certificates.Add(certificate);
             await _context.SaveChangesAsync();
 
-            // Send the email after certificate generation
+            // Now store the PDF bytes in the CertificateFiles table
+            var certificateFile = new CertificateFile
+            {
+                CertificateId = certificate.CertificateId, // Link back to the certificate
+                PdfBytes = pdfBytes // Store the generated PDF bytes
+            };
+
+            _context.CertificateFiles.Add(certificateFile);
+            await _context.SaveChangesAsync();
+
+            // Optionally, send the certificate email
             if (!string.IsNullOrEmpty(user.Email))
             {
                 await SendCertificateEmail(user.Email, "Your Certificate of Completion", pdfBytes, "certificate.pdf");
@@ -79,6 +92,8 @@ namespace GedsiHub.Services
 
             return pdfBytes;
         }
+
+
 
         // Generate certificate PDF using DinkToPdf with provided HTML
         private byte[] GenerateCertificatePdf(CertificateData data)
@@ -252,6 +267,26 @@ namespace GedsiHub.Services
                 Console.WriteLine("Email sender service is not available.");
             }
         }
+        public async Task<byte[]> GetCertificateBytesAsync(string userId, int moduleId)
+        {
+            // Check if a certificate exists for the user and module
+            var existingCertificate = await _context.Certificates
+                .FirstOrDefaultAsync(c => c.UserId == userId && c.ModuleId == moduleId);
+
+            if (existingCertificate == null)
+            {
+                // If no certificate exists, return null or throw an exception
+                return null; // This could be changed to throw an exception if preferred
+            }
+
+            // Retrieve the certificate bytes from the CertificateFiles table
+            var certificateFile = await _context.CertificateFiles
+                .FirstOrDefaultAsync(cf => cf.CertificateId == existingCertificate.CertificateId);
+
+            return certificateFile?.PdfBytes; // Return the PDF bytes, or null if not found
+        }
+
+
     }
 
     // CertificateData DTO for passing certificate details

@@ -581,3 +581,39 @@
     padding-top: 0.6rem;
     padding-bottom: 0.5rem;
 }
+    
+
+#addModuleTopButton::after {
+    display: none;
+}
+
+/* Styling the dropdown menu */
+#addModuleTopButton + .dropdown-menu {
+    background-color: #f8f9fa; /* Light gray background */
+    border: 1px solid #ddd; /* Light border */
+    min-width: 200px; /* Adjust width as needed */
+    padding: 5px; /* Add padding to dropdown menu */
+    border-radius: 1rem;
+    margin-top: 0.5rem;
+}
+
+    /* Styling individual dropdown items */
+    #addModuleTopButton + .dropdown-menu .dropdown-item {
+        color: #333; /* Text color */
+        padding: 8px 16px; /* Padding around items */
+        transition: background-color 0.3s; /* Smooth hover transition */
+        border-radius: 0.6rem;
+    }
+
+        /* Hover effect for dropdown items */
+        #addModuleTopButton + .dropdown-menu .dropdown-item:hover {
+            background-color: #660000; /* Hover color */
+            color: #fff; /* Text color on hover */
+        }
+
+/* Optional: Add shadow to the dropdown menu */
+#addModuleTopButton + .dropdown-menu {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
+}
+    
+
