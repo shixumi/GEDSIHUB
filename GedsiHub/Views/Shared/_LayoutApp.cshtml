@@ -63,10 +63,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="~/css/lessonContentEditDetails.css" />
     
-    
-    
-    
-
+    <style>
+        .profile_icon_circle {
+            width: 50px; /* Adjust size as needed */
+            height: 50px; /* Ensure width and height are equal */
+            border-radius: 50%; /* Make it circular */
+            object-fit: cover; /* Ensures the image fills the circle without distortion */
+            border: 2px solid #ffffff; /* Optional: Adds a white border for visibility */
+            overflow: hidden;
+        }
+    </style>
+ 
 </head>
 <body data-authenticated="@User.Identity.IsAuthenticated.ToString().ToLower()">
 
@@ -106,10 +113,9 @@
                     </span>
                     <span class="d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center navbar-text profile_icon_span">
                         <a asp-controller="Profile" asp-action="Index" title="View Profile" aria-label="View Profile">
-                            <img class="d-xxl-flex profile_icon" src="~/images/User.png" alt="Profile Icon" />
+                            @await Component.InvokeAsync("ProfilePicture")
                         </a>
                     </span>
-
                 </div>
             </div>
         </nav>
