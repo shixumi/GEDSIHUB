@@ -24,34 +24,38 @@ public class CertificateController : ControllerBase
     [HttpGet("{userId}/{moduleId}")]
     public async Task<IActionResult> GetCertificate(string userId, int moduleId)
     {
+        // Validate that the user exists
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
             return NotFound("User not found.");
         }
 
+        // Check if the module exists
         var module = await _context.Modules.FindAsync(moduleId);
         if (module == null)
         {
             return NotFound("Module not found.");
         }
 
-        var progress = await _context.UserProgresses
-            .FirstOrDefaultAsync(up => up.UserId == userId && up.ModuleId == moduleId && up.IsCompleted);
+        // Check for existing certificate
+        var existingCertificate = await _context.Certificates
+            .FirstOrDefaultAsync(c => c.UserId == userId && c.ModuleId == moduleId);
 
-        if (progress == null)
+        if (existingCertificate == null)
         {
-            return BadRequest("Module not yet completed.");
+            return BadRequest("No certificate issued for this module."); // Change this to your logic
         }
 
-        try
+        // If an existing certificate is found, retrieve its PDF bytes
+        var pdfBytes = await _certificateService.GetCertificateBytesAsync(userId, moduleId);
+        if (pdfBytes == null)
         {
-            var pdfBytes = await _certificateService.GenerateAndStoreCertificateAsync(userId, moduleId);
-            return File(pdfBytes, "application/pdf", "certificate.pdf");
+            return NotFound("Certificate not found.");
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message); // Will return "Certificate already issued" if applicable
-        }
+
+        // Return the PDF to download
+        return File(pdfBytes, "application/pdf", "certificate.pdf");
     }
+
 }

@@ -1,0 +1,61 @@
+﻿.create-notification-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+    .create-notification-container label {
+        display: block;
+        font-weight: 550;
+        margin-bottom: 0.5rem;
+    }
+
+    .create-notification-container div {
+        width: 100%;
+    }
+
+    .create-notification-container input[type="text"], select, textarea {
+        width: 100%;
+        height: 3.5rem;
+        border: 1px solid #464040;
+        border-radius: 10px;
+        padding: 0 1rem;
+    }
+
+
+    .create-notification-container select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE5IDZMMTAgMTVMMSA2IiBzdHJva2U9IiM0NjQwNDAiIHN0cm9rZS13aWR0aD0iMiIgLz4KPC9zdmc+Cg==');
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 12px;
+    }
+
+        .create-notification-button {
+            border: none;
+            background-color: #660000;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            width: 17rem;
+            height: 4rem;
+            transition: all 0.2s ease;
+        }
+
+        .create-notification-button:hover {
+            background-color: #950000;
+        }
+
+            .create-notification-button:active {
+                transform: scale(0.95);
+            }
+
+.create-notif-button-con {
+    display: flex;
+    margin-top: 3.5rem;
+    justify-content: right;
+}

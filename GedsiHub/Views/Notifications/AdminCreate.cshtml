@@ -4,23 +4,69 @@
     Layout = "_LayoutApp";
 }
 
-<!-- Embedded CSS -->
-<style>
-    .form-group {
-        margin-bottom: 15px;
-    }
 
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
 
-    .text-danger {
-        color: red;
-    }
-</style>
 
-<h2>Create Notification</h2>
+<div>
+    <form asp-action="AdminCreate" method="post">
+    <div class="feedback-title-searcbar-con">
+        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">Create Notification</h1>
+    </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <hr class="custom-hr">
+    <div id="notification-container" class="container feedback-container">
+        <div class="create-notification-container">
+            <div>
+                <label asp-for="Title">Title</label>
+                <input asp-for="Title" type="text" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div>
+               <label asp-for="Message"></label>
+               <textarea asp-for="Message"></textarea>
+               <span asp-validation-for="Message" class="text-danger"></span>
+           </div>
+
+            <div>
+                <label asp-for="Category"></label>
+                    <select asp-for="Category" asp-items="@(new SelectList((List<string>)ViewData["Categories"]))">
+                        <option value="">Select Category</option>
+                    </select>
+                    <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+
+
+            <div style="margin-top: 0.8rem;">
+                    
+                    <input asp-for="IsImportant" type="checkbox" />
+                    <label style="display: inline-block; margin-left: 0.5rem;">Is Important</label>
+                    <span asp-validation-for="IsImportant" class="text-danger"></span>
+            </div>
+
+
+            <div>
+                <label asp-for="TargetAudience"></label>
+                <select asp-for="TargetAudience" asp-items="@(new SelectList((List<string>)ViewData["TargetAudiences"]))">                    
+                     <option value="">Select Audience</option>
+                </select>
+                <span asp-validation-for="TargetAudience" class="text-danger"></span>
+            </div>
+
+
+        </div>
+        <div class="create-notif-button-con">
+                <button class="create-notification-button" type="submit">Create Notification</button>       
+        </div>
+    </div>
+    </form>
+</div>
+
+
+
+
+@* <h2>Create Notification</h2>
 
 <form asp-action="AdminCreate" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -59,8 +105,14 @@
         <span asp-validation-for="TargetAudience" class="text-danger"></span>
     </div>
 
+
+
+
+
+
+
     <button type="submit" class="btn btn-primary">Create Notification</button>
-</form>
+</form> *@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
