@@ -40,7 +40,7 @@ namespace GedsiHub.Models
         public string Color { get; set; } = "#000000"; // Default to black
 
         // Navigation Properties
-        public Exam Exam { get; set; } // One-to-one relationship
+        public Exam? Exam { get; set; } // One-to-one relationship
         public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
         public virtual ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
         public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
