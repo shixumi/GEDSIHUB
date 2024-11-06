@@ -75,23 +75,16 @@
                         <div class="report-inside-container">
                             <div class="container-of-cols">
                                 <div class="col-1-filter">
-                                    <div class="filter-label-date">
-                                        <span>Date Range:</span>
-                                        @*  @Html.DropDownListFor(model => model.DateRange, Model.DateRangeOptions, "Select a Date Range", new { @id = "dateRangeSelect" })
-                                        @Html.ValidationMessageFor(model => model.DateRange, "", new { @class = "text-danger" }) *@
+                                <div class="filter-label-date">
+                                    <span>Date Range:</span>
+                                    @Html.TextBoxFor(model => model.CustomStartDate, new { type = "date", @class = "form-control", placeholder = "Start Date" })
+                                    @Html.ValidationMessageFor(model => model.CustomStartDate, "", new { @class = "text-danger" })
 
-                                        @* <!-- Custom date range fields -->
-                                        <div id="customDateContainer" style="display: none; margin-top: 1rem;">
-                                        </div> *@
+                                    <span>to</span>
 
-                                        @Html.TextBoxFor(model => model.CustomStartDate, new { type = "date" })
-                                        @Html.ValidationMessageFor(model => model.CustomStartDate, "", new { @class = "text-danger" })
-
-                                        <span>to</span>
-                                        @Html.TextBoxFor(model => model.CustomEndDate, new { type = "date" })
-                                        @Html.ValidationMessageFor(model => model.CustomEndDate, "", new { @class = "text-danger" })
-                                    </div>
-
+                                    @Html.TextBoxFor(model => model.CustomEndDate, new { type = "date", @class = "form-control", placeholder = "End Date" })
+                                    @Html.ValidationMessageFor(model => model.CustomEndDate, "", new { @class = "text-danger" })
+                                </div>
                                     <div class="filter-label-select">
                                         <span>Campus:</span>
                                         <select name="Campus">
@@ -872,31 +865,44 @@
 
 
 
- @section Scripts {
-    <!-- Custom Date Picker Script -->
+@section Scripts {
     <script>
-        // Show loading spinner on form submit
-        document.querySelector("form").addEventListener("submit", function () {
-            document.getElementById("loading-spinner").style.display = "block";
-        });
-
-        // Handle custom date range visibility
         document.addEventListener("DOMContentLoaded", function () {
-            const dateRangeSelect = document.getElementById("dateRangeSelect");
-            const customDateContainer = document.getElementById("customDateContainer");
+            // Function to validate that start date isn't after end date
+            function validateDates() {
+                const startDate = document.querySelector('[name="CustomStartDate"]');
+                const endDate = document.querySelector('[name="CustomEndDate"]');
 
-            dateRangeSelect.addEventListener("change", function () {
-                if (this.value === "custom") {
-                    customDateContainer.style.display = "block";
-                } else {
-                    customDateContainer.style.display = "none";
+                if (startDate && endDate) {
+                    startDate.addEventListener("change", checkDates);
+                    endDate.addEventListener("change", checkDates);
                 }
-            });
 
-            // Initially hide the custom date container
-            customDateContainer.style.display = "none";
+                function checkDates() {
+                    const start = new Date(startDate.value);
+                    const end = new Date(endDate.value);
+                    const today = new Date();
+
+                    if (start > end) {
+                        alert("Start date cannot be later than end date.");
+                        endDate.value = ""; // Clear end date
+                    }
+                    if (end > today) {
+                        alert("End date cannot be in the future.");
+                        endDate.value = ""; // Clear end date
+                    }
+                }
+            }
+
+            validateDates();
+
+            // Show loading spinner on form submit
+            document.querySelector("form").addEventListener("submit", function () {
+                document.getElementById("loading-spinner").style.display = "block";
+            });
         });
     </script>
+}
     <script src="~/js/selectAllCheckbox.js"></script>
     <script src="~/js/reportsButtonToggle.js"></script>
  }

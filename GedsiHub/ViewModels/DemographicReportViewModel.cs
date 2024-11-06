@@ -9,16 +9,14 @@ namespace GedsiHub.ViewModels
     public class DemographicReportViewModel : IValidatableObject
     {
         // Filters
-        [Required(ErrorMessage = "Please select a date range.")]
-        [Display(Name = "Date Range")]
-        public string DateRange { get; set; }
-
         [DataType(DataType.Date)]
         [Display(Name = "Custom Start Date")]
+        [Required(ErrorMessage = "Please enter a start date.")]
         public DateTime? CustomStartDate { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name = "Custom End Date")]
+        [Required(ErrorMessage = "Please enter an end date.")]
         public DateTime? CustomEndDate { get; set; }
 
         [Display(Name = "Campus")]

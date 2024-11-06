@@ -26,20 +26,8 @@ namespace GedsiHub.Repositories
             // Start building the query from the Users table
             var query = _context.Users.AsQueryable();
 
-            // Apply the date range filter
-            if (filters.DateRange == "7days")
-            {
-                query = query.Where(u => u.CreatedDate >= DateTime.UtcNow.AddDays(-7));
-            }
-            else if (filters.DateRange == "28days")
-            {
-                query = query.Where(u => u.CreatedDate >= DateTime.UtcNow.AddDays(-28));
-            }
-            else if (filters.DateRange == "60days")
-            {
-                query = query.Where(u => u.CreatedDate >= DateTime.UtcNow.AddDays(-60));
-            }
-            else if (filters.DateRange == "custom" && filters.CustomStartDate.HasValue && filters.CustomEndDate.HasValue)
+            // Apply the custom date range filter, if provided
+            if (filters.CustomStartDate.HasValue && filters.CustomEndDate.HasValue)
             {
                 // Log the custom date range values
                 _logger.LogInformation($"Custom Start Date: {filters.CustomStartDate.Value}");
@@ -50,7 +38,7 @@ namespace GedsiHub.Repositories
             }
             else
             {
-                _logger.LogWarning("Custom date range not provided or invalid.");
+                _logger.LogWarning("Custom date range not provided or incomplete.");
             }
 
             // Apply the campus filter (case-insensitive)
@@ -104,7 +92,6 @@ namespace GedsiHub.Repositories
 
             return users;
         }
-
 
         // Helper Method to Calculate Age
         private int CalculateAge(DateTime birthDate)
