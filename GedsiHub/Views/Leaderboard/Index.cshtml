@@ -111,8 +111,12 @@
                             @for (int i = 0; i < Model.LeaderboardEntries.Count; i++)
                             {
                                 var entry = Model.LeaderboardEntries[i];
-                                var timeSpent = TimeSpan.FromSeconds(entry.TotalTimeSpent);
-                                string formattedTime = $"{(int)timeSpent.TotalHours}h {timeSpent.Minutes}m {timeSpent.Seconds}s";
+                                var timeSpent = entry.TotalTimeSpent.HasValue
+                                ? TimeSpan.FromSeconds(entry.TotalTimeSpent.Value)
+                                : (TimeSpan?)null;
+                                string formattedTime = timeSpent.HasValue
+                                ? $"{(int)timeSpent.Value.TotalHours}h {timeSpent.Value.Minutes}m {timeSpent.Value.Seconds}s"
+                                : "N/A";
 
                                 <tr>
                                     <td>@(i + 1)</td>

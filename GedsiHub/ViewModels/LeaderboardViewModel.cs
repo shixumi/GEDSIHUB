@@ -7,7 +7,7 @@ namespace GedsiHub.ViewModels
     {
         public string UserId { get; set; }
         public string UserName { get; set; }
-        public double TotalTimeSpent { get; set; } // In seconds
+        public double? TotalTimeSpent { get; set; } // Nullable to handle cases where time is not tracked
         public double TotalScore { get; set; }
     }
 

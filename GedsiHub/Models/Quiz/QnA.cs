@@ -27,9 +27,9 @@ namespace GedsiHub.Models.Quiz
     }
     public class AnswerDetails
     {
-        public int AnswarID { get; set; }
+        public int AnswerID { get; set; }
         public int OptionID { get; set; }
-        public string Answar { get; set; }
+        public string Answer { get; set; }
     }
 
 }

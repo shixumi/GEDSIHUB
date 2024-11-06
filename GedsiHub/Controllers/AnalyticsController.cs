@@ -31,9 +31,10 @@ namespace GedsiHub.Controllers
 
         // GET: Analytics/Dashboard
         // Displays the dashboard view with various metrics such as total learners and modules.
+        // Controllers/AnalyticsController.cs
         [HttpGet("")]
         [HttpGet("Dashboard")]
-        public async Task<IActionResult> Dashboard()
+        public async Task<IActionResult> Dashboard(int? moduleId)
         {
             var modules = await _context.Modules.ToListAsync();
 
@@ -45,20 +46,46 @@ namespace GedsiHub.Controllers
 
             // Fetch module-specific metrics
             var moduleMetrics = new List<ModuleMetricsViewModel>();
-            foreach (var module in modules)
-            {
-                var completionRate = await _analyticsService.GetModuleCompletionRateAsync(module.ModuleId);
-                var certificatesIssued = await _analyticsService.GetCertificateIssuanceRateAsync(module.ModuleId);
-                var averageQuizScore = await _analyticsService.GetAverageQuizScoreAsync(module.ModuleId);
 
-                moduleMetrics.Add(new ModuleMetricsViewModel
+            if (moduleId.HasValue)
+            {
+                // Fetch metrics only for the selected module
+                var module = modules.FirstOrDefault(m => m.ModuleId == moduleId.Value);
+
+                if (module != null)
                 {
-                    ModuleId = module.ModuleId,
-                    ModuleName = module.Title,
-                    CompletionRate = completionRate,
-                    CertificatesIssued = certificatesIssued,
-                    AverageQuizScore = averageQuizScore
-                });
+                    var completionRate = await _analyticsService.GetModuleCompletionRateAsync(module.ModuleId);
+                    var certificatesIssued = await _analyticsService.GetCertificateIssuanceRateAsync(module.ModuleId);
+                    var averageQuizScore = await _analyticsService.GetAverageQuizScoreAsync(module.ModuleId);
+
+                    moduleMetrics.Add(new ModuleMetricsViewModel
+                    {
+                        ModuleId = module.ModuleId,
+                        ModuleName = module.Title,
+                        CompletionRate = completionRate,
+                        CertificatesIssued = certificatesIssued,
+                        AverageQuizScore = averageQuizScore
+                    });
+                }
+            }
+            else
+            {
+                // Fetch metrics for all modules
+                foreach (var module in modules)
+                {
+                    var completionRate = await _analyticsService.GetModuleCompletionRateAsync(module.ModuleId);
+                    var certificatesIssued = await _analyticsService.GetCertificateIssuanceRateAsync(module.ModuleId);
+                    var averageQuizScore = await _analyticsService.GetAverageQuizScoreAsync(module.ModuleId);
+
+                    moduleMetrics.Add(new ModuleMetricsViewModel
+                    {
+                        ModuleId = module.ModuleId,
+                        ModuleName = module.Title,
+                        CompletionRate = completionRate,
+                        CertificatesIssued = certificatesIssued,
+                        AverageQuizScore = averageQuizScore
+                    });
+                }
             }
 
             var viewModel = new AnalyticsDashboardViewModel
@@ -68,12 +95,14 @@ namespace GedsiHub.Controllers
                 TotalLearners = totalLearners,
                 StudentLearners = studentLearners,
                 EmployeeLearners = employeeLearners,
-                TotalModules = totalModules
-                // Populate other existing metrics if any
+                TotalModules = totalModules,
+                SelectedModuleId = moduleId // Add this property
             };
 
             return View(viewModel);
         }
+
+
 
         // ****************************** USER DEMOGRAPHICS API ******************************
 
@@ -93,18 +122,19 @@ namespace GedsiHub.Controllers
         [HttpGet("GetModulePerformance")]
         public async Task<IActionResult> GetModulePerformance(int moduleId)
         {
-
-            var certificateIssuance = await _analyticsService.GetCertificateIssuanceRateAsync(moduleId);
+            var completionRate = await _analyticsService.GetModuleCompletionRateAsync(moduleId);
+            var certificatesIssued = await _analyticsService.GetCertificateIssuanceRateAsync(moduleId);
+            var averageQuizScore = await _analyticsService.GetAverageQuizScoreAsync(moduleId);
 
             var performance = new
             {
-
-                CertificateIssuance = certificateIssuance
+                AverageQuizScore = averageQuizScore,
+                CompletionRate = completionRate,
+                CertificateIssuance = certificatesIssued
             };
 
             return Json(performance);
         }
-
         // ****************************** ACTIVE USERS API ******************************
 
         // GET: Analytics/GetCurrentActiveUsers

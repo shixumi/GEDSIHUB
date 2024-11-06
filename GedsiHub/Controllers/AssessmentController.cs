@@ -63,6 +63,8 @@ namespace GedsiHub.Controllers
 
                 model.ExamID = exam.ExamID;
                 model.Name = exam.Name;
+                model.NumberOfQuestions = exam.NumberOfQuestions;
+                model.ShuffleQuestions = exam.ShuffleQuestions;
 
                 var questions = await _questionService.GetQuestionsByExamId(exam.ExamID);
                 model.Questions = questions.Select(q => new QuestionViewModel
@@ -342,8 +344,11 @@ namespace GedsiHub.Controllers
 
             foreach (var response in responses)
             {
-                var correctAnswer = await _answerService.GetAnswerByQuestionAndChoice(response.QuestionID, response.SelectedOption);
-                var isCorrect = correctAnswer != null && correctAnswer.IsCorrect;
+                // Fetch the correct answer for the question
+                var correctAnswer = await _answerService.GetCorrectAnswerByQuestionId(response.QuestionID);
+
+                // Determine if the selected option is correct
+                var isCorrect = correctAnswer != null && correctAnswer.ChoiceID == response.SelectedOption;
 
                 if (isCorrect)
                 {
@@ -356,9 +361,9 @@ namespace GedsiHub.Controllers
                     UserId = userId,
                     ExamID = response.ExamID,
                     QuestionID = response.QuestionID,
-                    AnswerID = response.AnswerID,
+                    AnswerID = correctAnswer != null ? correctAnswer.Sl_No : (int?)null, // Assign the correct AnswerID
                     SelectedOptionID = response.SelectedOption,
-                    IsCorrent = isCorrect,
+                    IsCorrect = isCorrect,
                     CreatedOn = DateTime.Now,
                     CreatedBy = User.Identity.Name,
                     ModifiedBy = User.Identity.Name
@@ -366,6 +371,7 @@ namespace GedsiHub.Controllers
 
                 results.Add(result);
             }
+
 
             await _resultService.AddResult(results);
 
@@ -393,17 +399,30 @@ namespace GedsiHub.Controllers
             var userProgress = await _context.UserProgresses
                 .FirstOrDefaultAsync(up => up.UserId == userId && up.ModuleId == moduleId);
 
-            if (userProgress != null)
+            if (userProgress == null)
+            {
+                userProgress = new UserProgress
+                {
+                    UserId = userId,
+                    ModuleId = moduleId,
+                    ProgressPercentage = 100,
+                    IsCompleted = true,
+                    StreakCount = 1, // Initialize as needed
+                    CompletedLessonIds = "" // Initialize as needed
+                };
+                _context.UserProgresses.Add(userProgress);
+            }
+            else
             {
                 userProgress.IsCompleted = true;
-                userProgress.ProgressPercentage = 100; // Mark as fully complete
-                await _context.SaveChangesAsync();
+                userProgress.ProgressPercentage = 100;
             }
+
+            await _context.SaveChangesAsync();
 
             // Generate and store certificate
             _logger.LogInformation($"Generating certificate for UserID: {userId}, ModuleID: {moduleId}");
             var pdfBytes = await _certificateService.GenerateAndStoreCertificateAsync(userId, moduleId);
-
 
             // Optionally, send an email with the certificate to the user
             var user = await _userManager.FindByIdAsync(userId);
@@ -420,7 +439,7 @@ namespace GedsiHub.Controllers
             var results = _resultService.Search(r => r.SessionID == sessionId && r.UserId == userId);
 
             var totalQuestions = results.Count();
-            var correctAnswers = results.Count(r => r.IsCorrent);
+            var correctAnswers = results.Count(r => r.IsCorrect);
 
             // Retrieve the ExamID from the first result (assuming the results contain this info)
             var firstResult = results.FirstOrDefault();

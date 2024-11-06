@@ -50,9 +50,9 @@ namespace GedsiHub.Services
                     }).ToList(),
                     answer = new AnswerDetails
                     {
-                        AnswarID = answer != null ? answer.Sl_No : 0,
+                        AnswerID = answer != null ? answer.Sl_No : 0,
                         OptionID = answer != null ? answer.ChoiceID : 0,
-                        Answar = answer != null ? answer.DisplayText : null
+                        Answer = answer != null ? answer.DisplayText : null
                     }
                 });
             }
