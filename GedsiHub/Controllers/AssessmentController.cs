@@ -102,37 +102,47 @@ namespace GedsiHub.Controllers
             try
             {
                 Exam exam;
+
+                // Check if this is an update or a new exam creation
                 if (model.ExamID.HasValue)
                 {
+                    // Editing an existing exam
                     exam = await _examService.GetExam(model.ExamID.Value);
                     if (exam == null) return NotFound();
 
+                    // Update the properties of the existing exam
                     exam.Name = model.Name;
                     exam.ModifiedOn = DateTime.Now;
                     exam.ModifiedBy = User.Identity.Name;
-                    exam.NumberOfQuestions = model.NumberOfQuestions;
+                    exam.NumberOfQuestions = model.NumberOfQuestions; // Correctly set number of questions for editing
                     exam.ShuffleQuestions = model.ShuffleQuestions;
 
                     await _examService.UpdateExam(exam);
                 }
                 else
                 {
+                    // Creating a new exam
                     exam = new Exam
                     {
                         Name = model.Name,
                         ModuleId = model.ModuleId,
                         CreatedOn = DateTime.Now,
                         CreatedBy = User.Identity.Name,
-                        ModifiedBy = User.Identity.Name
+                        ModifiedBy = User.Identity.Name,
+                        NumberOfQuestions = model.NumberOfQuestions, // FIX: Set NumberOfQuestions during creation
+                        ShuffleQuestions = model.ShuffleQuestions
                     };
                     await _examService.AddExam(exam);
                 }
 
+                // Loop through questions and choices
                 foreach (var qvm in model.Questions)
                 {
                     Question question;
+
                     if (qvm.QuestionID.HasValue)
                     {
+                        // Update the existing question
                         question = await _questionService.GetQuestion(qvm.QuestionID.Value);
                         if (question == null) continue;
 
@@ -143,6 +153,7 @@ namespace GedsiHub.Controllers
                     }
                     else
                     {
+                        // Create a new question
                         question = new Question
                         {
                             ExamID = exam.ExamID,
@@ -155,6 +166,7 @@ namespace GedsiHub.Controllers
                         await _questionService.AddQuestion(question);
                     }
 
+                    // Handle choices
                     for (int i = 0; i < qvm.Choices.Count; i++)
                     {
                         var choiceVm = qvm.Choices[i];
@@ -162,6 +174,7 @@ namespace GedsiHub.Controllers
 
                         if (choiceVm.ChoiceID.HasValue)
                         {
+                            // Update the existing choice
                             choice = await _choiceService.GetChoice(choiceVm.ChoiceID.Value);
                             if (choice == null) continue;
 
@@ -171,6 +184,7 @@ namespace GedsiHub.Controllers
                         }
                         else
                         {
+                            // Create a new choice
                             choice = new Choice
                             {
                                 QuestionID = question.QuestionID,
@@ -182,11 +196,13 @@ namespace GedsiHub.Controllers
                             await _choiceService.AddChoice(choice);
                         }
 
+                        // Handle correct answer marking
                         var answer = await _answerService.GetAnswerByQuestionAndChoice(question.QuestionID, choice.ChoiceID);
                         if (i == qvm.CorrectChoice)
                         {
                             if (answer == null)
                             {
+                                // Create new correct answer entry if it doesn’t exist
                                 answer = new Answer
                                 {
                                     QuestionID = question.QuestionID,
@@ -201,6 +217,7 @@ namespace GedsiHub.Controllers
                             }
                             else
                             {
+                                // Update existing answer as correct
                                 answer.IsCorrect = true;
                                 answer.ModifiedOn = DateTime.Now;
                                 await _answerService.UpdateAnswer(answer);
@@ -208,6 +225,7 @@ namespace GedsiHub.Controllers
                         }
                         else if (answer != null)
                         {
+                            // Unmark as correct if it’s not the chosen answer
                             answer.IsCorrect = false;
                             await _answerService.UpdateAnswer(answer);
                         }
