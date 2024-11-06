@@ -47,22 +47,27 @@ namespace GedsiHub.Services
                     .Select(e => e.ExamID)
                     .ToListAsync();
 
-                // If no exams are found for the module, return an empty list
-                if (!examIds.Any())
+                if (!examIds.Any()) // Return empty if no exams for this module
                     return new List<LeaderboardViewModel>();
             }
 
-            // Step 2: Filter QuizResults based on ExamID and calculate scores for each user
+            // Step 2: Calculate each user’s percentage score based on correct answers
             var scoresQuery = _context.QuizResults
                 .Where(qr => !examIds.Any() || examIds.Contains(qr.ExamID))
                 .GroupBy(qr => qr.UserId)
                 .Select(g => new
                 {
                     UserId = g.Key,
-                    TotalScore = g.Count(qr => qr.IsCorrect) // Calculate total correct answers as score
+                    CorrectAnswers = g.Count(qr => qr.IsCorrect),
+                    TotalQuestions = g.Count()  // Total attempts made
+                })
+                .Select(score => new
+                {
+                    score.UserId,
+                    TotalScore = score.TotalQuestions > 0 ? ((double)score.CorrectAnswers / score.TotalQuestions) * 100 : 0 // Score as percentage
                 });
 
-            // Step 3: Join with users to get UserName and construct the LeaderboardViewModel
+            // Step 3: Join with the Users table to get usernames and construct the LeaderboardViewModel
             var leaderboardEntries = await scoresQuery
                 .Join(_context.Users,
                       score => score.UserId,
@@ -71,10 +76,10 @@ namespace GedsiHub.Services
                       {
                           UserId = score.UserId,
                           UserName = user.UserName,
-                          TotalScore = score.TotalScore
+                          TotalScore = score.TotalScore // Score as a percentage
                       })
                 .OrderByDescending(l => l.TotalScore)
-                .Take(10) // Limit to top 10 if needed
+                .Take(10) // Top 10 leaderboard entries
                 .ToListAsync();
 
             return leaderboardEntries;

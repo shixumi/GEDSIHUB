@@ -38,7 +38,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="mr-2">
-                        <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                        @await Component.InvokeAsync("ProfilePicture", new { userId = Model.ForumPost.UserId })
                     </div>
                     <div class="ml-2">
                         <div class="h5 m-0">@Model.UserFirstName @Model.UserLastName</div>
@@ -123,7 +123,7 @@
                                     <!-- Commenter's Name and Date -->
                                     <div class="d-flex align-items-center">
                                         <div class="comment-profile-pic">
-                                            <img class="rounded-circle" src="https://picsum.photos/50/50" alt="Profile Picture" width="40">
+                                            @await Component.InvokeAsync("ProfilePicture", new { userId = comment.UserId })
                                         </div>
                                         <span class="comment-username">@comment.User.FirstName @comment.User.LastName</span>
                                         <span class="comment-date text-muted ml-2">• @comment.CreatedAt.ToString("d") •</span>
