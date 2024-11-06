@@ -285,14 +285,6 @@
                 </div>
                 <div class="modal-body">
                     Are you sure you want to delete the module titled "<strong>@module.Title</strong>"?
-
-                    <!-- Spinner (initially hidden) -->
-                    <div id="spinner-@module.ModuleId" class="flex-column justify-content-center align-items-center" style="display: none; height: 100px;">
-                        <div class="spinner-border" role="status">
-                            <spsn class="visually-hidden">Loading...</spsn>
-                        </div>
-                        <span class="mt-2">Loading...</span>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <form asp-action="Delete" method="post">
@@ -326,22 +318,6 @@
                     alert('Error updating color: ' + error);
                 }
             });
-        }
-
-
-        function submitFormWithSpinner(moduleId) {
-            // Get the default content and spinner elements
-            const defaultContent = document.querySelector(`#moduleConfirmDeleteModal-${moduleId} .default-content`);
-            const spinner = document.querySelector(`#spinner-${moduleId}`);
-
-            // Hide the default content and show the spinner
-            defaultContent.style.display = 'none'; // Hide the text content
-            spinner.style.display = 'flex'; // Show the spinner
-
-            // Submit the form after a slight delay
-            setTimeout(() => {
-                defaultContent.closest('form').submit(); // Now submit the form
-            }, 500); // Adjust the delay as needed
         }
 
     </script>
