@@ -1,5 +1,4 @@
 ﻿// Services/AnalyticsService.cs
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,9 +6,7 @@ using GedsiHub.Data;
 using GedsiHub.Models; // Ensure this using directive is present
 using Microsoft.EntityFrameworkCore;
 using GedsiHub.ViewModels;
-using Newtonsoft.Json;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
+using GedsiHub.Models.Quiz;
 
 namespace GedsiHub.Services
 {
@@ -41,45 +38,48 @@ namespace GedsiHub.Services
         // Single Method: Get Leaderboard
         public async Task<List<LeaderboardViewModel>> GetLeaderboardAsync(string scope, int? moduleId = null)
         {
-            IQueryable<UserActivity> query = _context.UserActivities
-                .Where(ua => ua.ActivityType.Contains("completed") && ua.Success == true);
-
+            // Step 1: Fetch ExamIDs if filtering by module
+            List<int> examIds = new List<int>();
             if (scope == "Module" && moduleId.HasValue)
             {
-                query = query.Where(ua => ua.ModuleId == moduleId.Value);
+                examIds = await _context.Exams
+                    .Where(e => e.ModuleId == moduleId.Value)
+                    .Select(e => e.ExamID)
+                    .ToListAsync();
+
+                // If no exams are found for the module, return an empty list
+                if (!examIds.Any())
+                    return new List<LeaderboardViewModel>();
             }
 
-            var groupedData = await query
-                .GroupBy(ua => ua.UserId)
-                .Select(g => new LeaderboardViewModel
+            // Step 2: Filter QuizResults based on ExamID and calculate scores for each user
+            var scoresQuery = _context.QuizResults
+                .Where(qr => !examIds.Any() || examIds.Contains(qr.ExamID))
+                .GroupBy(qr => qr.UserId)
+                .Select(g => new
                 {
                     UserId = g.Key,
-                    TotalTimeSpent = g.Sum(ua => ua.TimeSpentSeconds ?? 0.0), // double to double
-                    TotalScore = g.Sum(ua => ua.Score ?? 0.0)                // double to double
-                })
+                    TotalScore = g.Count(qr => qr.IsCorrect) // Calculate total correct answers as score
+                });
+
+            // Step 3: Join with users to get UserName and construct the LeaderboardViewModel
+            var leaderboardEntries = await scoresQuery
+                .Join(_context.Users,
+                      score => score.UserId,
+                      user => user.Id,
+                      (score, user) => new LeaderboardViewModel
+                      {
+                          UserId = score.UserId,
+                          UserName = user.UserName,
+                          TotalScore = score.TotalScore
+                      })
+                .OrderByDescending(l => l.TotalScore)
+                .Take(10) // Limit to top 10 if needed
                 .ToListAsync();
 
-            // Fetch user names in bulk to avoid N+1 problem
-            var userIds = groupedData.Select(ld => ld.UserId).ToList();
-            var users = await _context.Users
-                .Where(u => userIds.Contains(u.Id))
-                .ToDictionaryAsync(u => u.Id, u => u.UserName);
-
-            // Assign user names
-            foreach (var entry in groupedData)
-            {
-                entry.UserName = users.ContainsKey(entry.UserId) ? users[entry.UserId] : "Unknown";
-            }
-
-            // Ordering: Higher TimeSpent ranks higher, then higher Score
-            var orderedLeaderboard = groupedData
-                .OrderByDescending(ld => ld.TotalTimeSpent)
-                .ThenByDescending(ld => ld.TotalScore)
-                .Take(10)
-                .ToList();
-
-            return orderedLeaderboard;
+            return leaderboardEntries;
         }
+
 
         // Helper Method to Extract User ID from mbox
         private string ExtractUserIdFromMbox(string mbox)

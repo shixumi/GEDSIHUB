@@ -30,7 +30,7 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ExamID" />
             <input type="hidden" asp-for="ModuleId" />
-            
+            <div>
                 <span>Assessment Title</span>
                 <input asp-for="Name" type="text" placeholder="Enter assessment title" class="form-control" required />
                 <span asp-validation-for="Name" class="text-danger"></span>

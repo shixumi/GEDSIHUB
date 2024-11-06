@@ -59,5 +59,6 @@ namespace GedsiHub.Controllers
 
             return View(pageViewModel);
         }
+
     }
 }
