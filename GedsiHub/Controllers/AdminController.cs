@@ -29,34 +29,10 @@ namespace GedsiHub.Controllers
         // ****************************** ADMIN DASHBOARD ******************************
 
         // GET: Admin/Index
-        // This action displays the Admin dashboard with basic statistics about users and activity logs.
+        // This action redirects towards User Management
         public async Task<IActionResult> Index()
         {
-            _logger.LogInformation("Admin accessed the dashboard.");
-
-            try
-            {
-                var totalUsers = await _userManager.Users.CountAsync();
-                var adminCount = await _userManager.GetUsersInRoleAsync("Admin");
-                var nonAdminCount = totalUsers - adminCount.Count;
-
-                var logs = await _context.ActivityLogs.OrderByDescending(l => l.Timestamp).Take(10).ToListAsync();
-
-                var dashboardViewModel = new AdminDashboardViewModel
-                {
-                    TotalUsers = totalUsers,
-                    AdminCount = adminCount.Count,
-                    NonAdminCount = nonAdminCount,
-                    RecentLogs = logs
-                };
-
-                return View(dashboardViewModel);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while loading the dashboard.");
-                return View("Error");
-            }
+            return RedirectToAction(nameof(UserManagement));
         }
 
         // ****************************** USER MANAGEMENT ******************************
