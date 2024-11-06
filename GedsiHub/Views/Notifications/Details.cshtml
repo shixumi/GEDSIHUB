@@ -1,0 +1,34 @@
+﻿@model GedsiHub.Models.Notification
+@{
+    ViewData["Title"] = "Notification Details";
+    Layout = "_LayoutApp";
+}
+
+<!-- Embedded CSS -->
+<style>
+    .notification-details {
+        padding: 20px;
+    }
+
+        .notification-details h2 {
+            margin-bottom: 10px;
+        }
+
+        .notification-details .timestamp {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .notification-details i {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+</style>
+
+<div class="notification-details">
+    <i class="@Model.IconClass" aria-hidden="true"></i>
+    <h2>@Model.Title</h2>
+    <div class="timestamp">Posted on @Model.CreatedAt.ToString("f")</div>
+    <p>@Model.Message</p>
+</div>

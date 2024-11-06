@@ -37,6 +37,9 @@ namespace GedsiHub.Data
         public DbSet<ForumCommentReport> ForumCommentReports { get; set; }
         public DbSet<FAQ> FAQs { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<NotificationUser> NotificationUsers { get; set; }
+
 
         // DbSets for the Analytics
         public DbSet<XApiStatement> XApiStatements { get; set; }

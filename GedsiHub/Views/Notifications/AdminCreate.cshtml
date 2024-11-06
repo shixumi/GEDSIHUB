@@ -1,0 +1,67 @@
+﻿@model GedsiHub.Models.ViewModels.NotificationViewModel
+@{
+    ViewData["Title"] = "Create Notification";
+    Layout = "_LayoutApp";
+}
+
+<!-- Embedded CSS -->
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .text-danger {
+        color: red;
+    }
+</style>
+
+<h2>Create Notification</h2>
+
+<form asp-action="AdminCreate" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Message"></label>
+        <textarea asp-for="Message" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Message" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Category"></label>
+        <select asp-for="Category" asp-items="@(new SelectList((List<string>)ViewData["Categories"]))" class="form-control">
+            <option value="">Select Category</option>
+        </select>
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsImportant"></label>
+        <input asp-for="IsImportant" type="checkbox" />
+        <span asp-validation-for="IsImportant" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TargetAudience"></label>
+        <select asp-for="TargetAudience" asp-items="@(new SelectList((List<string>)ViewData["TargetAudiences"]))" class="form-control">
+            <option value="">Select Audience</option>
+        </select>
+        <span asp-validation-for="TargetAudience" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Notification</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

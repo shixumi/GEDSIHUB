@@ -1,0 +1,23 @@
+﻿@model IEnumerable<GedsiHub.Models.NotificationUser>
+
+@if (!Model.Any())
+{
+    <div class="text-center p-2">No new notifications.</div>
+}
+else
+{
+    @foreach (var notificationUser in Model)
+    {
+        var notification = notificationUser.Notification;
+        <a href="@Url.Action("Details", "Notifications", new { id = notification.Id })" class="list-group-item list-group-item-action">
+            <div class="d-flex align-items-center">
+                <i class="@notification.IconClass me-2" aria-hidden="true" style="font-size: 24px;"></i>
+                <div>
+                    <strong>@notification.Title</strong><br />
+                    <small class="text-muted">@((notification.Message.Length > 50 ? notification.Message.Substring(0, 50) + "..." : notification.Message))</small><br />
+                    <small class="text-muted">@notification.CreatedAt.ToString("g")</small>
+                </div>
+            </div>
+        </a>
+    }
+}

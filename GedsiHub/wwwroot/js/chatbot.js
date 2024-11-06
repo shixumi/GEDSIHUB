@@ -12,6 +12,8 @@ function resetChatbotState() {
     displayMessageBubble('Welcome to GEDSI HUB! How may I help you today?');
 }
 
+
+
 // Function to clear the chatbot body
 function clearChatBody() {
     const chatbotBody = document.querySelector('.chatbot-body');
@@ -26,7 +28,7 @@ function clearChatOptionFooter() {
 // Function to display a message in a chat bubble
 function displayMessageBubble(message) {
     // Prevent sending a message if cooldown is active
-    if (!canSendMessage) return;
+    //if (!canSendMessage) return;
 
     const chatbotBody = document.querySelector('.chatbot-body');
     const chatMessage = document.createElement('div');
@@ -61,13 +63,13 @@ function displayMessageBubble(message) {
     }, 50); // Adjust delay as needed
 
     // Start cooldown
-    startCooldown();
+    //startCooldown();
 }
 
 // Function to display user message labels
 function displayUserMessageLabel(label) {
     // Prevent sending a message if cooldown is active
-    if (!canSendMessage) return;
+    //if (!canSendMessage) return;
 
     const chatbotBody = document.querySelector('.chatbot-body');
 
@@ -92,7 +94,7 @@ function displayUserMessageLabel(label) {
     }, 50); // Adjust delay as needed
 
     // Start cooldown
-    startCooldown();
+    //startCooldown();
 }
 
 // Function to start the cooldown period

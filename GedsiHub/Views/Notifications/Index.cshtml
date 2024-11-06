@@ -1,0 +1,176 @@
+﻿@model IEnumerable<GedsiHub.Models.NotificationUser>
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "_LayoutApp";
+}
+
+<!-- Embedded CSS -->
+<style>
+    /* Notifications styles */
+    .notif-toggle-con {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .toggle-option {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        margin-right: 5px;
+    }
+
+        .toggle-option.selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+    .notification-item.unread td {
+        font-weight: bold;
+    }
+
+    .notification-item.read td {
+        color: gray;
+    }
+
+    .notif-circle {
+        width: 40px;
+        height: 40px;
+        background-color: #007bff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .notif-circle i {
+            color: white;
+            font-size: 20px;
+        }
+
+    .important-text {
+        margin-top: 30px;
+    }
+
+    .timestamp {
+        font-size: 0.9em;
+        color: #888;
+    }
+
+    .notification-item {
+        cursor: pointer;
+    }
+
+        /* Adjust message content to prevent overflow */
+        .notification-item td:nth-child(2) {
+            max-width: 400px;
+            word-wrap: break-word;
+        }
+</style>
+
+<div>
+    <div class="feedback-title-searcbar-con">
+        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">Notifications</h1>
+    </div>
+    <hr>
+    <div id="notification-container" class="container feedback-container">
+        <div class="notif-toggle-con">
+            <div class="toggle-option selected" data-filter="all">All</div>
+            <div class="toggle-option" data-filter="unread">Unread</div>
+        </div>
+
+        <h1 class="important-text">Important</h1>
+        <div>
+            <div class="important-notif-table">
+                <table>
+                    <tbody>
+                        @foreach (var notificationUser in Model.Where(nu => nu.Notification.IsImportant))
+                        {
+                            var notification = notificationUser.Notification;
+                            <tr class="notification-item @(notificationUser.IsRead ? "read" : "unread")" data-id="@notification.Id">
+                                <td>
+                                    <div class="notif-circle">
+                                        <i class="@notification.IconClass"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>@notification.Title</strong><br />
+                                    <span>@(notification.Message.Length > 100 ? notification.Message.Substring(0, 100) + "..." : notification.Message)</span>
+                                </td>
+                                <td class="timestamp">@notification.CreatedAt.ToString("g")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h1 class="important-text">Less Important</h1>
+        <div>
+            <div class="less-important-notif-table">
+                <table>
+                    <tbody>
+                        @foreach (var notificationUser in Model.Where(nu => !nu.Notification.IsImportant))
+                        {
+                            var notification = notificationUser.Notification;
+                            <tr class="notification-item @(notificationUser.IsRead ? "read" : "unread")" data-id="@notification.Id">
+                                <td>
+                                    <div class="notif-circle">
+                                        <i class="@notification.IconClass"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>@notification.Title</strong><br />
+                                    <span>@(notification.Message.Length > 100 ? notification.Message.Substring(0, 100) + "..." : notification.Message)</span>
+                                </td>
+                                <td class="timestamp">@notification.CreatedAt.ToString("g")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Include jQuery and SignalR scripts if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SignalR script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // SignalR setup
+            var connection = new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
+
+            connection.on("ReceiveNotification", function () {
+                // Optionally refresh the notifications list
+                location.reload();
+            });
+
+            connection.start().then(function () {
+                console.log('SignalR connected');
+            }).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+            // Toggle between All and Unread notifications
+            $(document).on('click', '.toggle-option', function () {
+                $('.toggle-option').removeClass('selected');
+                $(this).addClass('selected');
+                var filter = $(this).data('filter');
+                if (filter === 'unread') {
+                    $('.notification-item.read').hide();
+                    $('.notification-item.unread').show();
+                } else {
+                    $('.notification-item').show();
+                }
+            });
+
+            // Navigate to notification details when clicked
+            $(document).on('click', '.notification-item', function () {
+                var notificationId = $(this).data('id');
+                window.location.href = '/Notifications/Details/' + notificationId;
+            });
+        });
+    </script>
+}

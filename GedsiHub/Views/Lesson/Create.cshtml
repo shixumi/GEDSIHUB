@@ -51,9 +51,10 @@
                     <h1 style="color: #464040;font-size: 1.5625rem;">Overview</h1>
                     <!-- Overview Textarea -->
                     <div class="form-group">
-                        <textarea asp-for="Overview" class="form-control overview_textarea" placeholder="Enter a brief overview of the lesson"></textarea>
+                        <textarea asp-for="Overview" class="form-control overview_textarea" placeholder="Enter a brief overview of the lesson" maxlength="250"></textarea>
                         <span asp-validation-for="Overview" class="text-danger"></span>
                     </div>
+                    <span class="d-flex mt-2" style="color: #dd3025">Overview should not exceed 250 characters.</span>
                 </div>
             </div>
 

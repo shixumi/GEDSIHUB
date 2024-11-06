@@ -178,7 +178,8 @@ app.UseStatusCodePagesWithReExecute("/Error/{0}");
 // ========================================
 // 9. Map Endpoints
 // ========================================
-app.MapHub<AnalyticsHub>("/analyticsHub"); // Map SignalR Hub
+app.MapHub<AnalyticsHub>("/analyticsHub");
+app.MapHub<NotificationHub>("/notificationHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Dashboard}/{action=Index}/{id?}");
