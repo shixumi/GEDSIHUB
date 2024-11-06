@@ -1,0 +1,53 @@
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace GedsiHub.ViewModels
+{
+    public class ChoiceViewModel
+    {
+        public int? ChoiceID { get; set; }
+
+        [Required]
+        public string DisplayText { get; set; }
+
+        // Indicates if this choice is correct
+        public bool IsCorrect { get; set; }
+    }
+
+    public class QuestionViewModel
+    {
+        public int? QuestionID { get; set; }
+
+        [Required]
+        public string DisplayText { get; set; }
+
+        [Required]
+        public int QuestionType { get; set; }  // e.g., 1 for MCQ
+
+        public List<ChoiceViewModel> Choices { get; set; } = new List<ChoiceViewModel>();
+
+        // Add this property to store the index of the correct choice
+        public int? CorrectChoice { get; set; }
+    }
+
+    public class QuizViewModel
+    {
+        public int? ExamID { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Full Marks must be a positive number.")]
+        public decimal FullMarks { get; set; }
+
+        [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Duration must be a positive number.")]
+        public decimal Duration { get; set; }
+
+        [Required]
+        public int ModuleId { get; set; }
+
+        public List<QuestionViewModel> Questions { get; set; } = new List<QuestionViewModel>();
+    }
+}
