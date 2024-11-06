@@ -39,6 +39,8 @@ namespace GedsiHub.ViewModels
 
         [Required]
         public int ModuleId { get; set; }
+
+        public string? Passed { get; set; }
         public int NumberOfQuestions { get; set; }
         public bool ShuffleQuestions { get; set; }
 

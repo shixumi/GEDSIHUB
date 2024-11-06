@@ -1,4 +1,5 @@
-﻿@model GedsiHub.ViewModels.QuizResultViewModel
+﻿@using System.Security.Claims
+@model GedsiHub.ViewModels.QuizResultViewModel
 
 @{
     Layout = "_LayoutApp";
@@ -6,7 +7,19 @@
 }
 
 <h2>Assessment Result</h2>
-
 <p>Total Questions: @Model.TotalQuestions</p>
 <p>Correct Answers: @Model.CorrectAnswers</p>
 <p>Your Score: @Model.Score %</p>
+
+@if (Model.Passed)
+{
+    <p>Congratulations, you passed the assessment!</p>
+    <a href="https://localhost:44329/api/certificate/@User.FindFirstValue(ClaimTypes.NameIdentifier)/@Model.ModuleId" class="btn btn-primary">Download Certificate</a>
+
+
+}
+else
+{
+    <p>Unfortunately, you did not pass. Please review the material and try again.</p>
+    <a asp-controller="Module" asp-action="Details" asp-route-id="@Model.ExamID" class="btn btn-secondary">Back to Lessons</a>
+}
