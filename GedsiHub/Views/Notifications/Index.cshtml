@@ -6,65 +6,118 @@
 
 <!-- Embedded CSS -->
 <style>
-    /* Notifications styles */
-    .notif-toggle-con {
-        display: flex;
-        margin-bottom: 20px;
+#notification-container {
+    overflow-y: auto;
+}
+
+.notif-toggle-con {
+    display: inline-flex;
+    border-radius: 20px;
+    background: none;
+    
+}
+
+.toggle-option {
+    width: 8rem;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    color: #333;
+    transition: color 0.3s;
+    font-size: 1.2rem;
+    font-family: 'Poppins';
+    font-weight: 500;
+    margin-right: 0.8rem;
+}
+
+    .toggle-option.selected {
+        background-color: #660000;
+        color: #fff;
+        border-radius: 20px;
     }
 
-    .toggle-option {
-        padding: 10px 20px;
-        cursor: pointer;
-        border: 1px solid #ccc;
-        margin-right: 5px;
+    .toggle-option:not(.selected):hover {
+        background-color: #f0f0f0;
+        border-radius: 20px;
     }
 
-        .toggle-option.selected {
-            background-color: #007bff;
-            color: white;
-        }
-
-    .notification-item.unread td {
-        font-weight: bold;
+    .toggle-option.selected {
+        background-color: #660000;
+        color: #fff;
+        border-radius: 20px;
     }
 
-    .notification-item.read td {
-        color: gray;
-    }
+/* Style the table and ensure it takes up full width */
 
-    .notif-circle {
-        width: 40px;
-        height: 40px;
-        background-color: #007bff;
-        border-radius: 50%;
-        display: flex;
+.important-notif-table table, .less-important-notif-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    color: #464040;
+}
+
+/* Table header styling */
+
+.important-text {
+    margin-top: 2rem;
+    text-align: left;
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: #464040;
+}
+
+/* First cell (icon) styling */
+
+.important-notif-table td, .less-important-notif-table td, .less-important-notif-table tr, .important-notif-table tr {
+    padding-bottom: 1.3rem;
+    background-color: white;
+}
+
+    .important-notif-table td:first-child, .less-important-notif-table td:first-child {
         align-items: center;
         justify-content: center;
+        display: flex;
+        padding-right: 1rem;
     }
 
-        .notif-circle i {
-            color: white;
-            font-size: 20px;
-        }
+    /* Notification message styling */
 
-    .important-text {
-        margin-top: 30px;
+    .important-notif-table td:nth-child(2), .less-important-notif-table td:nth-child(2) {
+        width: 100%;
+        padding-right: 3rem;
     }
 
-    .timestamp {
-        font-size: 0.9em;
-        color: #888;
+    /* Time cell styling */
+
+    .important-notif-table td:last-child, .less-important-notif-table td:last-child {
+        text-align: right;
+        white-space: nowrap;
+        color: #9c9c9c;
+        vertical-align: top;
+        padding: 0;
     }
 
-    .notification-item {
-        cursor: pointer;
+/* Circle styling */
+
+.notif-circle {
+    width: 3rem;
+    height: 3rem;
+    background-color: #FF6663;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .notif-circle img {
+        width: 2rem;
+        height: auto;
+        margin-top: -0.2rem;
     }
 
-        /* Adjust message content to prevent overflow */
-        .notification-item td:nth-child(2) {
-            max-width: 400px;
-            word-wrap: break-word;
-        }
 </style>
 
 <div>
@@ -73,10 +126,18 @@
     </div>
     <hr>
     <div id="notification-container" class="container feedback-container">
+
+
+
         <div class="notif-toggle-con">
             <div class="toggle-option selected" data-filter="all">All</div>
             <div class="toggle-option" data-filter="unread">Unread</div>
         </div>
+
+
+     
+
+
 
         <h1 class="important-text">Important</h1>
         <div>
