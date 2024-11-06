@@ -172,6 +172,7 @@ namespace GedsiHub.Controllers
                 return BadRequest("Content ID is required.");
             }
 
+            // Retrieve the lesson content, including associated Lesson and Module details
             var lessonContent = await _context.LessonContents
                 .Include(lc => lc.Lesson)
                 .ThenInclude(l => l.Module)
@@ -183,11 +184,16 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
+            // Log the retrieved lesson content details
+            _logger.LogInformation($"Retrieved Lesson Content for editing. Content ID: {lessonContent.ContentId}, Lesson ID: {lessonContent.LessonId}");
+
+            // Ensure ViewBag is populated with the correct values for display in the view
             ViewBag.ModuleId = lessonContent.Lesson.ModuleId;
             ViewBag.ModuleTitle = lessonContent.Lesson.Module?.Title ?? "Untitled Module";
             ViewBag.LessonTitle = lessonContent.Lesson.Title;
             ViewBag.LessonNumber = lessonContent.Lesson.LessonNumber;
 
+            // Return the Edit view with the lessonContent model populated with the current content data
             return View("Edit", lessonContent);
         }
 
@@ -202,6 +208,14 @@ namespace GedsiHub.Controllers
             {
                 _logger.LogError("Content ID mismatch while editing. Expected: {ExpectedId}, Actual: {ActualId}", id, lessonContent.ContentId);
                 return BadRequest("Content ID mismatch.");
+            }
+
+            // Check if the LessonId in lessonContent is valid
+            bool lessonExists = await _context.Lessons.AnyAsync(l => l.LessonId == lessonContent.LessonId);
+            if (!lessonExists)
+            {
+                ModelState.AddModelError("LessonId", "The specified Lesson does not exist.");
+                return View(lessonContent);
             }
 
             if (!ModelState.IsValid)

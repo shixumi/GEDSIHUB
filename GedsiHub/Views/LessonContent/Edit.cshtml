@@ -29,6 +29,9 @@
     <form asp-action="Edit" method="post">
         @Html.AntiForgeryToken()
 
+        <!-- Ensure ContentId is passed correctly -->
+        <input type="hidden" asp-for="ContentId" />
+
         <!-- Ensure LessonId is passed correctly -->
         <input type="hidden" asp-for="LessonId" />
 
@@ -123,7 +126,7 @@
             <div class="cancel_save_con">
                 <a asp-action="Details" asp-controller="LessonContent" asp-route-id="@Model.LessonId" id="cancelLessonContentButton" class="btn fw-bolder cancelLessonContentButton">Cancel</a>
 
-                <button type="submit" class="SaveButton" asp-action="Edit" asp-route-id="@Model.ContentId">Save Changes</button>
+                <button type="submit" class="SaveButton">Save Changes</button>
             </div>
         </div>
     </form>
