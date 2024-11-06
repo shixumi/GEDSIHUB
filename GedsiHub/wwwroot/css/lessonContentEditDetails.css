@@ -139,7 +139,7 @@
 
 .info-modal-btn {
     display: flex;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
     font-size: 0.8rem;
     border-radius: 2rem;
@@ -151,6 +151,7 @@
     cursor: pointer;
     border: none;
     gap: 0.5rem;
+    width: 14.5rem;
 }
 
 .info-modal-btn:hover {
