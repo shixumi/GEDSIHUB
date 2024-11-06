@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
 
 [AllowAnonymous]
 public class ConfirmEmailModel : PageModel
