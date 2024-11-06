@@ -20,13 +20,29 @@
                     <img id="modulesSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
                 </button>
             </div>
-
-            <!-- Create Module Button (Visible to Admins only) -->
+            @*
+            <!-- Create Module Button (Visible to Admins only) --> 
             @if (User.IsInRole("Admin"))
             {
                 <a asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton">
                     <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
                 </a>
+            } 
+            *@
+
+            <!-- Create Module Button (Visible to Admins only) --> 
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="dropdown">
+                    <a class="btn btn-primary d-xxl-flex addModuleTopButton dropdown-toggle" href="#" id="addModuleTopButton" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="addModuleTopButton">
+                        <li><a class="dropdown-item" asp-action="Create">Add New Module</a></li>
+                        <li><a class="dropdown-item" asp-action="Reframe">Add Module Reframe</a></li>
+                    </ul>
+                </div>
             }
 
             <!-- View Toggle Buttons using Bootstrap Pills -->
