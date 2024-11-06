@@ -1,6 +1,4 @@
-﻿// ViewModels/EditUserProfileViewModel.cs
-
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
@@ -8,14 +6,13 @@ namespace GedsiHub.ViewModels
 {
     public class EditUserProfileViewModel
     {
-        // Common Fields
         [Display(Name = "Honorifics")]
         [StringLength(10)]
-        public string Honorifics { get; set; }
+        public string? Honorifics { get; set; }
 
         [Display(Name = "Lived Name")]
         [StringLength(50)]
-        public string LivedName { get; set; }
+        public string? LivedName { get; set; }
 
         [Display(Name = "Pronouns")]
         [StringLength(30)]
@@ -38,44 +35,34 @@ namespace GedsiHub.ViewModels
         [StringLength(30)]
         public string GenderIdentity { get; set; }
 
-        // Student-Specific Fields
-        [Display(Name = "Program")]
-        [StringLength(255)]
-        public string Program { get; set; } // e.g., Course Name
+        [Display(Name = "Are you a member of any Indigenous cultural community?")]
+        public bool IsMemberOfIndigenousCommunity { get; set; }
 
-        [Display(Name = "Year")]
-        [Range(1, 10, ErrorMessage = "Please enter a valid year.")]
-        public int? Year { get; set; }
+        [Display(Name = "Do you identify yourself as a differently abled person?")]
+        public bool IsDisabled { get; set; }
 
-        [Display(Name = "Section")]
-        [StringLength(10)]
-        public string Section { get; set; }
-
-        // Employee-Specific Fields
-        [Display(Name = "Employee Type")]
-        [StringLength(100)]
-        public string EmployeeType { get; set; }
-
-        [Display(Name = "Employment Status")]
-        [StringLength(100)]
-        public string EmploymentStatus { get; set; }
-
-        [Display(Name = "Branch Office/Section/Unit")]
-        [StringLength(100)]
-        public string BranchOfficeSectionUnit { get; set; }
-
-        [Display(Name = "Position")]
-        [StringLength(100)]
-        public string Position { get; set; }
-
-        [Display(Name = "Sector")]
-        [StringLength(100)]
-        public string Sector { get; set; }
-
-        // Profile Picture Upload
+        // Profile Picture Upload (Optional, with Validation)
         [Display(Name = "Profile Picture")]
-        public IFormFile ProfilePicture { get; set; }
+        [MaxFileSize(2 * 1024 * 1024)] // 2 MB limit
+        public IFormFile? ProfilePicture { get; set; }
+        public string ProfilePicturePath { get; set; } = "/images/User.png";
+    }
+}
 
-        // Additional Fields (if any)
+// Custom file size validation
+public class MaxFileSizeAttribute : ValidationAttribute
+{
+    private readonly int _maxFileSize;
+    public MaxFileSizeAttribute(int maxFileSize) => _maxFileSize = maxFileSize;
+
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        var file = value as IFormFile;
+        if (file != null && file.Length > _maxFileSize)
+        {
+            return new ValidationResult($"Maximum allowed file size is {(_maxFileSize / (1024 * 1024))} MB.");
+        }
+
+        return ValidationResult.Success;
     }
 }

@@ -5,13 +5,6 @@
     ViewData["Title"] = "Edit Profile";
 }
 
-
-
-
-
-
-
-
 <div>
     <div class="feedback-title-searcbar-con">
         <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">@ViewData["Title"]</h1>
@@ -20,29 +13,32 @@
     <hr class="custom-hr">
     <div class="container feedback-container edit-profile-con-of-con">
         
-        <form asp-action="Edit" enctype="multipart/form-data" method="post" class="edit-profile-form">
+        <form asp-action="Edit" asp-controller="Profile" enctype="multipart/form-data" method="post" class="edit-profile-form">
             <div class="edit-profile-container">
                  <div class="profile-picture-upload">
-                     <div class="edit-profile-pic-container">
-                         <img id="editCroppedImage" src="~/images/User.png" alt="User Profile Image">                   
-                     </div>
-                     
-                     <div class="edit-camera-container" onclick="document.getElementById('editProfilePictureInput').click()">
-                         <img src="~/images/Camera.png" alt="Camera Icon" width="1rem" height="auto">
-                     </div>
-                     <input asp-for="ProfilePicture"  type="file" id="editProfilePictureInput" accept="image/*">                    
-                 </div>
-                
+                    <div class="edit-profile-pic-container">
+                        <img id="editCroppedImage" src="@(Model.ProfilePicturePath ?? Url.Content("~/images/User.png"))" alt="User Profile Image" />
+                    </div>
 
+                    <!-- Camera Icon to Trigger File Input -->
+                    <div class="edit-camera-container" onclick="document.getElementById('editProfilePictureInput').click()">
+                        <img src="~/images/Camera.png" alt="Camera Icon" width="1rem" height="auto">
+                    </div>
 
-                 <div class="edit-modal" id="editCropModal">
-                     <div class="edit-modal-content">
-                         <h3>Crop Your Image</h3>
-                         <img id="editProfilePicture" alt="Profile Picture for Cropping">
-                         <button id="editCropButton" class="edit-btn">Crop Image</button>
-                     </div>
-                 </div>
-            
+                    <!-- Hidden File Input for Profile Picture -->
+                    <input asp-for="ProfilePicture" type="file" id="editProfilePictureInput" accept="image/*" style="display:none;">
+                </div>
+
+                <!-- Cropping Modal -->
+                <div class="edit-modal" id="editCropModal" style="display:none;">
+                    <div class="edit-modal-content">
+                        <h3>Crop Your Image</h3>
+                        <!-- Image for Cropping -->
+                        <img id="editProfilePicture" alt="Profile Picture for Cropping">
+                        <!-- Crop Button -->
+                        <button type="button" id="editCropButton" class="edit-btn">Crop Image</button>
+                    </div>
+                </div>
 
                 <div class="row-edit-profile">    
                     <div class="lived-name-con"><span>Lived Name</span>
@@ -58,237 +54,13 @@
                         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                     </div>
                 </div>
-
-                @* Role-Specific Fields *@
-                @if (User.IsInRole("Student"))
-                {
-                    <div class="row-edit-profile">
-                        <div class="lived-name-con">
-                            <span>Program</span>
-                            <select asp-for="Program">
-                                <option value="0" disabled selected>Select Course</option>
-                                <option value="1">Bachelor of Science in Accountancy (BSA)</option>
-                                <option value="2">Bachelor of Science in Management Accounting (BSMA)</option>
-                                <option value="3">Bachelor of Science in Business Administration Major in Financial Management (BSBAFM)</option>
-                                <option value="4">Bachelor of Science in Architecture (BSARCH)</option>
-                                <option value="5">Bachelor of Science in Interior Design (BSID)</option>
-                                <option value="6">Bachelor of Science in Environmental Planning (BSEP)</option>
-                                <option value="7">Bachelor of Arts in English Language Studies (ABELS)</option>
-                                <option value="8">Bachelor of Arts in Filipinology (ABF)</option>
-                                <option value="9">Bachelor of Arts in Literary and Cultural Studies (ABLCS)</option>
-                                <option value="10">Bachelor of Arts in Philosophy (ABPHILO)</option>
-                                <option value="11">Bachelor of Performing Arts major in Theater Arts (BPEA)</option>
-                                <option value="12">Doctor in Business Administration (DBA)</option>
-                                <option value="13">Master in Business Administration (MBA)</option>
-                                <option value="14">Bachelor of Science in Business Administration major in Human Resource Management (BSBAHRM)</option>
-                                <option value="15">Bachelor of Science in Business Administration major in Marketing Management (BSBAMM)</option>
-                                <option value="16">Bachelor of Science in Entrepreneurship (BSENTREP)</option>
-                                <option value="17">Bachelor of Science in Office Administration (BSOA)</option>
-                                <option value="18">Bachelor in Advertising and Public Relations (BADPR)</option>
-                                <option value="19">Bachelor of Arts in Broadcasting (BABroadcasting)</option>
-                                <option value="20">Bachelor of Arts in Communication Research (BACR)</option>
-                                <option value="21">Bachelor of Arts in Journalism (BAJ)</option>
-                                <option value="22">Bachelor of Science in Computer Science (BSCS)</option>
-                                <option value="23">Bachelor of Science in Information Technology (BSIT)</option>
-                                <option value="24">Doctor of Philosophy in Education Management (PhDEM)</option>
-                                <option value="25">Master of Arts in Education Management with Specialization in Educational Leadership (MAEM-EL)</option>
-                                <option value="26">Master of Arts in Education Management with Specialization in Instructional Leadership (MAEM-IL)</option>
-                                <option value="27">Master in Business Education (MBE)</option>
-                                <option value="28">Master in Library and Information Science (MLIS)</option>
-                                <option value="29">Master of Arts in English Language Teaching (MAELT)</option>
-                                <option value="30">Master of Arts in Education major in Mathematics Education (MAEd-ME)</option>
-                                <option value="31">Master of Arts in Physical Education and Sports (MAPES)</option>
-                                <option value="32">Master of Arts in Education major in Teaching Challenged Areas (MAED-TCA)</option>
-                                <option value="33">Post-Baccalaureate Diploma in Education (PBDE)</option>
-                                <option value="34">Bachelor of Technology and Livelihood Education major in Home Economics (BTLEd-HE)</option>
-                                <option value="35">Bachelor of Technology and Livelihood Education major in Industrial Arts (BTLEd-IA)</option>
-                                <option value="36">Bachelor of Technology and Livelihood Education major in Information and Communication Technology (BTLEd-ICT)</option>
-                                <option value="37">Bachelor of Library and Information Science (BLIS)</option>
-                                <option value="38">Bachelor of Elementary Education (BEEd)</option>
-                                <option value="39">Bachelor of Early Childhood Education (BECEd)</option>
-                                <option value="40">Bachelor of Science in Civil Engineering (BSCE)</option>
-                                <option value="41">Bachelor of Science in Computer Engineering (BSCpE)</option>
-                                <option value="42">Bachelor of Science in Electrical Engineering (BSEE)</option>
-                                <option value="43">Bachelor of Science in Electronics Engineering (BSECE)</option>
-                                <option value="44">Bachelor of Science in Industrial Engineering (BSIE)</option>
-                                <option value="45">Bachelor of Science in Mechanical Engineering (BSME)</option>
-                                <option value="46">Bachelor of Science in Railway Engineering (BSRE)</option>
-                                <option value="47">Bachelor of Physical Education (BPE)</option>
-                                <option value="48">Bachelor of Science in Exercises and Sports (BSESS)</option>
-                                <option value="49">Juris Doctor (JD)</option>
-                                <option value="50">Doctor in Public Administration (DPA)</option>
-                                <option value="51">Master in Public Administration (MPA)</option>
-                                <option value="52">Bachelor of Public Administration (BPA)</option>
-                                <option value="53">Bachelor of Arts in International Studies (BAIS)</option>
-                                <option value="54">Bachelor of Arts in Political Economy (BAPE)</option>
-                                <option value="55">Bachelor of Arts in Political Science (BAPS)</option>
-                                <option value="56">Bachelor of Arts in History (BAH)</option>
-                                <option value="57">Bachelor of Arts in Sociology (BAS)</option>
-                                <option value="58">Bachelor of Science in Cooperatives (BSC)</option>
-                                <option value="59">Bachelor of Science in Economics (BSE)</option>
-                                <option value="60">Bachelor of Science in Psychology (BSPSY)</option>
-                                <option value="61">Bachelor of Science in Food Technology (BSFT)</option>
-                                <option value="62">Bachelor of Science in Applied Mathematics (BSAPMATH)</option>
-                                <option value="63">Bachelor of Science in Biology (BSBIO)</option>
-                                <option value="64">Bachelor of Science in Chemistry (BSCHEM)</option>
-                                <option value="65">Bachelor of Science in Mathematics (BSMATH)</option>
-                                <option value="66">Bachelor of Science in Nutrition and Dietetics (BSND)</option>
-                                <option value="67">Bachelor of Science in Physics (BSPHY)</option>
-                                <option value="68">Bachelor of Science in Statistics (BSSTAT)</option>
-                                <option value="69">Bachelor of Science in Hospitality Management (BSHM)</option>
-                                <option value="70">Bachelor of Science in Tourism Management (BSTM)</option>
-                                <option value="71">Bachelor of Science in Transportation Management (BSTRM)</option>
-                            </select>
-                            <span asp-validation-for="Program" class="text-danger"></span>
-                        </div>
-                        <div class="phone-num-con"><span>Year</span>
-                            <input asp-for="Year" type="text" />
-                            <span asp-validation-for="Year" class="text-danger"></span>
-                        </div>                       
-                        <div class="birthday-con"><span>Section</span>
-                            <input asp-for="Section" type="text" />
-                            <span asp-validation-for="Section" class="text-danger"></span>
-                        </div>                      
-                    </div>
-                }
-				else if (User.IsInRole("Employee"))
-				{
-                    <div class="row-edit-profile">
-                        <div class="sector-con">
-                            <span>Employee Type</span>
-                            <select asp-for="EmployeeType">
-                                <option value="" disabled selected>Select Employee Type</option>
-                                <option value="Faculty">Faculty</option>
-                                <option value="Administrative Staff">Administrative Staff</option>
-                                <option value="Designee">Designee</option>
-                            </select>
-                            <span asp-validation-for="EmployeeType" class="text-danger"></span>
-                        </div>
-                        <div class="branch-con">
-                            <span>Employment Status</span>
-                            <select asp-for="EmploymentStatus">
-                                <option value="" disabled selected>Select Employment Status</option>
-                                <option value="Permanent">Permanent</option>
-                                <option value="Casual">Casual</option>
-                                <option value="Contract of Service">Contract of Service</option>
-                                <option value="Job Order">Job Order</option>
-                                <option value="Temporary">Temporary</option>
-                                <option value="Part-time">Part-time</option>
-                            </select>
-                            <span asp-validation-for="EmploymentStatus" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row-edit-profile">
-                        <div class="sector-con">
-                            <span>Sector</span>
-                            <select asp-for="Sector">
-                                <option value="" disabled selected>Select your sector</option>
-                                <option value="OEVP">Office of the Executive Vice President</option>
-                                <option value="OVPAA">Office of the Vice President for Academic Affairs</option>
-                                <option value="OVPF">Office of the Vice President for Planning and Finance</option>
-                                <option value="OVPSAS">Office of the Vice President for Student Affairs and Services</option>
-                                <option value="OVPA">Office of the Vice President for Administration</option>
-                                <option value="OVPC">Office of the Vice President for Campuses</option>
-                                <option value="OVPRED">Office of the Vice President for Research, Extension, and Development</option>
-                                <option value="OPRES">Office of the President</option>
-                            </select>
-                            <span asp-validation-for="Sector" class="text-danger"></span>
-                        </div>
-                        <div class="branch-con">
-                            <span>Branch/Office/Section/Unit</span>
-                            <select asp-for="BranchOfficeSectionUnit">
-                                <option value="" disabled selected>Select your Branch/Office/Section/Unit</option>
-                                <option value="OVEP">Office of the Executive Vice President</option>
-                                <option value="ICTO">Information and Communications Technology Office</option>
-                                <option value="IDSA">Institute for Data and Statistical Analysis</option>
-                                <option value="IAO">Internal Audit Office</option>
-                                <option value="IMO">Inspection Management Office</option>
-                                <option value="OIA">Office of the International Affairs</option>
-                                <option value="UPP">University Printing Press</option>
-                                <option value="OVPAA">Office of the Vice President for Academic Affairs</option>
-                                <option value="COE">College of Engineering</option>
-                                <option value="FEO">Faculty Evaluations Office</option>
-                                <option value="NSTP">National Service Training Program</option>
-                                <option value="CAFA">College of Architecture and Fine Arts</option>
-                                <option value="ITech">Institute of Technology</option>
-                                <option value="CS">College of Science</option>
-                                <option value="GS">Graduate School</option>
-                                <option value="CTHTM">College of Tourism, Hospitality and Transportation Management</option>
-                                <option value="CBA">College of Business Administration</option>
-                                <option value="CAF">College of Accountancy and Finance</option>
-                                <option value="CSSD">College of Social Sciences and Development</option>
-                                <option value="NALLRC">Ninoy Aquino Library and Learning Resources Center</option>
-                                <option value="SHS">Senior High School</option>
-                                <option value="OU">Open University</option>
-                                <option value="CCIS">College of Computer and Information Sciences</option>
-                                <option value="COC">College of Communication</option>
-                                <option value="CPSPA">College of Political Science and Public Administration</option>
-                                <option value="CAL">College of Arts and Letters</option>
-                                <option value="AD">Accounting Department</option>
-                                <option value="BSO">Budget Services Office</option>
-                                <option value="FMO">Fund Management Office</option>
-                                <option value="RGO">Resource Generation Office</option>
-                                <option value="IPO">Institutional Planning Office</option>
-                                <option value="OVPSAS">Office of the Vice President for Student Affairs and Services</option>
-                                <option value="ARCDO">Alumni Relations and Career Development Office</option>
-                                <option value="OCPS">Office of Counseling and Psychological Services</option>
-                                <option value="OSFA">Office of Scholarship and Financial Assistance</option>
-                                <option value="OSS">Office of the Student Services</option>
-                                <option value="OUR">Office of the University Registrar</option>
-                                <option value="SDPO">Sports Development Office</option>
-                                <option value="UCCA">University Center for Culture and the Arts</option>
-                                <option value="CRO">Central Records Office</option>
-                                <option value="FMO">Facility Management Office</option>
-                                <option value="GSO">General Services Office</option>
-                                <option value="HRMD">Human Resource Management Department</option>
-                                <option value="MHDPC">M.H Del Pilar Campus</option>
-                                <option value="MSD">Medical Services Department</option>
-                                <option value="PPDO">Physical Planning and Development Office</option>
-                                <option value="PMO">Procurement Management Office</option>
-                                <option value="PSMO">Philippine Society of Medical Oncology</option>
-                                <option value="USSO">University Safety and Security Office</option>
-                                <option value="OVPC">Office of the Vice President for Campuses</option>
-                                <option value="PUP-SPC">PUP San Pedro Campus</option>
-                                <option value="PUP-Mulanay">PUP Mulanay</option>
-                                <option value="PUP-QC">PUP Quezon City</option>
-                                <option value="PUP-Unisan">PUP Unisan</option>
-                                <option value="PUP-SJ">PUP San Juan</option>
-                                <option value="PUP-Alfonso">PUP Alfonso</option>
-                                <option value="PUP-Bataan">PUP Bataan</option>
-                                <option value="PUP-Sta.Maria>PUP Sta. Maria</option>
-                                <option value="PUP-Ragay">PUP Ragay</option>
-                                <option value="PUP-ST">PUP Sto. Tomas</option>
-                                <option value="PUP-Cabiao">PUP Cabiao</option>
-                                <option value="OVPRED">Office of the Vice President for Research, Extension and Development</option>
-                                <option value="RMO">Research Management Office</option>
-                                <option value="EMO">Research Management Office</option>
-                                <option value="IQMSO">Institutional Quality Management System Office</option>
-                                <option value="IPMO">Intellectual Property Management Office</option>
-                                <option value="RIHSD">Research Institute for Human and Social Development</option>
-                                <option value="RICL">Research Institute for Culture and Language</option>
-                                <option value="RIST">Research Institute for Science and Technology</option>
-                                <option value="OPRES">Office of the President</option>
-                                <option value="CMO">Communications Management Office</option>
-                                <option value="OUBC">Office of the University Board Secretary</option>
-                                <option value="ULCO">University Legal Counsel Office</option>
-                                <option value="SPPO">Special Programs and Projects Office</option>
-                            </select>
-                            <span asp-validation-for="BranchOfficeSectionUnit" class="text-danger"></span>
-                        </div>
-                        <div class="position-con">
-                            <span>Position/Designation</span>
-                            <input asp-for="Position" type="text" placeholder="Enter Position/Designation">           
-                            <span asp-validation-for="Position" class="text-danger"></span>
-                        </div>
-                    </div>
-                }
                 <div class="row-edit-profile">
                     <div class="sex-con">
                         <span>Sex</span>
                         <select asp-for="Sex">
                             <option value="" disabled selected>Select Sex</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                         </select>
                         <span asp-validation-for="Sex" class="text-danger"></span>
                     </div>
@@ -317,17 +89,20 @@
                 </div>
                 <div class="row-edit-profile">
                     <div class="indigenous-con">
-                        <span>Are you a member of any Indigenous cultural community?</span><select>
-                            <option value="" disabled selected>Select an option</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <span>Are you a member of any Indigenous cultural community?</span>
+                        <select asp-for="IsMemberOfIndigenousCommunity">
+                            <option value="" disabled>Select an option</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
+
                     <div class="diff-abled-con">
-                        <span>Do you identify yourself as a differently abled person? </span><select>
-                            <option value="" disabled selected>Select an option</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <span>Do you identify yourself as a differently abled person?</span>
+                        <select asp-for="IsDisabled">
+                            <option value="" disabled>Select an option</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
                 </div>
@@ -348,136 +123,3 @@
     }
     <script src="~/js/ProfilePictureUpload.js"></script>
 }
-
-
-
-
-
-
-
-
-
-@* 
-<h2>@ViewData["Title"]</h2>
-
-<form asp-action="Edit" enctype="multipart/form-data" method="post" class="edit-profile-form">
-    <div class="form-group">
-        <label asp-for="Honorifics" class="form-label"></label>
-        <input asp-for="Honorifics" class="form-control" />
-        <span asp-validation-for="Honorifics" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="LivedName" class="form-label"></label>
-        <input asp-for="LivedName" class="form-control" />
-        <span asp-validation-for="LivedName" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Pronouns" class="form-label"></label>
-        <input asp-for="Pronouns" class="form-control" />
-        <span asp-validation-for="Pronouns" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="DateOfBirth" class="form-label"></label>
-        <input asp-for="DateOfBirth" class="form-control" type="date" />
-        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="PhoneNumber" class="form-label"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Sex" class="form-label"></label>
-        <select asp-for="Sex" class="form-control">
-            <option value="">-- Select Sex --</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-            <option>Prefer not to say</option>
-        </select>
-        <span asp-validation-for="Sex" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="GenderIdentity" class="form-label"></label>
-        <input asp-for="GenderIdentity" class="form-control" />
-        <span asp-validation-for="GenderIdentity" class="text-danger"></span>
-    </div>
-
-    Role-Specific Fields 
-    @if (User.IsInRole("Student"))
-    {
-        <div class="form-group">
-            <label asp-for="Program" class="form-label"></label>
-            <input asp-for="Program" class="form-control" />
-            <span asp-validation-for="Program" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Year" class="form-label"></label>
-            <input asp-for="Year" class="form-control" type="number" min="1" max="10" />
-            <span asp-validation-for="Year" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Section" class="form-label"></label>
-            <input asp-for="Section" class="form-control" />
-            <span asp-validation-for="Section" class="text-danger"></span>
-        </div>
-    }
-    else if (User.IsInRole("Employee"))
-    {
-        <div class="form-group">
-            <label asp-for="EmployeeType" class="form-label"></label>
-            <input asp-for="EmployeeType" class="form-control" />
-            <span asp-validation-for="EmployeeType" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="EmploymentStatus" class="form-label"></label>
-            <input asp-for="EmploymentStatus" class="form-control" />
-            <span asp-validation-for="EmploymentStatus" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="BranchOfficeSectionUnit" class="form-label"></label>
-            <input asp-for="BranchOfficeSectionUnit" class="form-control" />
-            <span asp-validation-for="BranchOfficeSectionUnit" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Position" class="form-label"></label>
-            <input asp-for="Position" class="form-control" />
-            <span asp-validation-for="Position" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Sector" class="form-label"></label>
-            <input asp-for="Sector" class="form-control" />
-            <span asp-validation-for="Sector" class="text-danger"></span>
-        </div>
-    }
-
-    <div class="form-group">
-        <label asp-for="ProfilePicture" class="form-label"></label>
-        <input asp-for="ProfilePicture" type="file" class="form-control-file" />
-        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Save Changes</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form> *@
-
-
-
-@* @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
- *@

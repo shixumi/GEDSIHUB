@@ -1,6 +1,4 @@
-﻿// Controllers/ProfileController.cs
-
-using GedsiHub.Data;
+﻿using GedsiHub.Data;
 using GedsiHub.Models;
 using GedsiHub.ViewModels;
 using GedsiHub.Helpers;
@@ -11,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
@@ -32,16 +31,12 @@ namespace GedsiHub.Controllers
             _logger = logger;
         }
 
-        // Helper Method to Process Fields
         private string ProcessField(string? field)
         {
             return string.IsNullOrWhiteSpace(field) ? "N/A" : field.Trim();
         }
 
         // ****************************** PROFILE VIEWING ******************************
-
-        // GET: Profile
-        // Displays the profile information for the logged-in user, which can be a Student, Employee, or Admin.
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -65,16 +60,18 @@ namespace GedsiHub.Controllers
                 PhoneNumber = user.PhoneNumber,
                 Sex = user.Sex,
                 GenderIdentity = user.GenderIdentity,
-                ProfilePicturePath = user.ProfilePicturePath
+                ProfilePicturePath = user.ProfilePicturePath ?? "/images/User.png",
+                College = user.Student?.CollegeDepartment?.DepartmentName ?? "N/A",
+                IsMemberOfIndigenousCommunity = user.IsMemberOfIndigenousCommunity,
+                IsDisabled = user.IsDisabled,
+                CreatedDate = user.CreatedDate
             };
 
-            // Set LivedName to FirstName + LastName if null or empty
             if (string.IsNullOrWhiteSpace(profileViewModel.LivedName))
             {
                 profileViewModel.LivedName = $"{profileViewModel.FirstName} {profileViewModel.LastName}";
             }
 
-            // Set other fields to "N/A" if null or empty
             profileViewModel.Honorifics = ProcessField(profileViewModel.Honorifics);
             profileViewModel.Pronouns = ProcessField(profileViewModel.Pronouns);
             profileViewModel.Program = ProcessField(profileViewModel.Program);
@@ -88,10 +85,12 @@ namespace GedsiHub.Controllers
             {
                 var student = await _context.Students
                     .Include(s => s.Course)
+                    .Include(s => s.CollegeDepartment)
                     .FirstOrDefaultAsync(s => s.UserId == user.Id);
 
                 if (student != null)
                 {
+                    profileViewModel.College = student.CollegeDepartment?.DepartmentName ?? "N/A";
                     profileViewModel.Program = student.Course?.CourseName;
                     profileViewModel.Year = student.Year;
                     profileViewModel.Section = student.Section;
@@ -112,15 +111,14 @@ namespace GedsiHub.Controllers
                 }
             }
 
-            // **Fetch Recent Posts**
+            // Fetch Recent Posts
             var recentPosts = await _context.ForumPosts
                 .Where(p => p.UserId == user.Id)
                 .OrderByDescending(p => p.CreatedAt)
-                .Take(5) // Limit to 5 recent posts
-                .ToListAsync(); // Fetch data first
+                .Take(5)
+                .ToListAsync();
 
-            // **Project to RecentPostDto In-Memory**
-            var recentPostDtos = recentPosts.Select(p => new RecentPostDto
+            profileViewModel.RecentPosts = recentPosts.Select(p => new RecentPostDto
             {
                 PostId = p.PostId,
                 Title = p.Title,
@@ -130,15 +128,10 @@ namespace GedsiHub.Controllers
                 RelativeCreatedAt = DateTimeHelper.GetRelativeTime(p.CreatedAt)
             }).ToList();
 
-            profileViewModel.RecentPosts = recentPostDtos;
-
             return View(profileViewModel);
         }
 
         // ****************************** PROFILE EDITING ******************************
-
-        // GET: Profile/Edit
-        // Displays the profile edit form for the logged-in user, which can be a Student, Employee, or Admin.
         public async Task<IActionResult> Edit()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -148,8 +141,6 @@ namespace GedsiHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var userType = await GetUserTypeAsync(user);
-
             var editViewModel = new EditUserProfileViewModel
             {
                 Honorifics = user.Honorifics,
@@ -158,48 +149,29 @@ namespace GedsiHub.Controllers
                 DateOfBirth = user.DateOfBirth,
                 PhoneNumber = user.PhoneNumber,
                 Sex = user.Sex,
-                GenderIdentity = user.GenderIdentity
+                GenderIdentity = user.GenderIdentity,
+                IsMemberOfIndigenousCommunity = user.IsMemberOfIndigenousCommunity,
+                IsDisabled = user.IsDisabled,
+                ProfilePicturePath = user.ProfilePicturePath ?? "/images/User.png"
             };
-
-            if (userType == "Student")
-            {
-                var student = await _context.Students
-                    .Include(s => s.Course)
-                    .FirstOrDefaultAsync(s => s.UserId == user.Id);
-
-                if (student != null)
-                {
-                    editViewModel.Program = student.Course?.CourseName;
-                    editViewModel.Year = student.Year;
-                    editViewModel.Section = student.Section;
-                }
-            }
-            else if (userType == "Employee")
-            {
-                var employee = await _context.Employees
-                    .FirstOrDefaultAsync(e => e.UserId == user.Id);
-
-                if (employee != null)
-                {
-                    editViewModel.EmployeeType = employee.EmployeeType;
-                    editViewModel.EmploymentStatus = employee.EmploymentStatus;
-                    editViewModel.BranchOfficeSectionUnit = employee.BranchOfficeSectionUnit;
-                    editViewModel.Position = employee.Position;
-                    editViewModel.Sector = employee.Sector;
-                }
-            }
 
             return View(editViewModel);
         }
 
-        // POST: Profile/Edit
-        // Submits changes to the user profile for Students, Employees, or Admins.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditUserProfileViewModel model)
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Model state is invalid. Returning the view with validation errors.");
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        _logger.LogWarning("Field: {Field}, Error: {Error}", state.Key, error.ErrorMessage);
+                    }
+                }
                 return View(model);
             }
 
@@ -210,7 +182,9 @@ namespace GedsiHub.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Update common fields
+            _logger.LogInformation("User found: {UserId}, updating profile fields.", user.Id);
+
+            // Update editable fields
             user.Honorifics = model.Honorifics;
             user.LivedName = model.LivedName;
             user.Pronouns = model.Pronouns;
@@ -218,72 +192,65 @@ namespace GedsiHub.Controllers
             user.PhoneNumber = model.PhoneNumber;
             user.Sex = model.Sex;
             user.GenderIdentity = model.GenderIdentity;
+            user.IsMemberOfIndigenousCommunity = model.IsMemberOfIndigenousCommunity;
+            user.IsDisabled = model.IsDisabled;
+            _logger.LogInformation("Editable profile fields updated for user {UserId}.", user.Id);
 
-            // Handle Profile Picture Upload
+            // Handle Profile Picture Upload if provided
             if (model.ProfilePicture != null && model.ProfilePicture.Length > 0)
             {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile_pictures");
-                if (!Directory.Exists(uploadsFolder))
+                try
                 {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                    var fileExtension = Path.GetExtension("cropped_image.jpg").ToLower();
 
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(model.ProfilePicture.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await model.ProfilePicture.CopyToAsync(fileStream);
-                }
-
-                // Update the ProfilePicturePath
-                user.ProfilePicturePath = $"/images/profile_pictures/{uniqueFileName}";
-            }
-
-            // Determine User Type
-            var userType = await GetUserTypeAsync(user);
-
-            if (userType == "Student")
-            {
-                var student = await _context.Students
-                    .Include(s => s.Course)
-                    .FirstOrDefaultAsync(s => s.UserId == user.Id);
-
-                if (student != null)
-                {
-                    // Update Student-specific fields
-                    if (!string.IsNullOrEmpty(model.Program))
+                    if (!allowedExtensions.Contains(fileExtension))
                     {
-                        var course = await _context.Courses.FirstOrDefaultAsync(c => c.CourseName == model.Program);
-                        if (course != null)
+                        ModelState.AddModelError("ProfilePicture", "Only .jpg, .jpeg, and .png files are allowed.");
+                        return View(model);
+                    }
+
+                    // Limit file size to 2 MB
+                    if (model.ProfilePicture.Length > 2 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError("ProfilePicture", "The profile picture exceeds the 2 MB size limit.");
+                        return View(model);
+                    }
+
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile_pictures");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                        _logger.LogInformation("Created directory for profile pictures at {UploadsFolder}", uploadsFolder);
+                    }
+
+                    var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.ProfilePicture.CopyToAsync(fileStream);
+                    }
+
+                    // Delete the old profile picture if it exists and is not the default
+                    if (!string.IsNullOrEmpty(user.ProfilePicturePath) && user.ProfilePicturePath != "/images/User.png")
+                    {
+                        var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", user.ProfilePicturePath.TrimStart('/'));
+                        if (System.IO.File.Exists(oldFilePath))
                         {
-                            student.CourseId = course.CourseId;
-                        }
-                        else
-                        {
-                            // Handle case where course does not exist
-                            ModelState.AddModelError("Program", "Selected program does not exist.");
-                            return View(model);
+                            System.IO.File.Delete(oldFilePath);
+                            _logger.LogInformation("Deleted old profile picture for user {UserId} at {OldFilePath}", user.Id, oldFilePath);
                         }
                     }
 
-                    student.Year = model.Year;
-                    student.Section = model.Section;
+                    user.ProfilePicturePath = $"/images/profile_pictures/{uniqueFileName}";
+                    _logger.LogInformation("Profile picture uploaded for user {UserId}, file path: {FilePath}", user.Id, user.ProfilePicturePath);
                 }
-            }
-            else if (userType == "Employee")
-            {
-                var employee = await _context.Employees
-                    .FirstOrDefaultAsync(e => e.UserId == user.Id);
-
-                if (employee != null)
+                catch (Exception ex)
                 {
-                    // Update Employee-specific fields
-                    employee.EmployeeType = model.EmployeeType;
-                    employee.EmploymentStatus = model.EmploymentStatus;
-                    employee.BranchOfficeSectionUnit = model.BranchOfficeSectionUnit;
-                    employee.Position = model.Position;
-                    employee.Sector = model.Sector;
+                    _logger.LogError(ex, "Error occurred while uploading profile picture for user {UserId}.", user.Id);
+                    ModelState.AddModelError("ProfilePicture", "An error occurred while uploading the profile picture. Please try again.");
+                    return View(model);
                 }
             }
 
@@ -292,11 +259,11 @@ namespace GedsiHub.Controllers
             {
                 _context.Update(user);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("User profile updated successfully.");
+                _logger.LogInformation("User profile updated successfully for user {UserId}.", user.Id);
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error updating user profile.");
+                _logger.LogError(ex, "Error updating user profile for user {UserId}.", user.Id);
                 ModelState.AddModelError(string.Empty, "An error occurred while updating the profile. Please try again.");
                 return View(model);
             }
@@ -304,9 +271,6 @@ namespace GedsiHub.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ****************************** HELPER METHODS ******************************
-
-        // Helper Method to Determine User Type (Student, Employee, or Admin).
         private async Task<string> GetUserTypeAsync(ApplicationUser user)
         {
             var isStudent = await _context.Students.AnyAsync(s => s.UserId == user.Id);
@@ -317,7 +281,7 @@ namespace GedsiHub.Controllers
             if (isEmployee)
                 return "Employee";
 
-            return "Admin"; // Assuming non-Student/Employee users are Admins
+            return "Admin";
         }
     }
 }
