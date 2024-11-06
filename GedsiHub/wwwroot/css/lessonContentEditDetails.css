@@ -176,7 +176,26 @@ background-color:#920000;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+}
 
+
+.next-lesson-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    border-radius: 2rem;
+    background: #660000;
+    padding: 0.5rem 1.5rem;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+}
+
+.next-lesson-btn:hover {
+    background-color:#920000;
+    color: #fff;
 }
 /*.tinyMCE_preview {
     margin-top: 2rem;
