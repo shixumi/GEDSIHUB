@@ -32,7 +32,7 @@ namespace GedsiHub.Controllers
         // This action redirects towards User Management
         public async Task<IActionResult> Index()
         {
-            return RedirectToAction(nameof(UserManagement));
+            return RedirectToAction("AdminDashboard", "Dashboard");
         }
 
         // ****************************** USER MANAGEMENT ******************************
