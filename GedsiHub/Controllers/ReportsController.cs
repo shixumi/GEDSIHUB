@@ -62,7 +62,31 @@ namespace GedsiHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Demographic(DemographicReportViewModel model)
         {
-            // Check if the model state is valid
+            // Custom validation for required custom date fields
+            if (!model.CustomStartDate.HasValue)
+            {
+                ModelState.AddModelError(nameof(model.CustomStartDate), "Please enter a start date.");
+            }
+
+            if (!model.CustomEndDate.HasValue)
+            {
+                ModelState.AddModelError(nameof(model.CustomEndDate), "Please enter an end date.");
+            }
+
+            // Validate that CustomStartDate is not later than CustomEndDate
+            if (model.CustomStartDate.HasValue && model.CustomEndDate.HasValue)
+            {
+                if (model.CustomStartDate.Value > model.CustomEndDate.Value)
+                {
+                    ModelState.AddModelError(string.Empty, "The start date cannot be later than the end date.");
+                }
+                if (model.CustomEndDate.Value > DateTime.UtcNow)
+                {
+                    ModelState.AddModelError(nameof(model.CustomEndDate), "The end date cannot be in the future.");
+                }
+            }
+
+            // If model state is invalid, log issues and return to view
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Please check your input and try again.";
@@ -74,13 +98,8 @@ namespace GedsiHub.Controllers
                     _logger.LogWarning($"Validation error: {error.ErrorMessage}");
                 }
 
-                // Re-populate options for the view
-                model.DateRangeOptions = GetDateRangeOptions();
-                model.CampusOptions = GetCampusOptions();
-                model.AgeGroupOptions = GetAgeGroupOptions();
-                model.SexOptions = GetSexOptions();
-                model.GenderIdentityOptions = GetGenderIdentityOptions();
-                model.UserTypeOptions = GetUserTypeOptions();
+                // Re-populate dropdown options for the view
+                PopulateDropdownOptions(model);
                 return View(model);
             }
 
@@ -95,12 +114,7 @@ namespace GedsiHub.Controllers
                 {
                     _logger.LogInformation("No users found for the selected filters.");
                     TempData["NoDataMessage"] = "No users found for the selected filters.";
-                    model.DateRangeOptions = GetDateRangeOptions();
-                    model.CampusOptions = GetCampusOptions();
-                    model.AgeGroupOptions = GetAgeGroupOptions();
-                    model.SexOptions = GetSexOptions();
-                    model.GenderIdentityOptions = GetGenderIdentityOptions();
-                    model.UserTypeOptions = GetUserTypeOptions();
+                    PopulateDropdownOptions(model);
                     return View(model);
                 }
 
@@ -115,7 +129,7 @@ namespace GedsiHub.Controllers
                 // Log the report generation format
                 _logger.LogInformation($"Generating report in {model.FileFormat} format.");
 
-                // Generate CSV or PDF report
+                // Generate report based on selected file format
                 if (model.FileFormat == "CSV")
                 {
                     var csvBytes = GenerateCsv(users, model);
@@ -132,12 +146,7 @@ namespace GedsiHub.Controllers
                 // Handle invalid file format selection
                 _logger.LogWarning("Invalid file format selected.");
                 TempData["Error"] = "Please select a valid file format.";
-                model.DateRangeOptions = GetDateRangeOptions();
-                model.CampusOptions = GetCampusOptions();
-                model.AgeGroupOptions = GetAgeGroupOptions();
-                model.SexOptions = GetSexOptions();
-                model.GenderIdentityOptions = GetGenderIdentityOptions();
-                model.UserTypeOptions = GetUserTypeOptions();
+                PopulateDropdownOptions(model);
                 return View(model);
             }
             catch (Exception ex)
@@ -145,14 +154,19 @@ namespace GedsiHub.Controllers
                 // Log the error and return an error message
                 _logger.LogError(ex, "An error occurred while generating the report.");
                 TempData["ErrorMessage"] = "An error occurred: " + ex.Message;
-                model.DateRangeOptions = GetDateRangeOptions();
-                model.CampusOptions = GetCampusOptions();
-                model.AgeGroupOptions = GetAgeGroupOptions();
-                model.SexOptions = GetSexOptions();
-                model.GenderIdentityOptions = GetGenderIdentityOptions();
-                model.UserTypeOptions = GetUserTypeOptions();
+                PopulateDropdownOptions(model);
                 return View(model);
             }
+        }
+
+        // Helper method to populate dropdown options
+        private void PopulateDropdownOptions(DemographicReportViewModel model)
+        {
+            model.CampusOptions = GetCampusOptions();
+            model.AgeGroupOptions = GetAgeGroupOptions();
+            model.SexOptions = GetSexOptions();
+            model.GenderIdentityOptions = GetGenderIdentityOptions();
+            model.UserTypeOptions = GetUserTypeOptions();
         }
 
         // Helper Methods for Options
