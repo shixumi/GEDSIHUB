@@ -38,15 +38,9 @@ namespace GedsiHub.ViewModels
         public string Name { get; set; }
 
         [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "Full Marks must be a positive number.")]
-        public decimal FullMarks { get; set; }
-
-        [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "Duration must be a positive number.")]
-        public decimal Duration { get; set; }
-
-        [Required]
         public int ModuleId { get; set; }
+        public int NumberOfQuestions { get; set; }
+        public bool ShuffleQuestions { get; set; }
 
         public List<QuestionViewModel> Questions { get; set; } = new List<QuestionViewModel>();
     }

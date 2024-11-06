@@ -84,7 +84,10 @@
 
         @if (User.IsInRole("Student") || User.IsInRole("Employee"))
         {
-            <button id="nextLessonBtn" style="display: none;">Proceed to Next Lesson</button>
+            <div class="lesson_content_buttons">
+                <button id="nextLessonBtn" class="next-lesson-btn" style="display: none;">Next Lesson</button>
+            </div>
+            
         }
 
 
