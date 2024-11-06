@@ -31,21 +31,14 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ExamID" />
             <input type="hidden" asp-for="ModuleId" />
-            <div>
+            
                 <span>Assessment Title</span>
                 <input asp-for="Name" type="text" placeholder="Enter assessment title" required />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div>
-                <span>Full Marks</span>
-                <input asp-for="FullMarks" type="text" placeholder="Enter full marks" required />
-                <span asp-validation-for="FullMarks" class="text-danger"></span>
-            </div>
-            <div>
-                <span>Duration (Minutes)</span>
-                <input asp-for="Duration" type="text" placeholder="Enter duration" required />
-                <span asp-validation-for="Duration" class="text-danger"></span>
-            </div>
+                
+            
+            <span asp-validation-for="Name" class="text-danger"></span>
+            
+                
         </div>
 
         <div id="questions" class="container assessment-container">

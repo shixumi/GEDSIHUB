@@ -1,27 +1,36 @@
 ﻿// Array of colors for the circles (rainbow colors)
 const circleColors = ['#FF6663', '#FEB144', '#f7e788', '#91d694', '#9ECBCF', '#8183a9', '#c594c3'];
 
-// Function to add a new row with a colored circle to each table independently
-function addNotificationRow(content, timeAgo, tableClass) {
+// Function to set colors for existing notifications
+function updateNotificationColors(tableClass) {
     const tableBody = document.querySelector(`.${tableClass} tbody`);
+    const notifications = tableBody.querySelectorAll('tr'); // Select all notification rows
 
-    //if (!tableBody) {
-    //    console.error(`Table with class ${tableClass} not found.`);
-    //    return;
-    //}
+    notifications.forEach((notificationRow, index) => {
+        const notifCircle = notificationRow.querySelector('.notif-circle');
+        if (notifCircle) {
+            notifCircle.style.backgroundColor = circleColors[index % circleColors.length]; // Assign color
+        }
+    });
+}
+
+// Function to add a new row with a colored circle to each table independently
+function addNotificationRow(content, timeAgo, title, isImportant) {
+    const tableClass = isImportant ? 'important-notif-table' : 'less-important-notif-table';
+    const tableBody = document.querySelector(`.${tableClass} tbody`);
 
     // Create new row
     const newRow = document.createElement('tr');
+    newRow.classList.add('notification-item');
 
     // Create the circle cell
     const circleCell = document.createElement('td');
     const notifCircle = document.createElement('div');
     notifCircle.classList.add('notif-circle');
-    notifCircle.innerHTML = '<img src="/images/GADO_Logo_white.png" alt="GADO Icon" />';
 
     // Set the color based on the current number of rows in the specific table
     const rowIndex = tableBody.children.length; // Only count rows in this table
-    notifCircle.style.backgroundColor = circleColors[rowIndex % circleColors.length];
+    notifCircle.style.backgroundColor = circleColors[rowIndex % circleColors.length]; // Rainbow color assignment
 
     // Append the circle to the cell
     circleCell.appendChild(notifCircle);
@@ -29,24 +38,23 @@ function addNotificationRow(content, timeAgo, tableClass) {
 
     // Create content cell
     const contentCell = document.createElement('td');
-    contentCell.innerHTML = content;
+    contentCell.innerHTML = `<strong>${title}</strong><br /><span>${content.length > 100 ? content.substring(0, 100) + "..." : content}</span>`;
     newRow.appendChild(contentCell);
 
     // Create time cell
     const timeCell = document.createElement('td');
+    timeCell.classList.add('timestamp');
     timeCell.innerHTML = timeAgo;
     newRow.appendChild(timeCell);
 
     // Append the new row to the table body
     tableBody.appendChild(newRow);
+
+    // Update colors for all notifications after adding a new one
+    updateNotificationColors(tableClass);
 }
 
-// ERROR: Table with class less-important-notif-table not found.
-// Example usage for both tables, each starting with red, orange, yellow, etc.
-/*
-addNotificationRow('The new module "Understanding Workplace Inclusivity" has been successfully published.', '1h ago', 'important-notif-table');
-addNotificationRow('Another important update.', '2h ago', 'important-notif-table');
 
-addNotificationRow('The less important module has been published.', '1h ago', 'less-important-notif-table');
-addNotificationRow('Another less important update.', '2h ago', 'less-important-notif-table');
-*/
+// Call to update existing notifications (you may call this once during initialization if needed)
+updateNotificationColors('important-notif-table'); // Update existing important notifications
+updateNotificationColors('less-important-notif-table'); // Update existing less important notifications

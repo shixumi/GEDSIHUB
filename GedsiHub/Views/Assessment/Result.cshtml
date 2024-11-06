@@ -5,8 +5,70 @@
     ViewData["Title"] = "Assessment Result";
 }
 
-<h2>Assessment Result</h2>
 
-<p>Total Questions: @Model.TotalQuestions</p>
-<p>Correct Answers: @Model.CorrectAnswers</p>
-<p>Your Score: @Model.Score %</p>
+<style>
+    .parent-container {
+        display: flex;
+        
+        justify-content: center; /* Centers horizontally */
+        height: 100vh; /* Make sure the parent has a height to center within */
+    }
+
+    .assessment-result-container {
+        width: 55%;
+        height: 26rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 3rem 5rem;
+        background-color: white;
+        box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+        border-radius: 2rem;
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+
+    .assessment-result-text {
+        font-weight: 600;
+        font-size: 2rem !important;
+        padding-bottom: 1.5rem;
+        color: #660000;
+    }
+
+    .assessment-result-container span {
+        font-size: 1.6rem;
+    }
+
+    .assessment-result-container div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .assessment-result-container div span {
+            font-weight: 600;
+        }
+
+    .your-score span {
+        color: #660000;
+        font-weight: 700 !important;
+        margin-top: 1rem;
+    }
+
+</style>
+
+
+
+<div class="parent-container">
+    <div class="assessment-result-container">
+        <span class="assessment-result-text">Assessment Result</span>
+        <div><span>Total Questions</span><span>@Model.TotalQuestions</span></div>
+        <div><span>Correct Answers</span><span>@Model.CorrectAnswers</span></div>
+        <div class="your-score"><span>Your Score</span><span>@Model.Score %</span></div>
+    </div>
+</div>
+
+
