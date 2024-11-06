@@ -35,6 +35,13 @@ namespace GedsiHub.Services
                 .ToListAsync();
         }
 
+        public async Task<Answer> GetCorrectAnswerByQuestionId(int questionId)
+        {
+            return await _dbContext.Answers
+                .FirstOrDefaultAsync(a => a.QuestionID == questionId && a.IsCorrect);
+        }
+
+
         public async Task<int> AddAnswer(Answer answer)
         {
             _dbContext.Answers.Add(answer);

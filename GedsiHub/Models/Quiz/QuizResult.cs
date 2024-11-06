@@ -19,8 +19,8 @@ namespace GedsiHub.Models.Quiz
 
         public int ExamID { get; set; }
         public int QuestionID { get; set; }
-        public int AnswerID { get; set; }
+        public int? AnswerID { get; set; }
         public int SelectedOptionID { get; set; }
-        public bool IsCorrent { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }

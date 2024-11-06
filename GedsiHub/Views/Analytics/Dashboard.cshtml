@@ -5,17 +5,13 @@
     ViewData["Title"] = "Analytics Dashboard";
 }
 
-        
 <div class="feedback-title-searcbar-con">
     <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">@ViewData["Title"]</h1>
     <div class="manage-user-and-gen-rep-con">
         <button id="GenerateReportButton" type="button" onclick="location.href='@Url.Action("Demographic", "Reports")'">
             <img src="~/images/Graph.png" alt="Generate Report" /> Generate Report
         </button>
-
-
     </div>
-
 </div>
 <hr class="custom-hr">
 
@@ -52,53 +48,7 @@
     </div>
 </div>
 
-
-
-
-@* 
-<h1>@ViewData["Title"]</h1>
-
-<!-- Summary Metrics -->
-<div class="row mb-4">
-    <div class="col-md-3 col-sm-6 mb-3">
-        <div class="card text-white bg-primary h-100">
-            <div class="card-body">
-                <h5 class="card-title">Total Learners</h5>
-                <p class="card-text" style="font-size: 2em;">@Model.TotalLearners</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6 mb-3">
-        <div class="card text-white bg-success h-100">
-            <div class="card-body">
-                <h5 class="card-title">Student Learners</h5>
-                <p class="card-text" style="font-size: 2em;">@Model.StudentLearners</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6 mb-3">
-        <div class="card text-white bg-warning h-100">
-            <div class="card-body">
-                <h5 class="card-title">Employee Learners</h5>
-                <p class="card-text" style="font-size: 2em;">@Model.EmployeeLearners</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-6 mb-3">
-        <div class="card text-white bg-danger h-100">
-            <div class="card-body">
-                <h5 class="card-title">Total Modules</h5>
-                <p class="card-text" style="font-size: 2em;">@Model.TotalModules</p>
-            </div>
-        </div>
-    </div>
-</div>
- *@
-
-
-
 <hr class="custom-hr" style="margin-top: 1.5rem;">
-
 
 <div class="all-analytics-container">
     <!-- Row 1: Age Distribution, Gender Identity, Indigenous Membership -->
@@ -125,9 +75,8 @@
         <div class="container analytics_graph_container active-users-container">
             <div class="active-users-label-and-count-con">
                 <h4>Current<br>Active Users</h4>
-                <span class="activeUsersCount"></span>
+                <span class="activeUsersCount">Loading...</span>
             </div>
-           
         </div>
         <div class="container analytics_graph_container module-performance-container">
             <h4>Module Performance</h4>
@@ -143,15 +92,15 @@
             <div class="module-performance-stats-container">
                 <div class="module-performance-stat">
                     <p><strong>Average Quiz Score</strong></p>
-                    <p id="averageQuizScore">0</p>
+                    <p id="averageQuizScore">Loading...</p>
                 </div>
                 <div class="module-performance-stat">
                     <p><strong>Completion Rate</strong></p>
-                    <p id="completionRate">0%</p>
+                    <p id="completionRate">Loading...</p>
                 </div>
                 <div class="module-performance-stat">
                     <p><strong>Certificates Issued</strong></p>
-                    <p id="certificateIssuance">0</p>
+                    <p id="certificateIssuance">Loading...</p>
                 </div>
             </div>
             <span class="insight">Insight: Key performance metrics per module.</span>
@@ -172,218 +121,244 @@
         </div>
     </div>
 
+    <!-- Power BI Embedded Report (if applicable) -->
     <iframe title="Analytics" width="1470" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiYTdjMGU5ZTEtOTYxOS00NjAyLTlhMTItZmY2NWY1ZTU3OWFlIiwidCI6IjRkYTk4NTcxLWRjZWEtNDgzOS04ZmIxLTBiZGQ1ZGM5NjlmOSIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
 </div>
 
-
-
 <!-- Charts Initialization Script -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Fetch and render User Demographics
-        fetch('/Analytics/GetUserDemographics')
-            .then(response => response.json())
-            .then(data => {
-                // Age Distribution
-                const ageLabels = data.ageDistribution.map(a => a.year);
-                const ageCounts = data.ageDistribution.map(a => a.count);
-
-                new Chart(document.getElementById('ageDistributionChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: ageLabels,
-                        datasets: [{
-                            label: 'Number of Users',
-                            data: ageCounts,
-                            backgroundColor: 'rgb(42, 96, 113, 0.6)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: false,
-                                text: 'Age Distribution'
-                            },
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Number of Users'
-                                }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Year of Birth'
-                                }
-                            }
-                        }
-                    }
-                });
-
-                // Gender Identity
-                const genderLabels = data.genderIdentity.map(g => g.gender);
-                const genderCounts = data.genderIdentity.map(g => g.count);
-
-                new Chart(document.getElementById('genderIdentityChart'), {
-                    type: 'pie',
-                    data: {
-                        labels: genderLabels,
-                        datasets: [{
-                            data: genderCounts,
-                            backgroundColor: ['#6b2a1e', '#d8b27b', '#3c6470', '#7b5742', '#5c7786']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            title: {
-                                display: false,
-                                text: 'Gender Identity'
-                            }
-                        }
-                    }
-                });
-
-                // Indigenous Membership
-                const indigenousLabels = data.indigenousMembership.map(i => i.isMember ? "Indigenous" : "Non-Indigenous");
-                const indigenousCounts = data.indigenousMembership.map(i => i.count);
-
-                new Chart(document.getElementById('indigenousMembershipChart'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: indigenousLabels,
-                        datasets: [{
-                            data: indigenousCounts,
-                            backgroundColor: ['#c48c3a', '#3c6470']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            title: {
-                                display: false,
-                                text: 'Indigenous Membership'
-                            }
-                        }
-                    }
-                });
-            });
-
-        // Module Performance
-        document.getElementById('moduleSelector').addEventListener('change', function () {
-            const moduleId = this.value;
-            fetch(`/Analytics/GetModulePerformance?moduleId=${moduleId}`)
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch and render User Demographics
+            fetch('/Analytics/GetUserDemographics')
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('averageQuizScore').innerText = data.AverageQuizScore.toFixed(2);
-                    document.getElementById('completionRate').innerText = data.CompletionRate.toFixed(2);
-                    document.getElementById('certificateIssuance').innerText = data.CertificateIssuance;
+                    // Age Distribution
+                    const ageLabels = data.ageDistribution.map(a => a.year);
+                    const ageCounts = data.ageDistribution.map(a => a.count);
+
+                    new Chart(document.getElementById('ageDistributionChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: ageLabels,
+                            datasets: [{
+                                label: 'Number of Users',
+                                data: ageCounts,
+                                backgroundColor: 'rgba(42, 96, 113, 0.6)'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: false,
+                                    text: 'Age Distribution'
+                                },
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Number of Users'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Year of Birth'
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Gender Identity
+                    const genderLabels = data.genderIdentity.map(g => g.gender);
+                    const genderCounts = data.genderIdentity.map(g => g.count);
+
+                    new Chart(document.getElementById('genderIdentityChart'), {
+                        type: 'pie',
+                        data: {
+                            labels: genderLabels,
+                            datasets: [{
+                                data: genderCounts,
+                                backgroundColor: ['#6b2a1e', '#d8b27b', '#3c6470', '#7b5742', '#5c7786']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: false,
+                                    text: 'Gender Identity'
+                                }
+                            }
+                        }
+                    });
+
+                    // Indigenous Membership
+                    const indigenousLabels = data.indigenousMembership.map(i => i.isMember ? "Indigenous" : "Non-Indigenous");
+                    const indigenousCounts = data.indigenousMembership.map(i => i.count);
+
+                    new Chart(document.getElementById('indigenousMembershipChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: indigenousLabels,
+                            datasets: [{
+                                data: indigenousCounts,
+                                backgroundColor: ['#c48c3a', '#3c6470']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: false,
+                                    text: 'Indigenous Membership'
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching user demographics:', error);
+                });
+
+            // Module Performance
+            document.getElementById('moduleSelector').addEventListener('change', function () {
+                const moduleId = this.value;
+                fetch(`/Analytics/GetModulePerformance?moduleId=${moduleId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update UI with correct field names from the response
+                        document.getElementById('averageQuizScore').innerText = data.averageQuizScore !== null ? data.averageQuizScore.toFixed(2) : 'N/A';
+                        document.getElementById('completionRate').innerText = data.completionRate !== null ? data.completionRate.toFixed(2) + '%' : 'N/A';
+                        document.getElementById('certificateIssuance').innerText = data.certificateIssuance !== null ? data.certificateIssuance : 'N/A';
+                    })
+                    .catch(error => {
+                        console.error('Error fetching module performance data:', error);
+                        document.getElementById('averageQuizScore').innerText = 'N/A';
+                        document.getElementById('completionRate').innerText = 'N/A';
+                        document.getElementById('certificateIssuance').innerText = 'N/A';
+                    });
+            });
+
+
+            // Initial load for module performance
+            const moduleSelector = document.getElementById('moduleSelector');
+            if (moduleSelector && moduleSelector.options.length > 0) {
+                // Optionally, select a specific module or default to first
+                moduleSelector.selectedIndex = 0; // Select first module
+                moduleSelector.dispatchEvent(new Event('change'));
+            }
+
+            // Employment Status Breakdown
+            fetch('/Analytics/GetEmploymentStatusBreakdown')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(e => e.status);
+                    const counts = data.map(e => e.count);
+
+                    new Chart(document.getElementById('employmentStatusChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Number of Users',
+                                data: counts,
+                                backgroundColor: 'rgba(196, 140, 58, 0.6)'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: false,
+                                    text: 'Employment Status Breakdown'
+                                },
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Number of Users'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Employment Status'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching employment status breakdown:', error);
+                });
+
+            // Course Associations
+            fetch('/Analytics/GetCourseAssociations')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(c => c.courseName);
+                    const counts = data.map(c => c.count);
+
+                    new Chart(document.getElementById('courseAssociationsChart'), {
+                        type: 'pie',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: counts,
+                                backgroundColor: ['#3c6470', '#7b5742', '#96aab8', '#5c7786', '#6b2a1e', '#d8b27b']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: false,
+                                    text: 'Course Associations'
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching course associations:', error);
+                });
+
+            // Current Active Users
+            fetch('/Analytics/GetCurrentActiveUsers')
+                .then(response => response.json())
+                .then(data => {
+                    const activeUsersElement = document.querySelector('.activeUsersCount');
+                    if (activeUsersElement) {
+                        activeUsersElement.innerText = data.ActiveUsers;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching current active users:', error);
                 });
         });
-
-        // Initial load for module performance
-        if (document.getElementById('moduleSelector').options.length > 0) {
-            document.getElementById('moduleSelector').dispatchEvent(new Event('change'));
-        }
-
-        // Employment Status Breakdown
-        fetch('/Analytics/GetEmploymentStatusBreakdown')
-            .then(response => response.json())
-            .then(data => {
-                const labels = data.map(e => e.status);
-                const counts = data.map(e => e.count);
-
-                new Chart(document.getElementById('employmentStatusChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Number of Users',
-                            data: counts,
-                            backgroundColor: 'rgb(196, 140, 58, 0.6)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            title: {
-                                display: false,
-                                text: 'Employment Status Breakdown'
-                            },
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Number of Users'
-                                }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Employment Status'
-                                }
-                            }
-                        }
-                    }
-                });
-            });
-
-             // Course Associations
-        fetch('/Analytics/GetCourseAssociations')
-            .then(response => response.json())
-            .then(data => {
-                // Assuming data contains CourseName and Count
-                const labels = data.map(c => c.courseName);
-                const counts = data.map(c => c.count);
-
-                new Chart(document.getElementById('courseAssociationsChart'), {
-                    type: 'pie',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: counts,
-                            backgroundColor: ['#3c6470', '#7b5742', '#96aab8', '#5c7786', '#6b2a1e', '#d8b27b']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            title: {
-                                display: false,
-                                text: 'Course Associations'
-                            }
-                        }
-                    }
-                });
-            });
-
-        // Current Active Users
-        fetch('/Analytics/GetCurrentActiveUsers')
-            .then(response => response.json())
-            .then(data => {
-                document.querySelector('.activeUsersCount').innerText = data.ActiveUsers;
-            });
-    });
-</script>
+    </script>
+}

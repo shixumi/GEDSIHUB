@@ -237,22 +237,22 @@ namespace GedsiHub.Services
         // New Method: Get Completion Rate per Module
         public async Task<double> GetModuleCompletionRateAsync(int moduleId)
         {
-            var totalUsers = await _context.UserActivities
-                .Where(ua => ua.ModuleId == moduleId)
-                .Select(ua => ua.UserId)
+            var totalUsers = await _context.UserProgresses
+                .Where(up => up.ModuleId == moduleId)
+                .Select(up => up.UserId)
                 .Distinct()
                 .CountAsync();
 
             if (totalUsers == 0)
                 return 0.0;
 
-            var completedUsers = await _context.UserActivities
-                .Where(ua => ua.ModuleId == moduleId && ua.ActivityType.Contains("completed") && ua.Success == true)
-                .Select(ua => ua.UserId)
+            var completedUsers = await _context.UserProgresses
+                .Where(up => up.ModuleId == moduleId && up.IsCompleted)
+                .Select(up => up.UserId)
                 .Distinct()
                 .CountAsync();
 
-            return ((double)completedUsers / totalUsers) * 100; // Ensure all are double
+            return ((double)completedUsers / totalUsers) * 100;
         }
 
         // New Method: Get Number of Certificates Issued per Module
@@ -266,15 +266,43 @@ namespace GedsiHub.Services
         // New Method: Get Average Quiz Score per Module
         public async Task<double> GetAverageQuizScoreAsync(int moduleId)
         {
-            var scores = await _context.UserActivities
-                .Where(ua => ua.ModuleId == moduleId && ua.ActivityType.Contains("completed") && ua.Score.HasValue)
-                .Select(ua => ua.Score.Value)
+            _logger.LogInformation("Fetching exams for Module ID: {ModuleId}", moduleId);
+
+            var examIds = await _context.Exams
+                .Where(e => e.ModuleId == moduleId)
+                .Select(e => e.ExamID)
                 .ToListAsync();
 
-            if (!scores.Any())
+            _logger.LogInformation("Found {ExamCount} exams for Module ID: {ModuleId}", examIds.Count, moduleId);
+
+            if (!examIds.Any())
                 return 0.0;
 
-            return scores.Average(); // Already double
+            var quizResults = await _context.QuizResults
+                .Where(qr => examIds.Contains(qr.ExamID))
+                .ToListAsync();
+
+            _logger.LogInformation("Found {QuizResultCount} quiz results for Module ID: {ModuleId}", quizResults.Count, moduleId);
+
+            if (!quizResults.Any())
+                return 0.0;
+
+            // Calculate the average score per user
+            var userScores = quizResults
+                .GroupBy(qr => qr.UserId)
+                .Select(g =>
+                {
+                    var totalQuestions = g.Count();
+                    var correctAnswers = g.Count(qr => qr.IsCorrect);
+                    return (double)correctAnswers / totalQuestions * 100;
+                })
+                .ToList();
+
+            var averageScore = userScores.Any() ? userScores.Average() : 0.0;
+
+            _logger.LogInformation("Average quiz score for Module ID: {ModuleId} is {AverageScore}", moduleId, averageScore);
+
+            return averageScore;
         }
 
         // New Method: Get the Count of Modules to Do for a User
