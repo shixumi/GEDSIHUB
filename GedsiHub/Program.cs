@@ -106,7 +106,7 @@ builder.Services.AddRazorPages();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.AccessDeniedPath = "/Error/403";
 });
 
 // ========================================
@@ -186,10 +186,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
 // ========================================
 // 8. Map Endpoints
 // ========================================
-app.MapHub<AnalyticsHub>("/analyticsHub"); // Map SignalR Hub
+app.MapHub<AnalyticsHub>("/analyticsHub");
+app.MapHub<NotificationHub>("/notificationHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Dashboard}/{action=Index}/{id?}");

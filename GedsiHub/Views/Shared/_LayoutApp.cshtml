@@ -42,6 +42,7 @@
     <link rel="stylesheet" href="~/css/editProfile.css" />
     <link rel="stylesheet" href="~/css/errors.css" />
     <link rel="stylesheet" href="~/css/viewReports.css" />
+    <link rel="stylesheet" href="~/css/spinner.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
 
@@ -83,8 +84,23 @@
                 <div class="collapse navbar-collapse d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-end justify-content-lg-end justify-content-xl-end justify-content-xxl-end" id="navcol-3">
                     <img class="search_icon" src="~/images/Search.png" alt="Search Icon" />
                     <input type="search" class="navbar_search" placeholder="Search for anything" style="font-family: 'Poppins', sans-serif;" />
-                    <span class="navbar-text notification_icon_span" style="margin-right: 4px;">
-                        <img class="notification_icon" src="~/images/Notification.png" alt="Notification Icon" />
+                    <!-- Notifications Dropdown -->
+                    <span class="navbar-text notification_icon_span" style="margin-right: 4px; position: relative;">
+                        <a href="#" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell" style="font-size: 24px;"></i>
+                            <span id="notificationsCount" class="badge bg-danger" style="position: absolute; top: 0; right: 0;">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px;">
+                            <li>
+                                <div id="notificationsList" class="list-group">
+                                    <!-- Notifications will be loaded here via AJAX -->
+                                    <div class="text-center p-2">No new notifications.</div>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-center" href="@Url.Action("Index", "Notifications")">View All Notifications</a>
+                            </li>
+                        </ul>
                     </span>
                     <span class="d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center navbar-text profile_icon_span">
                         <a asp-controller="Profile" asp-action="Index" title="View Profile" aria-label="View Profile">
@@ -99,6 +115,21 @@
 
 
     </header>
+    <!-- Global Spinner -->
+    <div id="globalSpinner" class="d-flex justify-content-center align-items-center" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" class="flex-column justify-content-center align-items-center" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999;">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="mt-2">Loading...</span>
+    </div>
+
 
     <div class="background">
         @RenderBody()
@@ -169,6 +200,7 @@
         </div>
     </div>
 
+    
 @* 
    <div class="layout_container d-flex" style="min-height: 100vh;"> *@
 
@@ -292,6 +324,7 @@
     <script src="~/js/UnderlineToggling.js"></script>
     <script src="~/js/ProfileViewMoreFunction.js"></script>
     <script src="~/js/ToggleUserFieldsReports.js"></script>
+    <script src="~/js/spinner.js"></script>
     
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -306,6 +339,45 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            function loadNotifications() {
+                $.get('/Notifications/GetRecentNotifications', function (data) {
+                    $('#notificationsList').html(data);
+                });
+
+                // Update notifications count
+                $.get('/Notifications/GetUnreadCount', function (count) {
+                    $('#notificationsCount').text(count);
+                });
+            }
+
+            // Load notifications when the dropdown is opened
+            $('#notificationsDropdown').on('click', function () {
+                loadNotifications();
+            });
+
+            // SignalR setup
+            var connection = new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
+
+            connection.on("ReceiveNotification", function () {
+                // Optionally update notifications count or refresh notifications
+                loadNotifications();
+            });
+
+            connection.start().then(function () {
+                console.log('SignalR connected');
+            }).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+            // Initial load of unread count
+            $.get('/Notifications/GetUnreadCount', function (count) {
+                $('#notificationsCount').text(count);
+            });
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

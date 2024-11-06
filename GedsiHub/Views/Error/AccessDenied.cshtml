@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "403 Access Denied";
+}
+
+<div class="error-page">
+    <div class="error-container">
+        <img src="~/images/403.png" alt="403 Error Image"/>
+        <span>403 ERROR</span>
+        <span>Access Denied</span>
+        <span>Sorry, you don&#39;t have permission to access this file.</span>
+        <div class="d-flex justify-content-between align-items-center column-gap-5">
+            <button class="error-go-back-button" onclick="window.history.back()">Go Back</button>
+            <a asp-action="UserDashboard" asp-controller="Dashboard" class="error-home-page-button">Home Page</a>
+        </div>
+        
+    </div>
+</div>

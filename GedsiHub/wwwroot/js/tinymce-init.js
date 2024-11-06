@@ -59,7 +59,7 @@ function displayEditorError(message) {
 
 // Automatically load TinyMCE when the page loads
 window.addEventListener('DOMContentLoaded', () => {
-    const apiKey = 'pc43we3b52lrqcmnb47lj3qm67vb1913s1hlu7t592ezyquc';  // Your API key here
+    const apiKey = 'mu4me2oatw37outh5tb8n5z3tgsmpdbo0espl5885svmzsr7';  // Your API key here
 
     // Check if TinyMCE is already loaded
     if (typeof tinymce === 'undefined') {

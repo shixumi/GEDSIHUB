@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Azure.Communication.Email;
+using Azure;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace GedsiHub.Services
@@ -11,32 +11,46 @@ namespace GedsiHub.Services
     public class EmailSender : IEmailSender
     {
         private readonly IConfiguration _configuration;
+        private readonly EmailClient _emailClient;
 
         public EmailSender(IConfiguration configuration)
         {
             _configuration = configuration;
+            // Initialize the EmailClient using the ACS connection string from the configuration
+            var connectionString = _configuration["EmailSettings:ACSConnectionString"];
+
+            // Debugging: Check if the connection string is null or empty
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new Exception("ACSConnectionString is null or empty. Check your appsettings.json.");
+            }
+
+            _emailClient = new EmailClient(connectionString);
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             try
             {
-                var smtpClient = new SmtpClient
+                // Create the email content
+                var emailContent = new EmailContent(subject)
                 {
-                    Host = _configuration["EmailSettings:SMTPHost"],
-                    Port = int.Parse(_configuration["EmailSettings:SMTPPort"]),
-                    EnableSsl = true,
-                    Credentials = new NetworkCredential(
-                        _configuration["EmailSettings:FromEmail"],
-                        _configuration["EmailSettings:FromEmailPassword"])
+                    Html = htmlMessage
                 };
 
-                using (var mailMessage = new MailMessage(_configuration["EmailSettings:FromEmail"], email, subject, htmlMessage))
-                {
-                    mailMessage.IsBodyHtml = true;
-                    await smtpClient.SendMailAsync(mailMessage);
-                    Console.WriteLine($"Email sent to {email}");
-                }
+                // Create the email recipients
+                var emailRecipients = new EmailRecipients(new[] { new EmailAddress(email) });
+
+                // Create the email message
+                var emailMessage = new EmailMessage(
+                    senderAddress: _configuration["EmailSettings:FromEmail"],
+                    recipients: emailRecipients,
+                    content: emailContent
+                );
+
+                // Send the email
+                var operation = await _emailClient.SendAsync(WaitUntil.Completed, emailMessage);
+                Console.WriteLine($"Email sent to {email}. Operation ID: {operation.Id}");
             }
             catch (Exception ex)
             {
@@ -45,32 +59,37 @@ namespace GedsiHub.Services
             }
         }
 
-        // Method to send email with PDF attachment
         public async Task SendEmailWithAttachmentAsync(string email, string subject, string htmlMessage, byte[] pdfBytes, string fileName)
         {
             try
             {
-                var smtpClient = new SmtpClient
+                // Create the email content
+                var emailContent = new EmailContent(subject)
                 {
-                    Host = _configuration["EmailSettings:SMTPHost"],
-                    Port = int.Parse(_configuration["EmailSettings:SMTPPort"]),
-                    EnableSsl = true,
-                    Credentials = new NetworkCredential(
-                        _configuration["EmailSettings:FromEmail"],
-                        _configuration["EmailSettings:FromEmailPassword"])
+                    Html = htmlMessage
                 };
 
-                using (var mailMessage = new MailMessage(_configuration["EmailSettings:FromEmail"], email, subject, htmlMessage))
-                {
-                    mailMessage.IsBodyHtml = true;
+                // Create the email recipients
+                var emailRecipients = new EmailRecipients(new[] { new EmailAddress(email) });
 
-                    // Create attachment from the byte array and add it to the email
-                    var attachment = new Attachment(new MemoryStream(pdfBytes), fileName, "application/pdf");
-                    mailMessage.Attachments.Add(attachment);
+                // Create the email message
+                var emailMessage = new EmailMessage(
+                    senderAddress: _configuration["EmailSettings:FromEmail"],
+                    recipients: emailRecipients,
+                    content: emailContent
+                );
 
-                    await smtpClient.SendMailAsync(mailMessage);
-                    Console.WriteLine($"Email with attachment sent to {email}");
-                }
+                // Add the PDF attachment using BinaryData
+                var attachment = new EmailAttachment(
+                    name: fileName,
+                    contentType: "application/pdf",
+                    content: BinaryData.FromBytes(pdfBytes)
+                );
+                emailMessage.Attachments.Add(attachment);
+
+                // Send the email
+                var operation = await _emailClient.SendAsync(WaitUntil.Completed, emailMessage);
+                Console.WriteLine($"Email with attachment sent to {email}. Operation ID: {operation.Id}");
             }
             catch (Exception ex)
             {

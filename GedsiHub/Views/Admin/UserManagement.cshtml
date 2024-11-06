@@ -34,7 +34,7 @@
 
 
            <div class="select-container">
-            <select id="isActiveSelect" name="isActive" class="form-control">
+            <select id="isActiveSelect" name="isActive" class="form-control" onchange="this.form.submit();">
                 @if (Model.IsActive == null)
                 {
                     <option value="" selected>All Users</option>
@@ -118,3 +118,5 @@
     </div>
     </form>
 </div>
+
+
