@@ -1,4 +1,8 @@
-﻿.spinner-border {
+﻿#spinner {
+    font-family: Poppins, sans-serif;
+}
+
+.spinner-border {
     color: #660000 !important;
 }
 
