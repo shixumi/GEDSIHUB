@@ -11,14 +11,9 @@ namespace GedsiHub.Models.Quiz
         [Required]
         [StringLength(1000)]
         public string Name { get; set; }
+        public int NumberOfQuestions { get; set; } // Number of questions to display
+        public bool ShuffleQuestions { get; set; } // If true, questions will be randomized
 
-        [Required]
-        public decimal FullMarks { get; set; }
-
-        [Required]
-        public decimal Duration { get; set; } // in minutes
-
-        // Foreign Key to Module
         [Required]
         public int ModuleId { get; set; }
 

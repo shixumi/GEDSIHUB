@@ -59,8 +59,6 @@ namespace GedsiHub.Controllers
 
                 model.ExamID = exam.ExamID;
                 model.Name = exam.Name;
-                model.FullMarks = exam.FullMarks;
-                model.Duration = exam.Duration;
 
                 // Populate questions and choices for edit view
                 var questions = await _questionService.GetQuestionsByExamId(exam.ExamID);
@@ -104,10 +102,11 @@ namespace GedsiHub.Controllers
 
                         // Update existing exam properties
                         exam.Name = model.Name;
-                        exam.FullMarks = model.FullMarks;
-                        exam.Duration = model.Duration;
                         exam.ModifiedOn = DateTime.Now;
                         exam.ModifiedBy = User.Identity.Name;
+                        exam.NumberOfQuestions = model.NumberOfQuestions;
+                        exam.ShuffleQuestions = model.ShuffleQuestions;
+
                         await _examService.UpdateExam(exam);
                     }
                     else
@@ -116,8 +115,6 @@ namespace GedsiHub.Controllers
                         exam = new Exam
                         {
                             Name = model.Name,
-                            FullMarks = model.FullMarks,
-                            Duration = model.Duration,
                             ModuleId = model.ModuleId,
                             CreatedOn = DateTime.Now,
                             CreatedBy = User.Identity.Name,
@@ -270,10 +267,42 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
-            var qna = await _questionService.GetQuestionList(exam.ExamID);
+            // Fetch all questions for the exam
+            var allQuestions = await _questionService.GetQuestionsByExamId(exam.ExamID);
+
+            // Shuffle and limit questions if needed
+            var selectedQuestions = allQuestions.ToList();
+            if (exam.ShuffleQuestions)
+            {
+                selectedQuestions = selectedQuestions.OrderBy(_ => Guid.NewGuid()).ToList();
+            }
+
+            // Take only the specified number of questions
+            selectedQuestions = selectedQuestions.Take(exam.NumberOfQuestions).ToList();
+
+            // Convert to view model and shuffle choices if needed
+            var qna = new QnA
+            {
+                ExamID = exam.ExamID,
+                Exam = exam.Name,
+                questions = selectedQuestions.Select(q => new QuestionDetails
+                {
+                    QuestionID = q.QuestionID,
+                    QuestionText = q.DisplayText,
+                    QuestionType = q.QuestionType,
+                    options = _choiceService.GetChoicesByQuestion(q.QuestionID).Result
+                              .OrderBy(_ => Guid.NewGuid())  // Shuffle choices
+                              .Select(c => new OptionDetails
+                              {
+                                  OptionID = c.ChoiceID,
+                                  Option = c.DisplayText
+                              }).ToList()
+                }).ToList()
+            };
 
             return View(qna);
         }
+
 
         // POST: Assessment/Submit
         [HttpPost]
