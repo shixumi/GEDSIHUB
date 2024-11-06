@@ -1,11 +1,12 @@
-﻿using GedsiHub.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using GedsiHub.Models;
+using GedsiHub.Models.Quiz;
+using GedsiHub.Services.Interfaces;
+using GedsiHub.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
 using System.Security.Claims;
 
 namespace GedsiHub.Controllers
@@ -13,316 +14,367 @@ namespace GedsiHub.Controllers
     [Authorize]
     public class AssessmentController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IExam<Exam> _examService;
+        private readonly IQuestion<Question> _questionService;
+        private readonly IChoice<Choice> _choiceService;
+        private readonly IResult<QuizResult> _resultService;
+        private readonly IAnswerService _answerService;
         private readonly ILogger<AssessmentController> _logger;
 
-        public AssessmentController(ApplicationDbContext context, ILogger<AssessmentController> logger)
+        public AssessmentController(
+            IExam<Exam> examService,
+            IQuestion<Question> questionService,
+            IChoice<Choice> choiceService,
+            IResult<QuizResult> resultService,
+            ILogger<AssessmentController> logger,
+            IAnswerService answerService)
+
         {
-            _context = context;
+            _examService = examService;
+            _questionService = questionService;
+            _choiceService = choiceService;
+            _resultService = resultService;
             _logger = logger;
+            _answerService = answerService;
         }
 
-        // ****************************** CREATE ASSESSMENT ******************************
+        // GET: Assessment/CreateOrEdit
         [Authorize(Roles = "Admin")]
-        // GET: Assessment/Create/{moduleId}
-        public IActionResult Create(int moduleId)
+        public async Task<IActionResult> CreateOrEdit(int moduleId, int? examId = null)
         {
-            _logger.LogInformation($"Creating assessment for ModuleId: {moduleId}");
-
-            // Load the module and its assessment
-            var module = _context.Modules.Include(m => m.Assessment).FirstOrDefault(m => m.ModuleId == moduleId);
-            if (module == null)
+            // Initialize a new model for the view
+            var model = new QuizViewModel
             {
-                _logger.LogWarning($"Module with ID {moduleId} not found.");
-                return NotFound();
-            }
-
-            if (module.Assessment != null)
-            {
-                _logger.LogInformation($"Assessment already exists for ModuleId: {moduleId}, redirecting to edit.");
-                return RedirectToAction("Edit", new { id = module.Assessment.AssessmentId });
-            }
-
-            // Create a new assessment and pass the module object
-            var assessment = new Assessment
-            {
-                ModuleId = moduleId,
-                Module = module
+                ModuleId = moduleId
             };
 
-            return View(assessment);
+            if (examId.HasValue)
+            {
+                // If examId is provided, fetch the existing exam and populate the model
+                var exam = await _examService.GetExam(examId.Value);
+                if (exam == null)
+                {
+                    return NotFound();
+                }
+
+                model.ExamID = exam.ExamID;
+                model.Name = exam.Name;
+                model.FullMarks = exam.FullMarks;
+                model.Duration = exam.Duration;
+
+                // Populate questions and choices for edit view
+                var questions = await _questionService.GetQuestionsByExamId(exam.ExamID);
+                model.Questions = questions.Select(q => new QuestionViewModel
+                {
+                    QuestionID = q.QuestionID,
+                    DisplayText = q.DisplayText,
+                    QuestionType = q.QuestionType,
+                    Choices = _choiceService.GetChoicesByQuestion(q.QuestionID).Result.Select(c => new ChoiceViewModel
+                    {
+                        ChoiceID = c.ChoiceID,
+                        DisplayText = c.DisplayText,
+                        IsCorrect = _answerService.GetAnswerByQuestionAndChoice(q.QuestionID, c.ChoiceID).Result?.IsCorrect ?? false
+                    }).ToList()
+                }).ToList();
+            }
+
+            // Return the populated model to the view (for either create or edit)
+            return View(model);
         }
+
 
         // POST: Assessment/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Title,Description,H5PEmbedCode,ModuleId")] Assessment assessment)
+        public async Task<IActionResult> CreateOrEdit(QuizViewModel model)
         {
-            _logger.LogInformation("Creating new assessment.");
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _logger.LogError("ModelState is invalid. Logging validation errors...");
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                try
                 {
-                    _logger.LogError($"Validation Error: {error.ErrorMessage}");
+                    Exam exam;
+
+                    // Determine if this is a new quiz or an update
+                    if (model.ExamID.HasValue)
+                    {
+                        // Fetch the existing exam for editing
+                        exam = await _examService.GetExam(model.ExamID.Value);
+                        if (exam == null) return NotFound();
+
+                        // Update existing exam properties
+                        exam.Name = model.Name;
+                        exam.FullMarks = model.FullMarks;
+                        exam.Duration = model.Duration;
+                        exam.ModifiedOn = DateTime.Now;
+                        exam.ModifiedBy = User.Identity.Name;
+                        await _examService.UpdateExam(exam);
+                    }
+                    else
+                    {
+                        // Create a new exam
+                        exam = new Exam
+                        {
+                            Name = model.Name,
+                            FullMarks = model.FullMarks,
+                            Duration = model.Duration,
+                            ModuleId = model.ModuleId,
+                            CreatedOn = DateTime.Now,
+                            CreatedBy = User.Identity.Name,
+                            ModifiedBy = User.Identity.Name
+                        };
+                        await _examService.AddExam(exam);
+                    }
+
+                    // Loop through questions and choices
+                    foreach (var qvm in model.Questions)
+                    {
+                        Question question;
+
+                        if (qvm.QuestionID.HasValue)
+                        {
+                            // Fetch and update the existing question
+                            question = await _questionService.GetQuestion(qvm.QuestionID.Value);
+                            if (question == null) continue; // Skip if not found
+
+                            question.DisplayText = qvm.DisplayText;
+                            question.QuestionType = qvm.QuestionType;
+                            question.ModifiedOn = DateTime.Now;
+                            await _questionService.UpdateQuestion(question);
+                        }
+                        else
+                        {
+                            // Create a new question
+                            question = new Question
+                            {
+                                ExamID = exam.ExamID,
+                                DisplayText = qvm.DisplayText,
+                                QuestionType = qvm.QuestionType,
+                                CreatedOn = DateTime.Now,
+                                CreatedBy = User.Identity.Name,
+                                ModifiedBy = User.Identity.Name
+                            };
+                            await _questionService.AddQuestion(question);
+                        }
+
+                        // Handle Choices
+                        for (int i = 0; i < qvm.Choices.Count; i++)
+                        {
+                            var choiceVm = qvm.Choices[i];
+                            Choice choice;
+
+                            if (choiceVm.ChoiceID.HasValue)
+                            {
+                                // Fetch and update the existing choice
+                                choice = await _choiceService.GetChoice(choiceVm.ChoiceID.Value);
+                                if (choice == null) continue; // Skip if not found
+
+                                choice.DisplayText = choiceVm.DisplayText;
+                                choice.ModifiedOn = DateTime.Now;
+                                await _choiceService.UpdateChoice(choice);
+                            }
+                            else
+                            {
+                                // Create a new choice
+                                choice = new Choice
+                                {
+                                    QuestionID = question.QuestionID,
+                                    DisplayText = choiceVm.DisplayText,
+                                    CreatedOn = DateTime.Now,
+                                    CreatedBy = User.Identity.Name,
+                                    ModifiedBy = User.Identity.Name
+                                };
+                                await _choiceService.AddChoice(choice);
+                            }
+
+                            // Handle correct answer marking
+                            var answer = await _answerService.GetAnswerByQuestionAndChoice(question.QuestionID, choice.ChoiceID);
+
+                            if (i == qvm.CorrectChoice) // If this choice is marked as correct in the form
+                            {
+                                if (answer == null)
+                                {
+                                    // Create new correct answer entry if it doesn’t exist
+                                    answer = new Answer
+                                    {
+                                        QuestionID = question.QuestionID,
+                                        ChoiceID = choice.ChoiceID,
+                                        DisplayText = choiceVm.DisplayText,
+                                        IsCorrect = true,
+                                        CreatedOn = DateTime.Now,
+                                        CreatedBy = User.Identity.Name,
+                                        ModifiedBy = User.Identity.Name
+                                    };
+                                    await _answerService.AddAnswer(answer);
+                                }
+                                else
+                                {
+                                    // Update existing answer as correct
+                                    answer.IsCorrect = true;
+                                    answer.ModifiedOn = DateTime.Now;
+                                    await _answerService.UpdateAnswer(answer);
+                                }
+                            }
+                            else if (answer != null)
+                            {
+                                // Unmark as correct if it’s not the chosen answer
+                                answer.IsCorrect = false;
+                                await _answerService.UpdateAnswer(answer);
+                            }
+                        }
+                    }
+
+                    return RedirectToAction("Details", "Module", new { id = model.ModuleId });
                 }
-                return View(assessment);
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An error occurred while processing the quiz.");
+                    ModelState.AddModelError(string.Empty, "An error occurred. Please try again.");
+                }
             }
-
-            // Retrieve the module by ModuleId and assign it to the assessment
-            var module = await _context.Modules.FindAsync(assessment.ModuleId);
-            if (module == null)
-            {
-                _logger.LogError($"Module with ID {assessment.ModuleId} not found.");
-                ModelState.AddModelError("ModuleId", "Invalid Module.");
-                return View(assessment);
-            }
-
-            assessment.Module = module;
-
-            try
-            {
-                _logger.LogInformation($"Saving new assessment for ModuleId: {assessment.ModuleId}");
-                _context.Assessments.Add(assessment);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation($"Assessment created successfully for ModuleId: {assessment.ModuleId} with AssessmentId: {assessment.AssessmentId}");
-                return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error saving assessment: {ex.Message}");
-                ModelState.AddModelError(string.Empty, "An error occurred while saving the assessment. Please try again.");
-                return View(assessment);
-            }
+            return View(model);
         }
 
-        // ****************************** SHOW ASSESSMENT ******************************
-        // GET: Assessment/Details/{id}
-        [Authorize(Roles = "Student, Employee, Admin")]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> SetCorrectAnswer(int questionId, int choiceId)
         {
-            // Load the assessment and its associated module
-            var assessment = await _context.Assessments
-                .Include(a => a.Module)
-                .FirstOrDefaultAsync(a => a.AssessmentId == id);
-
-            if (assessment == null)
+            var answer = await _answerService.GetAnswerByQuestionAndChoice(questionId, choiceId);
+            if (answer == null)
             {
-                _logger.LogWarning($"Details: Assessment with ID {id} not found.");
+                answer = new Answer
+                {
+                    QuestionID = questionId,
+                    ChoiceID = choiceId,
+                    IsCorrect = true,
+                    CreatedBy = User.Identity.Name,
+                    CreatedOn = DateTime.Now
+                };
+                await _answerService.AddAnswer(answer);
+            }
+            else
+            {
+                answer.IsCorrect = true;
+                answer.ModifiedBy = User.Identity.Name;
+                answer.ModifiedOn = DateTime.Now;
+                await _answerService.UpdateAnswer(answer);
+            }
+
+            return Ok();
+        }
+
+        // GET: Assessment/Take/5
+        public async Task<IActionResult> Take(int id)
+        {
+            var exam = await _examService.GetExam(id);
+            if (exam == null)
+            {
                 return NotFound();
             }
 
-            // Pass the module information to the view using ViewBag
-            ViewBag.ModuleId = assessment.ModuleId;
-            ViewBag.ModuleTitle = assessment.Module?.Title ?? "Unknown Module";
-            ViewBag.AssessmentId = assessment.AssessmentId;
+            var qna = await _questionService.GetQuestionList(exam.ExamID);
 
-            return View(assessment);
+            return View(qna);
         }
 
-        // ****************************** EDIT ASSESSMENT ******************************
-        [Authorize(Roles = "Admin")]
-        // GET: Assessment/Edit/{id}
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (!id.HasValue)
-            {
-                _logger.LogWarning("Edit assessment: Assessment ID is null.");
-                return BadRequest();
-            }
-
-            var assessment = await _context.Assessments
-                .Include(a => a.Module)
-                .FirstOrDefaultAsync(a => a.AssessmentId == id.Value);
-
-            if (assessment == null)
-            {
-                _logger.LogWarning($"Edit assessment: Assessment with ID {id} not found.");
-                return NotFound();
-            }
-
-            ViewBag.ModuleTitle = assessment.Module?.Title ?? "Unknown Module";
-
-            return View(assessment);
-        }
-
-        // POST: Assessment/Edit/{id}
+        // POST: Assessment/Submit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("AssessmentId,Title,Description,H5PEmbedCode,ModuleId,CreatedDate,LastModifiedDate")] Assessment assessment)
+        public async Task<IActionResult> Submit(List<UserResponse> responses)
         {
-            if (id != assessment.AssessmentId)
+            if (responses == null || !responses.Any())
             {
-                _logger.LogWarning($"Edit assessment: Assessment ID mismatch (id: {id}, AssessmentId: {assessment.AssessmentId}).");
+                ModelState.AddModelError("", "No responses received.");
+                return View("Error");
+            }
+
+            var results = new List<QuizResult>();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            foreach (var response in responses)
+            {
+                // Find the correct answer for this question
+                var correctAnswer = await _answerService.GetAnswerByQuestionAndChoice(response.QuestionID, response.SelectedOption);
+
+                // Determine if the selected option is correct by checking against `IsCorrect` in `Answer`
+                var isCorrect = correctAnswer != null && correctAnswer.IsCorrect;
+
+                var result = new QuizResult
+                {
+                    SessionID = HttpContext.Session.Id,
+                    UserId = userId,
+                    ExamID = response.ExamID,
+                    QuestionID = response.QuestionID,
+                    AnswerID = response.AnswerID,
+                    SelectedOptionID = response.SelectedOption,
+                    IsCorrent = isCorrect,  // Updated logic for correctness
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = User.Identity.Name,
+                    ModifiedBy = User.Identity.Name
+                };
+
+                results.Add(result);
+            }
+
+            await _resultService.AddResult(results);
+
+            return RedirectToAction("Result", new { sessionId = HttpContext.Session.Id });
+        }
+
+        // GET: Assessment/Result
+        public IActionResult Result(string sessionId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var results = _resultService.Search(r => r.SessionID == sessionId && r.UserId == userId);
+
+            var totalQuestions = results.Count();
+            var correctAnswers = results.Count(r => r.IsCorrent);
+
+            var model = new QuizResultViewModel
+            {
+                TotalQuestions = totalQuestions,
+                CorrectAnswers = correctAnswers,
+                Score = totalQuestions > 0 ? ((double)correctAnswers / totalQuestions) * 100 : 0
+            };
+
+            return View(model);
+        }
+
+        // GET: Assessment/Delete/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var exam = await _examService.GetExam(id);
+            if (exam == null)
+            {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            var model = new QuizViewModel
             {
-                _logger.LogError("ModelState is invalid when editing assessment.");
-                return View(assessment);
-            }
+                ExamID = exam.ExamID,
+                Name = exam.Name,
+                ModuleId = exam.ModuleId
+            };
 
-            // Ensure the module is valid before proceeding
-            var module = await _context.Modules.FindAsync(assessment.ModuleId);
-            if (module == null)
-            {
-                _logger.LogError($"Module with ID {assessment.ModuleId} not found.");
-                ModelState.AddModelError("ModuleId", "Invalid Module.");
-                return View(assessment);
-            }
-
-            assessment.Module = module;
-
-            try
-            {
-                _logger.LogInformation($"Updating assessment with ID {id} for ModuleId: {assessment.ModuleId}");
-                _context.Update(assessment);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Assessment with ID {id} updated successfully.");
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                if (!AssessmentExists(assessment.AssessmentId))
-                {
-                    _logger.LogWarning($"Edit assessment: Assessment with ID {assessment.AssessmentId} no longer exists.");
-                    return NotFound();
-                }
-                else
-                {
-                    _logger.LogError($"Concurrency error while updating assessment: {ex.Message}");
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error updating assessment: {ex.Message}");
-                ModelState.AddModelError(string.Empty, "An error occurred while updating the assessment. Please try again.");
-                return View(assessment);
-            }
-
-            return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
+            return View(model);
         }
 
-        // ****************************** DELETE ASSESSMENT ******************************
-        [Authorize(Roles = "Admin")]
-        // GET: Assessment/Delete/{id}
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                _logger.LogWarning("Delete assessment: Assessment ID is null.");
-                return BadRequest();
-            }
-
-            var assessment = await _context.Assessments
-                .Include(a => a.Module)
-                .FirstOrDefaultAsync(m => m.AssessmentId == id);
-
-            if (assessment == null)
-            {
-                _logger.LogWarning($"Delete assessment: Assessment with ID {id} not found.");
-                return NotFound();
-            }
-
-            return View(assessment);
-        }
-
-        // POST: Assessment/Delete/{id}
-        [HttpPost, ActionName("DeleteConfirmed")]
+        // POST: Assessment/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var assessment = await _context.Assessments.FindAsync(id);
-            if (assessment != null)
+            var exam = await _examService.GetExam(id);
+            if (exam == null)
             {
-                _logger.LogInformation($"Deleting assessment with ID {id}.");
-                _context.Assessments.Remove(assessment);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Assessment with ID {id} deleted successfully.");
-                return RedirectToAction("Details", "Module", new { id = assessment.ModuleId });
+                return NotFound();
             }
 
-            _logger.LogWarning($"Delete assessment: Assessment with ID {id} not found during deletion.");
-            return NotFound();
-        }
+            await _examService.DeleteExam(exam);
 
-        // ****************************** SUBMIT ASSESSMENT ******************************
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Student, Employee")]
-        public async Task<IActionResult> Submit(int assessmentId)
-        {
-            _logger.LogInformation($"User attempting to submit assessment with ID {assessmentId}.");
+            // Optionally, delete related questions and choices
 
-            // Get the current user
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                _logger.LogWarning("Submit assessment: User not authenticated.");
-                return Unauthorized("User not authenticated.");
-            }
-
-            // Get the assessment
-            var assessment = await _context.Assessments
-                                           .Include(a => a.Module)
-                                           .FirstOrDefaultAsync(a => a.AssessmentId == assessmentId);
-            if (assessment == null)
-            {
-                _logger.LogWarning($"Submit assessment: Assessment with ID {assessmentId} not found.");
-                return NotFound("Assessment not found.");
-            }
-
-            // Get or create the UserProgress entry for the module
-            var userProgress = await _context.UserProgresses
-                .FirstOrDefaultAsync(up => up.UserId == userId && up.ModuleId == assessment.ModuleId);
-
-            if (userProgress == null)
-            {
-                userProgress = new UserProgress
-                {
-                    UserId = userId,
-                    ModuleId = assessment.ModuleId,
-                    ProgressPercentage = 100,
-                    IsCompleted = true,
-                    CompletedLessonIds = "" // Assuming assessment completes the module regardless of lesson completions
-                };
-                _context.UserProgresses.Add(userProgress);
-            }
-            else
-            {
-                userProgress.IsCompleted = true;
-                userProgress.ProgressPercentage = 100;
-                // Optionally, update CompletedLessonIds if needed
-            }
-
-            try
-            {
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"User {userId} completed assessment for ModuleId {assessment.ModuleId}.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Submit assessment: Error updating UserProgress - {ex.Message}");
-                return StatusCode(500, "An error occurred while updating your progress.");
-            }
-
-            // Redirect to /Api/Certificate/userID/ModuleId
-            var redirectUrl = $"/Api/Certificate/{userId}/{assessment.ModuleId}";
-            return Redirect(redirectUrl);
-        }
-
-        // ****************************** HELPER METHOD ******************************
-        private bool AssessmentExists(int id)
-        {
-            var exists = _context.Assessments.Any(e => e.AssessmentId == id);
-            _logger.LogInformation($"Checking if assessment with ID {id} exists: {exists}");
-            return exists;
+            return RedirectToAction("Details", "Module", new { id = exam.ModuleId });
         }
     }
 }

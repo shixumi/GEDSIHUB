@@ -1,0 +1,139 @@
+﻿@model GedsiHub.ViewModels.QuizViewModel
+
+@{
+    Layout = "_LayoutApp";
+    bool isEdit = Model.ExamID.HasValue;
+    ViewData["Title"] = isEdit ? "Edit Assessment" : "Create Assessment";
+}
+
+<!-- Breadcrumbs -->
+<ol class="breadcrumb" id="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="Module" asp-action="Index">Modules</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a asp-controller="Module" asp-action="Details" asp-route-id="@Model.ModuleId">Module Details</a>
+    </li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+</ol>
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="CreateOrEdit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ExamID" />
+    <input type="hidden" asp-for="ModuleId" />
+
+    <div class="form-group">
+        <label asp-for="Name">Assessment Title</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter Assessment Title" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FullMarks">Full Marks</label>
+        <input asp-for="FullMarks" class="form-control" placeholder="Enter Full Marks" required />
+        <span asp-validation-for="FullMarks" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Duration">Duration (minutes)</label>
+        <input asp-for="Duration" class="form-control" placeholder="Enter Duration" required />
+        <span asp-validation-for="Duration" class="text-danger"></span>
+    </div>
+
+    <!-- Questions Section -->
+    <div id="questions">
+        @for (int i = 0; i < Model.Questions.Count; i++)
+        {
+            var question = Model.Questions[i];
+            <div class="question-section" id="question-@i">
+                <h4>Question @(i + 1)</h4>
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <input type="hidden" name="Questions[@i].QuestionID" value="@question.QuestionID" />
+                    <input type="text" name="Questions[@i].DisplayText" class="form-control" value="@question.DisplayText" required />
+                </div>
+                <div class="form-group">
+                    <label>Question Type</label>
+                    <input type="number" name="Questions[@i].QuestionType" class="form-control" value="@question.QuestionType" required />
+                </div>
+
+                <div id="choices-@i">
+                    @for (int j = 0; j < question.Choices.Count; j++)
+                    {
+                        var choice = question.Choices[j];
+                        <div class="form-group">
+                            <label>Choice Text</label>
+                            <input type="hidden" name="Questions[@i].Choices[@j].ChoiceID" value="@choice.ChoiceID" />
+                            <input type="text" name="Questions[@i].Choices[@j].DisplayText" class="form-control" value="@choice.DisplayText" required />
+
+                            <!-- Radio button for correct answer selection -->
+                            <div class="form-check">
+                                <input type="radio" name="Questions[@i].CorrectChoice" class="form-check-input" value="@j" @(choice.IsCorrect ? "checked" : "") />
+                                <label class="form-check-label">Mark as Correct</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <button type="button" class="btn btn-secondary" onclick="addChoice(@i)">Add Choice</button>
+                <hr />
+            </div>
+        }
+    </div>
+
+    <button type="button" class="btn btn-secondary" onclick="addQuestion()">Add Question</button>
+
+    <div class="button-container">
+        <a asp-action="Details" asp-controller="Module" asp-route-id="@Model.ModuleId" class="btn btn-secondary">Cancel</a>
+        <input type="submit" value="@(isEdit ? "Save Changes" : "Create")" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        let questionIndex = @Model.Questions.Count;
+
+        function addQuestion() {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-section';
+            questionDiv.innerHTML = `
+                        <h4>Question ${questionIndex + 1}</h4>
+                        <div class="form-group">
+                            <label>Question Text</label>
+                            <input type="text" name="Questions[${questionIndex}].DisplayText" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Question Type</label>
+                            <input type="number" name="Questions[${questionIndex}].QuestionType" value="1" class="form-control" required />
+                        </div>
+                        <div id="choices-${questionIndex}">
+                            <!-- Choices will be added here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addChoice(${questionIndex})">Add Choice</button>
+                        <hr />
+                    `;
+            document.getElementById('questions').appendChild(questionDiv);
+            questionIndex++;
+        }
+
+        function addChoice(questionIdx) {
+            const choicesDiv = document.getElementById(`choices-${questionIdx}`);
+            const choiceCount = choicesDiv.children.length;
+            const choiceDiv = document.createElement('div');
+            choiceDiv.className = 'form-group';
+            choiceDiv.innerHTML = `
+                        <label>Choice Text</label>
+                        <input type="text" name="Questions[${questionIdx}].Choices[${choiceCount}].DisplayText" class="form-control" required />
+
+                        <!-- Radio button to mark this choice as correct -->
+                        <div class="form-check">
+                            <input type="radio" name="Questions[${questionIdx}].CorrectChoice" class="form-check-input" value="${choiceCount}" />
+                            <label class="form-check-label">Mark as Correct</label>
+                        </div>
+                    `;
+            choicesDiv.appendChild(choiceDiv);
+        }
+    </script>
+}
