@@ -80,6 +80,7 @@
     border: 0.075rem solid #9C9C9C;
     padding: 1.175rem;
     font-size: 1.5rem;
+    height: auto;
 }
 
     .url_input_textarea::placeholder {
