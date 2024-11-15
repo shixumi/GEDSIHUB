@@ -5,6 +5,7 @@
     ViewData["Title"] = "Take Assessment";
 }
 
+
 <!-- Breadcrumbs -->
 <ol class="breadcrumb" id="breadcrumb">
     <li class="breadcrumb-item">
@@ -16,7 +17,103 @@
     <li class="breadcrumb-item active">Take Assessment</li>
 </ol>
 
-<h2>@Model.Exam</h2>
+
+
+<div>
+
+    <!-- Title Section -->
+    <div class="feedback-title-searcbar-con">
+        <h1 id="feedback-responses-title" class="modules_title" style="color: #660000; padding-bottom: 0.5rem;">
+            @Model.Exam
+        </h1>
+    </div>
+
+    <!-- Congratulations Section -->
+    <div class="container assessment-container headnote-message">
+        <img src="~/images/Party_Popper.png" alt="Celebration Icon" />
+        <div class="congratulatory-message footnote-message">
+            <span>Congratulations on completing Module 1: Introduction to the Office (GADO)!</span>
+            <span>
+                To help reinforce what you've learned, please take a few moments to answer the following questions.
+                This test is designed to assess your understanding of the material covered. Select or input your answers,
+                and click "Submit" when you're ready.
+            </span>
+            <span>Good luck!</span>
+        </div>
+    </div>
+
+    <!-- Instruction Section -->
+    <div class="instruction-container">
+        <span>Instruction:</span>
+        <span>Please complete the following questions to assess your understanding of this module.</span>
+    </div>
+
+    <!-- Form to capture and submit answers -->
+    <form asp-action="Submit" asp-controller="Assessment" method="post">
+        <input type="hidden" asp-for="ExamID" />
+
+         @for (int i = 0; i < Model.questions.Count; i++)
+         {
+            <!-- Assessment Section -->
+            <div id="AssessmentContainer" class="container assessment-container" style="display:@(i == 0 ? "block" : "none")" id="question-@i">
+                <!-- Question Counter -->
+                <div class="num-delete-con">
+                    <span class="assessment-count">1/4</span>
+                </div>
+                    
+                <!-- Question Content -->
+                <div class="question-container user-question-container">
+                    <span>Question 1:</span>
+                    <div class="question-text">
+                        <span>@Model.questions[i].QuestionText</span>
+                    </div>
+                </div>
+
+                <!-- Options -->
+                <div class="option-delete-text-con">
+                    <span>Options</span>
+                </div>
+                <!-- Display choices as radio buttons -->
+                @foreach (var option in Model.questions[i].options)
+                {
+                    <div id="AllOptionContainer" class="all-options-container">
+                        <div id="Option" class="option-container">
+                            <div class="option-letter-circle">A</div>
+                                <input type="radio" id="option-@i-@option.OptionID" name="responses[@i].SelectedOption" value="@option.OptionID" />
+                                <label class="option-text" for="option-@i-@option.OptionID">@option.Option</label>
+                            <input type="hidden" name="responses[@i].QuestionID" value="@Model.questions[i].QuestionID" />
+                            <input type="hidden" name="responses[@i].ExamID" value="@Model.ExamID" />
+                        </div>
+                    </div>      
+                }
+            </div>
+         }
+            <!-- Final Message Section -->
+            <div class="container assessment-container footnote-message">
+                <span>You've reached the last question of the test!</span>
+                <span>Please review your answers carefully. When you are ready, click "Submit" to complete the test and see your results.</span>
+                <span>Great job on completing the module, and thank you for participating!</span>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="create-assessment-button-con user-assessment-button-con">
+                <button class="cancel-assesssment back-assessment-button" type="button" onclick="showPrevious()" id="prevButton" style="display:none;">Previous</button>
+                <button class="create-assessment next-question-button" type="button" onclick="showNext()">Next Question</button>
+                <button class="create-assessment next-question-button" type="submit" style="display:none;" id="submitButton">Submit</button>
+            </div>
+
+
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
 
 <!-- Form to capture and submit answers -->
 <form asp-action="Submit" asp-controller="Assessment" method="post">
@@ -72,5 +169,12 @@
                 showQuestion(currentQuestion - 1);
             }
         }
+
+        // Click event to toggle 'active' class on elements with the class 'option-text'
+        document.querySelectorAll('.option-text').forEach(element => {
+            element.addEventListener('click', function () {
+                element.classList.toggle('active'); 
+            });
+        });
     </script>
 }
