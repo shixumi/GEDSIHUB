@@ -23,7 +23,7 @@
 
     <!-- Title Section -->
     <div class="feedback-title-searcbar-con">
-        <h1 id="feedback-responses-title" class="modules_title" style="color: #660000; padding-bottom: 0.5rem;">
+        <h1 id="feedback-responses-title" class="modules_title" style="color: #660000; padding-bottom: 0.5rem; margin-top: 1rem !important;">
             @Model.Exam
         </h1>
     </div>
@@ -51,7 +51,7 @@
     <!-- Form to capture and submit answers -->
     <form asp-action="Submit" asp-controller="Assessment" method="post">
         <input type="hidden" asp-for="ExamID" />
-
+  
          @for (int i = 0; i < Model.questions.Count; i++)
          {
             <!-- Assessment Section -->
@@ -69,37 +69,52 @@
                     </div>
                 </div>
 
+
                 <!-- Options -->
                 <div class="option-delete-text-con">
                     <span>Options</span>
                 </div>
+
                 <!-- Display choices as radio buttons -->
+                @{
+                    int optionIndex = 0; // Initialize counter for alphabetical letters
+                }
                 @foreach (var option in Model.questions[i].options)
                 {
                     <div id="AllOptionContainer" class="all-options-container">
                         <div id="Option" class="option-container">
-                            <div class="option-letter-circle">A</div>
-                                <input type="radio" id="option-@i-@option.OptionID" name="responses[@i].SelectedOption" value="@option.OptionID" />
-                                <label class="option-text" for="option-@i-@option.OptionID">@option.Option</label>
+                            <!-- Convert index to alphabetical letter (A, B, C...) -->
+                            <div class="option-letter-circle">@((char)(65 + optionIndex++))</div>
+
+                            <input type="radio" class="option-radio-button" id="option-@i-@option.OptionID" name="responses[@i].SelectedOption" value="@option.OptionID" />
+                            <label class="option-text" for="option-@i-@option.OptionID">@option.Option</label>
+
                             <input type="hidden" name="responses[@i].QuestionID" value="@Model.questions[i].QuestionID" />
                             <input type="hidden" name="responses[@i].ExamID" value="@Model.ExamID" />
                         </div>
-                    </div>      
+                    </div>
                 }
+
+
             </div>
          }
-            <!-- Final Message Section -->
+         
+            @* <!-- Final Message Section -->
             <div class="container assessment-container footnote-message">
                 <span>You've reached the last question of the test!</span>
                 <span>Please review your answers carefully. When you are ready, click "Submit" to complete the test and see your results.</span>
                 <span>Great job on completing the module, and thank you for participating!</span>
-            </div>
+            </div> *@
 
             <!-- Navigation Buttons -->
             <div class="create-assessment-button-con user-assessment-button-con">
                 <button class="cancel-assesssment back-assessment-button" type="button" onclick="showPrevious()" id="prevButton" style="display:none;">Previous</button>
-                <button class="create-assessment next-question-button" type="button" onclick="showNext()">Next Question</button>
+            <button class="create-assessment next-question-button" type="button" onclick="showNext()" id="nextButton">Next Question</button>
                 <button class="create-assessment next-question-button" type="submit" style="display:none;" id="submitButton">Submit</button>
+
+
+
+
             </div>
 
 
@@ -139,23 +154,37 @@
         }
     </div>
 
-    <button type="button" onclick="showPrevious()" id="prevButton" style="display:none;">Previous</button>
-    <button type="button" onclick="showNext()">Next</button>
-    <button type="submit" style="display:none;" id="submitButton">Submit</button>
+    <button type="button" onclick="showPrevious()" id="prevButton" style="display: none;">Previous</button>
+    <button type="button" onclick="showNext()" id="nextButton">Next</button>
+    <button type="submit" style="display: none;" id="submitButton">Submit</button>
+
 </form>
+
 
 @section Scripts {
     <script>
         let currentQuestion = 0;
-        const totalQuestions = @Model.questions.Count;
+        const totalQuestions = @Model.questions.Count; // Make sure this is correctly embedded in the view
 
         function showQuestion(index) {
-            document.getElementById(`question-${currentQuestion}`).style.display = 'none';
-            document.getElementById(`question-${index}`).style.display = 'block';
+            console.log("Navigating to question:", index);
+
+            // Hide current question
+            if (document.getElementById(`question-${currentQuestion}`)) {
+                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+            }
+
+            // Show new question
+            if (document.getElementById(`question-${index}`)) {
+                document.getElementById(`question-${index}`).style.display = 'block';
+            }
+
             currentQuestion = index;
 
+            // Toggle visibility of navigation buttons
             document.getElementById('prevButton').style.display = currentQuestion > 0 ? 'inline' : 'none';
             document.getElementById('submitButton').style.display = currentQuestion === totalQuestions - 1 ? 'inline' : 'none';
+            document.getElementById('nextButton').style.display = currentQuestion < totalQuestions - 1 ? 'inline' : 'none';
         }
 
         function showNext() {
@@ -170,11 +199,28 @@
             }
         }
 
-        // Click event to toggle 'active' class on elements with the class 'option-text'
-        document.querySelectorAll('.option-text').forEach(element => {
-            element.addEventListener('click', function () {
-                element.classList.toggle('active'); 
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const optionContainers = document.querySelectorAll(".option-container");
+
+            optionContainers.forEach(container => {
+                const radio = container.querySelector("input[type='radio']");
+                const optionText = container.querySelector(".option-text");
+
+                radio.addEventListener("change", function () {
+                    // Remove 'selected' class from all option texts
+                    document.querySelectorAll(".option-text").forEach(text => text.classList.remove("selected"));
+
+                    // Add 'selected' class to the selected option text
+                    if (radio.checked) {
+                        optionText.classList.add("selected");
+                    }
+                });
             });
         });
+
+
     </script>
 }
