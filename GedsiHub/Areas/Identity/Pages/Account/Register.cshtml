@@ -5,7 +5,6 @@
     ViewData["Title"] = "Register";
 }
 
-
 <section id="reg-main">
     <div class="container reg-con">
         <!-- Container Elements -->
@@ -17,28 +16,40 @@
 
         <form id="registerForm" method="post" asp-route-returnUrl="@Model.ReturnUrl">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            
+
             <!-- Email Input -->
             <div class="mb-3">
-                <input asp-for="Input.Email" class="focus-ring focus-ring-light form-control" placeholder="Webmail" aria-required="true" />
+                <input asp-for="Input.Email"
+                       class="focus-ring focus-ring-light form-control"
+                       placeholder="Webmail"
+                       aria-required="true" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            
+
             <!-- Password Input -->
             <div class="mb-3">
-                <input asp-for="Input.Password" class="form-control" data-bs-toggle="tooltip" placeholder="Password" aria-required="true" />
+                <input asp-for="Input.Password"
+                       class="form-control"
+                       data-bs-toggle="tooltip"
+                       placeholder="Password"
+                       aria-required="true" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
-            
+
             <!-- Confirm Password Input -->
             <div class="mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm Password" required />
+                <input asp-for="Input.ConfirmPassword"
+                       class="form-control"
+                       placeholder="Confirm Password"
+                       required />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            
+
             <!-- Select Role -->
             <div class="mb-3">
-                <select asp-for="Input.Role" class="form-control focus-ring focus-ring-light form-select select-role" required>
+                <select asp-for="Input.Role"
+                        class="form-control focus-ring focus-ring-light form-select select-role"
+                        required>
                     <option value="" disabled selected>Select your role</option>
                     <option value="Student">Student</option>
                     <option value="Employee">Employee</option>
