@@ -55,7 +55,9 @@
          @for (int i = 0; i < Model.questions.Count; i++)
          {
             <!-- Assessment Section -->
-            <div id="AssessmentContainer" class="container assessment-container" style="display:@(i == 0 ? "block" : "none")" id="question-@i">
+
+            <div class="container assessment-container" style="display:@(i == 0 ? "block" : "none");" id="question-@i">
+
                 <!-- Question Counter -->
                 <div class="num-delete-con">
                     <span class="assessment-count">1/4</span>
@@ -95,8 +97,8 @@
                     </div>
                 }
 
-
             </div>
+  
          }
          
             @* <!-- Final Message Section -->
@@ -201,25 +203,30 @@
 
 
 
-
+        // Add event listeners to radio buttons to highlight selected option
         document.addEventListener("DOMContentLoaded", function () {
-            const optionContainers = document.querySelectorAll(".option-container");
+            const allOptionContainers = document.querySelectorAll(".all-options-container");
 
-            optionContainers.forEach(container => {
-                const radio = container.querySelector("input[type='radio']");
-                const optionText = container.querySelector(".option-text");
+            allOptionContainers.forEach(questionContainer => {
+                const optionContainers = questionContainer.querySelectorAll(".option-container");
 
-                radio.addEventListener("change", function () {
-                    // Remove 'selected' class from all option texts
-                    document.querySelectorAll(".option-text").forEach(text => text.classList.remove("selected"));
+                optionContainers.forEach(container => {
+                    const radio = container.querySelector("input[type='radio']");
+                    const optionText = container.querySelector(".option-text");
 
-                    // Add 'selected' class to the selected option text
-                    if (radio.checked) {
-                        optionText.classList.add("selected");
-                    }
+                    radio.addEventListener("change", function () {
+                        // Remove 'selected' class only within the same question container
+                        questionContainer.querySelectorAll(".option-text").forEach(text => text.classList.remove("selected"));
+
+                        // Add 'selected' class to the selected option text
+                        if (radio.checked) {
+                            optionText.classList.add("selected");
+                        }
+                    });
                 });
             });
         });
+
 
 
     </script>
