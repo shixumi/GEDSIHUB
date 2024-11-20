@@ -83,6 +83,7 @@
 
     .delete-user-feedback-button {
         background: rgba(102,0,0,0.3);
+        cursor: pointer;
     }
 
     #mark-as-resolved-button {
@@ -96,6 +97,7 @@
     font-weight: 500;
     transition: all 0.2s ease;
     color: #464040;
+    cursor:pointer !important;
 }
 
 #view-user-feedback-button:hover {

@@ -60,13 +60,43 @@
                                     <td class="report-content">@report.CreatedAt.ToShortDateString()</td>
                                     <td class="report-content button-container-feedback">
 
-                                        <!-- Dismiss button for post report -->
+                                        @* <!-- Dismiss button for post report -->
                                         <form asp-action="DismissPostReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn" id="dismiss-user-feedback-button">
                                                 <img src="~/images/Dismiss.png" /> Dismiss
                                             </button>
+                                        </form> *@
+
+                                        <!-- Dissmiss button modal for post report -->
+                                        <form asp-action="DismissPostReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <a data-bs-toggle="modal" data-bs-target="#dismissPostModal-@report.ReportId" class="btn" id="dismiss-user-feedback-button">
+                                                <img src="~/images/Dismiss.png" /> Dismiss
+                                            </a>
                                         </form>
+
+                                        <!-- Modal for dismissing post report -->
+                                        <div class="modal fade" id="dismissPostModal-@report.ReportId" tabindex="-1" aria-labelledby="dismissPostModalLabel-@report.ReportId" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="dismissPostModalLabel-@report.ReportId">Dismiss Report?</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-start">
+                                                        Are you sure you want to dismiss the report for the post titled "<strong>@report.PostTitle</strong>"?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form asp-action="DismissPostReport" asp-route-id="@report.ReportId" method="post">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary modal-del-btn">Dismiss</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <!-- View button to go to post details -->
                                         <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" id="view-user-feedback-button">
@@ -74,21 +104,53 @@
                                         </a>
 
 
-                                        <!-- Delete button -->
+                                        @* <!-- Delete button for post report -->
                                         <form asp-action="DeletePost" asp-route-id="@report.PostId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" id="delete-user-feedback-button" class="delete-user-feedback-button action-button">
                                                 <img src="~/images/Delete.png" /> Delete
                                             </button>
-                                        </form>
+                                        </form> *@
+
+                                        <!-- Delete button triggers modal -->
+                                        <a data-bs-toggle="modal" data-bs-target="#deletePostModal-@report.PostId" class="delete-user-feedback-button action-button" id="delete-user-feedback-button">
+                                            <img src="~/images/Delete.png" /> Delete
+                                        </a>
                                     </td>
                                 </tr>
+
+                                <!-- Modal for deleting post -->
+                                <div class="modal fade" id="deletePostModal-@report.PostId" tabindex="-1" aria-labelledby="deletePostModalLabel-@report.PostId" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deletePostModalLabel-@report.PostId">Delete Post?</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete the post titled "<strong>@report.PostTitle</strong>"?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form asp-action="DeletePost" asp-route-id="@report.PostId" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         }
                         else
                         {
-                            <tr>
-                                <td class="report-table-rows" colspan="6">No reports found for posts.</td>
+                            <tr class="report-table-rows">
+                                <td class="report-content"></td>
+                                <td class="report-content text-start">No reports found for posts.</td>
+                                <td class="report-content"></td>
+                                <td class="report-content"></td>
+                                <td class="report-content"></td>
+                                <td class="report-content"></td>
                             </tr>
                         }
                     </tbody>
@@ -123,34 +185,97 @@
                                     <td class="report-content">@report.CreatedAt.ToShortDateString()</td>
                                     <td class="report-content button-container-feedback">
                                        
-                                        <!-- Dismiss button -->
+                                        @* <!-- Dismiss button for reported comment -->
                                         <form asp-action="DismissCommentReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn" id="dismiss-user-feedback-button">
                                                 <img src="~/images/Dismiss.png"/> Dismiss
                                             </button>
                                         </form>
+ *@
+                                        <!-- Dissmiss button modal for reported comment-->
+                                        <form asp-action="DismissCommentReport" asp-route-id="@report.ReportId" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <a data-bs-toggle="modal" data-bs-target="#dismissCommentModal-@report.ReportId" class="btn" id="dismiss-user-feedback-button">
+                                                <img src="~/images/Dismiss.png" /> Dismiss
+                                            </a>
+                                        </form>
+
+                                        <!-- Modal for dismissing comment report -->
+                                        <div class="modal fade" id="dismissCommentModal-@report.ReportId" tabindex="-1" aria-labelledby="dismissCommentModalLabel-@report.ReportId" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="dismissCommentModalLabel-@report.ReportId">Dismiss Report?</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-start">
+                                                        Are you sure you want to dismiss the report for the comment: "<strong>@report.CommentContent</strong>"?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form asp-action="DismissCommentReport" asp-route-id="@report.ReportId" method="post">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary modal-del-btn">Dismiss</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <!-- View button to go to the post details where the comment is located -->
                                         <a href="@Url.Action("Details", "ForumPost", new { id = report.PostId })" id="view-user-feedback-button">
                                             <img src="~/images/View_Green.png" /> View
                                         </a>
 
-                                        <!-- Delete button -->
+                                       @*  <!-- Delete button -->
                                         <form asp-action="DeleteComment" asp-route-id="@report.CommentId" method="post" style="display:inline;">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" id="delete-user-feedback-button" class="delete-user-feedback-button action-button">
                                                 <img src="~/images/Delete.png" />Delete
                                             </button>
-                                        </form>
+                                        </form> *@
+
+                                        <!-- Delete button triggers modal -->
+                                        <a data-bs-toggle="modal" data-bs-target="#deleteCommentModal-@report.CommentId" class="delete-user-feedback-button action-button" id="delete-user-feedback-button">
+                                            <img src="~/images/Delete.png" /> Delete
+                                        </a>
+
                                     </td>
                                 </tr>
+
+                                <!-- Modal for deleting comment -->
+                                <div class="modal fade" id="deleteCommentModal-@report.CommentId" tabindex="-1" aria-labelledby="deleteCommentModalLabel-@report.CommentId" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteCommentModalLabel-@report.CommentId">Delete Comment?</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete the comment: "<strong>@report.CommentContent</strong>"?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form asp-action="DeleteComment" asp-route-id="@report.CommentId" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary modal-del-btn">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         }
                         else
                         {
-                            <tr>
-                                <td colspan="6">No reports found for comments.</td>
+                            <tr class="report-table-rows">
+                                <td class="report-content"></td>
+                                <td class="report-content text-start">No reports found for comments.</td>
+                                <td class="report-content"></td>
+                                <td class="report-content"></td>
+                                <td class="report-content"></td>
+                                <td class="report-content"></td>
                             </tr>
                         }
                     </tbody>
@@ -159,3 +284,38 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabKey = "activeTab";
+
+            // Function to save the clicked tab's ID to local storage
+            const saveActiveTab = (tabId) => {
+                localStorage.setItem(tabKey, tabId);
+            };
+
+            // Add event listener for tab clicks
+            const tabs = document.querySelectorAll("#reportsTab a[data-bs-toggle='tab']");
+            tabs.forEach((tab) => {
+                tab.addEventListener("shown.bs.tab", function (event) {
+                    const activeTabId = event.target.getAttribute("href"); // Get href of clicked tab
+                    saveActiveTab(activeTabId);
+                });
+            });
+
+            // Retrieve the last active tab from local storage
+            const lastActiveTabId = localStorage.getItem(tabKey);
+
+            if (lastActiveTabId) {
+                const lastActiveTab = document.querySelector(`#reportsTab a[href="${lastActiveTabId}"]`);
+                if (lastActiveTab) {
+                    new bootstrap.Tab(lastActiveTab).show(); // Use Bootstrap's Tab API to show the saved tab
+                }
+            }
+        });
+    </script>
+
+
+}
