@@ -39,5 +39,12 @@ namespace GedsiHub.ViewModels
         public string? ModuleTitle { get; set; }
         public List<Module>? Modules { get; set; }
         public string? UserId { get; set; }
+
+        // Add LikesCount and ViewsCount
+        public int LikesCount { get; set; } // Default to 0
+        public int ViewsCount { get; set; } // Default to 0
+
+        // Trending score for sorting in the Trending view
+        public double? TrendingScore { get; set; }
     }
 }
