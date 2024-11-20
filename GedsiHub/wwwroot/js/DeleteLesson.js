@@ -18,16 +18,5 @@ document.querySelectorAll('.dropdown-option').forEach(function (option) {
     });
 });
 
-// Hide dropdown if clicked outside
-document.addEventListener('click', function (event) {
-    var dropdown = document.getElementById('customDropdown');
-    var filterButton = document.getElementById('userManagementFilter');
-    if (!dropdown.contains(event.target) && event.target !== filterButton) {
-        dropdown.style.display = 'none';
-    }
-});
-
-
-
 
 
