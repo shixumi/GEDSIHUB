@@ -33,6 +33,7 @@ namespace GedsiHub.Data
         
         // DbSets for the Forum
         public DbSet<ForumPost> ForumPosts { get; set; }
+        public DbSet<ForumPostLike> ForumPostLikes { get; set; }
         public DbSet<ForumComment> ForumComments { get; set; }
         public DbSet<ForumPostReport> ForumPostReports { get; set; } 
         public DbSet<ForumCommentReport> ForumCommentReports { get; set; }

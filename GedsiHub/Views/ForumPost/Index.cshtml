@@ -9,7 +9,7 @@
 <div class="container-forum pt-lg-5 pt-md-4 pt-sm-3 pt-2">
 
     <!-- Top Container -->
-    <div class="d-flex justify-content-end align-items-center top-container">
+    <div class="d-flex justify-content-between align-items-center top-container">
         <form method="get" class="mb-3">
             <select name="sortBy" class="form-select" onchange="this.form.submit()">
                 @if (ViewData["SortBy"]?.ToString() == "Latest")
@@ -149,9 +149,12 @@
             <!-- Card Footer Buttons -->
             <div class="d-flex align-items-center card-footer">
 
-                <button class="btn btn-link card-link d-flex align-items-center like-btn" data-post-id="@post.PostId">
-                    <i class="f-icon la la-thumbs-up"></i> @post.LikesCount
+                <button class="btn btn-link card-link d-flex align-items-center like-btn"
+                        data-post-id="@post.PostId"
+                        data-has-liked="@post.HasLiked">
+                    <i class="f-icon la @(post.HasLiked ? "la-heart" : "la-heart-o")"></i>
                 </button>
+                <span id="likeCount-@post.PostId">@post.LikesCount</span>
 
                 <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center">
                     <i class="f-icon la la-comment"></i> @post.CommentCount

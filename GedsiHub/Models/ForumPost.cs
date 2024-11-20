@@ -61,5 +61,6 @@ namespace GedsiHub.Models
 
         public virtual ICollection<ForumComment> ForumComments { get; set; } = new List<ForumComment>();
         public virtual ICollection<ForumPostReport> PostReports { get; set; } = new List<ForumPostReport>();
+        public ICollection<ForumPostLike> ForumPostLikes { get; set; } = new List<ForumPostLike>();
     }
 }

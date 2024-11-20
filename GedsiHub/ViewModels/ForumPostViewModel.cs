@@ -43,6 +43,7 @@ namespace GedsiHub.ViewModels
         // Add LikesCount and ViewsCount
         public int LikesCount { get; set; } // Default to 0
         public int ViewsCount { get; set; } // Default to 0
+        public bool HasLiked { get; set; }
 
         // Trending score for sorting in the Trending view
         public double? TrendingScore { get; set; }

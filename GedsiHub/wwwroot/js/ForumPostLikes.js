@@ -1,31 +1,43 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
-    // Like button click handler
-    document.querySelectorAll(".like-button").forEach((button) => {
-        button.addEventListener("click", (event) => {
-            const postId = event.target.dataset.postId;
+﻿document.querySelectorAll(".like-btn").forEach(button => {
+    button.addEventListener("click", async () => {
+        const postId = button.dataset.postId;
+        const hasLiked = button.dataset.hasLiked === "true"; // Convert string to boolean
+        const url = `/ForumPost/ToggleLike/${postId}`;
 
-            fetch(`/ForumPost/LikePost/${postId}`, {
+        try {
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Failed to like the post.");
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    const likeCountElement = document.querySelector(
-                        `#like-count-${postId}`
-                    );
-                    likeCountElement.textContent = data.newLikesCount;
-                })
-                .catch((error) => {
-                    console.error("Error liking post:", error);
-                });
-        });
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                console.error("Failed to toggle like status");
+                return;
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                // Update the button's dataset and icon
+                button.dataset.hasLiked = (!hasLiked).toString(); // Toggle the hasLiked value
+                const icon = button.querySelector("i");
+                if (data.hasLiked) {
+                    icon.classList.remove("la-heart-o");
+                    icon.classList.add("la-heart");
+                } else {
+                    icon.classList.remove("la-heart");
+                    icon.classList.add("la-heart-o");
+                }
+
+                // Update the like count
+                const likeCount = document.querySelector(`#likeCount-${postId}`);
+                if (likeCount) {
+                    likeCount.textContent = data.newLikeCount;
+                }
+            }
+        } catch (error) {
+            console.error("Error toggling like status:", error);
+        }
     });
 });

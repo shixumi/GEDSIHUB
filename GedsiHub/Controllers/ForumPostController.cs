@@ -26,16 +26,19 @@ namespace GedsiHub.Controllers
 
         // ****************************** FORUM POSTS: VIEWING ******************************
 
-        // GET: ForumPost/Index - Display all posts or filter by module
         public async Task<IActionResult> Index(int? moduleId, string sortBy = "Latest", int page = 1)
         {
             const int PageSize = 10;
+
+            // Get the currently logged-in user's ID
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Query for fetching posts
             var baseQuery = _context.ForumPosts
                 .Include(post => post.User)
                 .Include(post => post.Module)
                 .Include(post => post.ForumComments)
+                .Include(post => post.ForumPostLikes)
                 .AsQueryable();
 
             // Filter by module
@@ -65,8 +68,10 @@ namespace GedsiHub.Controllers
                             UserLastName = post.User.LastName,
                             UserId = post.UserId,
                             CommentCount = post.ForumComments.Count,
+                            LikesCount = post.LikesCount,
+                            HasLiked = post.ForumPostLikes.Any(like => like.UserId == userId), // Check if user liked the post
                             TrendingScore = (post.ForumComments.Count * 3 + post.LikesCount * 2 + post.ViewsCount)
-                                             / Math.Pow((DateTime.UtcNow - post.CreatedAt).TotalHours + 2, 1.5)
+                                            / Math.Pow((DateTime.UtcNow - post.CreatedAt).TotalHours + 2, 1.5)
                         })
                         .OrderByDescending(post => post.TrendingScore)
                         .ToList();
@@ -87,7 +92,9 @@ namespace GedsiHub.Controllers
                             UserFirstName = post.User.FirstName,
                             UserLastName = post.User.LastName,
                             UserId = post.UserId,
-                            CommentCount = post.ForumComments.Count
+                            CommentCount = post.ForumComments.Count,
+                            LikesCount = post.LikesCount,
+                            HasLiked = post.ForumPostLikes.Any(like => like.UserId == userId) // Check if user liked the post
                         })
                         .ToListAsync();
                     break;
@@ -103,22 +110,62 @@ namespace GedsiHub.Controllers
             return View(paginatedPosts);
         }
 
-        // POST: ForumPost/LikePost - Increment likes count for a post
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LikePost(int postId)
+        // GET: ForumPost/GetLikesCounts - Get likes count for all posts
+        [HttpGet]
+        [Route("ForumPost/GetLikesCounts")]
+        public IActionResult GetLikesCounts()
         {
-            var post = await _context.ForumPosts.FindAsync(postId);
-            if (post == null)
+            var likesCounts = _context.ForumPosts
+                .Select(post => new { post.PostId, post.LikesCount })
+                .ToList();
+
+            return Json(likesCounts);
+        }
+
+        // POST: ForumPost/ToggleLike - Toggle like status for a post
+        [HttpPost]
+        [Route("ForumPost/ToggleLike/{id}")]
+        public async Task<IActionResult> ToggleLike(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
             {
-                return NotFound();
+                return Unauthorized(new { success = false, message = "User not logged in" });
             }
 
-            post.LikesCount++;
-            _context.ForumPosts.Update(post);
+            var post = await _context.ForumPosts
+                .Include(p => p.ForumPostLikes) // Include the likes collection
+                .FirstOrDefaultAsync(p => p.PostId == id);
+
+            if (post == null)
+            {
+                return NotFound(new { success = false, message = "Post not found" });
+            }
+
+            var existingLike = post.ForumPostLikes.FirstOrDefault(like => like.UserId == userId);
+
+            if (existingLike != null)
+            {
+                // Unlike the post
+                post.ForumPostLikes.Remove(existingLike);
+                post.LikesCount--;
+            }
+            else
+            {
+                // Like the post
+                var newLike = new ForumPostLike
+                {
+                    PostId = id,
+                    UserId = userId
+                };
+                post.ForumPostLikes.Add(newLike);
+                post.LikesCount++;
+            }
+
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, likesCount = post.LikesCount });
+            return Json(new { success = true, newLikeCount = post.LikesCount, hasLiked = existingLike == null });
         }
 
         // GET: ForumPost/Details/{id} - Display post with comments
