@@ -1460,7 +1460,6 @@ namespace GedsiHub.Migrations
                             ModuleId = 4,
                             Color = "#000000",
                             CreatedDate = new DateTime(2024, 11, 20, 19, 47, 13, 297, DateTimeKind.Utc).AddTicks(1299),
-                            CreatedDate = new DateTime(2024, 11, 20, 19, 21, 9, 444, DateTimeKind.Utc).AddTicks(8052),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
                             Status = 0,
