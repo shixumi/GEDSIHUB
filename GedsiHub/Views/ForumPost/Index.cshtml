@@ -10,13 +10,31 @@
 
     <!-- Top Container -->
     <div class="d-flex justify-content-end align-items-center top-container">
-        @* <!-- Flair Filtering Form -->
-        <select class="focus-ring focus-ring-light form-select custom-select">
-            <option selected>All</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-        </select> *@
+        <form method="get" class="mb-3">
+            <select name="sortBy" class="form-select" onchange="this.form.submit()">
+                @if (ViewData["SortBy"]?.ToString() == "Latest")
+                {
+                    <option value="Latest" selected>Latest</option>
+                }
+                else
+                {
+                    <option value="Latest">Latest</option>
+                }
+
+                @if (ViewData["SortBy"]?.ToString() == "Trending")
+                {
+                    <option value="Trending" selected>Trending</option>
+                }
+                else
+                {
+                    <option value="Trending">Trending</option>
+                }
+            </select>
+            @if (ViewData["ModuleId"] != null)
+            {
+                <input type="hidden" name="moduleId" value="@ViewData["ModuleId"]" />
+            }
+        </form>
 
         <div class="input-group custom-search">
             <span class="input-group-text">
@@ -112,6 +130,11 @@
                     @(post.Content.Length > 200 ? post.Content.Substring(0, 100) + "..." : post.Content)
                 </p>
 
+                @if (ViewData["SortBy"]?.ToString() == "Trending")
+                {
+                <p class="text-muted">Trending Score: @post.TrendingScore</p> <!-- DELETE THIS AFTER TESTING -->
+                }
+
                 <!-- Image Preview -->
                 @if (!string.IsNullOrEmpty(post.ImagePath))
                 {
@@ -125,6 +148,11 @@
 
             <!-- Card Footer Buttons -->
             <div class="d-flex align-items-center card-footer">
+
+                <button class="btn btn-link card-link d-flex align-items-center like-btn" data-post-id="@post.PostId">
+                    <i class="f-icon la la-thumbs-up"></i> @post.LikesCount
+                </button>
+
                 <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center">
                     <i class="f-icon la la-comment"></i> @post.CommentCount
                 </a>
@@ -226,4 +254,5 @@
 
 @section Scripts {
     <script src="~/js/ForumPost.js"></script>
+    <script src="~/js/ForumPostLikes.js"></script>
 }

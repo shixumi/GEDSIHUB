@@ -27,43 +27,98 @@ namespace GedsiHub.Controllers
         // ****************************** FORUM POSTS: VIEWING ******************************
 
         // GET: ForumPost/Index - Display all posts or filter by module
-        public async Task<IActionResult> Index(int? moduleId)
+        public async Task<IActionResult> Index(int? moduleId, string sortBy = "Latest", int page = 1)
         {
-            // Start building the query
-            var query = _context.ForumPosts
+            const int PageSize = 10;
+
+            // Query for fetching posts
+            var baseQuery = _context.ForumPosts
                 .Include(post => post.User)
                 .Include(post => post.Module)
                 .Include(post => post.ForumComments)
                 .AsQueryable();
 
-            // Apply filtering by moduleId if provided
+            // Filter by module
             if (moduleId.HasValue)
             {
-                query = query.Where(post => post.ModuleId == moduleId.Value);
+                baseQuery = baseQuery.Where(post => post.ModuleId == moduleId.Value);
             }
 
-            // Project the query to ForumPostViewModel and execute
-            var posts = await query
-                .Select(post => new ForumPostViewModel
-                {
-                    PostId = post.PostId,
-                    Title = post.Title,
-                    Content = post.Content,
-                    ImagePath = post.ImagePath,
-                    Flair = post.Flair,
-                    CreatedAt = post.CreatedAt.ToLocalTime(),
-                    PollOptions = post.PollOptions,
-                    UserFirstName = post.User.FirstName,
-                    UserLastName = post.User.LastName,
-                    UserId = post.UserId,
-                    CommentCount = post.ForumComments.Count,
-                    RelativeCreatedAt = DateTimeHelper.GetRelativeTime(post.CreatedAt),
-                    ModuleTitle = post.Module != null ? post.Module.Title : null,
-                    ModuleId = post.ModuleId // Include ModuleId for view reference
-                })
-                .ToListAsync();
+            IEnumerable<ForumPostViewModel> posts;
 
-            return View(posts);
+            // Sort logic
+            switch (sortBy)
+            {
+                case "Trending":
+                    posts = baseQuery
+                        .AsEnumerable() // Switch to in-memory
+                        .Select(post => new ForumPostViewModel
+                        {
+                            PostId = post.PostId,
+                            Title = post.Title,
+                            Content = post.Content,
+                            CreatedAt = post.CreatedAt,
+                            Flair = post.Flair,
+                            ModuleId = post.ModuleId,
+                            ModuleTitle = post.Module?.Title,
+                            UserFirstName = post.User.FirstName,
+                            UserLastName = post.User.LastName,
+                            UserId = post.UserId,
+                            CommentCount = post.ForumComments.Count,
+                            TrendingScore = (post.ForumComments.Count * 3 + post.LikesCount * 2 + post.ViewsCount)
+                                             / Math.Pow((DateTime.UtcNow - post.CreatedAt).TotalHours + 2, 1.5)
+                        })
+                        .OrderByDescending(post => post.TrendingScore)
+                        .ToList();
+                    break;
+
+                default: // Latest
+                    posts = await baseQuery
+                        .OrderByDescending(post => post.CreatedAt)
+                        .Select(post => new ForumPostViewModel
+                        {
+                            PostId = post.PostId,
+                            Title = post.Title,
+                            Content = post.Content,
+                            CreatedAt = post.CreatedAt,
+                            Flair = post.Flair,
+                            ModuleId = post.ModuleId,
+                            ModuleTitle = post.Module != null ? post.Module.Title : null,
+                            UserFirstName = post.User.FirstName,
+                            UserLastName = post.User.LastName,
+                            UserId = post.UserId,
+                            CommentCount = post.ForumComments.Count
+                        })
+                        .ToListAsync();
+                    break;
+            }
+
+            // Pagination
+            var paginatedPosts = posts.Skip((page - 1) * PageSize).Take(PageSize);
+
+            // ViewData for sorting and filtering
+            ViewData["SortBy"] = sortBy;
+            ViewData["ModuleId"] = moduleId;
+
+            return View(paginatedPosts);
+        }
+
+        // POST: ForumPost/LikePost - Increment likes count for a post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LikePost(int postId)
+        {
+            var post = await _context.ForumPosts.FindAsync(postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.LikesCount++;
+            _context.ForumPosts.Update(post);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, likesCount = post.LikesCount });
         }
 
         // GET: ForumPost/Details/{id} - Display post with comments
@@ -80,6 +135,10 @@ namespace GedsiHub.Controllers
             {
                 return NotFound();
             }
+
+            post.ViewsCount++;
+            _context.ForumPosts.Update(post);
+            await _context.SaveChangesAsync();
 
             var viewModel = new ForumPostDetailsViewModel
             {

@@ -117,9 +117,22 @@
     </div>
 </div>
 
-<script>
-    function toggleAllCheckboxes(source) {
-        const checkboxes = document.querySelectorAll('input[name="UserIds"]');
-        checkboxes.forEach(checkbox => checkbox.checked = source.checked);
-    }
-</script>
+@section Scripts {
+    <script>
+        function toggleAllCheckboxes(source) {
+            const checkboxes = document.querySelectorAll('input[name="UserIds"]');
+            checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+        }
+    </script>
+
+    @* <script>
+        // Hide dropdown if clicked outside
+        document.addEventListener('click', function (event) {
+            var dropdown = document.getElementById('customDropdown');
+            var filterButton = document.getElementById('userManagementFilter');
+            if (!dropdown.contains(event.target) && event.target !== filterButton) {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script> *@
+}
