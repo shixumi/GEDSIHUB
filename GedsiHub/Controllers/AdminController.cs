@@ -39,48 +39,43 @@ namespace GedsiHub.Controllers
 
         // GET: Admin/UserManagement
         // This action displays a list of users with search and filter options (e.g., active/inactive users).
-        public async Task<IActionResult> UserManagement(string search = "", bool? isActive = null)
+        public async Task<IActionResult> UserManagement(string search = "", bool? isActive = null, int page = 1, int pageSize = 10)
         {
-            _logger.LogInformation("Admin accessed the User Management page with search term: {SearchTerm} and filter: {IsActive}", search, isActive);
+            var usersQuery = _userManager.Users.AsQueryable();
 
-            try
+            if (!string.IsNullOrEmpty(search))
             {
-                var usersQuery = _userManager.Users.AsQueryable();
-
-                if (!string.IsNullOrEmpty(search))
-                {
-                    usersQuery = usersQuery.Where(u => u.UserName.Contains(search) || u.Email.Contains(search));
-                }
-
-                if (isActive.HasValue)
-                {
-                    usersQuery = usersQuery.Where(u => u.IsActive == isActive.Value);
-                }
-
-                var users = await usersQuery.ToListAsync();
-                var userViewModels = users.Select(u => new UserViewModel
-                {
-                    Id = u.Id,
-                    UserName = u.UserName,
-                    Email = u.Email,
-                    IsAdmin = _userManager.IsInRoleAsync(u, "Admin").Result,
-                    IsActive = u.IsActive
-                }).ToList();
-
-                var model = new UserManagementViewModel
-                {
-                    Users = userViewModels,
-                    SearchTerm = search,
-                    IsActive = isActive
-                };
-
-                return View(model);
+                usersQuery = usersQuery.Where(u => u.UserName.Contains(search) || u.Email.Contains(search));
             }
-            catch (Exception ex)
+
+            if (isActive.HasValue)
             {
-                _logger.LogError(ex, "Error occurred while loading User Management.");
-                return View("Error");
+                usersQuery = usersQuery.Where(u => u.IsActive == isActive.Value);
             }
+
+            var users = await usersQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var totalUsers = await usersQuery.CountAsync();
+
+            var userViewModels = users.Select(u => new UserViewModel
+            {
+                Id = u.Id,
+                UserName = u.UserName,
+                Email = u.Email,
+                IsAdmin = _userManager.IsInRoleAsync(u, "Admin").Result,
+                IsActive = u.IsActive
+            }).ToList();
+
+            var model = new UserManagementViewModel
+            {
+                Users = userViewModels,
+                SearchTerm = search,
+                IsActive = isActive,
+                TotalUsers = totalUsers,
+                CurrentPage = page,
+                PageSize = pageSize
+            };
+
+            return View(model);
         }
 
         // ****************************** EDIT USER ******************************
@@ -210,6 +205,21 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
+            // Manually delete related records in other tables
+            var studentRecord = await _context.Students.SingleOrDefaultAsync(s => s.UserId == id);
+            if (studentRecord != null)
+            {
+                _context.Students.Remove(studentRecord);
+            }
+
+            var employeeRecord = await _context.Employees.SingleOrDefaultAsync(e => e.UserId == id);
+            if (employeeRecord != null)
+            {
+                _context.Employees.Remove(employeeRecord);
+            }
+
+            // Repeat for other entities as necessary
+
             try
             {
                 await _userManager.DeleteAsync(user);
@@ -232,6 +242,33 @@ namespace GedsiHub.Controllers
                 _logger.LogError(ex, "Error occurred while deleting user with ID: {UserId}", id);
                 return View("Error");
             }
+        }
+
+        // This action bulk deletes the user from the database.
+        // POST: Admin/BulkDeleteUsers
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BulkDeleteUsers(string[] UserIds)
+        {
+            if (UserIds != null && UserIds.Any())
+            {
+                foreach (var userId in UserIds)
+                {
+                    var user = await _userManager.FindByIdAsync(userId);
+                    if (user != null)
+                    {
+                        await _userManager.DeleteAsync(user);
+                    }
+                }
+
+                TempData["SuccessMessage"] = "Selected users deleted successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "No users selected for deletion.";
+            }
+
+            return RedirectToAction(nameof(UserManagement));
         }
 
         // ****************************** ADMIN REPORTS DASHBOARD ******************************

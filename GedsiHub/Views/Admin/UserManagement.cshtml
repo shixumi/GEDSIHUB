@@ -5,118 +5,121 @@
     ViewData["Title"] = "User Management";
 }
 
-
 <div>
-    <!-- Search and Filter Form -->
-<form asp-action="UserManagement" method="get" class="mb-3">
-    <div class="um-title-searcbar-con">
-        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">User Management</h1>
-        
-        
-        <div class="um-search-con">
-            <input id="userManagementSearch" type="search" name="search" value="@Model.SearchTerm" placeholder="Search by username or email" />
-                <button type="submit" class="search-icon-um">
-                    <img id="userManagementSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
-                </button>
-        </div>
-    </div>
+    <!-- Main Container for All Content -->
+    <div class="container feedback-container">
+        <!-- Search and Filter Form -->
+        <form asp-action="UserManagement" method="get" class="mb-3">
+            <div class="um-title-searcbar-con">
+                <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">User Management</h1>
 
-        <hr class="custom-hr">
-        <div class="container feedback-container">
-        <div class="user-management-filter-con">
-           
+                <div class="um-search-con">
+                    <input id="userManagementSearch" type="search" name="search" value="@Model.SearchTerm" placeholder="Search by username or email" />
+                    <button type="submit" class="search-icon-um">
+                        <img id="userManagementSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
+                    </button>
+                </div>
+            </div>
 
-            <!-- Back Button -->
-            <a asp-action="Index" asp-controller="Dashboard" id="umBackButton">
-                <img src="~/images/Back.png" alt="Back to Dashboard" /> Back to Dashboard
-            </a>
+            <hr class="custom-hr">
+            <div class="user-management-filter-con">
+                <!-- Back Button -->
+                <a asp-action="Index" asp-controller="Dashboard" id="umBackButton">
+                    <img src="~/images/Back.png" alt="Back to Dashboard" /> Back to Dashboard
+                </a>
 
+                <!-- Filter Dropdown -->
+                <div class="select-container">
+                    <select id="isActiveSelect" name="isActive" class="form-control" onchange="this.form.submit();">
+                        @if (Model.IsActive == null)
+                        {
+                            <option value="" selected>All Users</option>
+                            <option value="true">Active Users</option>
+                            <option value="false">Inactive Users</option>
+                        }
+                        else if (Model.IsActive == true)
+                        {
+                            <option value="">All Users</option>
+                            <option value="true" selected>Active Users</option>
+                            <option value="false">Inactive Users</option>
+                        }
+                        else if (Model.IsActive == false)
+                        {
+                            <option value="">All Users</option>
+                            <option value="true">Active Users</option>
+                            <option value="false" selected>Inactive Users</option>
+                        }
+                    </select>
+                    <img src="~/images/Filter.png" width="1.7rem" height="1.7rem" alt="Filter Icon" class="filter-icon" />
+                </div>
+            </div>
+        </form>
 
-
-           <div class="select-container">
-            <select id="isActiveSelect" name="isActive" class="form-control" onchange="this.form.submit();">
-                @if (Model.IsActive == null)
-                {
-                    <option value="" selected>All Users</option>
-                    <option value="true">Active Users</option>
-                    <option value="false">Inactive Users</option>
-                }
-                else if (Model.IsActive == true)
-                {
-                    <option value="">All Users</option>
-                    <option value="true" selected>Active Users</option>
-                    <option value="false">Inactive Users</option>
-                }
-                else if (Model.IsActive == false)
-                {
-                    <option value="">All Users</option>
-                    <option value="true">Active Users</option>
-                    <option value="false" selected>Inactive Users</option>
-                }
-            </select>
-            <img src="~/images/Filter.png" width="1.7rem" height="1.7rem" alt="Filter Icon" class="filter-icon" />
-        </div>
-
-
-
-
-        </div>
-
-
-
-
-        <div>
-
-         <!-- Users Table -->
-            @if (Model.Users != null && Model.Users.Any())
-            {
-                <form asp-action="BulkDeleteUsers" method="post">
-                        <table class="table">
-                            <thead>
-                                <tr class="feedback-table-label">
-                                    <th class="um-header-label">Select</th>
-                                    <th class="um-header-label">Username</th>
-                                    <th class="um-header-label">Email</th>
-                                    <th class="um-header-label">Admin</th>
-                                    <th class="um-header-label">Status</th>
-                                    <th class="um-header-label"><span>Actions</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var user in Model.Users)
-                            {
-                                <tr class="row-feedback-response">
-                                                <td class="um-content"><input type="checkbox" name="UserIds" value="@user.Id" /></td>
-                                                <td class="um-content text-start">@user.UserName</td>
-                                                <td class="um-content text-start">@user.Email</td>
-                                    <td class="um-content">@(user.IsAdmin ? "Yes" : "No")</td>
-                                                <td class="um-content">@(user.IsActive ? "Active" : "Inactive")</td>
-                                    <td id="um-content-button-con" class="um-content">
-                                                    <a asp-action="EditUser" asp-route-id="@user.Id" id="um-edit-user-button">
-                                                        <img src="~/images/Edit_Green.png" />Edit
-                                                    </a>
-
-                                                    <a asp-action="DeleteUser" asp-route-id="@user.Id" id="um-delete-user-button">
-                                                        <img src="~/images/Delete.png" />Delete
-                                                    </a>
-                                    </td>
-                                </tr>
-                            }
+        <!-- Users Table and Bulk Delete Form -->
+        @if (Model.Users != null && Model.Users.Any())
+        {
+            <form asp-action="BulkDeleteUsers" method="post" id="bulkDeleteForm">
+                <table class="table">
+                    <thead>
+                        <tr class="feedback-table-label">
+                            <th><input type="checkbox" id="selectAllCheckbox" onclick="toggleAllCheckboxes(this)" /></th>
+                            <th class="um-header-label">Username</th>
+                            <th class="um-header-label">Email</th>
+                            <th class="um-header-label">Admin</th>
+                            <th class="um-header-label">Status</th>
+                            <th class="um-header-label"><span>Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr class="row-feedback-response">
+                                <td class="um-content"><input type="checkbox" name="UserIds" value="@user.Id" /></td>
+                                <td class="um-content text-start">@user.UserName</td>
+                                <td class="um-content text-start">@user.Email</td>
+                                <td class="um-content">@(user.IsAdmin ? "Yes" : "No")</td>
+                                <td class="um-content">@(user.IsActive ? "Active" : "Inactive")</td>
+                                <td id="um-content-button-con" class="um-content">
+                                    <a asp-action="EditUser" asp-route-id="@user.Id" id="um-edit-user-button">
+                                        <img src="~/images/Edit_Green.png" />Edit
+                                    </a>
+                                    <a asp-action="DeleteUser" asp-route-id="@user.Id" id="um-delete-user-button">
+                                        <img src="~/images/Delete.png" />Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
-                </form>
-            }
-            else
-            {
-                <p>No users found.</p>
-            }
 
-        </div>
-        <div id="um-actions-con-bottom">
-            <img id="deleteSelectedUM" src="~/images/Delete.png" />
-        </div>
+                <!-- Bulk Delete Button -->
+                <div id="um-actions-con-bottom" style="text-align: center;">
+                    <button type="submit" id="deleteSelectedUM" style="background: none; border: none; padding: 0; cursor: pointer;">
+                        <img src="~/images/Delete.png" alt="Delete Selected" />
+                    </button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <p>No users found.</p>
+        }
+
+        @if (Model.TotalUsers > Model.PageSize)
+        {
+            <div class="pagination">
+                @for (int i = 1; i <= (Model.TotalUsers + Model.PageSize - 1) / Model.PageSize; i++)
+                {
+                    <a asp-action="UserManagement" asp-route-page="@i" class="@(Model.CurrentPage == i ? "active" : "")">@i</a>
+                }
+            </div>
+        }
     </div>
-    </form>
 </div>
 
-
+<script>
+    function toggleAllCheckboxes(source) {
+        const checkboxes = document.querySelectorAll('input[name="UserIds"]');
+        checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+    }
+</script>
