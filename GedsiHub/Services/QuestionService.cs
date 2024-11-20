@@ -1,4 +1,6 @@
-﻿using GedsiHub.Models.Quiz;
+﻿// Services/QuestionService.cs
+
+using GedsiHub.Models.Quiz;
 using GedsiHub.Services.Interfaces;
 using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +44,7 @@ namespace GedsiHub.Services
                 {
                     QuestionID = q.QuestionID,
                     QuestionText = q.DisplayText,
-                    QuestionType = q.QuestionType,
+                    QuestionType = (int)q.QuestionType, // Cast enum to int for ViewModel
                     options = choices.Select(c => new OptionDetails
                     {
                         OptionID = c.ChoiceID,

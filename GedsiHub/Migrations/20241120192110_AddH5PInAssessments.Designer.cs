@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241120192110_AddH5PInAssessments")]
+    partial class AddH5PInAssessments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1215,10 +1218,6 @@ namespace GedsiHub.Migrations
                         .HasColumnType("VARCHAR(255)")
                         .HasColumnName("image_path");
 
-                    b.Property<int>("LikesCount")
-                        .HasColumnType("int")
-                        .HasColumnName("likes_count");
-
                     b.Property<int?>("ModuleId")
                         .HasColumnType("int")
                         .HasColumnName("module_id");
@@ -1238,18 +1237,10 @@ namespace GedsiHub.Migrations
                         .HasColumnType("nvarchar(150)")
                         .HasColumnName("title");
 
-                    b.Property<double?>("TrendingScore")
-                        .HasColumnType("FLOAT")
-                        .HasColumnName("trending_score");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("user_id");
-
-                    b.Property<int>("ViewsCount")
-                        .HasColumnType("int")
-                        .HasColumnName("views_count");
 
                     b.HasKey("PostId");
 
@@ -1258,30 +1249,6 @@ namespace GedsiHub.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("forum_post_tbl");
-                });
-
-            modelBuilder.Entity("GedsiHub.Models.ForumPostLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("forum_post_like_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumPostReport", b =>
@@ -1459,7 +1426,6 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 4,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 20, 19, 47, 13, 297, DateTimeKind.Utc).AddTicks(1299),
                             CreatedDate = new DateTime(2024, 11, 20, 19, 21, 9, 444, DateTimeKind.Utc).AddTicks(8052),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
@@ -2308,25 +2274,6 @@ namespace GedsiHub.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GedsiHub.Models.ForumPostLike", b =>
-                {
-                    b.HasOne("GedsiHub.Models.ForumPost", "ForumPost")
-                        .WithMany("ForumPostLikes")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GedsiHub.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ForumPost");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("GedsiHub.Models.ForumPostReport", b =>
                 {
                     b.HasOne("GedsiHub.Models.ForumPost", "ForumPost")
@@ -2632,8 +2579,6 @@ namespace GedsiHub.Migrations
             modelBuilder.Entity("GedsiHub.Models.ForumPost", b =>
                 {
                     b.Navigation("ForumComments");
-
-                    b.Navigation("ForumPostLikes");
 
                     b.Navigation("PostReports");
                 });

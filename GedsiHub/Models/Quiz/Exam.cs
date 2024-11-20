@@ -11,6 +11,8 @@ namespace GedsiHub.Models.Quiz
         [Required]
         [StringLength(1000)]
         public string Name { get; set; }
+
+        public string? H5PEmbedCode { get; set; } // Optional H5P embed code
         public int NumberOfQuestions { get; set; } // Number of questions to display
         public bool ShuffleQuestions { get; set; } // If true, questions will be randomized
 

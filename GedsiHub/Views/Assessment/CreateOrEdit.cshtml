@@ -1,4 +1,6 @@
-﻿@model GedsiHub.ViewModels.QuizViewModel
+﻿@using GedsiHub.Models.Quiz
+@using GedsiHub.Helpers
+@model GedsiHub.ViewModels.QuizViewModel
 
 @{
     Layout = "_LayoutApp";
@@ -16,7 +18,6 @@
     </li>
     <li class="breadcrumb-item active">@ViewData["Title"]</li>
 </ol>
-
 
 <div>
     <form asp-action="CreateOrEdit" method="post">
@@ -44,61 +45,83 @@
                 <input asp-for="ShuffleQuestions" class="form-check-input" type="checkbox" />
                 <label asp-for="ShuffleQuestions" class="form-check-label">Shuffle Questions</label>
             </div>
+            <div class="container assessment-container">
+                <span>H5P Embed Code (Optional):</span>
+                <textarea asp-for="H5PEmbedCode" class="form-control" placeholder="Paste iframe embed code here"></textarea>
+                <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
+            </div>
+
         </div>
 
         <div id="questions" class="container assessment-container">
             @for (int i = 0; i < Model.Questions.Count; i++)
             {
                 var question = Model.Questions[i];
-                    <div class="question-section" id="question-@i">
-                        <div class="num-delete-con">
-                            <span class="assessment-count">Question @(i + 1)</span>
-                            <button class="delete-question-button" type="button" onclick="deleteQuestion(@i)">
-                                Delete Question <img src="~/images/Delete.png" />
-                            </button>
-                        </div>
+                <div class="question-section" id="question-@i">
+                    <div class="num-delete-con">
+                        <span class="assessment-count">Question @(i + 1)</span>
+                        <button class="delete-question-button" type="button" onclick="deleteQuestion(@i)">
+                            Delete Question <img src="~/images/Delete.png" />
+                        </button>
+                    </div>
 
-                        <input type="hidden" name="Questions[@i].QuestionID" value="@question.QuestionID" />
-                        <div class="question-container">
-                            <span>Question Text</span>
-                            <input type="text" name="Questions[@i].DisplayText" class="question-input form-control" value="@question.DisplayText" placeholder="Type the question here" required />
-                        </div>
+                    <input type="hidden" name="Questions[@i].QuestionID" value="@question.QuestionID" />
+                    <div class="question-container">
+                        <span>Question Text</span>
+                        <input type="text" name="Questions[@i].DisplayText" class="question-input form-control" value="@question.DisplayText" placeholder="Type the question here" required />
+                    </div>
 
-                        <div class="question-container">
-                            <span>Question Type</span>
-                            <input type="number" name="Questions[@i].QuestionType" class="form-control" value="@question.QuestionType" required />
-                        </div>
+                    <div class="question-container">
+                        <span>Question Type</span>
+                        <select name="Questions[@i].QuestionType" class="form-control" required>
+                            @foreach (var questionType in Enum.GetValues(typeof(GedsiHub.Models.Quiz.QuestionTypeEnum)).Cast<GedsiHub.Models.Quiz.QuestionTypeEnum>())
+                            {
+                                var value = (int)questionType;
+                                var text = questionType.GetDisplayName(); // Use the extension method
+                                bool isSelected = (int)question.QuestionType == value;
 
-                        <div class="option-delete-text-con">
-                            <span>Options</span>
-                        </div>
+                                if (isSelected)
+                                {
+                                    <option value="@value" selected="selected">@text</option>
+                                }
+                                else
+                                {
+                                    <option value="@value">@text</option>
+                                }
+                            }
+                        </select>
+                    </div>
 
-                        <div id="choices-@i" class="all-options-container">
+                    <div class="option-delete-text-con">
+                        <span>Options</span>
+                    </div>
+
+                    <div id="choices-@i" class="all-options-container">
                         @for (int j = 0; j < question.Choices.Count; j++)
                         {
                             var choice = question.Choices[j];
-                                    <div id="choice-@i-@j" class="option-container">
+                            <div id="choice-@i-@j" class="option-container">
                                 <div class="option-letter-circle">@((char)(65 + j))</div>
-                                        <input type="hidden" class="option-input" name="Questions[@i].Choices[@j].ChoiceID" value="@choice.ChoiceID" />
-                                        <input type="text" class="option-input form-control" name="Questions[@i].Choices[@j].DisplayText" value="@choice.DisplayText" required />
-                                        <button class="option-delete-button" type="button" onclick="deleteChoice(@i, @j)">
-                                            <img src="~/images/Option_Delete.png" />
-                                        </button>
-                                        <div class="mark-as-correct-con">
-                                            <input type="radio" name="Questions[@i].CorrectChoice" class="form-check-input" value="@j" @(choice.IsCorrect ? "checked" : "") />
-                                            <span>Mark as Correct</span>
-                                        </div>
-                                    </div>
+                                <input type="hidden" class="option-input" name="Questions[@i].Choices[@j].ChoiceID" value="@choice.ChoiceID" />
+                                <input type="text" class="option-input form-control" name="Questions[@i].Choices[@j].DisplayText" value="@choice.DisplayText" required />
+                                <button class="option-delete-button" type="button" onclick="deleteChoice(@i, @j)">
+                                    <img src="~/images/Option_Delete.png" />
+                                </button>
+                                <div class="mark-as-correct-con">
+                                    <input type="radio" name="Questions[@i].CorrectChoice" class="form-check-input" value="@j" @(choice.IsCorrect ? "checked" : "") />
+                                    <span>Mark as Correct</span>
+                                </div>
+                            </div>
                         }
-                        </div>
-
-                        <div class="add-another-option-con">
-                            <button id="AddAnotherOption" class="add-another-option-button" type="button" onclick="addChoice(@i)">
-                                <img src="~/images/Add.png" /> Add Another Option
-                            </button>
-                        </div>
-                        <hr />
                     </div>
+
+                    <div class="add-another-option-con">
+                        <button id="AddAnotherOption" class="add-another-option-button" type="button" onclick="addChoice(@i)">
+                            <img src="~/images/Add.png" /> Add Another Option
+                        </button>
+                    </div>
+                    <hr />
+                </div>
             }
         </div>
 
@@ -115,102 +138,111 @@
 </div>
 
 @section Scripts {
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                let questionIndex = @Model.Questions.Count;
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let questionIndex = @Model.Questions.Count;
 
-                window.addQuestion = function () {
-                    const questionDiv = document.createElement('div');
-                    questionDiv.className = 'question-section';
-                    questionDiv.id = `question-${questionIndex}`;
-                    questionDiv.innerHTML = `
-                        <div class="num-delete-con">
-                            <span class="assessment-count">Question ${questionIndex + 1}</span>
-                            <button class="delete-question-button" type="button" onclick="deleteQuestion(${questionIndex})">
-                                Delete Question <img src="/images/Delete.png" />
+            window.addQuestion = function () {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-section';
+                questionDiv.id = `question-${questionIndex}`;
+                questionDiv.innerHTML = `
+                <div class="num-delete-con">
+                    <span class="assessment-count">Question ${questionIndex + 1}</span>
+                    <button class="delete-question-button" type="button" onclick="deleteQuestion(${questionIndex})">
+                        Delete Question <img src="/images/Delete.png" />
+                    </button>
+                </div>
+
+                <input type="hidden" name="Questions[${questionIndex}].QuestionID" value="" />
+                <div class="question-container">
+                    <span>Question Text</span>
+                    <input type="text" name="Questions[${questionIndex}].DisplayText" class="question-input form-control" placeholder="Type the question here" required />
+                </div>
+
+                <div class="question-container">
+                    <span>Question Type</span>
+                    <select name="Questions[${questionIndex}].QuestionType" class="form-control" required>
+                        <option value="1">Multiple Choice</option>
+                        <option value="2">True/False</option>
+                        <option value="3">Short Answer</option>
+                        <option value="4">Fill in the Blank</option>
+                    </select>
+                </div>
+
+                <div class="option-delete-text-con">
+                    <span>Options</span>
+                </div>
+
+                <div id="choices-${questionIndex}" class="all-options-container">
+                    <!-- Choices will be added here -->
+                </div>
+
+                <div class="add-another-option-con">
+                    <button type="button" class="add-another-option-button" onclick="addChoice(${questionIndex})">
+                        <img src="/images/Add.png" /> Add Option
+                    </button>
+                </div>
+                <hr />
+            `;
+                document.getElementById('questions').appendChild(questionDiv);
+                questionIndex++;
+            };
+
+            window.addChoice = function (questionIdx) {
+                const choicesDiv = document.getElementById(`choices-${questionIdx}`);
+                const choiceCount = choicesDiv.children.length;
+                const choiceDiv = document.createElement('div');
+                choiceDiv.className = 'option-container';
+                choiceDiv.id = `choice-${questionIdx}-${choiceCount}`;
+                choiceDiv.innerHTML = `
+                            <div class="option-letter-circle">${String.fromCharCode(65 + choiceCount)}</div>
+                            <input type="hidden" name="Questions[${questionIdx}].Choices[${choiceCount}].ChoiceID" value="" />
+                            <input type="text" name="Questions[${questionIdx}].Choices[${choiceCount}].DisplayText" class="option-input form-control" placeholder="Type the option here" required />
+                            <button class="option-delete-button" type="button" onclick="deleteChoice(${questionIdx}, ${choiceCount})">
+                                <img src="/images/Option_Delete.png" />
                             </button>
-                        </div>
+                            <div class="mark-as-correct-con">
+                                <input type="radio" name="Questions[${questionIdx}].CorrectChoice" class="form-check-input" value="${choiceCount}" />
+                                <span>Mark as Correct</span>
+                            </div>
+                        `;
+                choicesDiv.appendChild(choiceDiv);
+            };
 
-                        <input type="hidden" name="Questions[${questionIndex}].QuestionID" value="" />
-                        <div class="question-container">
-                            <span>Question Text</span>
-                            <input type="text" name="Questions[${questionIndex}].DisplayText" class="question-input form-control" placeholder="Type the question here" required />
-                        </div>
+            window.deleteQuestion = function (questionIdx) {
+                document.getElementById(`question-${questionIdx}`).remove();
+                updateQuestionIndexes();
+            };
 
-                        <div class="question-container">
-                            <span>Question Type</span>
-                            <input type="number" name="Questions[${questionIndex}].QuestionType" class="form-control" value="1" required />
-                        </div>
+            window.deleteChoice = function (questionIdx, choiceIdx) {
+                document.getElementById(`choice-${questionIdx}-${choiceIdx}`).remove();
+                updateChoiceIndexes(questionIdx);
+            };
 
-                        <div id="choices-${questionIndex}" class="all-options-container">
-                            <!-- Choices will be added here -->
-                        </div>
+            function updateQuestionIndexes() {
+                const questions = document.querySelectorAll('.question-section');
+                questions.forEach((question, index) => {
+                    question.id = `question-${index}`;
+                    question.querySelector('.assessment-count').innerText = `Question ${index + 1}`;
+                    question.querySelector('input[name^="Questions["]').name = `Questions[${index}].QuestionID`;
+                    question.querySelector('input[name$="DisplayText"]').name = `Questions[${index}].DisplayText`;
+                    question.querySelector('select[name$="QuestionType"]').name = `Questions[${index}].QuestionType`;
+                    question.querySelector('.all-options-container').id = `choices-${index}`;
+                });
+                questionIndex = questions.length;
+            }
 
-                        <div class="add-another-option-con">
-                            <button type="button" class="add-another-option-button" onclick="addChoice(${questionIndex})">
-                                <img src="/images/Add.png" /> Add Option
-                            </button>
-                        </div>
-                        <hr />
-                    `;
-                    document.getElementById('questions').appendChild(questionDiv);
-                    questionIndex++;
-                };
-
-                window.addChoice = function (questionIdx) {
-                    const choicesDiv = document.getElementById(`choices-${questionIdx}`);
-                    const choiceCount = choicesDiv.children.length;
-                    const choiceDiv = document.createElement('div');
-                    choiceDiv.className = 'option-container';
-                    choiceDiv.id = `choice-${questionIdx}-${choiceCount}`;
-                    choiceDiv.innerHTML = `
-                        <div class="option-letter-circle">${String.fromCharCode(65 + choiceCount)}</div>
-                        <input type="hidden" name="Questions[${questionIdx}].Choices[${choiceCount}].ChoiceID" value="" />
-                        <input type="text" name="Questions[${questionIdx}].Choices[${choiceCount}].DisplayText" class="option-input form-control" placeholder="Type the option here" required />
-                        <button class="option-delete-button" type="button" onclick="deleteChoice(${questionIdx}, ${choiceCount})">
-                            <img src="/images/Option_Delete.png" />
-                        </button>
-                        <div class="mark-as-correct-con">
-                            <input type="radio" name="Questions[${questionIdx}].CorrectChoice" class="form-check-input" value="${choiceCount}" />
-                            <span>Mark as Correct</span>
-                        </div>
-                    `;
-                    choicesDiv.appendChild(choiceDiv);
-                };
-
-                window.deleteQuestion = function (questionIdx) {
-                    document.getElementById(`question-${questionIdx}`).remove();
-                    updateQuestionIndexes();
-                };
-
-                window.deleteChoice = function (questionIdx, choiceIdx) {
-                    document.getElementById(`choice-${questionIdx}-${choiceIdx}`).remove();
-                    updateChoiceIndexes(questionIdx);
-                };
-
-                function updateQuestionIndexes() {
-                    const questions = document.querySelectorAll('.question-section');
-                    questions.forEach((question, index) => {
-                        question.id = `question-${index}`;
-                        question.querySelector('.assessment-count').innerText = `Question ${index + 1}`;
-                        question.querySelector('input[name^="Questions["]').name = `Questions[${index}].QuestionID`;
-                        question.querySelector('input[name$="DisplayText"]').name = `Questions[${index}].DisplayText`;
-                        question.querySelector('input[name$="QuestionType"]').name = `Questions[${index}].QuestionType`;
-                        question.querySelector('.all-options-container').id = `choices-${index}`;
-                    });
-                    questionIndex = questions.length;
-                }
-
-                function updateChoiceIndexes(questionIdx) {
-                    const choices = document.querySelectorAll(`#choices-${questionIdx} .option-container`);
-                    choices.forEach((choice, index) => {
-                        choice.id = `choice-${questionIdx}-${index}`;
-                        choice.querySelector('input[name$="ChoiceID"]').name = `Questions[${questionIdx}].Choices[${index}].ChoiceID`;
-                        choice.querySelector('input[name$="DisplayText"]').name = `Questions[${questionIdx}].Choices[${index}].DisplayText`;
-                        choice.querySelector('input[type="radio"]').name = `Questions[${questionIdx}].CorrectChoice`;
-                        choice.querySelector('button').setAttribute("onclick", `deleteChoice(${questionIdx}, ${index})`);
-                    });
-                }
-            });
-        </script>
+            function updateChoiceIndexes(questionIdx) {
+                const choices = document.querySelectorAll(`#choices-${questionIdx} .option-container`);
+                choices.forEach((choice, index) => {
+                    choice.id = `choice-${questionIdx}-${index}`;
+                    choice.querySelector('input[name$="ChoiceID"]').name = `Questions[${questionIdx}].Choices[${index}].ChoiceID`;
+                    choice.querySelector('input[name$="DisplayText"]').name = `Questions[${questionIdx}].Choices[${index}].DisplayText`;
+                    choice.querySelector('input[type="radio"]').name = `Questions[${questionIdx}].CorrectChoice`;
+                    choice.querySelector('button').setAttribute("onclick", `deleteChoice(${questionIdx}, ${index})`);
+                });
+            }
+        });
+    </script>
 }

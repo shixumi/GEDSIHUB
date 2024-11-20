@@ -45,10 +45,11 @@ namespace GedsiHub.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress(ErrorMessage = "Please enter a valid email.")]
-            [Display(Name = "Email")]
-            public required string Email { get; set; }
+            [Required(ErrorMessage = "Email is required.")]
+            [EmailAddress(ErrorMessage = "Invalid email address.")]
+            [RegularExpression(@"^[a-zA-Z0-9._%+-]+@(pup\.edu\.ph|iskolarngbayan\.pup\.edu\.ph)$",
+            ErrorMessage = "Email must end with @pup.edu.ph or @iskolarngbayan.pup.edu.ph.")]
+            public string Email { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "{0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
