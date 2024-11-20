@@ -149,12 +149,13 @@
             <!-- Card Footer Buttons -->
             <div class="d-flex align-items-center card-footer">
 
-                <button class="btn btn-link card-link d-flex align-items-center like-btn"
+                <button class="card-link d-flex align-items-center like-btn"
                         data-post-id="@post.PostId"
                         data-has-liked="@post.HasLiked">
                     <i class="f-icon la @(post.HasLiked ? "la-heart" : "la-heart-o")"></i>
+                    <span id="likeCount-@post.PostId">@post.LikesCount</span>
                 </button>
-                <span id="likeCount-@post.PostId">@post.LikesCount</span>
+                
 
                 <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center">
                     <i class="f-icon la la-comment"></i> @post.CommentCount
