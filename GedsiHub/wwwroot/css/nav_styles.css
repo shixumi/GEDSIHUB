@@ -62,3 +62,59 @@
   margin-right: 573px;
 }
 
+
+/* Remove the blue background and border on the dropdown when active */
+#notificationsDropdown:focus,
+#notificationsDropdown:active,
+#notificationsDropdown.show {
+    outline: none !important;
+    border: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Remove blue highlight from the dropdown menu */
+.dropdown-menu {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+/* Remove blue focus ring or box-shadow from the icon */
+#notificationsDropdown .fa-bell:focus,
+#notificationsDropdown .fa-bell:active,
+#notificationsDropdown:hover {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+
+#notificationsCount {
+    background-color: #880000 !important;
+    border-radius: 10px !important;
+    color: white;
+    min-width: 15px;
+    min-height: 18px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid white;
+    position: absolute;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0.5rem;
+}
+
+    #notificationsCount.circular {
+        border-radius: 50% !important;   
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: white;
+        font-weight: bold;
+        position: absolute;
+
+    }

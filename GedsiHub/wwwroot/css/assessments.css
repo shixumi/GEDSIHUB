@@ -29,9 +29,10 @@
         font-weight: 400;
     }
 
-    .option-text {
-        cursor: pointer;
-    }
+.option-text {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
     .option-text:active {
         border: 2px solid #464040; 
@@ -49,4 +50,15 @@
 
 .user-assessment-button-con {
     margin-top: 2.5rem !important;
+}
+
+.option-radio-button {
+    display: none;
+}
+
+.option-text.selected {
+    border: 1px solid #464040;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+    color: #464040;
 }

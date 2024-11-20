@@ -412,7 +412,7 @@ namespace GedsiHub.Data
                 entity.HasOne(a => a.User)
                       .WithOne(u => u.Admin)
                       .HasForeignKey<Admin>(a => a.UserId)
-                      .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // **Configure Employee relationships**
@@ -421,7 +421,7 @@ namespace GedsiHub.Data
                 entity.HasOne(e => e.User)
                       .WithOne(u => u.Employee)
                       .HasForeignKey<Employee>(e => e.UserId)
-                      .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // **Configure Student relationships**
@@ -430,7 +430,7 @@ namespace GedsiHub.Data
                 entity.HasOne(s => s.User)
                       .WithOne(u => u.Student)
                       .HasForeignKey<Student>(s => s.UserId)
-                      .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+                      .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(s => s.CollegeDepartment)
                       .WithMany(cd => cd.Students)

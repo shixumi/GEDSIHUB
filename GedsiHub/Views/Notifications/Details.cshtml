@@ -8,6 +8,10 @@
 <style>
     .notification-details {
         padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #464040;
     }
 
         .notification-details h2 {
@@ -26,9 +30,11 @@
         }
 </style>
 
+<div id="delete-user-container" class="container feedback-container">
 <div class="notification-details">
     <i class="@Model.IconClass" aria-hidden="true"></i>
     <h2>@Model.Title</h2>
     <div class="timestamp">Posted on @Model.CreatedAt.ToString("f")</div>
     <p>@Model.Message</p>
+</div>
 </div>
