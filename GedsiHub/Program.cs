@@ -18,7 +18,6 @@ using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.Runtime.InteropServices;
 using System.Net.Http.Headers;
-using GedsiHub.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +65,7 @@ builder.Services.AddScoped<IResult<QuizResult>, ResultService<QuizResult>>();
 builder.Services.AddScoped(typeof(IChoice<>), typeof(ChoiceService<>)); // Register ChoiceService
 builder.Services.AddScoped(typeof(IResult<>), typeof(ResultService<>)); // Register ResultServic
 builder.Services.AddScoped<IAnswerService, AnswerService>();
+builder.Services.AddTransient<ExcelParserService>();
 
 
 builder.Services.AddScoped<SignInManager<ApplicationUser>, ApplicationSignInManager>();

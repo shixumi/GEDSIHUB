@@ -48,6 +48,13 @@
         <span>Please complete the following questions to assess your understanding of this module.</span>
     </div>
 
+    @if (!string.IsNullOrWhiteSpace(Model.H5PEmbedCode))
+    {
+        <div class="iframe-container">
+            @Html.Raw(Model.H5PEmbedCode)
+        </div>
+    }
+
     <!-- Form to capture and submit answers -->
     <form asp-action="Submit" asp-controller="Assessment" method="post">
         <input type="hidden" asp-for="ExamID" />

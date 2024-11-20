@@ -12,6 +12,7 @@ using GedsiHub.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using GedsiHub.Data;
+using System.IO;
 
 namespace GedsiHub.Controllers
 {
@@ -27,6 +28,7 @@ namespace GedsiHub.Controllers
         private readonly ApplicationDbContext _context;
         private readonly CertificateService _certificateService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ExcelParserService _excelParserService;
 
         public AssessmentController(
             IExam<Exam> examService,
@@ -37,7 +39,8 @@ namespace GedsiHub.Controllers
             IAnswerService answerService,
             ApplicationDbContext context,
             CertificateService certificateService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ExcelParserService excelParserService)
 
         {
             _examService = examService;
@@ -49,6 +52,7 @@ namespace GedsiHub.Controllers
             _context = context;
             _certificateService = certificateService;
             _userManager = userManager;
+            _excelParserService = excelParserService;
         }
 
         // GET: Assessment/CreateOrEdit
@@ -65,13 +69,14 @@ namespace GedsiHub.Controllers
                 model.Name = exam.Name;
                 model.NumberOfQuestions = exam.NumberOfQuestions;
                 model.ShuffleQuestions = exam.ShuffleQuestions;
+                model.H5PEmbedCode = exam.H5PEmbedCode; // Load H5P embed code
 
                 var questions = await _questionService.GetQuestionsByExamId(exam.ExamID);
                 model.Questions = questions.Select(q => new QuestionViewModel
                 {
                     QuestionID = q.QuestionID,
                     DisplayText = q.DisplayText,
-                    QuestionType = q.QuestionType,
+                    QuestionType = q.QuestionType,  // Enum directly
                     Choices = _choiceService.GetChoicesByQuestion(q.QuestionID).Result.Select(c => new ChoiceViewModel
                     {
                         ChoiceID = c.ChoiceID,
@@ -118,6 +123,7 @@ namespace GedsiHub.Controllers
                     exam.ModifiedBy = User.Identity.Name;
                     exam.NumberOfQuestions = model.NumberOfQuestions; // Correctly set number of questions for editing
                     exam.ShuffleQuestions = model.ShuffleQuestions;
+                    exam.H5PEmbedCode = model.H5PEmbedCode; // Save H5P embed code
 
                     await _examService.UpdateExam(exam);
                 }
@@ -132,7 +138,8 @@ namespace GedsiHub.Controllers
                         CreatedBy = User.Identity.Name,
                         ModifiedBy = User.Identity.Name,
                         NumberOfQuestions = model.NumberOfQuestions, // FIX: Set NumberOfQuestions during creation
-                        ShuffleQuestions = model.ShuffleQuestions
+                        ShuffleQuestions = model.ShuffleQuestions,
+                        H5PEmbedCode = model.H5PEmbedCode // Save H5P embed code
                     };
                     await _examService.AddExam(exam);
                 }
@@ -149,7 +156,7 @@ namespace GedsiHub.Controllers
                         if (question == null) continue;
 
                         question.DisplayText = qvm.DisplayText;
-                        question.QuestionType = qvm.QuestionType;
+                        question.QuestionType = (QuestionTypeEnum)qvm.QuestionType;
                         question.ModifiedOn = DateTime.Now;
                         await _questionService.UpdateQuestion(question);
                     }
@@ -160,7 +167,7 @@ namespace GedsiHub.Controllers
                         {
                             ExamID = exam.ExamID,
                             DisplayText = qvm.DisplayText,
-                            QuestionType = qvm.QuestionType,
+                            QuestionType = (QuestionTypeEnum)qvm.QuestionType,
                             CreatedOn = DateTime.Now,
                             CreatedBy = User.Identity.Name,
                             ModifiedBy = User.Identity.Name
@@ -297,13 +304,13 @@ namespace GedsiHub.Controllers
             {
                 ExamID = exam.ExamID,
                 Exam = exam.Name,
+                H5PEmbedCode = exam.H5PEmbedCode, // Pass the embed code
                 questions = selectedQuestions.Select(q => new QuestionDetails
                 {
                     QuestionID = q.QuestionID,
                     QuestionText = q.DisplayText,
-                    QuestionType = q.QuestionType,
+                    QuestionType = (int)q.QuestionType,
                     options = _choiceService.GetChoicesByQuestion(q.QuestionID).Result
-                              .OrderBy(_ => Guid.NewGuid())  // Shuffle choices
                               .Select(c => new OptionDetails
                               {
                                   OptionID = c.ChoiceID,
@@ -311,6 +318,7 @@ namespace GedsiHub.Controllers
                               }).ToList()
                 }).ToList()
             };
+
 
             return View(qna);
         }
@@ -392,7 +400,6 @@ namespace GedsiHub.Controllers
             }
         }
 
-
         private async Task MarkProgressAndGenerateCertificate(string userId, int moduleId)
         {
             // Update UserProgress as complete
@@ -471,6 +478,43 @@ namespace GedsiHub.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadQuizExcel(int moduleId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                TempData["FileError"] = "Please upload a valid Excel file.";
+                return RedirectToAction("CreateOrEdit", new { moduleId });
+            }
+
+            try
+            {
+                var examsData = await _excelParserService.ParseExcelToQuizAsync(file);
+
+                if (examsData == null || !examsData.Any())
+                {
+                    TempData["ParseError"] = "The uploaded file format is invalid or contains no data.";
+                    return RedirectToAction("CreateOrEdit", new { moduleId });
+                }
+
+                foreach (var exam in examsData)
+                {
+                    await _examService.AddExam(exam);
+                }
+
+                TempData["Success"] = "Quiz uploaded successfully.";
+                return RedirectToAction("Details", "Module", new { id = moduleId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing uploaded file.");
+                TempData["Error"] = "An error occurred while processing the file. Please try again.";
+                return RedirectToAction("CreateOrEdit", new { moduleId });
+            }
         }
 
 

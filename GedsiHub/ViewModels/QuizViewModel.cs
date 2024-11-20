@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GedsiHub.Models.Quiz;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GedsiHub.ViewModels
@@ -22,11 +23,13 @@ namespace GedsiHub.ViewModels
         public string DisplayText { get; set; }
 
         [Required]
-        public int QuestionType { get; set; }  // e.g., 1 for MCQ
+        public QuestionTypeEnum QuestionType { get; set; }
+
+        // Add a computed property for the display name
+        public string QuestionTypeName => ((QuestionTypeEnum)QuestionType).ToString();
 
         public List<ChoiceViewModel> Choices { get; set; } = new List<ChoiceViewModel>();
 
-        // Add this property to store the index of the correct choice
         public int? CorrectChoice { get; set; }
     }
 
@@ -41,9 +44,14 @@ namespace GedsiHub.ViewModels
         public int ModuleId { get; set; }
 
         public string? Passed { get; set; }
+
         public int NumberOfQuestions { get; set; }
+
         public bool ShuffleQuestions { get; set; }
+
+        public string? H5PEmbedCode { get; set; } // Optional H5P embed code
 
         public List<QuestionViewModel> Questions { get; set; } = new List<QuestionViewModel>();
     }
+
 }

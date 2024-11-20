@@ -11,6 +11,7 @@ namespace GedsiHub.Models.Quiz
         public int ExamID { get; set; }
         public string Exam { get; set; }
         public List<QuestionDetails> questions { get; set; }
+        public string? H5PEmbedCode { get; set; } // Optional H5P embed code
     }
     public class QuestionDetails
     {
