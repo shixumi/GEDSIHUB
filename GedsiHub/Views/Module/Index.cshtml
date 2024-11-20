@@ -125,7 +125,7 @@
 
                             <div class="ModuleCard">
 
-                                <div class="progress" id="progress-bar" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 8px;">
+                                <div class="progress" id="progress-bar" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 8px;">
                                     <div class="progress-bar" style="width: 25%; background-color: #52A035;"></div>
                                 </div>
 
@@ -183,6 +183,42 @@
                         }
                     </div>
                 }
+
+
+                <!-- Module Card for Grid View -->
+                <div class="module_card" id="moduleCard" style="padding-right: 2.1rem; padding-left: 2.1rem;">
+                    <div class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
+                        <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
+
+                        <!-- Color Picker (Admin only) -->
+                        <div class="picker-container">
+                            <input id="colorPicke"
+                                   class="ColorInput"
+                                   type="color"
+                                   value="Color" />
+                        </div>
+                    </div>
+
+                    <!-- Lesson Reframe Module Title -->
+                    <a>
+                        <span id="ModuleTitle" class="fw-bolder ModuleTitle">Lesson Reframe</span>
+                    </a>
+
+                    <!-- Number of Lesson Container -->
+                    <div class="NumberOfLessonsContainer">
+                        <img class="LessonIcon" src="~/images/lesson.png" />
+                        <span id="NumberOfLessons" class="NumberOfLessons">4</span>
+                        <span class="fw-normal LessonsText">session</span>
+                    </div>
+
+                    <div>
+                        <a href="/module/reframe" class="btn btn-primary reframe-btn">
+                            Take the Reframe
+                        </a>
+                    </div>
+
+   
+                </div>
                 @if (User.IsInRole("Admin"))
                 {
                     <!-- Add New Module Button -->

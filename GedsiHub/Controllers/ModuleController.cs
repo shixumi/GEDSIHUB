@@ -162,6 +162,12 @@ namespace GedsiHub.Controllers
             return View(module);
         }
 
+        // GET: Module/Reframe
+        public IActionResult Reframe()
+        {
+            return View();
+        }
+
         // POST: Handle submission of module editing with error handling
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -14,7 +14,7 @@
 @if (Model.Passed)
 {
     <p>Congratulations, you passed the assessment!</p>
-    <a href="https://localhost:44329/api/certificate/@User.FindFirstValue(ClaimTypes.NameIdentifier)/@Model.ModuleId" class="btn btn-primary">Download Certificate</a>
+    <a href="https://gedsihub.tech/api/certificate/@User.FindFirstValue(ClaimTypes.NameIdentifier)/@Model.ModuleId" class="btn btn-primary">Download Certificate</a>
 
 
 }

@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Reframe";
+    Layout = "_LayoutApp";
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .iframe-container {
+            display: none; /* Hide all iframes by default */
+            text-align: center;
+        }
+        .iframe-container.active {
+            display: block; /* Show only the active iframe */
+        }
+        .nav-button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="iframe1" class="iframe-container active">
+        <iframe src="https://gedsipup.h5p.com/content/1292423619212402749/embed" aria-label="GEDSI Grasp: Flip for Clarity!" width="1088" height="637" frameborder="0" allowfullscreen="allowfullscreen" allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"></iframe>
+        <script src="https://gedsipup.h5p.com/js/h5p-resizer.js" charset="UTF-8"></script>
+        <button class="nav-button" onclick="nextIframe(2)">Next</button>
+    </div>
+
+    <div id="iframe2" class="iframe-container">
+        <iframe src="https://gedsipup.h5p.com/content/1292423634707641719/embed" aria-label="GEDSI Crosswise: Uncover the Essentials!" width="1088" height="637" frameborder="0" allowfullscreen="allowfullscreen" allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"></iframe>
+        <script src="https://gedsipup.h5p.com/js/h5p-resizer.js" charset="UTF-8"></script>
+        <button class="nav-button" onclick="nextIframe(3)">Next</button>
+    </div>
+
+    <div id="iframe3" class="iframe-container">
+        <iframe src="https://gedsipup.h5p.com/content/1292423671321343069/embed" aria-label="GEDSI True or False Challenge!" width="1088" height="637" frameborder="0" allowfullscreen="allowfullscreen" allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"></iframe>
+        <script src="https://gedsipup.h5p.com/js/h5p-resizer.js" charset="UTF-8"></script>
+        <button class="nav-button" onclick="nextIframe(4)">Next</button>
+    </div>
+
+    <div id="iframe4" class="iframe-container">
+        <iframe src="https://gedsipup.h5p.com/content/1292423678081988989/embed" aria-label="Fill in the GEDSI Gaps!" width="1088" height="637" frameborder="0" allowfullscreen="allowfullscreen" allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"></iframe>
+        <script src="https://gedsipup.h5p.com/js/h5p-resizer.js" charset="UTF-8"></script>
+        <button class="nav-button" onclick="nextIframe(1)">Finish</button>
+    </div>
+
+    <script>
+        function nextIframe(nextIframeId) {
+            // Hide all iframes
+            document.querySelectorAll('.iframe-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            // Show the selected iframe
+            document.getElementById('iframe' + nextIframeId).classList.add('active');
+        }
+    </script>
+
+</body>
+</html>

@@ -22,7 +22,3 @@ function hideSpinner() {
 }
 
 
-
-$(window).on('load', function () {
-    $('#spinner').hide();
-}) 
