@@ -6,22 +6,23 @@
 }
 
 <div>
+    <div class="um-title-searcbar-con">
+        <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">User Management</h1>
+
+        <div class="um-search-con">
+            <input id="userManagementSearch" type="search" name="search" value="@Model.SearchTerm" placeholder="Search by username or email" />
+            <button type="submit" class="search-icon-um">
+                <img id="userManagementSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
+            </button>
+        </div>
+    </div>
+
+    <hr class="custom-hr">
     <!-- Main Container for All Content -->
     <div class="container feedback-container">
         <!-- Search and Filter Form -->
         <form asp-action="UserManagement" method="get" class="mb-3">
-            <div class="um-title-searcbar-con">
-                <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">User Management</h1>
-
-                <div class="um-search-con">
-                    <input id="userManagementSearch" type="search" name="search" value="@Model.SearchTerm" placeholder="Search by username or email" />
-                    <button type="submit" class="search-icon-um">
-                        <img id="userManagementSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
-                    </button>
-                </div>
-            </div>
-
-            <hr class="custom-hr">
+         
             <div class="user-management-filter-con">
                 <!-- Back Button -->
                 <a asp-action="Index" asp-controller="Dashboard" id="umBackButton">
@@ -93,7 +94,7 @@
                 </table>
 
                 <!-- Bulk Delete Button -->
-                <div id="um-actions-con-bottom" style="text-align: center;">
+                <div id="um-actions-con-bottom" style="text-align: left;">
                     <button type="submit" id="deleteSelectedUM" style="background: none; border: none; padding: 0; cursor: pointer;">
                         <img src="~/images/Delete.png" alt="Delete Selected" />
                     </button>

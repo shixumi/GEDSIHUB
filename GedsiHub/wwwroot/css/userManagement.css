@@ -147,25 +147,23 @@
     gap: 1rem;
 }
 
-#deleteSelectedUM {
+#deleteSelectedUM img {
     width: 1.7rem;
     height: 1.7rem;
     transition: all 0.2s ease;
-    margin-left: 1.1rem;
+    margin-left: 0.4rem;
 }
 
-    #deleteSelectedUM:hover {
+    #deleteSelectedUM img:hover {
         opacity: 1;
         filter: brightness(1.768);
     }
 
-    #deleteSelectedUM:active {
+    #deleteSelectedUM img:active {
         transform: scale(0.95);
     }
 
-#um-actions-con-bottom {
-    padding-left: 0.3rem;
-}
+
 
 #userManagementFilter {
     font-size: 1rem;
