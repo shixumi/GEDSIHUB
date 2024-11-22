@@ -51,19 +51,21 @@ builder.Services.AddHttpClient<WatershedApiService>(client =>
 // ========================================
 // 3. Register Application Services
 // ========================================
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddScoped<IReportManagementService, ReportManagementService>();
 builder.Services.AddScoped<AnalyticsService>();
-builder.Services.AddScoped<XApiService>(); // Register XApiService
+builder.Services.AddScoped<XApiService>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddHostedService<StaleActiveUserCleanupService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.AddTransient<EmailSender>(); // Ensure EmailSender is registered
+builder.Services.AddTransient<EmailSender>();
 builder.Services.AddTransient<CertificateService>();
 builder.Services.AddScoped<IExam<Exam>, ExamService<Exam>>();
 builder.Services.AddScoped<IQuestion<Question>, QuestionService<Question>>();
 builder.Services.AddScoped<IResult<QuizResult>, ResultService<QuizResult>>();
-builder.Services.AddScoped(typeof(IChoice<>), typeof(ChoiceService<>)); // Register ChoiceService
-builder.Services.AddScoped(typeof(IResult<>), typeof(ResultService<>)); // Register ResultServic
+builder.Services.AddScoped(typeof(IChoice<>), typeof(ChoiceService<>));
+builder.Services.AddScoped(typeof(IResult<>), typeof(ResultService<>));
 builder.Services.AddScoped<IAnswerService, AnswerService>();
 builder.Services.AddTransient<ExcelParserService>();
 

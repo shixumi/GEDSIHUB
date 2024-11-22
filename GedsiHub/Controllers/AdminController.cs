@@ -16,14 +16,23 @@ namespace GedsiHub.Controllers
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserManagementService _userManagementService;
+        private readonly IReportManagementService _reportManagementService;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AdminController> _logger;
 
-        public AdminController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, ILogger<AdminController> logger)
+        public AdminController(
+            UserManager<ApplicationUser> userManager,
+            ApplicationDbContext context,
+            ILogger<AdminController> logger,
+            IUserManagementService userManagementService,
+            IReportManagementService reportManagementService)
         {
             _userManager = userManager;
             _context = context;
             _logger = logger;
+            _userManagementService = userManagementService;
+            _reportManagementService = reportManagementService;
         }
 
         // ****************************** ADMIN DASHBOARD ******************************
@@ -41,41 +50,35 @@ namespace GedsiHub.Controllers
         // This action displays a list of users with search and filter options (e.g., active/inactive users).
         public async Task<IActionResult> UserManagement(string search = "", bool? isActive = null, int page = 1, int pageSize = 10)
         {
-            var usersQuery = _userManager.Users.AsQueryable();
-
-            if (!string.IsNullOrEmpty(search))
+            try
             {
-                usersQuery = usersQuery.Where(u => u.UserName.Contains(search) || u.Email.Contains(search));
+                var users = await _userManagementService.GetUsersAsync(search, isActive, page, pageSize);
+                var userViewModels = users.Select(u => new UserViewModel
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    IsAdmin = _userManagementService.IsUserAdmin(u),
+                    IsActive = u.IsActive
+                }).ToList();
+
+                var model = new UserManagementViewModel
+                {
+                    Users = userViewModels,
+                    SearchTerm = search,
+                    IsActive = isActive,
+                    TotalUsers = userViewModels.Count(),
+                    CurrentPage = page,
+                    PageSize = pageSize
+                };
+
+                return View(model);
             }
-
-            if (isActive.HasValue)
+            catch (Exception ex)
             {
-                usersQuery = usersQuery.Where(u => u.IsActive == isActive.Value);
+                _logger.LogError(ex, "Error while loading user management.");
+                return View("Error");
             }
-
-            var users = await usersQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            var totalUsers = await usersQuery.CountAsync();
-
-            var userViewModels = users.Select(u => new UserViewModel
-            {
-                Id = u.Id,
-                UserName = u.UserName,
-                Email = u.Email,
-                IsAdmin = _userManager.IsInRoleAsync(u, "Admin").Result,
-                IsActive = u.IsActive
-            }).ToList();
-
-            var model = new UserManagementViewModel
-            {
-                Users = userViewModels,
-                SearchTerm = search,
-                IsActive = isActive,
-                TotalUsers = totalUsers,
-                CurrentPage = page,
-                PageSize = pageSize
-            };
-
-            return View(model);
         }
 
         // ****************************** EDIT USER ******************************
@@ -175,7 +178,7 @@ namespace GedsiHub.Controllers
         {
             _logger.LogInformation("Admin attempting to delete user with ID: {UserId}", id);
 
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManagementService.GetUserForDeletionAsync(id);
             if (user == null)
             {
                 _logger.LogWarning("User with ID {UserId} not found for deletion.", id);
@@ -198,37 +201,15 @@ namespace GedsiHub.Controllers
         {
             _logger.LogInformation("DeleteUserConfirmed called for user with ID: {UserId}", id);
 
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                _logger.LogWarning("User with ID {UserId} not found for confirmed deletion.", id);
-                return NotFound();
-            }
-
-            // Manually delete related records in other tables
-            var studentRecord = await _context.Students.SingleOrDefaultAsync(s => s.UserId == id);
-            if (studentRecord != null)
-            {
-                _context.Students.Remove(studentRecord);
-            }
-
-            var employeeRecord = await _context.Employees.SingleOrDefaultAsync(e => e.UserId == id);
-            if (employeeRecord != null)
-            {
-                _context.Employees.Remove(employeeRecord);
-            }
-
-            // Repeat for other entities as necessary
-
             try
             {
-                await _userManager.DeleteAsync(user);
+                await _userManagementService.DeleteUserAndRelatedDataAsync(id);
 
                 // Log the deletion
                 var log = new ActivityLog
                 {
                     AdminUser = User.Identity.Name,
-                    Action = $"Deleted user {user.UserName}",
+                    Action = $"Deleted user with ID {id}",
                     Timestamp = DateTime.UtcNow
                 };
                 _context.ActivityLogs.Add(log);
@@ -236,6 +217,11 @@ namespace GedsiHub.Controllers
 
                 _logger.LogInformation("User with ID: {UserId} deleted successfully.", id);
                 return RedirectToAction(nameof(UserManagement));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, "Attempted to delete non-existent user with ID: {UserId}", id);
+                return NotFound();
             }
             catch (Exception ex)
             {
@@ -248,24 +234,23 @@ namespace GedsiHub.Controllers
         // POST: Admin/BulkDeleteUsers
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BulkDeleteUsers(string[] UserIds)
+        public async Task<IActionResult> BulkDeleteUsers(string[] userIds)
         {
-            if (UserIds != null && UserIds.Any())
-            {
-                foreach (var userId in UserIds)
-                {
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if (user != null)
-                    {
-                        await _userManager.DeleteAsync(user);
-                    }
-                }
-
-                TempData["SuccessMessage"] = "Selected users deleted successfully.";
-            }
-            else
+            if (userIds == null || !userIds.Any())
             {
                 TempData["ErrorMessage"] = "No users selected for deletion.";
+                return RedirectToAction(nameof(UserManagement));
+            }
+
+            try
+            {
+                await _userManagementService.BulkDeleteUsersAsync(userIds);
+                TempData["SuccessMessage"] = "Selected users deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while bulk deleting users.");
+                TempData["ErrorMessage"] = "An error occurred while deleting selected users.";
             }
 
             return RedirectToAction(nameof(UserManagement));
@@ -280,42 +265,17 @@ namespace GedsiHub.Controllers
 
             try
             {
-                var postReports = await _context.ForumPostReports
-                    .Include(r => r.ForumPost)
-                    .Include(r => r.User)
-                    .Select(r => new ReportedPostViewModel
-                    {
-                        ReportId = r.ReportId,
-                        PostId = r.PostId,
-                        PostTitle = r.ForumPost.Title,
-                        ReportedByName = $"{r.User.FirstName} {r.User.LastName}",
-                        Reason = r.Reason,
-                        CreatedAt = r.CreatedAt
-                    })
-                    .ToListAsync();
-
-                var commentReports = await _context.ForumCommentReports
-                    .Include(r => r.ForumComment)
-                    .Include(r => r.User)
-                    .Select(r => new ReportedCommentViewModel
-                    {
-                        ReportId = r.ReportId,
-                        CommentId = r.CommentId,
-                        CommentContent = r.ForumComment.Content,
-                        ReportedByName = $"{r.User.FirstName} {r.User.LastName}",
-                        Reason = r.Reason,
-                        CreatedAt = r.CreatedAt,
-                        PostId = r.ForumComment.PostId
-                    })
-                    .ToListAsync();
-
-                _logger.LogInformation("ViewReports loaded successfully with {PostReportsCount} post reports and {CommentReportsCount} comment reports", postReports.Count, commentReports.Count);
+                var postReports = await _reportManagementService.GetPostReportsAsync();
+                var commentReports = await _reportManagementService.GetCommentReportsAsync();
 
                 var viewModel = new AdminReportsViewModel
                 {
                     ReportedPosts = postReports,
                     ReportedComments = commentReports
                 };
+
+                _logger.LogInformation("ViewReports loaded successfully with {PostReportsCount} post reports and {CommentReportsCount} comment reports",
+                    postReports.Count, commentReports.Count);
 
                 return View(viewModel);
             }
@@ -332,19 +292,17 @@ namespace GedsiHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletePost([FromRoute] int postId)
         {
-            var post = await _context.ForumPosts.FindAsync(postId);
-            if (post == null)
+            try
             {
-                return NotFound();
+                await _reportManagementService.DeleteReportedPostAsync(postId);
+                TempData["SuccessMessage"] = "Post and associated reports deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting post with ID: {PostId}", postId);
+                TempData["ErrorMessage"] = "An error occurred while deleting the post.";
             }
 
-            // Remove the post and associated reports
-            _context.ForumPosts.Remove(post);
-            var relatedReports = _context.ForumPostReports.Where(r => r.PostId == postId);
-            _context.ForumPostReports.RemoveRange(relatedReports);
-
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Post and associated reports deleted successfully.";
             return RedirectToAction(nameof(ViewReports));
         }
 
@@ -354,19 +312,17 @@ namespace GedsiHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteComment([FromRoute] int commentId)
         {
-            var comment = await _context.ForumComments.FindAsync(commentId);
-            if (comment == null)
+            try
             {
-                return NotFound();
+                await _reportManagementService.DeleteReportedCommentAsync(commentId);
+                TempData["SuccessMessage"] = "Comment and associated reports deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting comment with ID: {CommentId}", commentId);
+                TempData["ErrorMessage"] = "An error occurred while deleting the comment.";
             }
 
-            // Remove the comment and associated reports
-            _context.ForumComments.Remove(comment);
-            var relatedReports = _context.ForumCommentReports.Where(r => r.CommentId == commentId);
-            _context.ForumCommentReports.RemoveRange(relatedReports);
-
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Comment and associated reports deleted successfully.";
             return RedirectToAction(nameof(ViewReports));
         }
 
@@ -376,15 +332,17 @@ namespace GedsiHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DismissPostReport([FromRoute] int reportId)
         {
-            var report = await _context.ForumPostReports.FindAsync(reportId);
-            if (report == null)
+            try
             {
-                return NotFound();
+                await _reportManagementService.DismissPostReportAsync(reportId);
+                TempData["SuccessMessage"] = "Post report dismissed successfully.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while dismissing post report with ID: {ReportId}", reportId);
+                TempData["ErrorMessage"] = "An error occurred while dismissing the post report.";
             }
 
-            _context.ForumPostReports.Remove(report);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Post report dismissed successfully.";
             return RedirectToAction(nameof(ViewReports));
         }
 
@@ -394,15 +352,17 @@ namespace GedsiHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DismissCommentReport([FromRoute] int reportId)
         {
-            var report = await _context.ForumCommentReports.FindAsync(reportId);
-            if (report == null)
+            try
             {
-                return NotFound();
+                await _reportManagementService.DismissCommentReportAsync(reportId);
+                TempData["SuccessMessage"] = "Comment report dismissed successfully.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while dismissing comment report with ID: {ReportId}", reportId);
+                TempData["ErrorMessage"] = "An error occurred while dismissing the comment report.";
             }
 
-            _context.ForumCommentReports.Remove(report);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Comment report dismissed successfully.";
             return RedirectToAction(nameof(ViewReports));
         }
 
