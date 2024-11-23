@@ -298,37 +298,45 @@
 
 #recent-activity-con {
     min-height: 18rem;
-    max-height: 5rem;
+    max-height: 19rem;
     padding: 0;
+    overflow-y: auto;
+    position: relative;
 }
+
+    #recent-activity-con::-webkit-scrollbar {
+        display: none;
+    }
 
 .recent-activity-table-container {
     overflow-y: auto;
     border-radius: 30px 30px 0 0;
 }
 
-/* Recent Activity Table - Ensure No Background */
 .recent-activity-table {
     width: 100%;
     border-collapse: collapse;
     color: #464040;
-    background: none; /* No background */
-    border: none; /* No border */
-    padding: 2rem;
+    background: none;
+    border: none;
+    table-layout: fixed;
+    overflow-y: auto;
 }
 
-
-    .recent-activity-table th {
+    .recent-activity-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #660000;
+        color: white;
         text-align: left;
         font-weight: bold;
-        background: #660000;    
-        color: white;
         padding: 1.2rem 2rem;
-
+        border-bottom: 2px solid #ffffff;
     }
 
     .recent-activity-table td {
-        background: none;         
+        background: none;
         padding: 1rem 2rem;
         border: none;
     }
@@ -336,6 +344,10 @@
     .recent-activity-table tr {
         padding-top: 0.4rem;
     }
+
+        .recent-activity-table tr:hover {
+            background-color: #f9f9f9;
+        }
 
 
 

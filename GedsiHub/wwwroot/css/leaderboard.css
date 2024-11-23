@@ -85,6 +85,28 @@
     width: 1%;
 }
 
+
+
+/* Alternating row colors */
+
+#leaderboard-table table.table-striped tbody tr:nth-child(odd) {
+    background-color: #f5efef; /* Light background for odd rows */
+}
+
+
+#leaderboard-table table.table-striped tbody tr:nth-child(even) {
+    background-color: #ffffff; /* White background for even rows */
+}
+
+/* Hover effect */
+
+#leaderboard-table table.table-striped tbody tr:hover {
+    background-color: #f5efef; /* Hover color */
+}
+
+
+
+
 .view-lead-text, .leaderboard-text {
     font-size: 1.5rem;
     font-weight: 600;
@@ -152,14 +174,14 @@
         left: 0;
         right: 0;
         height: 5px;
-        background-color: #7C0A02;
+   
         border-radius: 10px;
         width: 100%;
         transition: width 0.3s ease-in-out, background-color 0.3s ease;
     }
 
     .leaderboard-sidebar.active {
-        color: #7C0A02;
+        
         transition: color 0.3s ease;
     }
 
@@ -217,7 +239,6 @@
 
 /* Hover effect animation for table rows */
 #leaderboard-table tr:hover td {
-    background-color: #f5f5f5;
     transform: scale(1.02);
     transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
 }

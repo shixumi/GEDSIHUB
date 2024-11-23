@@ -118,12 +118,53 @@
         margin-top: -0.2rem;
     }
 
+    .admin-create-notification-button {
+        background: none;
+        color: white;
+        background-color: #660000;
+        border: none;
+        border-radius: 3rem;
+        width: 14rem;
+        height: 2.734375rem;
+        font-weight: 500;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+    }
+
+    .admin-create-notification-button:hover {
+        background-color: #920000;
+        color: #ffffff;
+    }
+
+
+
+    .admin-create-notification-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        color: #ffffff;
+        border-style: none;
+    }
+
 </style>
 
 <div>
     <div class="feedback-title-searcbar-con">
         <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">Notifications</h1>
+        <div class="manage-user-and-gen-rep-con">
+            
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Notifications" asp-action="AdminCreate" class="admin-create-notification-button">
+                    <img id="addModuleTopAddIcon" src="/images/Add_White.png">
+                     Create Notification
+                </a>
+            }
+        </div>
     </div>
+
     <hr class="custom-hr">
     <div id="notification-container" class="container feedback-container">
 
@@ -191,14 +232,7 @@
             </div>
         </div>
     </div>
-    <div class="create-notif-button-con">
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-controller="Notifications" asp-action="AdminCreate" class="create-notification-button">
-                Create Notification
-            </a>
-        }
-    </div>
+    
 </div>
 
 @section Scripts {

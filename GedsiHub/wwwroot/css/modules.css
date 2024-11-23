@@ -340,7 +340,6 @@
 #toggleButtonPublishUnpublishModule, #toggleButtonPublishUnpublishLesson, toggleButtonPublishUnpublishAssessment {
     display: flex;
     position: relative;
-    gap: 10.4px;
 }
 
     .toggle-content {
