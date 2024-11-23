@@ -81,7 +81,6 @@
     }
 
     /* Time cell styling */
-
     .important-notif-table td:last-child, .less-important-notif-table td:last-child {
         text-align: right;
         white-space: nowrap;
@@ -95,15 +94,14 @@
 .notif-circle {
     width: 3rem;
     height: 3rem;
-    background-color: #FF6663;
+    background-color: #ffb59e !important;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-    .notif-circle img {
-        width: 2rem;
-        height: auto;
-        margin-top: -0.2rem;
+    .notif-circle i {
+        font-size: 1.2rem;
+        color: #660000;
     }
