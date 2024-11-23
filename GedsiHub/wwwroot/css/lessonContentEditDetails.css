@@ -197,6 +197,18 @@ background-color:#920000;
     background-color:#920000;
     color: #fff;
 }
+
+.image-content-preview img {
+    width:100% !important;
+}
+
+
+
+.image-content-preview {
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
 /*.tinyMCE_preview {
     margin-top: 2rem;
 }*/
