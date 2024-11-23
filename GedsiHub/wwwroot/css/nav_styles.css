@@ -78,7 +78,7 @@
     outline: none !important;
     border: none !important;
     box-shadow: none !important;
-    background-color: transparent !important;
+    background-color: transparent;
 }
 
 /* Remove blue focus ring or box-shadow from the icon */

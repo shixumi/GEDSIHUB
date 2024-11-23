@@ -33,16 +33,19 @@
             <!-- Create Module Button (Visible to Admins only) --> 
             @if (User.IsInRole("Admin"))
             {
-                <div class="dropdown">
-                    <a class="btn btn-primary d-xxl-flex addModuleTopButton dropdown-toggle" href="#" id="addModuleTopButton" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="addModule-dropdown">
+                    <button class="btn btn-primary d-xxl-flex addModuleTopButton dropdown-toggle" href="#" id="addModuleTopButton" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
-                    </a>
+                    </button>
 
-                    <ul class="dropdown-menu" aria-labelledby="addModuleTopButton">
-                        <li><a class="dropdown-item" asp-action="Create">Add New Module</a></li>
-                        <li><a class="dropdown-item" asp-action="Reframe">Add Module Reframe</a></li>
+                    <ul class="dropdown-menu moduleDropdownMenu" aria-labelledby="addModuleTopButton">
+                        <li><a class="dropdown-item moduleDropdownItem" asp-action="Create">Add New Module</a></li>
+                        <li><a class="dropdown-item moduleDropdownItem" asp-action="Reframe">Add Module Reframe</a></li>
                     </ul>
                 </div>
+
+
+
             }
 
             <!-- View Toggle Buttons using Bootstrap Pills -->
@@ -53,7 +56,7 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="grid-tab" data-bs-toggle="tab" data-bs-target="#grid-view" type="button" role="tab" aria-controls="grid-view" aria-selected="true" onclick="setView('grid')">
+                    <button class="nav-link" id="grid-tab" data-bs-toggle="tab" data-bs-target="#grid-view" type="button" role="tab" aria-controls="grid-view" aria-selected="true" onclick="setView('grid')">
                         <i class="fa fa-th-large"></i>
                     </button>
                 </li>
@@ -354,6 +357,30 @@
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check localStorage for the last active tab
+            const lastActiveTab = localStorage.getItem("activeTab") || "grid";
+
+            // Set the active tab based on localStorage value
+            const activeTabButton = document.querySelector(`#${lastActiveTab}-tab`);
+            const activeTabPane = document.querySelector(`#${lastActiveTab}-view`);
+
+            if (activeTabButton && activeTabPane) {
+                // Remove the default active class
+                document.querySelectorAll(".nav-link").forEach(tab => tab.classList.remove("active"));
+                document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.remove("show", "active"));
+
+                // Add active class to the stored tab
+                activeTabButton.classList.add("active");
+                activeTabPane.classList.add("show", "active");
+            }
+        });
+
+        function setView(view) {
+            // Save the active tab to localStorage
+            localStorage.setItem("activeTab", view);
+        }
+
         function updateColor(moduleId, color) {
             $.ajax({
                 url: '@Url.Action("UpdateColor", "Module")',
@@ -371,6 +398,5 @@
                 }
             });
         }
-
     </script>
 }

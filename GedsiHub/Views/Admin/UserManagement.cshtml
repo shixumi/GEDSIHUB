@@ -63,7 +63,7 @@
                 <table class="table">
                     <thead>
                         <tr class="feedback-table-label">
-                            <th><input type="checkbox" id="selectAllCheckbox" onclick="toggleAllCheckboxes(this)" /></th>
+                            <th class="text-center"><input type="checkbox" id="selectAllCheckbox" onclick="toggleAllCheckboxes(this)" /></th>
                             <th class="um-header-label">Username</th>
                             <th class="um-header-label">Email</th>
                             <th class="um-header-label">Admin</th>
@@ -90,15 +90,19 @@
                                 </td>
                             </tr>
                         }
+
+                        <!-- Bulk Delete Button -->
+                        <tr class="delete-all-row">
+                            <td colspan="1" class="um-content text-center">
+                                <button type="submit" id="deleteSelectedUM" style="background: none; border: none; padding: 0; cursor: pointer;">
+                                    <img src="~/images/Delete.png" alt="Delete Selected" />
+                                </button>
+                            </td>
+                            <td colspan="5"></td>
+                        </tr>
                     </tbody>
                 </table>
 
-                <!-- Bulk Delete Button -->
-                <div id="um-actions-con-bottom" style="text-align: left;">
-                    <button type="submit" id="deleteSelectedUM" style="background: none; border: none; padding: 0; cursor: pointer;">
-                        <img src="~/images/Delete.png" alt="Delete Selected" />
-                    </button>
-                </div>
             </form>
         }
         else

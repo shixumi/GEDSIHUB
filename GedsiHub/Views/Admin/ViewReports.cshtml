@@ -18,7 +18,7 @@
         <!-- Tabs Navigation -->
         <ul class="nav nav-tabs" id="reportsTab" role="tablist">
             <li class="nav-item">
-                <a class="tab-link active" id="complaint-tab" data-bs-toggle="tab" href="#post-reports" role="tab" aria-controls="post-reports" aria-selected="true">
+                <a class="tab-link" id="complaint-tab" data-bs-toggle="tab" href="#post-reports" role="tab" aria-controls="post-reports" aria-selected="true">
                     Reported Posts
                 </a>
             </li>
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Reported Posts Tab -->
-        <div class="tab-pane fade show active" id="post-reports" role="tabpanel" aria-labelledby="post-reports-tab">
+        <div class="tab-pane fade" id="post-reports" role="tabpanel" aria-labelledby="post-reports-tab">
 
 
 
@@ -145,12 +145,7 @@
                         else
                         {
                             <tr class="report-table-rows">
-                                <td class="report-content"></td>
-                                <td class="report-content text-start">No reports found for posts.</td>
-                                <td class="report-content"></td>
-                                <td class="report-content"></td>
-                                <td class="report-content"></td>
-                                <td class="report-content"></td>
+                                <td class="report-content text-center" colspan="6">No reports found for posts.</td>
                             </tr>
                         }
                     </tbody>
@@ -270,12 +265,7 @@
                         else
                         {
                             <tr class="report-table-rows">
-                                <td class="report-content"></td>
-                                <td class="report-content text-start">No reports found for comments.</td>
-                                <td class="report-content"></td>
-                                <td class="report-content"></td>
-                                <td class="report-content"></td>
-                                <td class="report-content"></td>
+                                <td class="report-content text-center" colspan="6">No reports found for comments.</td>
                             </tr>
                         }
                     </tbody>
@@ -289,29 +279,30 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const tabKey = "activeTab";
+            const tabKey = "activeReportsTab"; // Key for localStorage
 
-            // Function to save the clicked tab's ID to local storage
+            // Function to save the active tab to localStorage
             const saveActiveTab = (tabId) => {
                 localStorage.setItem(tabKey, tabId);
             };
 
-            // Add event listener for tab clicks
+            // Add event listeners to the tabs
             const tabs = document.querySelectorAll("#reportsTab a[data-bs-toggle='tab']");
             tabs.forEach((tab) => {
                 tab.addEventListener("shown.bs.tab", function (event) {
-                    const activeTabId = event.target.getAttribute("href"); // Get href of clicked tab
-                    saveActiveTab(activeTabId);
+                    const activeTabId = event.target.getAttribute("href"); // Get href of the active tab
+                    saveActiveTab(activeTabId); // Save it to localStorage
                 });
             });
 
-            // Retrieve the last active tab from local storage
+            // Retrieve the last active tab from localStorage
             const lastActiveTabId = localStorage.getItem(tabKey);
 
+            // Activate the last active tab if it exists
             if (lastActiveTabId) {
                 const lastActiveTab = document.querySelector(`#reportsTab a[href="${lastActiveTabId}"]`);
                 if (lastActiveTab) {
-                    new bootstrap.Tab(lastActiveTab).show(); // Use Bootstrap's Tab API to show the saved tab
+                    new bootstrap.Tab(lastActiveTab).show(); // Use Bootstrap's Tab API to activate
                 }
             }
         });
