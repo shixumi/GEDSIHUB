@@ -8,7 +8,7 @@
 <div class="feedback-title-searcbar-con">
     <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">@ViewData["Title"]</h1>
     <div class="manage-user-and-gen-rep-con">
-        <button id="GenerateReportButton" type="button" onclick="location.href='@Url.Action("Demographic", "Reports")'">
+        <button id="GenerateReportButton" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bss-tooltip="" data-bs-title="Click to generate report" onclick="location.href='@Url.Action("Demographic", "Reports")'">
             <img src="~/images/Graph.png" alt="Generate Report" /> Generate Report
         </button>
     </div>

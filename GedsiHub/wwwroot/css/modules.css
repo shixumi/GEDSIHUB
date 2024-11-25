@@ -495,6 +495,7 @@
     font-weight: 500;
     transition: all 0.2s ease;
     color: #464040;
+    cursor: pointer;
 }
 
 #list-editModuleButton img, #list-deleteModuleButton img, #list-publishModuleButton img, #list-unpublishModuleButton img {
@@ -602,19 +603,19 @@
     z-index: 1000; /* Ensure it appears above other content */
 }
 
-    /* Styling individual dropdown items */
-    #addModuleTopButton + .moduleDropdownMenu .moduleDropdownItem {
-        color: #333; /* Text color */
-        padding: 8px 16px; /* Padding around items */
-        transition: background-color 0.3s; /* Smooth hover transition */
-        border-radius: 0.6rem;
-    }
+/* Styling individual dropdown items */
+#addModuleTopButton + .moduleDropdownMenu .moduleDropdownItem {
+    color: #333; /* Text color */
+    padding: 8px 16px; /* Padding around items */
+    transition: background-color 0.3s; /* Smooth hover transition */
+    border-radius: 0.6rem;
+}
 
-        /* Hover effect for dropdown items */
-        #addModuleTopButton + .moduleDropdownMenu .moduleDropdownItem:hover {
-            background-color: #660000; /* Hover color */
-            color: #fff; /* Text color on hover */
-        }
+/* Hover effect for dropdown items */
+#addModuleTopButton + .moduleDropdownMenu .moduleDropdownItem:hover {
+    background-color: #660000; /* Hover color */
+    color: #fff; /* Text color on hover */
+}
 
 .dropdown-toggle:after {
     content: none;

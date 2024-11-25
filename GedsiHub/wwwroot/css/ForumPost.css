@@ -459,13 +459,35 @@ body {
         color: #ffffff;
         background-color: #660000;
         border: none;
-        padding-left: 25px;
-        padding-right: 25px;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 
+    .modal-footer .btn-secondary {
+        border-radius: 30px;
+        border: none;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
     .modal-footer .btn-primary:hover {
         background-color: #920000;
         color: #ffffff;
+    }
+
+    .modal-footer .btn-success {
+        border-radius: 30px !important;
+        border: none;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .modal-footer .btn-warning {
+        border-radius: 30px !important;
+        border: none;
+        color: #464040;
+        font-weight: 500 !important;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 
     /* Modal Styling */
