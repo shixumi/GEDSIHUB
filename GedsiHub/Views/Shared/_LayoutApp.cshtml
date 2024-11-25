@@ -97,7 +97,7 @@
                     <img class="search_icon" src="~/images/Search.png" alt="Search Icon" />
                     <input type="search" class="navbar_search" placeholder="Search for anything" style="font-family: 'Poppins', sans-serif;" />
                     <!-- Notifications Dropdown -->
-                    <span class="navbar-text notification_icon_span" style="margin-right: 4px; position: relative;">
+                    <span class="navbar-text notification_icon_span " style="margin-right: 4px; position: relative;">
                         <a href="#" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-bell" style="font-size: 33px; margin-right: 1rem; color:#464040;"></i>
                             <span id="notificationsCount" class="badge bg-danger">0</span>
@@ -105,7 +105,7 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
                             <li>
                                 <div id="notificationsList" class="list-group">
-                                    <a href="/Notifications/Details/1" class="list-group-item list-group-item-action">
+                                    <a href="/Notifications/Details/1" class="list-group-item list-group-item-action unread-notification">
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-sync-alt" aria-hidden="true"></i>
                                             <div>
@@ -120,7 +120,7 @@
                             <li>
                                 <a class="dropdown-item text-center" href="/Notifications">View All Notifications</a>
                             </li>
-                        </ul>
+						</ul>
 
                     </span>
                     <span class="d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center navbar-text profile_icon_span">
@@ -398,6 +398,11 @@
                 $('#notificationsCount').text(count);
             });
         });
+
+
+
+
+
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
