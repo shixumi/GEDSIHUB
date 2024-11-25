@@ -148,27 +148,32 @@
                             </div>
                         }
 
+                      
+                        
+
+
+                       
 
                         <!-- Publish/Unpublish Button (Admin only) -->
                         @if (User.IsInRole("Admin"))
                         {
-                            <div id="modCardButtonContainer" class="d-xxl-flex justify-content-between align-items-center">
-                                <div id="toggleButtonPublishUnpublishModule" class="d-xxl-flex">
-                                    @if (module.Status == ModuleStatus.Published)
-                                    {
                                         <!-- Unpublish Button -->
                                         <button data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId" data-bs-placement="bottom" data-bs-title="Unpublish Module" type="button" class="btn toggle-content">
                                             <img class="PublishIcon" src="~/images/Unpublish.png" />
                                             <span>Unpublish</span>
                                         </button>
-                                    }
-                                    else
-                                    {
+                                                <img class="PublishIcon" src="~/images/Unpublish.png" />
+                                                <span>Unpublish</span>
+                                            </button>
                                         <!-- Publish Button -->
                                         <button data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId" data-bs-placement="bottom" data-bs-title="Publish Module" type="button" class="btn toggle-content">
                                             <img class="PublishIcon" src="~/images/Publish.png" />
                                             <span>Publish</span>
                                         </button>
+                                                <img class="PublishIcon" src="~/images/Publish.png" />
+                                                <span>Publish</span>
+                                            </button>
+                                        </form>
                                     }
                                 </div>
 
@@ -179,14 +184,14 @@
                                     </a>
                                     <a data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId" data-bs-placement="bottom" data-bs-title="Delete Module">
                                         <img id="DeleteModule-@module.ModuleId" class="Delete" src="~/images/Delete.png" />
+
+                            
+
+
                                     </a>
                                 </div>
                             </div>
                         }
-
-
-
-
                     </div>
                 }
 
@@ -285,30 +290,30 @@
 
                                     <!-- Actions (Edit/Delete/Publish/Unpublish) -->
                                     <td class="module-content text-start action-buttons">
-                                        <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId">
+                                        <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Module">
                                             <img src="~/images/Edit.png" /> Edit
                                         </a>
 
-                                        <a id="list-deleteModuleButton" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
+                                        <a id="list-deleteModuleButton"  data-bs-placement="bottom" data-bs-title="Delete Module" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
                                             <img src="~/images/Delete.png" /> Delete
                                         </a>
-
-
-                                        @if (module.Status == ModuleStatus.Published)
-                                        {
                                             <!-- Unpublish Button -->
                                             <button type="button" id="list-unpublishModuleButton" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId">
                                                 <img src="~/images/Unpublish.png" alt="Unpublish Icon" />
                                                 Unpublish
                                             </button>
-                                        }
-                                        else
-                                        {
+                                                <button id="list-unpublishModuleButton" type="submit">
+                                                    <img src="~/images/Unpublish.png" /> Unpublish
+                                                </button>
                                             <!-- Publish Button -->
                                             <button type="button" id="list-publishModuleButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId">
                                                 <img src="~/images/Publish.png" alt="Publish Icon" />
                                                 Publish
                                             </button>
+                                                <button id="list-publishModuleButton" type="submit">
+                                                    <img src="~/images/Publish.png" /> Publish
+                                                </button>
+                                            </form>
                                         }
                                     </td>
                                 }
@@ -409,10 +414,6 @@
         </div>
     }
 }
-
-@section Scripts {
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Check localStorage for the last active tab
             const lastActiveTab = localStorage.getItem("activeTab") || "grid";
@@ -447,6 +448,10 @@
             localStorage.setItem("activeTab", view);
         }
 
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
         function updateColor(moduleId, color) {
             $.ajax({
                 url: '@Url.Action("UpdateColor", "Module")',
@@ -458,10 +463,6 @@
                 },
                 success: function (response) {
                     // Optionally, show a success message
-                },
-                error: function (xhr, status, error) {
-                    alert('Error updating color: ' + error);
-                }
             });
         }
 
@@ -488,6 +489,10 @@
                     }, 150); // Slight delay for smooth hiding
                 }
             }
+                    alert('Error updating color: ' + error);
+                }
+            });
+        }
 
 
             // Add event listeners for Publish and Unpublish buttons specifically

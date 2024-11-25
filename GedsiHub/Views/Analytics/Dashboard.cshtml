@@ -8,7 +8,7 @@
 <div class="feedback-title-searcbar-con">
     <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">@ViewData["Title"]</h1>
     <div class="manage-user-and-gen-rep-con">
-        <button id="GenerateReportButton" type="button" onclick="location.href='@Url.Action("Demographic", "Reports")'">
+        <button id="GenerateReportButton" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bss-tooltip="" data-bs-title="Click to generate report" onclick="location.href='@Url.Action("Demographic", "Reports")'">
             <img src="~/images/Graph.png" alt="Generate Report" /> Generate Report
         </button>
     </div>
@@ -51,24 +51,6 @@
 <hr class="custom-hr" style="margin-top: 1.5rem;">
 
 <div class="all-analytics-container">
-    <!-- Row 1: Age Distribution, Gender Identity, Indigenous Membership -->
-    <div class="analytics">
-        <div id="age-distribution-container" class="container analytics_graph_container age-dist-wide">
-            <h6>Age Distribution</h6>
-            <canvas id="ageDistributionChart" class="full-width-canvas"></canvas>
-            <span class="insight">Insight: Age distribution trends over time.</span>
-        </div>
-        <div class="container analytics_graph_container gender-identity-narrow">
-            <h6>Gender Identity</h6>
-            <canvas id="genderIdentityChart"></canvas>
-            <span class="insight">Insight: Gender identity breakdown analysis.</span>
-        </div>
-        <div class="container analytics_graph_container indigenous-membership-narrow">
-            <h6>Indigenous Membership</h6>
-            <canvas id="indigenousMembershipChart"></canvas>
-            <span class="insight">Insight: Indigenous membership data insights.</span>
-        </div>
-    </div>
 
     <!-- Row 2: Active Users, Module Performance -->
     <div class="analytics">
@@ -107,6 +89,27 @@
         </div>
     </div>
 
+    <!-- Row 1: Age Distribution, Gender Identity, Indigenous Membership -->
+    <div class="analytics">
+        <div id="age-distribution-container" class="container analytics_graph_container age-dist-wide">
+            <h6>Age Distribution</h6>
+            <canvas id="ageDistributionChart" class="full-width-canvas"></canvas>
+            <span class="insight">Insight: Age distribution trends over time.</span>
+        </div>
+        <div class="container analytics_graph_container gender-identity-narrow">
+            <h6>Gender Identity</h6>
+            <canvas id="genderIdentityChart"></canvas>
+            <span class="insight">Insight: Gender identity breakdown analysis.</span>
+        </div>
+        <div class="container analytics_graph_container indigenous-membership-narrow">
+            <h6>Indigenous Membership</h6>
+            <canvas id="indigenousMembershipChart"></canvas>
+            <span class="insight">Insight: Indigenous membership data insights.</span>
+        </div>
+    </div>
+
+   
+
     <!-- Row 3: Employment Status Breakdown, Course Associations -->
     <div class="analytics">
         <div class="container analytics_graph_container employment-status-container">
@@ -121,9 +124,13 @@
         </div>
     </div>
 
+           
     <!-- Power BI Embedded Report (if applicable) -->
-    <iframe title="Analytics" width="1470" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiYTdjMGU5ZTEtOTYxOS00NjAyLTlhMTItZmY2NWY1ZTU3OWFlIiwidCI6IjRkYTk4NTcxLWRjZWEtNDgzOS04ZmIxLTBiZGQ1ZGM5NjlmOSIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+    <iframe title="Analytics"  class=" analytics_graph_container"  width="100%" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiYTdjMGU5ZTEtOTYxOS00NjAyLTlhMTItZmY2NWY1ZTU3OWFlIiwidCI6IjRkYTk4NTcxLWRjZWEtNDgzOS04ZmIxLTBiZGQ1ZGM5NjlmOSIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+       
+
 </div>
+
 
 <!-- Charts Initialization Script -->
 @section Scripts {

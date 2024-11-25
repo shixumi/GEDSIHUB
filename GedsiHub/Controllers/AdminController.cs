@@ -59,7 +59,9 @@ namespace GedsiHub.Controllers
                     UserName = u.UserName,
                     Email = u.Email,
                     IsAdmin = _userManagementService.IsUserAdmin(u),
-                    IsActive = u.IsActive
+                    IsActive = u.IsActive,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName
                 }).ToList();
 
                 var model = new UserManagementViewModel
@@ -203,29 +205,24 @@ namespace GedsiHub.Controllers
 
             try
             {
-                await _userManagementService.DeleteUserAndRelatedDataAsync(id);
+                // Call the service to handle the deletion
+                var deletionResult = await _userManagementService.DeleteUserWithDependenciesAsync(id, User.Identity?.Name);
 
-                // Log the deletion
-                var log = new ActivityLog
+                if (!deletionResult)
                 {
-                    AdminUser = User.Identity.Name,
-                    Action = $"Deleted user with ID {id}",
-                    Timestamp = DateTime.UtcNow
-                };
-                _context.ActivityLogs.Add(log);
-                await _context.SaveChangesAsync();
+                    _logger.LogError("Failed to delete user with ID: {UserId}", id);
+                    TempData["ErrorMessage"] = "Failed to delete the user. Please try again.";
+                    return View("Error");
+                }
 
                 _logger.LogInformation("User with ID: {UserId} deleted successfully.", id);
+                TempData["SuccessMessage"] = "User deleted successfully.";
                 return RedirectToAction(nameof(UserManagement));
-            }
-            catch (KeyNotFoundException ex)
-            {
-                _logger.LogWarning(ex, "Attempted to delete non-existent user with ID: {UserId}", id);
-                return NotFound();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while deleting user with ID: {UserId}", id);
+                TempData["ErrorMessage"] = "An error occurred while deleting the user.";
                 return View("Error");
             }
         }

@@ -286,3 +286,20 @@ input[type="checkbox"] {
 .bigger-space-td {
     width: 25% !important;
 }
+
+
+.resolved-button {
+    background-color: transparent !important;
+    border: none !important;
+    color: #464040 !important;
+    cursor: text !important;
+    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+    .resolved-button img {
+        opacity: 1;
+        margin-right: 5px;
+        color: inherit;
+    }

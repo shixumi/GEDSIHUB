@@ -1,0 +1,120 @@
+﻿/* Dropdown Menu with Border */
+.dropdown-menu {
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #ddd; /* Subtle gray border around the entire container */
+    padding: 0; /* Remove extra padding */
+    background-color: #ffffff;
+    width: 25rem;
+    overflow: hidden;
+    border-radius: 15px; /* Rounded corners for the entire dropdown */
+}
+
+/* Notifications List */
+#notificationsList {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+    background-color: #ffffff;
+    /* No border needed here since the outer container already has the border */
+}
+
+    /* Individual Notification Items */
+    #notificationsList a.list-group-item {
+        border: none;
+        padding: 15px 10px;
+        border-bottom: 1px solid #f1f1f1; /* Internal separator between notifications */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #ffffff;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+        #notificationsList a.list-group-item:last-child {
+            border-bottom: none; /* Remove bottom border from last notification */
+        }
+
+        #notificationsList a.list-group-item:hover {
+            background-color: #F7F8FC;
+            color: #000;
+        }
+
+    #notificationsList i {
+        font-size: 24px;
+        color: #660000;
+        padding-right: 0.5rem;
+        padding-left: 1rem;
+    }
+
+    #notificationsList strong {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    #notificationsList .text-muted {
+        font-size: 0.85rem;
+    }
+
+/* View All Notifications Button */
+.dropdown-item.text-center {
+    font-size: 0.95rem;
+    color: #464040;
+    font-weight: 500;
+    padding: 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border-top: 1px solid #f1f1f1; /* Internal separator between the list and the button */
+    /* No border radius here since the outer container already has the border radius */
+}
+
+    .dropdown-item.text-center:hover {
+        background-color: #F7F8FC;
+    }
+
+.dropdown-menu-end {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25) !important;
+}
+
+.d-flex {
+    overflow: hidden; /* Prevent content from overflowing */
+    text-overflow: ellipsis; /* Add ellipsis if the content overflows */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+}
+
+    .d-flex div {
+        flex-shrink: 1; /* Allow the text block to shrink within the container */
+        overflow: hidden; /* Ensure text stays within the bounds */
+        text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+
+    /* Ensure consistent padding */
+    .d-flex.align-items-center {
+        padding-right: 0.7rem;
+        box-sizing: border-box; /* Ensure padding is included in total width */
+    }
+
+
+.list-group-item {
+    border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+
+.unread-notification {
+    background-color: #e7f3ff; /* Light blue background */
+    border-left: 4px solid #007bff; /* Blue left border */
+    transition: background-color 0.3s ease, border-left 0.3s ease;
+}
+
+    .unread-notification:hover {
+        background-color: #d6e9ff;
+        text-decoration: none;
+    }

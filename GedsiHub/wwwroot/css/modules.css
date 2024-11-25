@@ -14,6 +14,9 @@
 }
 
 #addModuleTopButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: #660000;
     color: #fff;
     border-radius: 3.90625rem;
@@ -340,7 +343,6 @@
 #toggleButtonPublishUnpublishModule, #toggleButtonPublishUnpublishLesson, toggleButtonPublishUnpublishAssessment {
     display: flex;
     position: relative;
-    gap: 10.4px;
 }
 
     .toggle-content {
@@ -493,6 +495,7 @@
     font-weight: 500;
     transition: all 0.2s ease;
     color: #464040;
+    cursor: pointer;
 }
 
 #list-editModuleButton img, #list-deleteModuleButton img, #list-publishModuleButton img, #list-unpublishModuleButton img {
@@ -581,41 +584,43 @@
     padding-top: 0.6rem;
     padding-bottom: 0.5rem;
 }
-    
+
 
 #addModuleTopButton::after {
     display: none;
+    content: none !important;*/ /* Remove the dropdown caret */
 }
 
 /* Styling the dropdown menu */
-#addModuleTopButton + .dropdown-menu {
-    background-color: #f8f9fa; /* Light gray background */
+#addModuleTopButton + .moduleDropdownMenu {
+    background-color: #fff !important; /* Light gray background */
     border: 1px solid #ddd; /* Light border */
     min-width: 200px; /* Adjust width as needed */
     padding: 5px; /* Add padding to dropdown menu */
     border-radius: 1rem;
     margin-top: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important; /* Subtle shadow */
+    z-index: 1000; /* Ensure it appears above other content */
 }
 
-    /* Styling individual dropdown items */
-    #addModuleTopButton + .dropdown-menu .dropdown-item {
-        color: #333; /* Text color */
-        padding: 8px 16px; /* Padding around items */
-        transition: background-color 0.3s; /* Smooth hover transition */
-        border-radius: 0.6rem;
-    }
-
-        /* Hover effect for dropdown items */
-        #addModuleTopButton + .dropdown-menu .dropdown-item:hover {
-            background-color: #660000; /* Hover color */
-            color: #fff; /* Text color on hover */
-        }
-
-/* Optional: Add shadow to the dropdown menu */
-#addModuleTopButton + .dropdown-menu {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
+/* Styling individual dropdown items */
+#addModuleTopButton + .moduleDropdownMenu .moduleDropdownItem {
+    color: #333; /* Text color */
+    padding: 8px 16px; /* Padding around items */
+    transition: background-color 0.3s; /* Smooth hover transition */
+    border-radius: 0.6rem;
 }
-    
+
+/* Hover effect for dropdown items */
+#addModuleTopButton + .moduleDropdownMenu .moduleDropdownItem:hover {
+    background-color: #660000; /* Hover color */
+    color: #fff; /* Text color on hover */
+}
+
+.dropdown-toggle:after {
+    content: none;
+}
+
 
 .reframe-btn {
     display: flex;
@@ -633,3 +638,5 @@
 .reframe-btn:hover {
     background-color: #920000;
 }
+
+

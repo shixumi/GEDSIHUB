@@ -128,6 +128,7 @@
 
 #umBackButton {
     transition: all 0.2s ease;
+    color: #464040;
 }
 
 #umBackButton img {
@@ -151,7 +152,7 @@
     width: 1.7rem;
     height: 1.7rem;
     transition: all 0.2s ease;
-    margin-left: 0.4rem;
+
 }
 
     #deleteSelectedUM img:hover {
@@ -163,6 +164,9 @@
         transform: scale(0.95);
     }
 
+.delete-all-row td {
+    border-bottom: none !important;
+}
 
 
 #userManagementFilter {

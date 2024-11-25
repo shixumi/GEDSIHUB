@@ -120,40 +120,41 @@
                     </div>
                 </div>
             </div>
-            <div id="recent-activity-con" class="container user-profile-con">
-                <div class="recent-activity-table-container">
+        <div id="recent-activity-con" class="container user-profile-con">
+            <div class="recent-activity-table-container">
                 <table class="recent-activity-table table-striped">
-                        <thead class="hd-recent-act-text">
-                            <tr>
-                                <th class="text-start">Recent Activity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.RecentPosts != null && Model.RecentPosts.Any())
-                            {
-                                @foreach (var post in Model.RecentPosts)
-                                {
-                                    <tr>
-                                        <td class="text-start">
-                                            <a href="@Url.Action("Details", "ForumPost", new { id = post.PostId })" class="post-title">
-                                                @post.Title
-                                            </a>
-                                            <p class="post-snippet">@post.ContentSnippet</p>
-                                            <span class="recent-activity-time">@post.RelativeCreatedAt</span>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
+                    <thead class="hd-recent-act-text">
+                        <tr>
+                            <th class="text-start">Recent Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentPosts != null && Model.RecentPosts.Any())
+                        {
+                            @foreach (var post in Model.RecentPosts)
                             {
                                 <tr>
-                                    <td class="text-start">No recent activities.</td>
+                                    <td class="text-start">
+                                        <a href="@Url.Action("Details", "ForumPost", new { id = post.PostId })" class="post-title">
+                                            @post.Title
+                                        </a>
+                                        <p class="post-snippet">@post.ContentSnippet</p>
+                                        <span class="recent-activity-time">@post.RelativeCreatedAt</span>
+                                    </td>
                                 </tr>
                             }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-start">No recent activities.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
+        </div>
+
         </div>
         <div id="certificates-con" class="container">
             <h1 class="your-cert-label">
