@@ -24,6 +24,7 @@ namespace GedsiHub.Data
 
         // DbSets for the LMS
         public DbSet<UserProgress> UserProgresses { get; set; }
+        public DbSet<UserLessonProgress> UserLessonProgresses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<Lesson> Lessons { get; set; } 
