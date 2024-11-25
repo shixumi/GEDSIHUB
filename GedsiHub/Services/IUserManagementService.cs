@@ -13,4 +13,5 @@ public interface IUserManagementService
     Task<ApplicationUser?> GetUserForDeletionAsync(string id);
     Task DeleteUserAndRelatedDataAsync(string id);
     Task BulkDeleteUsersAsync(IEnumerable<string> ids);
+    Task<bool> DeleteUserWithDependenciesAsync(string userId, string? adminUserName);
 }

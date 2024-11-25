@@ -1,15 +1,18 @@
-﻿@model ErrorViewModel
+﻿@model GedsiHub.ViewModels.ErrorViewModel
+
 @{
     ViewData["Title"] = "Error";
+    var showRequestId = Model?.ShowRequestId ?? false;
+    var requestId = Model?.RequestId ?? "Unavailable";
 }
 
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
-@if (Model.ShowRequestId)
+@if (showRequestId)
 {
     <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        <strong>Request ID:</strong> <code>@requestId</code>
     </p>
 }
 

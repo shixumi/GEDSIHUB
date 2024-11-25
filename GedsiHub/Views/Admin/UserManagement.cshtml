@@ -64,7 +64,7 @@
                     <thead>
                         <tr class="feedback-table-label">
                             <th><input type="checkbox" id="selectAllCheckbox" onclick="toggleAllCheckboxes(this)" /></th>
-                            <th class="um-header-label">Username</th>
+                            <th class="um-header-label">Name</th>
                             <th class="um-header-label">Email</th>
                             <th class="um-header-label">Admin</th>
                             <th class="um-header-label">Status</th>
@@ -76,7 +76,7 @@
                         {
                             <tr class="row-feedback-response">
                                 <td class="um-content"><input type="checkbox" name="UserIds" value="@user.Id" /></td>
-                                <td class="um-content text-start">@user.UserName</td>
+                                <td class="um-content text-start">@($"{user.FirstName} {user.LastName}")</td>
                                 <td class="um-content text-start">@user.Email</td>
                                 <td class="um-content">@(user.IsAdmin ? "Yes" : "No")</td>
                                 <td class="um-content">@(user.IsActive ? "Active" : "Inactive")</td>
