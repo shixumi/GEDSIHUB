@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241125160846_Anonymous Fix 2")]
+    partial class AnonymousFix2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("CollegeDeptId");
 
-                    b.ToTable("CollegeDepartments", (string)null);
+                    b.ToTable("CollegeDepartments");
 
                     b.HasData(
                         new
@@ -132,7 +135,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("CollegeDeptId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
 
                     b.HasData(
                         new
@@ -577,7 +580,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("active_user_tbl", (string)null);
+                    b.ToTable("active_user_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ActivityLog", b =>
@@ -601,7 +604,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ActivityLogs", (string)null);
+                    b.ToTable("ActivityLogs");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Admin", b =>
@@ -628,7 +631,7 @@ namespace GedsiHub.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("admin_tbl", (string)null);
+                    b.ToTable("admin_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ApplicationUser", b =>
@@ -813,7 +816,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Certificates", (string)null);
+                    b.ToTable("Certificates");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.CertificateFile", b =>
@@ -833,7 +836,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CertificateFiles", (string)null);
+                    b.ToTable("CertificateFiles");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ContactInfo", b =>
@@ -881,7 +884,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactInfos", (string)null);
+                    b.ToTable("ContactInfos");
 
                     b.HasData(
                         new
@@ -936,7 +939,7 @@ namespace GedsiHub.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("employee_tbl", (string)null);
+                    b.ToTable("employee_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Enrollment", b =>
@@ -967,7 +970,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("enrollment_tbl", (string)null);
+                    b.ToTable("enrollment_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.FAQ", b =>
@@ -994,7 +997,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FAQs", (string)null);
+                    b.ToTable("FAQs");
 
                     b.HasData(
                         new
@@ -1107,7 +1110,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumComment", b =>
@@ -1147,7 +1150,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_comment_tbl", (string)null);
+                    b.ToTable("forum_comment_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumCommentReport", b =>
@@ -1183,7 +1186,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_comment_report_tbl", (string)null);
+                    b.ToTable("forum_comment_report_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumPost", b =>
@@ -1257,7 +1260,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_post_tbl", (string)null);
+                    b.ToTable("forum_post_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumPostLike", b =>
@@ -1281,7 +1284,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_post_like_tbl", (string)null);
+                    b.ToTable("forum_post_like_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumPostReport", b =>
@@ -1317,7 +1320,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_post_report_tbl", (string)null);
+                    b.ToTable("forum_post_report_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Lesson", b =>
@@ -1353,7 +1356,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("ModuleId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.LessonContent", b =>
@@ -1383,7 +1386,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("LessonContents", (string)null);
+                    b.ToTable("LessonContents");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Module", b =>
@@ -1422,7 +1425,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("ModuleId");
 
-                    b.ToTable("Modules", (string)null);
+                    b.ToTable("Modules");
 
                     b.HasData(
                         new
@@ -1524,7 +1527,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("module_activity_tbl", (string)null);
+                    b.ToTable("module_activity_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Notification", b =>
@@ -1563,7 +1566,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.NotificationUser", b =>
@@ -1590,7 +1593,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("NotificationUsers", (string)null);
+                    b.ToTable("NotificationUsers");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.Answer", b =>
@@ -1637,7 +1640,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("QuestionID");
 
-                    b.ToTable("Answers", (string)null);
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.Choice", b =>
@@ -1676,7 +1679,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("QuestionID");
 
-                    b.ToTable("Choices", (string)null);
+                    b.ToTable("Choices");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.Exam", b =>
@@ -1726,7 +1729,7 @@ namespace GedsiHub.Migrations
                     b.HasIndex("ModuleId")
                         .IsUnique();
 
-                    b.ToTable("Exams", (string)null);
+                    b.ToTable("Exams");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.Question", b =>
@@ -1768,7 +1771,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("ExamID");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.QuizResult", b =>
@@ -1823,7 +1826,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuizResults", (string)null);
+                    b.ToTable("QuizResults");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Student", b =>
@@ -1865,7 +1868,7 @@ namespace GedsiHub.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("student_tbl", (string)null);
+                    b.ToTable("student_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.UserLogin", b =>
@@ -1887,7 +1890,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("user_login_analytics_tbl", (string)null);
+                    b.ToTable("user_login_analytics_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.UserProgress", b =>
@@ -1930,7 +1933,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("progress_module_tbl", (string)null);
+                    b.ToTable("progress_module_tbl");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -2099,7 +2102,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserActivities", (string)null);
+                    b.ToTable("UserActivities");
                 });
 
             modelBuilder.Entity("XApiStatement", b =>
@@ -2178,7 +2181,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("XApiStatements", (string)null);
+                    b.ToTable("XApiStatements");
                 });
 
             modelBuilder.Entity("Course", b =>

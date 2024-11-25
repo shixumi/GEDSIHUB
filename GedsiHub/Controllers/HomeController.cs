@@ -1,5 +1,5 @@
 // Controllers/HomeController.cs
-using GedsiHub.Models; // Ensure this using directive is present
+using GedsiHub.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;

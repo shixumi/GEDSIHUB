@@ -29,7 +29,10 @@ namespace GedsiHub.ViewModels
         public int CommentCount { get; set; }
 
         // Add a new property to store the relative time string
-        public string RelativeCreatedAt { get; set; } = string.Empty;
+        public string RelativeCreatedAt
+        {
+            get => GedsiHub.Helpers.DateTimeHelper.GetRelativeTime(CreatedAt);
+        }
 
         [Required(ErrorMessage = "Please select a flair.")]
         public string Flair { get; set; } = string.Empty;

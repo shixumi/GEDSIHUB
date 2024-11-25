@@ -29,20 +29,27 @@
         font-weight: 400;
     }
 
+/* Base style for the option text */
 .option-text {
     cursor: pointer;
     transition: all 0.3s ease;
+    border: 1px solid transparent;
+    box-shadow: none;
+    font-weight: normal;
+    color: inherit;
+}
+.all-options-container .option-container .option-text.is-selected {
+    border: 1px solid #464040;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+    color: #464040;
 }
 
-    .option-text:active {
-        border: 2px solid #464040; 
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    
 
-    .next-question-button {
-        width: 16rem !important;
-    }
+/* Buttons for navigation */
+.next-question-button {
+    width: 16rem !important;
+}
 
 .back-assessment-button {
     width: 16rem !important;
@@ -54,11 +61,4 @@
 
 .option-radio-button {
     display: none;
-}
-
-.option-text.selected {
-    border: 1px solid #464040;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-weight: 500;
-    color: #464040;
 }

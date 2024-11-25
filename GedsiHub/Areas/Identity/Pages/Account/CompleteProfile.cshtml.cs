@@ -20,11 +20,16 @@ namespace GedsiHub.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
+        private readonly ILogger<CompleteProfileModel> _logger;
 
-        public CompleteProfileModel(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext)
+        public CompleteProfileModel(
+            UserManager<ApplicationUser> userManager,
+            ApplicationDbContext dbContext,
+            ILogger<CompleteProfileModel> logger)
         {
             _userManager = userManager;
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -219,123 +224,184 @@ namespace GedsiHub.Areas.Identity.Pages.Account
         {
             if (!ModelState.IsValid)
             {
-                // Log or output validation errors
-                var errors = ModelState.Values.SelectMany(v => v.Errors);
-                foreach (var error in errors)
+                // Log validation errors
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    Console.WriteLine(error.ErrorMessage);
+                    _logger.LogWarning("Validation Error: {ErrorMessage}", error.ErrorMessage);
                 }
 
-                // Reload the dropdowns if the form is invalid
-                CollegeDepartments = await _dbContext.CollegeDepartments
-                    .Select(cd => new SelectListItem
-                    {
-                        Value = cd.CollegeDeptId.ToString(),
-                        Text = cd.DepartmentName
-                    })
-                    .ToListAsync();
+                // Reload dropdowns
+                await PopulateDropdownsAsync();
 
-                Courses = await _dbContext.Courses
-                    .Select(c => new SelectListItem
-                    {
-                        Value = c.CourseId.ToString(),
-                        Text = c.CourseName
-                    })
-                    .ToListAsync();
-                return Page(); // Redisplay the form with errors
+                return Page(); // Redisplay the form with validation errors
             }
 
             var user = await _userManager.GetUserAsync(User);
-
             if (user == null)
             {
                 return NotFound("Unable to load user.");
             }
 
-            // Pass the user to the validation context for role-based validation
+            // Validate the input model
             var validationContext = new ValidationContext(Input, serviceProvider: null, items: new Dictionary<object, object> { { "User", User } });
-            var results = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(Input, validationContext, results, true);
-
-            if (!isValid)
+            var validationResults = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(Input, validationContext, validationResults, true))
             {
-                foreach (var validationResult in results)
+                foreach (var validationResult in validationResults)
                 {
                     ModelState.AddModelError(string.Empty, validationResult.ErrorMessage);
                 }
+                await PopulateDropdownsAsync(); // Reload dropdowns
                 return Page();
             }
 
-            if (ModelState.IsValid)
+            // Update user profile
+            UpdateUserProfile(user);
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
             {
-                // **Update General User Information**
-                user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;
-                user.MiddleName = Input.MiddleName;
-                user.Suffix = Input.Suffix;
-                user.Honorifics = Input.Honorifics;
-                user.LivedName = Input.LivedName;
-                user.Sex = Input.Sex;
-                user.PhoneNumber = Input.PhoneNumber;
-                user.DateOfBirth = Input.DateOfBirth;
-                user.GenderIdentity = Input.GenderIdentity;
-                user.Pronouns = Input.Pronouns;
-                user.IsMemberOfIndigenousCommunity = Input.IsMemberOfIndigenousCommunity;
-                user.IsDisabled = Input.IsDisabled;
-                user.ProfilePicturePath = Input.ProfilePicturePath;
-
-                var updateUserResult = await _userManager.UpdateAsync(user);
-                if (!updateUserResult.Succeeded)
+                foreach (var error in updateResult.Errors)
                 {
-                    foreach (var error in updateUserResult.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                    return Page();
+                    _logger.LogError("Error updating user profile: {Error}", error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
-
-                // **Update Role-Specific Information**
-                if (await _userManager.IsInRoleAsync(user, "Student"))
-                {
-                    var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.UserId == user.Id);
-                    if (student == null)
-                    {
-                        student = new Student { UserId = user.Id };
-                        _dbContext.Students.Add(student);
-                    }
-
-                    student.CollegeDeptId = Input.StudentInfo?.CollegeDeptId ?? 0;
-                    student.CourseId = Input.StudentInfo?.CourseId ?? 0; // Store the CourseId directly
-                    student.Year = Input.StudentInfo?.Year;
-                    student.Section = Input.StudentInfo?.Section;
-
-                    _dbContext.Students.Update(student);
-                }
-                else if (await _userManager.IsInRoleAsync(user, "Employee"))
-                {
-                    var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.UserId == user.Id);
-                    if (employee == null)
-                    {
-                        employee = new Employee { UserId = user.Id };
-                        _dbContext.Employees.Add(employee);
-                    }
-
-                    employee.BranchOfficeSectionUnit = Input.EmployeeInfo.BranchOfficeSectionUnit;
-                    employee.Position = Input.EmployeeInfo.Position;
-                    employee.Sector = Input.EmployeeInfo.Sector;
-                    employee.EmployeeType = Input.EmployeeInfo.EmployeeType;
-                    employee.EmploymentStatus = Input.EmployeeInfo.EmploymentStatus;
-
-                    _dbContext.Employees.Update(employee);
-                }
-
-
-                await _dbContext.SaveChangesAsync();
-                return RedirectToPage("/Account/Manage");
+                await PopulateDropdownsAsync(); // Reload dropdowns
+                return Page();
             }
 
-            // If we got this far, something failed; redisplay form
-            return Page();
+            // Update role-specific information
+            if (await _userManager.IsInRoleAsync(user, "Student"))
+            {
+                await UpdateStudentProfileAsync(user.Id);
+            }
+            else if (await _userManager.IsInRoleAsync(user, "Employee"))
+            {
+                await UpdateEmployeeProfileAsync(user.Id);
+            }
+
+            // Mark profile as complete by setting IsActive to true
+            user.IsActive = true;
+
+            // Save changes to the database
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation("User profile completed successfully for User ID: {UserId}", user.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving profile changes for User ID: {UserId}", user.Id);
+                ModelState.AddModelError(string.Empty, "An error occurred while saving your profile. Please try again.");
+                await PopulateDropdownsAsync();
+                return Page();
+            }
+
+            return RedirectToPage("/Account/Manage"); // Redirect to the intended page after success
+        }
+
+        // Helper method: Update general user profile
+        private void UpdateUserProfile(ApplicationUser user)
+        {
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+            user.MiddleName = Input.MiddleName;
+            user.Suffix = Input.Suffix;
+            user.Honorifics = Input.Honorifics;
+            user.LivedName = Input.LivedName;
+            user.Sex = Input.Sex;
+            user.PhoneNumber = Input.PhoneNumber;
+            user.DateOfBirth = Input.DateOfBirth;
+            user.GenderIdentity = Input.GenderIdentity;
+            user.Pronouns = Input.Pronouns;
+            user.IsMemberOfIndigenousCommunity = Input.IsMemberOfIndigenousCommunity;
+            user.IsDisabled = Input.IsDisabled;
+            user.ProfilePicturePath = Input.ProfilePicturePath;
+        }
+
+        // Helper method: Populate dropdowns
+        private async Task PopulateDropdownsAsync()
+        {
+            CollegeDepartments = await _dbContext.CollegeDepartments
+                .Select(cd => new SelectListItem
+                {
+                    Value = cd.CollegeDeptId.ToString(),
+                    Text = cd.DepartmentName
+                })
+                .ToListAsync();
+
+            Courses = await _dbContext.Courses
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CourseId.ToString(),
+                    Text = c.CourseName
+                })
+                .ToListAsync();
+        }
+
+        // Helper method: Update student-specific profile
+        private async Task UpdateStudentProfileAsync(string userId)
+        {
+            var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.UserId == userId);
+            if (student == null)
+            {
+                student = new Student { UserId = userId };
+                _dbContext.Students.Add(student);
+            }
+
+            student.CollegeDeptId = Input.StudentInfo?.CollegeDeptId ?? 0;
+            student.CourseId = Input.StudentInfo?.CourseId ?? 0;
+            student.Year = Input.StudentInfo?.Year;
+            student.Section = Input.StudentInfo?.Section;
+
+            _dbContext.Students.Update(student);
+        }
+
+        // Helper method: Update employee-specific profile
+        private async Task UpdateEmployeeProfileAsync(string userId)
+        {
+            var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.UserId == userId);
+            if (employee == null)
+            {
+                employee = new Employee { UserId = userId };
+                _dbContext.Employees.Add(employee);
+            }
+
+            employee.BranchOfficeSectionUnit = Input.EmployeeInfo?.BranchOfficeSectionUnit;
+            employee.Position = Input.EmployeeInfo?.Position;
+            employee.Sector = Input.EmployeeInfo?.Sector;
+            employee.EmployeeType = Input.EmployeeInfo?.EmployeeType;
+            employee.EmploymentStatus = Input.EmployeeInfo?.EmploymentStatus;
+
+            _dbContext.Employees.Update(employee);
+        }
+
+        public async Task<bool> IsProfileCompleteAsync()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(user.FirstName) || string.IsNullOrWhiteSpace(user.LastName))
+            {
+                return false;
+            }
+
+            if (await _userManager.IsInRoleAsync(user, "Student"))
+            {
+                var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.UserId == user.Id);
+                return student?.CollegeDeptId != null && student.CourseId != null;
+            }
+            else if (await _userManager.IsInRoleAsync(user, "Employee"))
+            {
+                var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.UserId == user.Id);
+                return !string.IsNullOrWhiteSpace(employee?.Position);
+            }
+
+            return true;
         }
     }
 }

@@ -1,5 +1,5 @@
-// File: Models/ErrorViewModel.cs
-namespace GedsiHub.Models
+// File: ViewModels/ErrorViewModel.cs
+namespace GedsiHub.ViewModels
 {
     public class ErrorViewModel
     {
