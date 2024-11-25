@@ -46,7 +46,11 @@
     <link rel="stylesheet" href="~/css/createNotification.css" />
     <link rel="stylesheet" href="~/css/createAssessment.css" />
     <link rel="stylesheet" href="~/css/assessments.css" />
+    <link rel="stylesheet" href="~/css/notificationDropdown.css" />
+    <link rel="stylesheet" href="~/css/tooltip.css" />
 
+
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
 
 
@@ -75,6 +79,7 @@
         }
     </style>
  
+        
 </head>
 <body data-authenticated="@User.Identity.IsAuthenticated.ToString().ToLower()">
 
@@ -95,25 +100,34 @@
                     <img class="search_icon" src="~/images/Search.png" alt="Search Icon" />
                     <input type="search" class="navbar_search" placeholder="Search for anything" style="font-family: 'Poppins', sans-serif;" />
                     <!-- Notifications Dropdown -->
-                    <span class="navbar-text notification_icon_span" style="margin-right: 4px; position: relative;">
+                    <span class="navbar-text notification_icon_span " style="margin-right: 4px; position: relative;">
                         <a href="#" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-bell" style="font-size: 33px; margin-right: 1rem; color:#464040;"></i>
+                            <i data-bs-toggle="tooltip" data-bs-placement="left" data-bss-tooltip="" data-bs-title="Notifications" class="fas fa-bell" style="font-size: 33px; margin-right: 1rem; color:#464040;"></i>
                             <span id="notificationsCount" class="badge bg-danger">0</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px;">
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
                             <li>
                                 <div id="notificationsList" class="list-group">
-                                    <!-- Notifications will be loaded here via AJAX -->
-                                    <div class="text-center p-2">No new notifications.</div>
+                                    <a href="/Notifications/Details/1" class="list-group-item list-group-item-action unread-notification">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                                            <div>
+                                                <strong>Notification Title</strong><br>
+                                                <small class="text-muted">This is a notification preview...</small><br>
+                                                <small class="text-muted">06/11/2024 1:33 PM</small>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
                             </li>
                             <li>
-                                <a class="dropdown-item text-center" href="@Url.Action("Index", "Notifications")">View All Notifications</a>
+                                <a class="dropdown-item text-center" href="/Notifications">View All Notifications</a>
                             </li>
-                        </ul>
+						</ul>
+
                     </span>
                     <span class="d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center navbar-text profile_icon_span">
-                        <a asp-controller="Profile" asp-action="Index" title="View Profile" aria-label="View Profile">
+                        <a asp-controller="Profile" asp-action="Index" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bss-tooltip="" data-bs-title="View Profile" aria-label="View Profile">
                             @await Component.InvokeAsync("ProfilePicture")
                         </a>
                     </span>
@@ -313,6 +327,7 @@
 
 
     <!-- Added from Bootstrap Studio -->
+
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/js/bs-init.js"></script>
 @*     <script src="~/js/breadcrumb.js"></script> *@
@@ -337,6 +352,7 @@
     
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
 
 
     <!-- Flatpickr JS -->
@@ -386,6 +402,35 @@
             $.get('/Notifications/GetUnreadCount', function (count) {
                 $('#notificationsCount').text(count);
             });
+        });
+
+
+
+
+
+        });
+
+        
+    </script>
+    <script>
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    delay: { show: 500, hide: 100 } // Delay in milliseconds (500ms to show, 100ms to hide)
+                });
+            });
+        });
+
+        // Add event listener to hide tooltip when notification dropdown is clicked
+        var dropdownButton = document.getElementById('notificationsDropdown');
+        dropdownButton.addEventListener('click', function () {
+            // Hide the tooltip for the notifications dropdown button
+            var tooltip = bootstrap.Tooltip.getInstance(dropdownButton);
+            if (tooltip) {
+                tooltip.hide(); // Hide tooltip on click
+            }
         });
     </script>
 

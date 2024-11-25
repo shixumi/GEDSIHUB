@@ -14,7 +14,7 @@
         width: 100%;
     }
 
-    .create-notification-container input[type="text"], select, textarea {
+    .create-notification-container input[type="text"], .create-notification-container select, .create-notification-container textarea {
         width: 100%;
         height: 3.5rem;
         border: 1px solid #464040;

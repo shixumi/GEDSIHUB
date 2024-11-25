@@ -88,15 +88,17 @@
                 @{
                     int optionIndex = 0; // Initialize counter for alphabetical letters
                 }
+
                 @foreach (var option in Model.questions[i].options)
                 {
                     <div id="AllOptionContainer" class="all-options-container">
                         <div id="Option" class="option-container">
                             <!-- Convert index to alphabetical letter (A, B, C...) -->
                             <div class="option-letter-circle">@((char)(65 + optionIndex++))</div>
-
+                            
                             <input type="radio" class="option-radio-button" id="option-@i-@option.OptionID" name="responses[@i].SelectedOption" value="@option.OptionID" />
                             <label class="option-text" for="option-@i-@option.OptionID">@option.Option</label>
+                            
 
                             <input type="hidden" name="responses[@i].QuestionID" value="@Model.questions[i].QuestionID" />
                             <input type="hidden" name="responses[@i].ExamID" value="@Model.ExamID" />
@@ -139,35 +141,7 @@
 
 
 
-<!-- Form to capture and submit answers -->
-<form asp-action="Submit" asp-controller="Assessment" method="post">
-    <input type="hidden" asp-for="ExamID" />
 
-    <div id="question-container">
-        @for (int i = 0; i < Model.questions.Count; i++)
-        {
-            <div class="question" style="display:@(i == 0 ? "block" : "none")" id="question-@i">
-                <h4>@Model.questions[i].QuestionText</h4>
-
-                <!-- Display choices as radio buttons -->
-                @foreach (var option in Model.questions[i].options)
-                {
-                    <div>
-                        <input type="radio" id="option-@i-@option.OptionID" name="responses[@i].SelectedOption" value="@option.OptionID" />
-                        <label for="option-@i-@option.OptionID">@option.Option</label>
-                        <input type="hidden" name="responses[@i].QuestionID" value="@Model.questions[i].QuestionID" />
-                        <input type="hidden" name="responses[@i].ExamID" value="@Model.ExamID" />
-                    </div>
-                }
-            </div>
-        }
-    </div>
-
-    <button type="button" onclick="showPrevious()" id="prevButton" style="display: none;">Previous</button>
-    <button type="button" onclick="showNext()" id="nextButton">Next</button>
-    <button type="submit" style="display: none;" id="submitButton">Submit</button>
-
-</form>
 
 
 @section Scripts {
@@ -212,27 +186,37 @@
 
         // Add event listeners to radio buttons to highlight selected option
         document.addEventListener("DOMContentLoaded", function () {
-            const allOptionContainers = document.querySelectorAll(".all-options-container");
+            // Select all radio button groups
+            const optionContainers = document.querySelectorAll(".option-container");
 
-            allOptionContainers.forEach(questionContainer => {
-                const optionContainers = questionContainer.querySelectorAll(".option-container");
+            // Add event listener for each radio button group
+            optionContainers.forEach(container => {
+                const radioButton = container.querySelector("input[type='radio']");
+                const label = container.querySelector(".option-text");
 
-                optionContainers.forEach(container => {
-                    const radio = container.querySelector("input[type='radio']");
-                    const optionText = container.querySelector(".option-text");
+                radioButton.addEventListener("change", function () {
+                    const questionName = this.name;
 
-                    radio.addEventListener("change", function () {
-                        // Remove 'selected' class only within the same question container
-                        questionContainer.querySelectorAll(".option-text").forEach(text => text.classList.remove("selected"));
+                    // Find all radio buttons in the same group
+                    const groupRadios = document.querySelectorAll(`input[name="${questionName}"]`);
 
-                        // Add 'selected' class to the selected option text
-                        if (radio.checked) {
-                            optionText.classList.add("selected");
-                        }
+                    // Remove 'is-selected' class from all labels in the group
+                    groupRadios.forEach(radio => {
+                        const groupLabel = radio.closest(".option-container").querySelector(".option-text");
+                        groupLabel.classList.remove("is-selected");
                     });
+
+                    // Add 'is-selected' class to the current label
+                    if (this.checked) {
+                        label.classList.add("is-selected");
+                        console.log(`Adding 'is-selected' to label:`, label);
+                    }
                 });
+
             });
         });
+
+
 
 
 
