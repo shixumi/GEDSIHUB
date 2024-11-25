@@ -289,5 +289,29 @@ else
                 });
             });
         });
+
+
+       
+            document.addEventListener("DOMContentLoaded", function () {
+                // Check if the "View Resolved Feedbacks" view is active
+                const isResolvedView = new URLSearchParams(window.location.search).get('status') === 'resolved';
+
+            // Find all resolve buttons
+            const resolveButtons = document.querySelectorAll('#mark-as-resolved-button');
+
+                resolveButtons.forEach(button => {
+                    if (isResolvedView) {
+                // Disable the button and change its text and style
+                button.classList.add('resolved-button'); // Add disabled and resolved styles
+                button.removeAttribute('data-bs-toggle'); // Prevent the modal from opening
+                button.removeAttribute('data-bs-target'); // Remove modal target
+                button.innerHTML = `
+                <img src="/images/Done.png" alt="Resolved Icon" /> Resolved
+                `;
+                        }
+                    });
+                });
+
+
     </script>
 }
