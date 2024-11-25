@@ -281,11 +281,11 @@
 
                                     <!-- Actions (Edit/Delete/Publish/Unpublish) -->
                                     <td class="module-content text-start action-buttons">
-                                        <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId">
+                                        <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Module">
                                             <img src="~/images/Edit.png" /> Edit
                                         </a>
 
-                                        <a id="list-deleteModuleButton" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
+                                        <a id="list-deleteModuleButton"  data-bs-placement="bottom" data-bs-title="Delete Module" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
                                             <img src="~/images/Delete.png" /> Delete
                                         </a>
 
@@ -293,7 +293,7 @@
                                         @if (module.Status == ModuleStatus.Published)
                                         {
                                             <!-- Unpublish Button -->
-                                            <button type="button" id="list-unpublishModuleButton" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId">
+                                            <button type="button" id="list-unpublishModuleButton" data-bs-placement="bottom" data-bs-title="Unpublish Module" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId">
                                                 <img src="~/images/Unpublish.png" alt="Unpublish Icon" />
                                                 Unpublish
                                             </button>
@@ -301,7 +301,7 @@
                                         else
                                         {
                                             <!-- Publish Button -->
-                                            <button type="button" id="list-publishModuleButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId">
+                                            <button type="button" id="list-publishModuleButton" data-bs-placement="bottom" data-bs-title="Publish Module" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId">
                                                 <img src="~/images/Publish.png" alt="Publish Icon" />
                                                 Publish
                                             </button>
