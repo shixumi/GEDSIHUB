@@ -1,0 +1,44 @@
+﻿/* Customize the tooltip font style */
+.tooltip {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 400;
+    
+    max-width: 15rem !important; /* Adjust this value as needed */
+    white-space: normal !important;
+    word-wrap: break-word !important;
+}
+
+
+
+/* Match the tooltip background color */
+.tooltip-inner {
+    background-color: #464040 !important;
+    color: #fff !important;
+    border-radius: 1rem !important;
+    font-size: 0.8rem !important;
+}
+
+
+
+/* Top Tooltip */
+.bs-tooltip-top .tooltip-arrow::before,
+.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before {
+    border-top-color: #464040 !important;
+}
+
+/* Bottom Tooltip */
+.bs-tooltip-bottomm .tooltip-arrow::before, .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before {
+    border-bottom-color: #464040 !important;
+}
+
+/* Left Tooltip */
+.bs-tooltip-left .tooltip-arrow::before,
+.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before {
+    border-left-color: #464040 !important;
+}
+
+/* Right Tooltip */
+.bs-tooltip-right .tooltip-arrow::before,
+.bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before {
+    border-right-color: #464040 !important;
+}

@@ -38,11 +38,11 @@
                     <a href="@Url.Action("Index", "Feedback", new { tab = ViewBag.ActiveTab, status = ViewBag.ShowResolved ? "unresolved" : "resolved" })" class="view-resolved-feedbacks">
                         @if (ViewBag.ShowResolved)
                         {
-                            <span>View Unresolved Feedbacks</span>
+                            <span style="color:#660000;">View Unresolved Feedbacks</span>
                         }
                         else
                         {
-                            <span>View Resolved Feedbacks</span>
+                            <span style="color:#52a035;">View Resolved Feedbacks</span>
                         }
                     </a>
                 </div>
