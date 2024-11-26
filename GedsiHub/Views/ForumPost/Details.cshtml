@@ -68,7 +68,9 @@
 
             @if (!string.IsNullOrEmpty(Model.ModuleTitle))
             {
-                <span class="badge rounded-pill module-badge">@Model.ModuleTitle</span>
+                <a href="@Url.Action("Index", "ForumPost", new { moduleId = Model.ForumPost.ModuleId })" class="badge rounded-pill module-badge">
+                    @Model.ModuleTitle
+                </a>
             }
 
             <!-- Card Title -->
@@ -90,6 +92,14 @@
 
         <!-- Card Footer Buttons -->
         <div class="d-flex align-items-center card-footer">
+            <button id="likeButton"
+            class="card-link d-flex align-items-center like-btn"
+            data-post-id="@Model.ForumPost.PostId"
+            data-has-liked="@Model.HasLiked">
+                <i id="likeIcon" class="f-icon la @(Model.HasLiked ? "la-heart" : "la-heart-o")"></i>
+                <span id="likeCount">@Model.LikesCount</span>
+            </button>
+
             <a asp-action="Details" asp-route-id="@Model.ForumPost.PostId" class="card-link d-flex align-items-center">
                 <i class="f-icon la la-comment"></i> @Model.ForumPost.ForumComments.Count()
             </a>
@@ -336,4 +346,5 @@
         }
     </script>
     <script src="~/js/ForumPost.js"></script>
+    <script src="~/js/ForumPostDetailsLikes.js"></script>
 }

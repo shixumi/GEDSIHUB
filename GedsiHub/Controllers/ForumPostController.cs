@@ -135,7 +135,7 @@ namespace GedsiHub.Controllers
             }
 
             var post = await _context.ForumPosts
-                .Include(p => p.ForumPostLikes) // Include the likes collection
+                .Include(p => p.ForumPostLikes)
                 .FirstOrDefaultAsync(p => p.PostId == id);
 
             if (post == null)
@@ -143,26 +143,28 @@ namespace GedsiHub.Controllers
                 return NotFound(new { success = false, message = "Post not found" });
             }
 
+            // Check if the user already liked the post
             var existingLike = post.ForumPostLikes.FirstOrDefault(like => like.UserId == userId);
 
             if (existingLike != null)
             {
-                // Unlike the post
-                post.ForumPostLikes.Remove(existingLike);
+                // Remove like
+                _context.ForumPostLikes.Remove(existingLike);
                 post.LikesCount--;
             }
             else
             {
-                // Like the post
+                // Add like
                 var newLike = new ForumPostLike
                 {
                     PostId = id,
                     UserId = userId
                 };
-                post.ForumPostLikes.Add(newLike);
+                _context.ForumPostLikes.Add(newLike);
                 post.LikesCount++;
             }
 
+            // Save changes to the database
             await _context.SaveChangesAsync();
 
             return Json(new { success = true, newLikeCount = post.LikesCount, hasLiked = existingLike == null });
@@ -171,11 +173,14 @@ namespace GedsiHub.Controllers
         // GET: ForumPost/Details/{id} - Display post with comments
         public async Task<IActionResult> Details(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var post = await _context.ForumPosts
                                      .Include(p => p.User)
                                      .Include(p => p.Module)
                                      .Include(p => p.ForumComments)
                                      .ThenInclude(c => c.User)
+                                     .Include(p => p.ForumPostLikes)
                                      .FirstOrDefaultAsync(p => p.PostId == id);
 
             if (post == null)
@@ -183,6 +188,7 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
+            // Increment views count
             post.ViewsCount++;
             _context.ForumPosts.Update(post);
             await _context.SaveChangesAsync();
@@ -195,7 +201,9 @@ namespace GedsiHub.Controllers
                 UserLastName = post.User.LastName,
                 UserId = post.UserId,
                 Flair = post.Flair,
-                ModuleTitle = post.Module?.Title
+                ModuleTitle = post.Module?.Title,
+                LikesCount = post.LikesCount,
+                HasLiked = userId != null && post.ForumPostLikes.Any(like => like.UserId == userId)
             };
 
             return View(viewModel);
