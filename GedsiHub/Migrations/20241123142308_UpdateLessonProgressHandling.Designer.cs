@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241123142308_UpdateLessonProgressHandling")]
+    partial class UpdateLessonProgressHandling
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1429,7 +1432,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 1,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 26, 12, 51, 18, 454, DateTimeKind.Utc).AddTicks(1293),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6282),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             PositionInt = 0,
                             Status = 0,
@@ -1439,7 +1442,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 2,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 26, 12, 51, 18, 454, DateTimeKind.Utc).AddTicks(1295),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6317),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             PositionInt = 0,
                             Status = 0,
@@ -1449,7 +1452,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 3,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 26, 12, 51, 18, 454, DateTimeKind.Utc).AddTicks(1296),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6319),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             PositionInt = 0,
                             Status = 0,
@@ -1459,7 +1462,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 4,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 26, 12, 51, 18, 454, DateTimeKind.Utc).AddTicks(1298),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6321),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
                             Status = 0,
@@ -1469,7 +1472,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 5,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 26, 12, 51, 18, 454, DateTimeKind.Utc).AddTicks(1300),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6322),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             PositionInt = 0,
                             Status = 0,
@@ -1479,7 +1482,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 6,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 26, 12, 51, 18, 454, DateTimeKind.Utc).AddTicks(1302),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6324),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             PositionInt = 0,
                             Status = 0,
@@ -1489,7 +1492,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 7,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 26, 12, 51, 18, 454, DateTimeKind.Utc).AddTicks(1304),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6326),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             PositionInt = 0,
                             Status = 0,
@@ -2224,7 +2227,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithOne("Admin")
                         .HasForeignKey("GedsiHub.Models.Admin", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -2254,7 +2257,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithOne("Employee")
                         .HasForeignKey("GedsiHub.Models.Employee", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -2290,7 +2293,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumComments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ForumPost");
@@ -2309,7 +2312,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumCommentReports")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ForumComment");
@@ -2326,7 +2329,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumPosts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Module");
@@ -2364,7 +2367,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumPostReports")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ForumPost");
@@ -2509,7 +2512,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithOne("Student")
                         .HasForeignKey("GedsiHub.Models.Student", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CollegeDepartment");

@@ -208,9 +208,15 @@
 
 #Media_Upload_Container, #Lesson_Content_Upload_Container {
     width: 100%;
-    max-width: 1028.75px;
+    height: 100%;
     flex-grow: 0;
     flex-shrink: 0;
+    border: 2px dashed #3b82f6;
+    border-radius: 10px;
+    padding: 5rem;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
     #Media_Upload_Container.highlight {
@@ -242,6 +248,7 @@
     font-size: 1.1rem;
     color: #920000;
     font-weight: 600;
+    margin-top: 0.5rem;
     transition: transform 0.3s ease, border 0.1s ease, box-shadow 0.3s ease;
 }
 

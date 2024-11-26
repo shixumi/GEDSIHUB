@@ -44,8 +44,8 @@
                 <button type="button" class="btn btn-info mb-5 info-modal-btn" data-bs-toggle="modal" data-bs-target="#h5pHelpModal">
                     <i class="fa fa-info-circle"></i> Need help with H5P?
                 </button>
-
             </div>
+
             <!-- H5P Link Input -->
             <textarea asp-for="H5PEmbedCode" class="url_input_textarea" placeholder="Paste H5P link here" id="h5pEditorCreate"></textarea>
             <span asp-validation-for="H5PEmbedCode" class="text-danger"></span>
@@ -111,10 +111,11 @@
                 <span class="upload_text">Drag and Drop Files or Click to Upload Text or Images</span>
                 <input type="file" name="uploadFile" id="uploadFile" class="uploadButton" accept=".mp4,.mov,.avi,.jpg,.png,.jpeg,.pdf,.doc,.docx" />
                 <label for="uploadFile" class="uploadButtonLabel"> Upload</label>
-
-                <!-- Container for displaying the preview -->
-                <div id="MediaPreviewContainer"></div>
             </div>
+
+
+
+           
 
             <!-- Cancel and Save Button -->
             <div class="cancel_save_con">
@@ -145,9 +146,9 @@
         // Preview selected media
         // Ensure script runs after all page elements have loaded
         window.addEventListener("load", function () {
-            const uploadInput = document.getElementById('uploadText');
-            const previewContainer = document.getElementById('MediaPreviewContainer');
-
+            const uploadInput = document.getElementById('uploadFile');
+            const previewContainer = document.getElementById('Lesson_Content_Upload_Container');
+       
             // Check that both the upload input and preview container exist
             if (!uploadInput) {
                 console.warn("Upload input (uploadText) not found.");
@@ -191,4 +192,5 @@
         });
     </script>
     <script src="~/js/tinymce-init.js"></script>
+    <script src="~/js/DragAndDropFile.js"></script>
 }

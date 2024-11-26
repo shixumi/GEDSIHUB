@@ -1,11 +1,13 @@
 ﻿using GedsiHub.Data;
 using GedsiHub.Models;
+using GedsiHub.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace GedsiHub.Controllers
@@ -43,6 +45,9 @@ namespace GedsiHub.Controllers
         // GET: Display the list of modules
         public async Task<IActionResult> Index()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Fetch all modules
             IQueryable<Module> modulesQuery = _context.Modules.Include(m => m.Lessons);
 
             if (!IsUserAdmin())
@@ -53,8 +58,32 @@ namespace GedsiHub.Controllers
 
             var modules = await modulesQuery.OrderBy(m => m.PositionInt).ToListAsync();
 
-            return View(modules);
+            // Fetch user progress
+            var userProgresses = await _context.UserProgresses
+                .Where(up => up.UserId == userId)
+                .Include(up => up.Module)
+                .ToListAsync();
+
+            // Calculate the highest completed module position
+            var highestCompletedPosition = userProgresses
+                .Where(up => up.IsCompleted)
+                .Select(up => up.Module.PositionInt)
+                .DefaultIfEmpty(0)
+                .Max();
+
+            // Prepare the model
+            var model = modules.Select(module => new ModuleProgressViewModel
+            {
+                Module = module,
+                ProgressPercentage = userProgresses
+                    .FirstOrDefault(up => up.ModuleId == module.ModuleId)?.ProgressPercentage ?? 0,
+                IsUnlocked = IsUserAdmin() || module.PositionInt <= highestCompletedPosition + 1
+            }).ToList();
+
+            return View(model);
         }
+
+
 
         // ******************* MODULE DETAILS *******************
 
@@ -99,8 +128,32 @@ namespace GedsiHub.Controllers
                     .AnyAsync(lc => lc.LessonId == lesson.LessonId);
             }
 
+            // Ensure user is authorized to view this module based on lock status
+            if (!IsUserAdmin())
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                // Fetch user's highest completed module position
+                var userProgresses = await _context.UserProgresses
+                    .Where(up => up.UserId == userId)
+                    .Include(up => up.Module)
+                    .ToListAsync();
+
+                var highestCompletedPosition = userProgresses
+                    .Where(up => up.IsCompleted)
+                    .Select(up => up.Module?.PositionInt ?? 0)
+                    .DefaultIfEmpty(0)
+                    .Max();
+
+                if (module.PositionInt > highestCompletedPosition + 1)
+                {
+                    return RedirectToAction("Index"); // Redirect to module list
+                }
+            }
+
             return View(module);
         }
+
 
         // ******************* MODULE CREATION *******************
 

@@ -105,11 +105,11 @@
                             <i data-bs-toggle="tooltip" data-bs-placement="left" data-bss-tooltip="" data-bs-title="Notifications" class="fas fa-bell" style="font-size: 33px; margin-right: 1rem; color:#464040;"></i>
                             <span id="notificationsCount" class="badge bg-danger">0</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationsDropdown">
                             <li>
                                 <div id="notificationsList" class="list-group">
                                     <a href="/Notifications/Details/1" class="list-group-item list-group-item-action unread-notification">
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center notif-list">
                                             <i class="fas fa-sync-alt" aria-hidden="true"></i>
                                             <div>
                                                 <strong>Notification Title</strong><br>
@@ -161,7 +161,7 @@
     <div class="sidebar_container">
         <div class="sidebar">
             <!-- Dashboard Button -->
-            <div class="dashboard_container" id="SidebarButton_Dashboard">
+            <div class="dashboard_container" id="SidebarButton_Dashboard" data-bs-toggle="tooltip" data-bs-placement="right" data-bss-tooltip="" data-bs-title="Overview of key metrics and activities">
                 <div class="icon-container">
                     <img class="sidebar_icon" src="~/images/Dashboard_Dark.png"  alt="Dashboard Icon" />
                 </div>
@@ -169,7 +169,7 @@
             </div>
 
             <!-- Modules Button -->
-            <div class="dashboard_container" id="SidebarButton_Modules">
+            <div class="dashboard_container" id="SidebarButton_Modules" data-bs-toggle="tooltip" data-bs-placement="right" data-bss-tooltip="" data-bs-title="Access learning modules">
                 <div class="icon-container">
                     <img class="sidebar_icon" src="~/images/Modules_Dark.png"  alt="Modules Icon" />
                 </div>
@@ -177,7 +177,7 @@
             </div>
 
             <!-- Leaderboard Button -->
-            <div class="dashboard_container" id="SidebarButton_Leaderboard">
+            <div class="dashboard_container" id="SidebarButton_Leaderboard" data-bs-toggle="tooltip" data-bs-placement="right" data-bss-tooltip="" data-bs-title="See top performers and rankings">
                 <div class="icon-container">
                     <img class="sidebar_icon" src="~/images/Leaderboard_Dark.png" style="width: 42px; height: auto;" alt="Leaderboard Icon" />
                 </div>
@@ -185,7 +185,7 @@
             </div>
 
             <!-- Forum Button -->
-            <div class="dashboard_container" id="SidebarButton_Forum">
+            <div class="dashboard_container" id="SidebarButton_Forum" data-bs-toggle="tooltip" data-bs-placement="right" data-bss-tooltip="" data-bs-title="Engage in community discussions">
                 <div class="icon-container">
                     <img class="sidebar_icon" src="~/images/Forum_Dark.png"  style="width: 38px; height: auto;"  alt="Forum Icon" />
                 </div>
@@ -195,7 +195,7 @@
             @if (User.IsInRole("Admin"))
             {
                 <!-- Reports Button -->
-                <div class="dashboard_container" id="SidebarButton_Reports">
+                <div class="dashboard_container" id="SidebarButton_Reports" data-bs-toggle="tooltip" data-bs-placement="right" data-bss-tooltip="" data-bs-title="Generate Reports">
                     <div class="icon-container">
                         <img class="sidebar_icon" src="~/images/Reports_Dark.png" style="width: 48px; height: auto;" alt="Reports Icon" />
                     </div>
@@ -204,7 +204,7 @@
             }
 
             <!-- Feedback Button -->
-            <div class="dashboard_container" id="SidebarButton_Feedback">
+            <div class="dashboard_container" id="SidebarButton_Feedback" data-bs-toggle="tooltip" data-bs-placement="right" data-bss-tooltip="" data-bs-title="Share your thoughts and suggestions">
                 <div class="icon-container">
                     <img class="sidebar_icon" src="~/images/Feedback_Dark.png" alt="Feedback Icon" />
                 </div>
@@ -213,7 +213,7 @@
 
             <!-- Logout Button with Modal Trigger -->
             <button type="button" data-bs-toggle="modal" data-bs-target="#logoutModal" style="padding:0;">
-                <div class="dashboard_container" id="SidebarButton_Logout">
+                <div class="dashboard_container" id="SidebarButton_Logout" data-bs-toggle="tooltip" data-bs-placement="right" data-bss-tooltip="" data-bs-title="Sign out of your account">
                     <div class="icon-container">
                         <img class="sidebar_icon" src="~/images/Logout_Dark.png" alt="Logout Icon" />
                     </div>

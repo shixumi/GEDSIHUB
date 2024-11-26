@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GedsiHub.Models.Module>
+﻿@model IEnumerable<GedsiHub.ViewModels.ModuleProgressViewModel>
 
 @{
     Layout = "_LayoutApp";
@@ -21,16 +21,16 @@
                 </button>
             </div>
             @*
-            <!-- Create Module Button (Visible to Admins only) --> 
+            <!-- Create Module Button (Visible to Admins only) -->
             @if (User.IsInRole("Admin"))
             {
-                <a asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton">
-                    <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
-                </a>
-            } 
+            <a asp-action="Create" class="btn btn-primary d-xxl-flex addModuleTopButton" id="addModuleTopButton">
+            <img id="addModuleTopAddIcon" src="~/images/Add_White.png" /> Add New Module
+            </a>
+            }
             *@
 
-            <!-- Create Module Button (Visible to Admins only) --> 
+            <!-- Create Module Button (Visible to Admins only) -->
             @if (User.IsInRole("Admin"))
             {
                 <div class="addModule-dropdown">
@@ -84,11 +84,16 @@
                                        class="ColorInput"
                                        type="color"
                                        value="@module.Color"
-                                       data-bs-toggle="tooltip"
-                                       data-bs-placement="bottom"
-                                       data-bs-title="Change Module Color"
+                                       @if (User.IsInRole("Admin"))
+                                       {
+                                           <text>
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="bottom"
+                                               data-bs-title="Change Module Color"
+                                           </text>
+                                       }
                                        onchange="updateColor(@module.ModuleId, this.value)"
-                                @(User.IsInRole("Admin") ? "" : "disabled") />
+                                       @(User.IsInRole("Admin") ? "" : "disabled") />
                             </div>
                         </div>
 
@@ -127,23 +132,27 @@
 
                         @if (!(User.IsInRole("Admin")))
                         {
-                            
-
                             <div class="ModuleCard">
 
-                                <div class="progress" id="progress-bar" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 8px;">
-                                    <div class="progress-bar" style="width: 25%; background-color: #52A035;"></div>
+                                <div class="progress" id="progress-bar-@module.Module.ModuleId" role="progressbar"
+                                     aria-label="Progress for @module.Module.Title"
+                                     aria-valuenow="@module.ProgressPercentage"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100"
+                                     style="height: 8px;">
+                                    <div class="progress-bar"
+                                         style="width: @module.ProgressPercentage%; background-color: #52A035;">
+                                    </div>
                                 </div>
 
+                                <div class="module-completed">
+                                    <span>Module Completed</span>
+                                    <span>@Math.Ceiling(module.ProgressPercentage)%</span>
+                                </div>
 
-                            <div class="module-completed">
-                                <span>Module Completed</span>
-                                <span>0%</span>
-                            </div>
                             </div>
                         }
 
-                      
 
                         <!-- Publish/Unpublish Button (Admin only) -->
                         @if (User.IsInRole("Admin"))
@@ -153,7 +162,7 @@
                                     @if (module.Status == ModuleStatus.Published)
                                     {
                                         <!-- Unpublish Button -->
-                                        <button data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId" data-bs-placement="bottom" data-bs-title="Unpublish Module" type="button" class="btn toggle-content"  >
+                                        <button data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId" data-bs-placement="bottom" data-bs-title="Unpublish Module" type="button" class="btn toggle-content">
                                             <img class="PublishIcon" src="~/images/Unpublish.png" />
                                             <span>Unpublish</span>
                                         </button>
@@ -161,7 +170,7 @@
                                     else
                                     {
                                         <!-- Publish Button -->
-                                        <button data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId" data-bs-placement="bottom" data-bs-title="Publish Module" type="button" class="btn toggle-content" >
+                                        <button data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId" data-bs-placement="bottom" data-bs-title="Publish Module" type="button" class="btn toggle-content">
                                             <img class="PublishIcon" src="~/images/Publish.png" />
                                             <span>Publish</span>
                                         </button>
@@ -180,7 +189,7 @@
                             </div>
                         }
 
-                            
+
 
 
                     </div>
@@ -219,7 +228,7 @@
                         </a>
                     </div>
 
-   
+
                 </div>
                 @if (User.IsInRole("Admin"))
                 {
@@ -228,7 +237,7 @@
                         <img class="d-xxl-flex add_icon" src="~/images/Add.png" /> Add New Module
                     </a>
                 }
-                
+
             </div>
         </div>
 
@@ -281,11 +290,11 @@
 
                                     <!-- Actions (Edit/Delete/Publish/Unpublish) -->
                                     <td class="module-content text-start action-buttons">
-                                        <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Module">
+                                        <a id="list-editModuleButton" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Module" asp-action="Edit" asp-route-id="@module.ModuleId">
                                             <img src="~/images/Edit.png" /> Edit
                                         </a>
 
-                                        <a id="list-deleteModuleButton"  data-bs-placement="bottom" data-bs-title="Delete Module" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
+                                        <a id="list-deleteModuleButton" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
                                             <img src="~/images/Delete.png" /> Delete
                                         </a>
 
@@ -293,7 +302,7 @@
                                         @if (module.Status == ModuleStatus.Published)
                                         {
                                             <!-- Unpublish Button -->
-                                            <button type="button" id="list-unpublishModuleButton" data-bs-placement="bottom" data-bs-title="Unpublish Module" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId">
+                                            <button type="button" id="list-unpublishModuleButton" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId">
                                                 <img src="~/images/Unpublish.png" alt="Unpublish Icon" />
                                                 Unpublish
                                             </button>
@@ -301,7 +310,7 @@
                                         else
                                         {
                                             <!-- Publish Button -->
-                                            <button type="button" id="list-publishModuleButton" data-bs-placement="bottom" data-bs-title="Publish Module" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId">
+                                            <button type="button" id="list-publishModuleButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId">
                                                 <img src="~/images/Publish.png" alt="Publish Icon" />
                                                 Publish
                                             </button>
@@ -426,7 +435,7 @@
                 activeTabButton.classList.add("active");
                 activeTabPane.classList.add("show", "active");
             }
-            
+
             // Handle tooltips for list and grid view buttons
             const listTabButton = document.getElementById("list-tab");
             const gridTabButton = document.getElementById("grid-tab");
