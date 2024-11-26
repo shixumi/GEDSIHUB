@@ -4,6 +4,7 @@ using GedsiHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GedsiHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241123142308_UpdateLessonProgressHandling")]
+    partial class UpdateLessonProgressHandling
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("CollegeDeptId");
 
-                    b.ToTable("CollegeDepartments", (string)null);
+                    b.ToTable("CollegeDepartments");
 
                     b.HasData(
                         new
@@ -132,7 +135,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("CollegeDeptId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
 
                     b.HasData(
                         new
@@ -577,7 +580,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("active_user_tbl", (string)null);
+                    b.ToTable("active_user_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ActivityLog", b =>
@@ -601,7 +604,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ActivityLogs", (string)null);
+                    b.ToTable("ActivityLogs");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Admin", b =>
@@ -628,7 +631,7 @@ namespace GedsiHub.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("admin_tbl", (string)null);
+                    b.ToTable("admin_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ApplicationUser", b =>
@@ -813,7 +816,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Certificates", (string)null);
+                    b.ToTable("Certificates");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.CertificateFile", b =>
@@ -833,7 +836,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CertificateFiles", (string)null);
+                    b.ToTable("CertificateFiles");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ContactInfo", b =>
@@ -881,7 +884,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactInfos", (string)null);
+                    b.ToTable("ContactInfos");
 
                     b.HasData(
                         new
@@ -936,7 +939,7 @@ namespace GedsiHub.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("employee_tbl", (string)null);
+                    b.ToTable("employee_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Enrollment", b =>
@@ -967,7 +970,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("enrollment_tbl", (string)null);
+                    b.ToTable("enrollment_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.FAQ", b =>
@@ -994,7 +997,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FAQs", (string)null);
+                    b.ToTable("FAQs");
 
                     b.HasData(
                         new
@@ -1107,7 +1110,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumComment", b =>
@@ -1147,7 +1150,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_comment_tbl", (string)null);
+                    b.ToTable("forum_comment_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumCommentReport", b =>
@@ -1183,7 +1186,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_comment_report_tbl", (string)null);
+                    b.ToTable("forum_comment_report_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumPost", b =>
@@ -1257,7 +1260,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_post_tbl", (string)null);
+                    b.ToTable("forum_post_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumPostLike", b =>
@@ -1281,7 +1284,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_post_like_tbl", (string)null);
+                    b.ToTable("forum_post_like_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.ForumPostReport", b =>
@@ -1317,7 +1320,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("forum_post_report_tbl", (string)null);
+                    b.ToTable("forum_post_report_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Lesson", b =>
@@ -1353,7 +1356,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("ModuleId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.LessonContent", b =>
@@ -1383,7 +1386,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("LessonContents", (string)null);
+                    b.ToTable("LessonContents");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Module", b =>
@@ -1422,14 +1425,14 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("ModuleId");
 
-                    b.ToTable("Modules", (string)null);
+                    b.ToTable("Modules");
 
                     b.HasData(
                         new
                         {
                             ModuleId = 1,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 25, 16, 8, 45, 894, DateTimeKind.Utc).AddTicks(4938),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6282),
                             Description = "This module covers the basics of gender equality, exploring the significance of gender equality in society and the workplace.",
                             PositionInt = 0,
                             Status = 0,
@@ -1439,7 +1442,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 2,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 25, 16, 8, 45, 894, DateTimeKind.Utc).AddTicks(4940),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6317),
                             Description = "In this module, you'll learn about different gender identities, gender expression, and the importance of respecting personal pronouns.",
                             PositionInt = 0,
                             Status = 0,
@@ -1449,7 +1452,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 3,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 25, 16, 8, 45, 894, DateTimeKind.Utc).AddTicks(4967),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6319),
                             Description = "This module discusses how diversity and inclusion can benefit organizations and create a healthier work environment.",
                             PositionInt = 0,
                             Status = 0,
@@ -1459,7 +1462,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 4,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 25, 16, 8, 45, 894, DateTimeKind.Utc).AddTicks(4969),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6321),
                             Description = "Learn about how gender plays a role in global development, examining gender policies and frameworks used worldwide.",
                             PositionInt = 0,
                             Status = 0,
@@ -1469,7 +1472,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 5,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 25, 16, 8, 45, 894, DateTimeKind.Utc).AddTicks(4970),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6322),
                             Description = "This module introduces practical strategies for fostering social inclusion in various settings, from schools to workplaces.",
                             PositionInt = 0,
                             Status = 0,
@@ -1479,7 +1482,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 6,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 25, 16, 8, 45, 894, DateTimeKind.Utc).AddTicks(4972),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6324),
                             Description = "This is the final module summarizing all previous modules, offering an interactive format to test your knowledge and understanding.",
                             PositionInt = 0,
                             Status = 0,
@@ -1489,7 +1492,7 @@ namespace GedsiHub.Migrations
                         {
                             ModuleId = 7,
                             Color = "#000000",
-                            CreatedDate = new DateTime(2024, 11, 25, 16, 8, 45, 894, DateTimeKind.Utc).AddTicks(4974),
+                            CreatedDate = new DateTime(2024, 11, 23, 14, 23, 6, 595, DateTimeKind.Utc).AddTicks(6326),
                             Description = "This module educates about gender-based violence, its impact on individuals, and measures for prevention and support.",
                             PositionInt = 0,
                             Status = 0,
@@ -1524,7 +1527,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("module_activity_tbl", (string)null);
+                    b.ToTable("module_activity_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Notification", b =>
@@ -1563,7 +1566,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.NotificationUser", b =>
@@ -1590,7 +1593,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("NotificationUsers", (string)null);
+                    b.ToTable("NotificationUsers");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.Answer", b =>
@@ -1637,7 +1640,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("QuestionID");
 
-                    b.ToTable("Answers", (string)null);
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.Choice", b =>
@@ -1676,7 +1679,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("QuestionID");
 
-                    b.ToTable("Choices", (string)null);
+                    b.ToTable("Choices");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.Exam", b =>
@@ -1726,7 +1729,7 @@ namespace GedsiHub.Migrations
                     b.HasIndex("ModuleId")
                         .IsUnique();
 
-                    b.ToTable("Exams", (string)null);
+                    b.ToTable("Exams");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.Question", b =>
@@ -1768,7 +1771,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("ExamID");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Quiz.QuizResult", b =>
@@ -1823,7 +1826,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuizResults", (string)null);
+                    b.ToTable("QuizResults");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.Student", b =>
@@ -1865,7 +1868,7 @@ namespace GedsiHub.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("student_tbl", (string)null);
+                    b.ToTable("student_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.UserLessonProgress", b =>
@@ -1914,7 +1917,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("user_login_analytics_tbl", (string)null);
+                    b.ToTable("user_login_analytics_tbl");
                 });
 
             modelBuilder.Entity("GedsiHub.Models.UserProgress", b =>
@@ -1957,7 +1960,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("progress_module_tbl", (string)null);
+                    b.ToTable("progress_module_tbl");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -2126,7 +2129,7 @@ namespace GedsiHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserActivities", (string)null);
+                    b.ToTable("UserActivities");
                 });
 
             modelBuilder.Entity("XApiStatement", b =>
@@ -2205,7 +2208,7 @@ namespace GedsiHub.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("XApiStatements", (string)null);
+                    b.ToTable("XApiStatements");
                 });
 
             modelBuilder.Entity("Course", b =>
@@ -2224,7 +2227,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithOne("Admin")
                         .HasForeignKey("GedsiHub.Models.Admin", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -2254,7 +2257,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithOne("Employee")
                         .HasForeignKey("GedsiHub.Models.Employee", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -2290,7 +2293,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumComments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ForumPost");
@@ -2309,7 +2312,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumCommentReports")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ForumComment");
@@ -2326,7 +2329,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumPosts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Module");
@@ -2364,7 +2367,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithMany("ForumPostReports")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ForumPost");
@@ -2509,7 +2512,7 @@ namespace GedsiHub.Migrations
                     b.HasOne("GedsiHub.Models.ApplicationUser", "User")
                         .WithOne("Student")
                         .HasForeignKey("GedsiHub.Models.Student", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CollegeDepartment");

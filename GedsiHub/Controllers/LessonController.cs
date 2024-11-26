@@ -255,22 +255,45 @@ namespace GedsiHub.Controllers
         // POST: Update User Progress
         // Handles lesson completion and assessment completion
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateUserProgress([FromBody] ProgressUpdateDto dto)
         {
-            if (dto == null || dto.ModuleId <= 0)
+            _logger.LogInformation("UpdateUserProgress called with LessonId={LessonId}, ModuleId={ModuleId}", dto.LessonId, dto.ModuleId);
+
+            if (dto == null || dto.ModuleId <= 0 || dto.LessonId <= 0)
             {
+                _logger.LogWarning("Invalid data received in UpdateUserProgress");
                 return BadRequest("Invalid data.");
             }
 
-            // Retrieve the user's unique identifier
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             if (string.IsNullOrEmpty(userId))
             {
+                _logger.LogWarning("User not found in UpdateUserProgress");
                 return Unauthorized("User not found.");
             }
 
-            // Retrieve or create the UserProgress entry for the module
+            // Check if the lesson is already marked as completed
+            var lessonProgress = await _context.UserLessonProgresses
+                .FirstOrDefaultAsync(ulp => ulp.UserId == userId && ulp.LessonId == dto.LessonId);
+
+            if (lessonProgress == null)
+            {
+                // Mark lesson as completed
+                _context.UserLessonProgresses.Add(new UserLessonProgress
+                {
+                    UserId = userId,
+                    LessonId = dto.LessonId,
+                    CompletedOn = DateTime.UtcNow
+                });
+                _logger.LogInformation("Marked LessonId={LessonId} as completed for UserId={UserId}", dto.LessonId, userId);
+
+                // Force save changes here
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Changes saved to UserLessonProgress.");
+            }
+
+            // Retrieve or create the user's module progress record
             var userProgress = await _context.UserProgresses
                 .FirstOrDefaultAsync(up => up.UserId == userId && up.ModuleId == dto.ModuleId);
 
@@ -282,63 +305,48 @@ namespace GedsiHub.Controllers
                     ModuleId = dto.ModuleId,
                     ProgressPercentage = 0,
                     IsCompleted = false,
-                    CompletedLessonIds = ""
+                    StreakCount = 0
                 };
                 _context.UserProgresses.Add(userProgress);
+                _logger.LogInformation("Created new UserProgress record for UserId={UserId}, ModuleId={ModuleId}", userId, dto.ModuleId);
             }
 
-            // Handle Lesson Completion
-            if (dto.LessonId > 0)
+            // Recalculate progress
+            var completedLessonsCount = await _context.UserLessonProgresses
+                .Include(ulp => ulp.Lesson)
+                .Where(ulp => ulp.UserId == userId && ulp.Lesson.ModuleId == dto.ModuleId)
+                .CountAsync();
+
+            var totalLessonsCount = await _context.Lessons
+                .Where(l => l.ModuleId == dto.ModuleId)
+                .CountAsync();
+
+            userProgress.ProgressPercentage = totalLessonsCount > 0
+                ? Math.Ceiling((decimal)completedLessonsCount / totalLessonsCount * 100)
+                : 0;
+
+            _logger.LogInformation("User {UserId} has completed {CompletedLessonsCount} out of {TotalLessonsCount} lessons. ProgressPercentage: {ProgressPercentage}%", userId, completedLessonsCount, totalLessonsCount, userProgress.ProgressPercentage);
+
+            // Update streak count (only increment if progress increased)
+            if (userProgress.ProgressPercentage > 0)
             {
-                // Parse the CompletedLessonIds and add the new LessonId if not already present
-                var completedLessonIds = userProgress.CompletedLessonIds
-                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(idStr => int.Parse(idStr))
-                    .ToList();
-
-                if (!completedLessonIds.Contains(dto.LessonId))
-                {
-                    completedLessonIds.Add(dto.LessonId);
-                    userProgress.CompletedLessonIds = string.Join(",", completedLessonIds);
-
-                    // Calculate progress percentage based on completed lessons
-                    var totalLessons = await _context.Lessons
-                        .Where(l => l.ModuleId == dto.ModuleId)
-                        .CountAsync();
-
-                    var completedLessons = completedLessonIds.Count;
-                    userProgress.ProgressPercentage = totalLessons > 0
-                        ? Math.Round(((decimal)completedLessons / totalLessons) * 100, 2)
-                        : 0;
-                }
+                userProgress.StreakCount++;
+                _logger.LogInformation("Incremented streak count for UserId={UserId} to {StreakCount}", userId, userProgress.StreakCount);
             }
 
-            // Update User's Streak
-            var today = DateTime.UtcNow.Date;
-            var recentActivity = await _context.UserActivities
-                .Where(ua => ua.UserId == userId)
-                .OrderByDescending(ua => ua.Timestamp)
-                .FirstOrDefaultAsync();
-
-            if (recentActivity == null || recentActivity.Timestamp.Date != today)
+            // Mark module as completed if progress is 100%
+            if (userProgress.ProgressPercentage >= 100)
             {
-                // If there's no activity for today, add a new entry and update the streak
-                _context.UserActivities.Add(new UserActivity
-                {
-                    UserId = userId,
-                    ModuleId = dto.ModuleId,
-                    ActivityType = "streak",
-                    Timestamp = DateTime.UtcNow,
-                    Success = true
-                });
-
-                // Fixed Line
-                userProgress.StreakCount += 1;
+                userProgress.IsCompleted = true;
+                _logger.LogInformation("ModuleId={ModuleId} marked as completed for UserId={UserId}", dto.ModuleId, userId);
             }
 
             await _context.SaveChangesAsync();
-            return Ok();
+            _logger.LogInformation("Changes saved to UserProgress.");
+
+            return Ok(new { userProgress.ProgressPercentage, userProgress.StreakCount });
         }
+
 
         // DTO for Progress Update
         public class ProgressUpdateDto

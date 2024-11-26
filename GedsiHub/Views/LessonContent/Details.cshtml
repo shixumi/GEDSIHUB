@@ -1,4 +1,5 @@
-﻿@model GedsiHub.Models.LessonContent
+﻿@Html.AntiForgeryToken()
+@model GedsiHub.Models.LessonContent
 
 @{
     Layout = "_LayoutApp";
@@ -85,7 +86,7 @@
         @if (User.IsInRole("Student") || User.IsInRole("Employee"))
         {
             <div class="lesson_content_buttons">
-                <button id="nextLessonBtn" class="next-lesson-btn" style="display: none;">Next Lesson</button>
+                <button id="nextLessonBtn" class="next-lesson-btn" style="display: block;">Next Lesson</button>
             </div>
             
         }
@@ -98,45 +99,46 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var videoDuration = 5; // Set to actual video duration in seconds (e.g., 300 for 5 minutes)
             var nextLessonBtn = document.getElementById('nextLessonBtn');
-            var moduleId = @Html.Raw(Json.Serialize(ViewBag.ModuleId));
+            var moduleId = @Model.Lesson.ModuleId;
+            var lessonId = @Model.Lesson.LessonId;
 
             if (nextLessonBtn) {
-                nextLessonBtn.style.display = 'none';
-
-                setTimeout(function () {
-                    nextLessonBtn.style.display = 'block';
-                }, videoDuration * 1000); // Show after video duration
+                nextLessonBtn.style.display = 'block'; // Ensure the button is visible
 
                 nextLessonBtn.addEventListener('click', function () {
-                    fetch('/Lesson/UpdateUserProgress', {
+                    // Get the anti-forgery token
+                    var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                    fetch('@Url.Action("UpdateUserProgress", "Lesson")', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': token
                         },
                         body: JSON.stringify({
-                            lessonId: @Model.Lesson.LessonId, // Ensure LessonId is accessible
-                            moduleId: @Model.Lesson.ModuleId   // Ensure ModuleId is accessible
-                                })
-                    }).then(response => {
-                        if (response.ok) {
-                            alert('Progress updated successfully!');
-                            // Redirect to Module/Details/ModuleId
-                            window.location.href = '@Url.Action("Details", "Module")/' + moduleId;
-                        } else {
-                            // Optionally, parse and display the error message from the server
-                            response.text().then(text => {
-                                console.error('Server Error:', text);
-                                alert('Failed to update progress. Please try again.');
-                            });
-                        }
-                    }).catch(error => {
-                        console.error('Fetch Error:', error);
-                        alert('An error occurred while updating progress. Please try again.');
-                    });
+                            lessonId: lessonId,
+                            moduleId: moduleId
+                        })
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Redirect to Module/Details/ModuleId
+                                window.location.href = '@Url.Action("Details", "Module", new { id = Model.Lesson.ModuleId })';
+                            } else {
+                                response.text().then(text => {
+                                    console.error('Server Error:', text);
+                                    alert('Failed to update progress. Please try again.');
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Fetch Error:', error);
+                            alert('An error occurred while updating progress. Please try again.');
+                        });
                 });
             }
         });
     </script>
 }
+
