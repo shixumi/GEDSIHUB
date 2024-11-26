@@ -84,11 +84,16 @@
                                        class="ColorInput"
                                        type="color"
                                        value="@module.Color"
-                                       data-bs-toggle="tooltip"
-                                       data-bs-placement="bottom"
-                                       data-bs-title="Change Module Color"
+                                       @if (User.IsInRole("Admin"))
+                                       {
+                                           <text>
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="bottom"
+                                               data-bs-title="Change Module Color"
+                                           </text>
+                                       }
                                        onchange="updateColor(@module.ModuleId, this.value)"
-                                @(User.IsInRole("Admin") ? "" : "disabled") />
+                                       @(User.IsInRole("Admin") ? "" : "disabled") />
                             </div>
                         </div>
 
