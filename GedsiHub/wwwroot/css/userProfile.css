@@ -42,8 +42,8 @@
 
 .profile-container {
     background-color: #d9d9d9;
-    width: 7rem;
-    height: 7rem;
+    min-width: 7rem;
+    min-height: 7rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -94,9 +94,6 @@
     border-radius: 30px 0 0 30px;
 }
 
-.role-user-profile, .label-col-1-user-profile, .date-joined-user-profile {
-    
-}
 
 .label-col-1-user-profile {
     font-size: 0.7rem;

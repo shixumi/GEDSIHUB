@@ -35,7 +35,8 @@
     position: absolute;
     margin-left: 307px;
     width: calc(100% - 307px);
-    background: linear-gradient( 120deg, rgba(255, 253, 231, 0.4), rgba(253, 226, 228, 0.4), rgba(226, 236, 254, 0.4), rgba(243, 250, 230, 0.4) );
+    background: linear-gradient( 120deg, rgba(243, 250, 230, 0.4), rgba(226, 236, 254, 0.4), rgba(253, 226, 228, 0.4), rgba(255, 253, 231, 0.4));
+    box-shadow: 0 0.1625rem 0.8125rem rgba(0, 0, 0, 0.1);
     margin-top: -40px;
     border-top-left-radius: 40px;
     border-color: #464040;

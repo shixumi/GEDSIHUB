@@ -290,7 +290,7 @@
 
                                     <!-- Actions (Edit/Delete/Publish/Unpublish) -->
                                     <td class="module-content text-start action-buttons">
-                                        <a id="list-editModuleButton" asp-action="Edit" asp-route-id="@module.ModuleId">
+                                        <a id="list-editModuleButton" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Module" asp-action="Edit" asp-route-id="@module.ModuleId">
                                             <img src="~/images/Edit.png" /> Edit
                                         </a>
 

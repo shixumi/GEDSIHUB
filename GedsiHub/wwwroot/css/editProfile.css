@@ -215,10 +215,15 @@
     border-radius: 2rem;
     cursor: pointer;
     font-size: 0.9rem;
+    transition: all 0.2s ease;
 }
 
     .edit-btn:hover {
-        background-color: #218838;
+        background-color: #880000;
+    }
+
+    .edit-btn:active {
+        transform: scale(0.95); 
     }
 
 #editProfilePictureInput {

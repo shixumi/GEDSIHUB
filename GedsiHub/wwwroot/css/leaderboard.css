@@ -172,17 +172,11 @@
         position: absolute;
         bottom: -5px;
         left: 0;
-        right: 0;
         height: 5px;
-   
+        background-color: #7C0A02;
         border-radius: 10px;
         width: 100%;
         transition: width 0.3s ease-in-out, background-color 0.3s ease;
-    }
-
-    .leaderboard-sidebar.active {
-        
-        transition: color 0.3s ease;
     }
 
     /* Default state of the underline when the button is not active */
@@ -191,12 +185,12 @@
         position: absolute;
         bottom: -5px;
         left: 0;
-        right: 0;
         height: 5px;
         background-color: transparent;
-        width: 0%;
+        width: 0;
         transition: width 0.3s ease-in-out, background-color 0.3s ease;
     }
+
 
 .inside-container-leaderboard {
     background: white;
