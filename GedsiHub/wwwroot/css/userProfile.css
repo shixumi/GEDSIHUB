@@ -53,7 +53,7 @@
 }
 
     .profile-container img {
-        width: 6.5rem;
+        width: 7rem;
     }
 
 .camera-container {
@@ -152,6 +152,11 @@
     margin-top: 1.9rem;
 }
 
+.profile-image-circle {
+    border-radius: 80%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image fills the circle */
+    overflow: hidden;
+}
     .user-profile-table td, .user-profile-table th {
         padding: 1rem 2rem;
     }
