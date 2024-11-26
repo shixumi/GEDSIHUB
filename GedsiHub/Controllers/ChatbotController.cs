@@ -36,8 +36,13 @@ namespace GedsiHub.Controllers
         [HttpGet("api/chatbot/modules")]
         public async Task<IActionResult> GetModules()
         {
+            // Determine if the user is an admin
+            bool isAdmin = User.IsInRole("Admin");
+
+            // Fetch modules based on user's role
             var modules = await _context.Modules
-                .Select(m => new { m.Title, m.Description })  // Select both title and description
+                .Where(m => isAdmin || m.Status == ModuleStatus.Published) // Show all modules to admin, only published to others
+                .Select(m => new { m.Title, m.Description }) // Select necessary fields
                 .ToListAsync();
 
             return Ok(new { modules });
