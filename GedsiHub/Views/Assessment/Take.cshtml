@@ -150,31 +150,55 @@
         const totalQuestions = @Model.questions.Count; // Make sure this is correctly embedded in the view
 
         function showQuestion(index) {
-            console.log("Navigating to question:", index);
+            console.log("Navigating to question index:", index);
 
-            // Hide current question
-            if (document.getElementById(`question-${currentQuestion}`)) {
-                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+            // Hide the current question
+            const currentElement = document.getElementById(`question-${currentQuestion}`);
+            if (currentElement) {
+                console.log(`Hiding question-${currentQuestion}`);
+                currentElement.style.display = "none";
+            } else {
+                console.error(`Current question element not found: question-${currentQuestion}`);
             }
 
-            // Show new question
-            if (document.getElementById(`question-${index}`)) {
-                document.getElementById(`question-${index}`).style.display = 'block';
+            // Show the new question
+            const nextElement = document.getElementById(`question-${index}`);
+            if (nextElement) {
+                console.log(`Showing question-${index}`);
+                nextElement.style.display = "block";
+            } else {
+                console.error(`Next question element not found: question-${index}`);
             }
 
             currentQuestion = index;
 
-            // Toggle visibility of navigation buttons
-            document.getElementById('prevButton').style.display = currentQuestion > 0 ? 'inline' : 'none';
-            document.getElementById('submitButton').style.display = currentQuestion === totalQuestions - 1 ? 'inline' : 'none';
-            document.getElementById('nextButton').style.display = currentQuestion < totalQuestions - 1 ? 'inline' : 'none';
+            // Update navigation buttons
+            document.getElementById("prevButton").style.display = currentQuestion > 0 ? "inline" : "none";
+            document.getElementById("nextButton").style.display = currentQuestion < totalQuestions - 1 ? "inline" : "none";
+            document.getElementById("submitButton").style.display = currentQuestion === totalQuestions - 1 ? "inline" : "none";
         }
 
+
+
         function showNext() {
+            const options = document.querySelectorAll(`#question-${currentQuestion} input[type="radio"]`);
+            const isSelected = Array.from(options).some(option => option.checked);
+
+            console.log("Options for currentQuestion:", options); // Verify options are found
+            console.log("Is any option selected?", isSelected); // Verify selection status
+
+            if (!isSelected) {
+                alert("Please select an answer before moving to the next question.");
+                return; // Stop execution if nothing is selected
+            }
+
+            console.log(`Proceeding to the next question: currentQuestion=${currentQuestion}, totalQuestions=${totalQuestions}`);
+
             if (currentQuestion < totalQuestions - 1) {
                 showQuestion(currentQuestion + 1);
             }
         }
+
 
         function showPrevious() {
             if (currentQuestion > 0) {
@@ -186,10 +210,8 @@
 
         // Add event listeners to radio buttons to highlight selected option
         document.addEventListener("DOMContentLoaded", function () {
-            // Select all radio button groups
             const optionContainers = document.querySelectorAll(".option-container");
 
-            // Add event listener for each radio button group
             optionContainers.forEach(container => {
                 const radioButton = container.querySelector("input[type='radio']");
                 const label = container.querySelector(".option-text");
@@ -197,28 +219,18 @@
                 radioButton.addEventListener("change", function () {
                     const questionName = this.name;
 
-                    // Find all radio buttons in the same group
                     const groupRadios = document.querySelectorAll(`input[name="${questionName}"]`);
 
-                    // Remove 'is-selected' class from all labels in the group
                     groupRadios.forEach(radio => {
                         const groupLabel = radio.closest(".option-container").querySelector(".option-text");
                         groupLabel.classList.remove("is-selected");
                     });
 
-                    // Add 'is-selected' class to the current label
                     if (this.checked) {
                         label.classList.add("is-selected");
-                        console.log(`Adding 'is-selected' to label:`, label);
                     }
                 });
-
             });
         });
-
-
-
-
-
     </script>
 }

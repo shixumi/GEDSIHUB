@@ -71,7 +71,7 @@ namespace GedsiHub.Controllers
                 .DefaultIfEmpty(0)
                 .Max();
 
-            // Prepare the model
+            // Prepare the model with unlocking logic
             var model = modules.Select(module => new ModuleProgressViewModel
             {
                 Module = module,
@@ -90,7 +90,6 @@ namespace GedsiHub.Controllers
         // GET: Display detailed information about a module including its lessons and assessments
         public async Task<IActionResult> Details(int id)
         {
-            // Fetch the module and include its lessons and assessment
             var module = await _context.Modules
                 .Include(m => m.Lessons)
                 .Include(m => m.Exam)
@@ -101,55 +100,75 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
-            // Check if the module is unpublished and the user is not an admin
-            if (module.Status == ModuleStatus.Unpublished && !IsUserAdmin())
-            {
-                return NotFound();
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = IsUserAdmin();
 
-            // Ensure that Lessons list is initialized, even if empty
-            if (module.Lessons == null)
+            // Check if module is unlocked for the user
+            if (!isAdmin)
             {
-                module.Lessons = new List<Lesson>();
-            }
-
-            // Filter lessons based on their publication status for non-admin users
-            if (!IsUserAdmin())
-            {
-                module.Lessons = module.Lessons
-                    .Where(l => l.IsPublished)
-                    .ToList();
-            }
-
-            // Check if each lesson has content
-            foreach (var lesson in module.Lessons)
-            {
-                lesson.HasContent = await _context.LessonContents
-                    .AnyAsync(lc => lc.LessonId == lesson.LessonId);
-            }
-
-            // Ensure user is authorized to view this module based on lock status
-            if (!IsUserAdmin())
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                // Fetch user's highest completed module position
+                // Fetch user progress to determine access
                 var userProgresses = await _context.UserProgresses
                     .Where(up => up.UserId == userId)
                     .Include(up => up.Module)
                     .ToListAsync();
 
+                // Determine the highest completed module position
                 var highestCompletedPosition = userProgresses
                     .Where(up => up.IsCompleted)
-                    .Select(up => up.Module?.PositionInt ?? 0)
+                    .Select(up => up.Module.PositionInt)
                     .DefaultIfEmpty(0)
                     .Max();
 
+                // Restrict access if the module's position exceeds the user's access level
                 if (module.PositionInt > highestCompletedPosition + 1)
                 {
-                    return RedirectToAction("Index"); // Redirect to module list
+                    TempData["Error"] = "This module is locked. Complete previous modules to access it.";
+                    return RedirectToAction("Index");
                 }
             }
+
+            var lessonStatuses = new Dictionary<int, bool>();
+            bool areAllLessonsCompleted = false;
+
+            if (!isAdmin)
+            {
+                // Fetch completed lessons for this module
+                var completedLessons = await _context.UserLessonProgresses
+                    .Where(ulp => ulp.UserId == userId && ulp.Lesson.ModuleId == id)
+                    .Select(ulp => ulp.LessonId)
+                    .ToListAsync();
+
+                bool previousLessonCompleted = true;
+                foreach (var lesson in module.Lessons.OrderBy(l => l.PositionInt))
+                {
+                    bool isAccessible = previousLessonCompleted;
+
+                    if (lesson.IsPublished)
+                    {
+                        lessonStatuses[lesson.LessonId] = isAccessible;
+                        previousLessonCompleted = isAccessible && completedLessons.Contains(lesson.LessonId);
+                    }
+                    else
+                    {
+                        lessonStatuses[lesson.LessonId] = false;
+                    }
+                }
+
+                areAllLessonsCompleted = module.Lessons
+                    .Where(l => l.IsPublished)
+                    .All(l => completedLessons.Contains(l.LessonId));
+            }
+            else
+            {
+                areAllLessonsCompleted = true;
+                foreach (var lesson in module.Lessons)
+                {
+                    lessonStatuses[lesson.LessonId] = true;
+                }
+            }
+
+            ViewData["LessonStatuses"] = lessonStatuses;
+            ViewData["AreAllLessonsCompleted"] = areAllLessonsCompleted;
 
             return View(module);
         }
@@ -172,24 +191,26 @@ namespace GedsiHub.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // If ModelState is invalid, return the view with the errors
                 return View(module);
             }
 
-            // If valid, proceed with saving the module
             try
             {
+                // Set creation and modification timestamps
                 module.CreatedDate = DateTime.UtcNow;
                 module.LastModifiedDate = DateTime.UtcNow;
 
+                // Determine the next available PositionInt
+                var lastPosition = await _context.Modules
+                    .OrderByDescending(m => m.PositionInt)
+                    .Select(m => m.PositionInt)
+                    .FirstOrDefaultAsync();
+
+                module.PositionInt = lastPosition + 1; // Assign the next position
+
                 _context.Add(module);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));  // Redirect to index after success
-            }
-            catch (DbUpdateException ex)
-            {
-                _logger.LogError(ex, "Database error while creating module.");
-                ModelState.AddModelError("", "A database error occurred. Please try again.");
+                return RedirectToAction(nameof(Index)); // Redirect to index after success
             }
             catch (Exception ex)
             {
@@ -197,7 +218,7 @@ namespace GedsiHub.Controllers
                 ModelState.AddModelError("", "An error occurred while creating the module.");
             }
 
-            return View(module);  // Return the view if an exception occurs
+            return View(module); // Return the view if an exception occurs
         }
 
         // ******************* MODULE EDITING *******************
@@ -224,7 +245,8 @@ namespace GedsiHub.Controllers
         // POST: Handle submission of module editing with error handling
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ModuleId,Title,Description,Status,Color,CreatedDate,LastModifiedDate")] Module module)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, [Bind("ModuleId,Title,Description,Status,Color,PositionInt")] Module module)
         {
             if (id != module.ModuleId)
             {
@@ -248,11 +270,6 @@ namespace GedsiHub.Controllers
                     _logger.LogError("Concurrency error while editing module with ID {ModuleId}", module.ModuleId);
                     ModelState.AddModelError("", "Concurrency conflict occurred. Please try again.");
                 }
-                catch (DbUpdateException ex)
-                {
-                    _logger.LogError(ex, "Database error while editing module");
-                    ModelState.AddModelError("", "Database error occurred while updating. Please try again.");
-                }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error while editing module");
@@ -262,6 +279,7 @@ namespace GedsiHub.Controllers
 
             return View(module);
         }
+
 
         // ******************* MODULE DELETION *******************
 

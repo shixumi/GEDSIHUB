@@ -1,4 +1,4 @@
-﻿    @model GedsiHub.Models.Lesson
+﻿@model GedsiHub.Models.Lesson
 
 @{
     Layout = "_LayoutApp";
@@ -15,7 +15,7 @@
     <!-- Form for editing the lesson -->
     <form asp-action="Edit">
 
-        <!-- Hidden field for moduleId -->
+        <!-- Hidden field for LessonId -->
         <input type="hidden" asp-for="LessonId" />
 
         <!-- Hidden field for ModuleId -->
@@ -58,6 +58,19 @@
                         <span asp-validation-for="Overview" class="text-danger"></span>
                     </div>
                     <span class="d-flex mt-2" style="color: #dd3025">Overview should not exceed 250 characters.</span>
+                </div>
+            </div>
+
+            <!-- Lesson Position -->
+            <div class="row mt-3">
+                <div class="col-md-6 col-xl-5 col-xxl-4">
+                    <!-- Position Label -->
+                    <h1 style="color: #464040;font-size: 1.5625rem;">Position</h1>
+                    <!-- Position Input -->
+                    <div class="form-group">
+                        <input asp-for="PositionInt" class="form-control InputBox" placeholder="Enter Lesson Position" required />
+                        <span asp-validation-for="PositionInt" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
 

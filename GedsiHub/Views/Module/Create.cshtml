@@ -13,6 +13,7 @@
         <!-- Display validation summary for model binding errors -->
         <div asp-validation-summary="All" class="text-danger"></div>
 
+
         <div class="container AddModuleDataContainer" id="moduleCards_container">
             <div class="row">
                 <div class="col-md-12">
@@ -43,6 +44,8 @@
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
             </div>
+
+            <input type="hidden" asp-for="PositionInt" />
 
 
             <!-- Color Picker -->

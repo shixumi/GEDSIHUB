@@ -58,9 +58,19 @@
         </div>
     }
 
+    @{
+        var lessonStatuses = ViewData["LessonStatuses"] as Dictionary<int, bool> ?? new Dictionary<int, bool>();
+    }
+
     <!-- Iterate through each lesson and display lesson details -->
-    @foreach (var lesson in Model.Lessons)
+    @foreach (var lesson in Model.Lessons.OrderBy(l => l.PositionInt))
     {
+        // Ensure unpublished lessons are visible only to Admins
+        if (!lesson.IsPublished && !User.IsInRole("Admin"))
+        {
+            continue; // Skip unpublished lessons for non-admin users
+        }
+
         <div id="edit_new_lesson_container" class="container d-xxl-flex EditLessonContainer">
             <div class="lessonNo_title_container">
                 <span>Lesson</span>
@@ -78,6 +88,7 @@
             <div class="button_container @(User.IsInRole("Admin") ? "" : "justify-content-end")">
                 @if (User.IsInRole("Admin"))
                 {
+                    <!-- Admin-Specific Buttons -->
                     <!-- Delete Lesson Button -->
                     <a class="lesson-ftr-btn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@lesson.LessonId">
                         <div id="DeleteLesson">
@@ -112,38 +123,31 @@
                             </div>
                         </button>
                     </form>
-                }
 
-                <!-- Go to lesson button -->
-                @if (lesson.HasContent)
-                {
-                    <!-- Active button without tooltip -->
-                    <a asp-action="GoToLesson"
-                       asp-controller="LessonContent"
-                       asp-route-lessonId="@lesson.LessonId"
-                       asp-route-moduleId="@Model.ModuleId"
-                       class="btn btn-primary go_to_button">
+                    <!-- Direct Admin Access to Lesson -->
+                    <a asp-action="GoToLesson" asp-controller="LessonContent" asp-route-lessonId="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
                         Go To Lesson
                     </a>
                 }
                 else
                 {
-                    @if (User.IsInRole("Admin"))
+                    <!-- User Buttons with Lesson Lock Logic -->
+                    @if (lessonStatuses.ContainsKey(lesson.LessonId) && lessonStatuses[lesson.LessonId])
                     {
+                        <!-- Lesson is accessible -->
                         <a asp-action="GoToLesson" asp-controller="LessonContent" asp-route-lessonId="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">
                             Go To Lesson
                         </a>
                     }
                     else
                     {
-                        <!-- Disabled button with tooltip -->
-                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Content is not available yet">
+                        <!-- Lesson is locked -->
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Complete the previous lesson to unlock this one.">
                             <button class="btn btn-primary go_to_button" disabled>
-                                Go To Lesson
+                                Locked
                             </button>
                         </span>
                     }
-
                 }
             </div>
         </div>
@@ -190,61 +194,48 @@
         }
         else
         {
-            <!-- Safeguard: Ensure Model.Exam is not null before accessing its properties -->
-            @if (Model.Exam != null)
-            {
-                <!-- Assessment Card Preview -->
-                <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
-                    <div class="lessonNo_title_container">
-                        <span id="AssessmentTitleDisplay">@Model.Exam?.Name</span>
-                        <div class="lesson_con_linebreak"></div>
-                    </div>
-                    <span id="assessmentOverviewDisplay" class="lesson_brief_overview"></span>
-
-                    <!-- Assessment footer -->
-                    <div class="button_container @(User.IsInRole("Admin") ? "" : "justify-content-end")">
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <span class="d-flex gap-5">
-                                <!-- Delete Assessment Button -->
-                                <div id="DeleteAssessment">
-                                    <a data-bs-toggle="modal" data-bs-target="#assessmentConfirmDeleteModal-@Model.Exam.ExamID">
-                                        <img id="DeleteAssessment" class="Delete" src="~/images/Delete.png" />
-                                        <span>Delete</span>
-                                    </a>
-                                </div>
-
-                                <!-- Edit Assessment Button -->
-                                <a asp-controller="Assessment" asp-action="CreateOrEdit" asp-route-moduleId="@Model.ModuleId" asp-route-examId="@Model.Exam.ExamID">
-                                    <div id="EditAssessment">
-                                        <img class="Edit" src="~/images/Edit.png" />
-                                        <span>Edit</span>
-                                    </div>
+            <div id="edit_assessment_container" class="container d-xxl-flex EditLessonContainer">
+                <div class="lessonNo_title_container">
+                    <span id="AssessmentTitleDisplay">@Model.Exam?.Name</span>
+                    <div class="lesson_con_linebreak"></div>
+                </div>
+                <div class="button_container @(User.IsInRole("Admin") ? "" : "justify-content-end")">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span class="d-flex gap-5">
+                            <!-- Admin Buttons -->
+                            <div id="DeleteAssessment">
+                                <a data-bs-toggle="modal" data-bs-target="#assessmentConfirmDeleteModal-@Model.Exam.ExamID">
+                                    <img id="DeleteAssessment" class="Delete" src="~/images/Delete.png" />
+                                    <span>Delete</span>
                                 </a>
-                            </span>
+                            </div>
 
-                        <!-- Temporary removed -->
-                        <!-- Toggle button for publish/unpublish assessment NO BACKEND -->
-                        @*
-                        <div id="toggleButtonPublishUnpublishAssessment" class="d-xxl-flex">
-                            <div id="publishAssessment" class="toggle-content">
-                                <img class="PublishIcon" src="~/images/Publish.png" />
-                                <span>Publish</span>
-                            </div>
-                            <div id="unpublishAssessment" class="toggle-content">
-                                <img class="PublishIcon" src="~/images/Unpublish.png" />
-                                <span>Unpublish</span>
-                            </div>
-                        </div>
-                        *@
+                            <a asp-controller="Assessment" asp-action="CreateOrEdit" asp-route-moduleId="@Model.ModuleId" asp-route-examId="@Model.Exam.ExamID">
+                                <div id="EditAssessment">
+                                    <img class="Edit" src="~/images/Edit.png" />
+                                    <span>Edit</span>
+                                </div>
+                            </a>
+                        </span>
                     }
-                        <!-- Go To Assessment Button -->
-                        <a asp-controller="Assessment" asp-action="Take" asp-route-id="@Model.Exam.ExamID" class="btn btn-primary go_to_button">
+                    <!-- Go To Assessment Button -->
+                    @if (ViewData["AreAllLessonsCompleted"] is bool areAllLessonsCompleted && areAllLessonsCompleted)
+                    {
+                        <a asp-controller="Assessment" asp-action="Take" asp-route-id="@Model.Exam?.ExamID" class="btn btn-primary go_to_button">
                             Go To Assessment
                         </a>
-                    </div>
+                    }
+                    else
+                    {
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Complete all lessons before taking the assessment.">
+                            <button class="btn btn-primary go_to_button" disabled>
+                                Go To Assessment
+                            </button>
+                        </span>
+                    }
                 </div>
-            }
+            </div>
         }
     </div>
 

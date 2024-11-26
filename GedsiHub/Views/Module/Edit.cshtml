@@ -46,6 +46,16 @@
                 </div>
             </div>
 
+            @* Position Input *@
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="color: #464040; font-size: 1.5625rem;">Position</h1>
+                    <input asp-for="PositionInt" class="form-control InputBox" placeholder="Enter Module Position" required />
+                    <span asp-validation-for="PositionInt" class="text-danger"></span>
+                </div>
+            </div>
+
+
             <!-- Color Picker -->
             <div class="row">
                 <div class="col-md-12">

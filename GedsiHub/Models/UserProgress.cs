@@ -35,5 +35,9 @@ namespace GedsiHub.Models
 
         [Column("is_completed")]
         public bool IsCompleted { get; set; }
+
+        public bool IsAssessmentCompleted { get; set; } = false;
+
+        public DateTime? LastUpdated { get; set; }
     }
 }

@@ -5,6 +5,13 @@
     ViewData["Title"] = "Module";
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+    </div>
+}
+
 <!-- List of Modules Page -->
 <div>
     <!-- Module Page Header -->
@@ -74,7 +81,7 @@
                 @foreach (var module in Model)
                 {
                     <!-- Module Card for Grid View -->
-                    <div class="module_card" id="moduleCard-@module.ModuleId" style="padding-right: 2.1rem; padding-left: 2.1rem;">
+                    <div class="module_card @(module.IsUnlocked ? "" : "locked-module")" id="moduleCard-@module.ModuleId" style="padding-right: 2.1rem; padding-left: 2.1rem;">
                         <div class="moduleIcon_container" style="color: rgb(33, 37, 41); margin-left: 0px;">
                             <img class="ModuleTempIcon" src="~/images/GADO_Logo_white.png" />
 
@@ -84,23 +91,29 @@
                                        class="ColorInput"
                                        type="color"
                                        value="@module.Color"
-                                       @if (User.IsInRole("Admin"))
-                                       {
-                                           <text>
-                                               data-bs-toggle="tooltip"
-                                               data-bs-placement="bottom"
-                                               data-bs-title="Change Module Color"
-                                           </text>
-                                       }
-                                       onchange="updateColor(@module.ModuleId, this.value)"
-                                       @(User.IsInRole("Admin") ? "" : "disabled") />
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <text>
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom"
+                                        data-bs-title="Change Module Color"
+                                    </text>
+                                }
+                                onchange="updateColor(@module.ModuleId, this.value)"
+                                @(User.IsInRole("Admin") ? "" : "disabled") />
                             </div>
                         </div>
 
                         <!-- Module Title -->
-                        <a asp-action="Details" asp-route-id="@module.ModuleId">
+                        <a asp-action="Details" asp-route-id="@module.ModuleId" class="module-link @(module.IsUnlocked ? "" : "disabled-link")">
                             <span id="ModuleTitle-@module.ModuleId" class="fw-bolder ModuleTitle">@module.Title</span>
                         </a>
+
+                        <!-- Locked/Unlocked Indicator -->
+                        @if (!module.IsUnlocked)
+                        {
+                            <span class="locked-badge" title="Complete the previous module to unlock this one.">Locked</span>
+                        }
 
                         <!-- Number of Lesson Container -->
                         <div class="NumberOfLessonsContainer">
@@ -265,9 +278,13 @@
                             <tr class="module-table-rows">
                                 <!-- Module Title -->
                                 <td class="module-content text-start">
-                                    <a asp-action="Details" asp-route-id="@module.ModuleId" class="module-title-link text-decoration-none">
+                                    <a asp-action="Details" asp-route-id="@module.ModuleId" class="module-title-link text-decoration-none @(module.IsUnlocked ? "" : "disabled-link")">
                                         @module.Title
                                     </a>
+                                    @if (!module.IsUnlocked)
+                                    {
+                                        <span class="locked-badge text-danger ms-2">Locked</span>
+                                    }
                                 </td>
 
                                 <!-- Number of Lessons -->

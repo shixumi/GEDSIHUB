@@ -329,40 +329,21 @@ namespace GedsiHub.Services
         // User Dashboard
         public async Task<UserDashboardViewModel> GetUserDashboardAsync(string userId)
         {
-            // Fetch completed modules using UserProgress
             var completedModules = await _context.UserProgresses
                 .Where(up => up.UserId == userId && up.IsCompleted)
                 .Select(up => up.ModuleId)
                 .Distinct()
                 .ToListAsync();
 
-            // Count total published modules
             var totalModules = await _context.Modules
                 .Where(m => m.Status == ModuleStatus.Published)
                 .CountAsync();
 
-            // Count modules to do (published and not completed)
             var modulesToDoCount = totalModules - completedModules.Count;
 
-            // Calculate streak
-            var recentActivities = await _context.UserActivities
-                .Where(ua => ua.UserId == userId)
-                .OrderByDescending(ua => ua.Timestamp)
-                .ToListAsync();
-
-            int streak = 0;
-            DateTime today = DateTime.UtcNow.Date;
-            foreach (var activity in recentActivities)
-            {
-                if (activity.Timestamp.Date == today.AddDays(-streak))
-                {
-                    streak++;
-                }
-                else
-                {
-                    break;
-                }
-            }
+            var streak = await _context.UserProgresses
+                .Where(up => up.UserId == userId)
+                .SumAsync(up => up.StreakCount);
 
             return new UserDashboardViewModel
             {
@@ -372,6 +353,7 @@ namespace GedsiHub.Services
                 CurrentStreak = streak
             };
         }
+
 
         public async Task<CorrelationDto> GetGenderPerformanceCorrelationAsync()
         {

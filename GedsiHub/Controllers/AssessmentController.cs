@@ -286,6 +286,22 @@ namespace GedsiHub.Controllers
                 return NotFound();
             }
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get the module's lessons
+            var moduleLessons = await _context.Lessons.Where(l => l.ModuleId == exam.ModuleId).ToListAsync();
+
+            // Check user progress
+            var completedLessons = await _context.UserLessonProgresses
+                .Where(up => up.UserId == userId && moduleLessons.Select(ml => ml.LessonId).Contains(up.LessonId))
+                .ToListAsync();
+
+            if (completedLessons.Count < moduleLessons.Count)
+            {
+                TempData["ErrorMessage"] = "You must complete all lessons in this module before attempting the assessment.";
+                return RedirectToAction("Details", "Module", new { id = exam.ModuleId });
+            }
+
             // Fetch all questions for the exam
             var allQuestions = await _questionService.GetQuestionsByExamId(exam.ExamID);
 
@@ -318,7 +334,6 @@ namespace GedsiHub.Controllers
                               }).ToList()
                 }).ToList()
             };
-
 
             return View(qna);
         }
@@ -412,17 +427,39 @@ namespace GedsiHub.Controllers
                 {
                     UserId = userId,
                     ModuleId = moduleId,
-                    ProgressPercentage = 100,
-                    IsCompleted = true,
-                    StreakCount = 1, // Initialize as needed
-                    CompletedLessonIds = "" // Initialize as needed
+                    IsAssessmentCompleted = true,
+                    ProgressPercentage = 0,
+                    IsCompleted = false,
+                    StreakCount = 0
                 };
                 _context.UserProgresses.Add(userProgress);
             }
             else
             {
+                userProgress.IsAssessmentCompleted = true;
+            }
+
+            // Recalculate progress
+            var totalLessonsCount = await _context.Lessons
+                .Where(l => l.ModuleId == moduleId)
+                .CountAsync();
+
+            var totalItemsCount = totalLessonsCount + 1; // Include assessment
+            var completedLessonsCount = await _context.UserLessonProgresses
+                .Include(ulp => ulp.Lesson)
+                .Where(ulp => ulp.UserId == userId && ulp.Lesson.ModuleId == moduleId)
+                .CountAsync();
+
+            var completedItemsCount = completedLessonsCount + 1; // Assessment completed
+
+            userProgress.ProgressPercentage = totalItemsCount > 0
+                ? Math.Ceiling((decimal)completedItemsCount / totalItemsCount * 100)
+                : 0;
+
+            // Mark module as completed if progress is 100%
+            if (userProgress.ProgressPercentage >= 100)
+            {
                 userProgress.IsCompleted = true;
-                userProgress.ProgressPercentage = 100;
             }
 
             await _context.SaveChangesAsync();
