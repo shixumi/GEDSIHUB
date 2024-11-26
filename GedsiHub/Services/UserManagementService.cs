@@ -170,47 +170,49 @@ public class UserManagementService : IUserManagementService
 
             _logger.LogInformation("Deleting user with ID: {UserId}", userId);
 
-            // Step 1: Handle dependent entities
-            // Anonymize or delete forum comments
-            _logger.LogInformation("Anonymizing forum comments for user with ID: {UserId}", userId);
-            var forumComments = await _context.ForumComments.Where(c => c.UserId == userId).ToListAsync();
-            if (forumComments.Any())
+            // Step 1: Nullify UserProgress
+            _logger.LogInformation("Nullifying user progress for user with ID: {UserId}", userId);
+            var userProgresses = await _context.UserProgresses.Where(up => up.UserId == userId).ToListAsync();
+            foreach (var progress in userProgresses)
             {
-                foreach (var comment in forumComments)
-                {
-                    comment.UserId = AnonymousUserId;
-                }
-                _context.ForumComments.UpdateRange(forumComments);
+                progress.UserId = null; // Nullify the user ID
             }
+            _context.UserProgresses.UpdateRange(userProgresses);
 
-            // Anonymize or delete forum posts
-            _logger.LogInformation("Anonymizing forum posts for user with ID: {UserId}", userId);
-            var forumPosts = await _context.ForumPosts.Where(p => p.UserId == userId).ToListAsync();
-            if (forumPosts.Any())
+            // Step 2: Anonymize ForumPosts and ForumComments
+            _logger.LogInformation("Anonymizing forum posts and comments for user with ID: {UserId}", userId);
+            var forumPosts = await _context.ForumPosts.Where(fp => fp.UserId == userId).ToListAsync();
+            foreach (var post in forumPosts)
             {
-                foreach (var post in forumPosts)
-                {
-                    post.UserId = AnonymousUserId;
-                }
-                _context.ForumPosts.UpdateRange(forumPosts);
+                post.UserId = AnonymousUserId;
             }
+            _context.ForumPosts.UpdateRange(forumPosts);
 
-            // Step 2: Delete related reports
-            _logger.LogInformation("Deleting related reports for user with ID: {UserId}", userId);
-            var commentReports = await _context.ForumCommentReports.Where(cr => cr.UserId == userId).ToListAsync();
-            if (commentReports.Any())
+            var forumComments = await _context.ForumComments.Where(fc => fc.UserId == userId).ToListAsync();
+            foreach (var comment in forumComments)
             {
-                _context.ForumCommentReports.RemoveRange(commentReports);
+                comment.UserId = AnonymousUserId;
             }
+            _context.ForumComments.UpdateRange(forumComments);
 
+            // Step 3: Anonymize ForumPostReports and ForumCommentReports
+            _logger.LogInformation("Anonymizing forum post and comment reports for user with ID: {UserId}", userId);
             var postReports = await _context.ForumPostReports.Where(pr => pr.UserId == userId).ToListAsync();
-            if (postReports.Any())
+            foreach (var report in postReports)
             {
-                _context.ForumPostReports.RemoveRange(postReports);
+                report.UserId = AnonymousUserId;
             }
+            _context.ForumPostReports.UpdateRange(postReports);
 
-            // Step 3: Delete associated student or employee records
-            _logger.LogInformation("Deleting student and employee records for user with ID: {UserId}", userId);
+            var commentReports = await _context.ForumCommentReports.Where(cr => cr.UserId == userId).ToListAsync();
+            foreach (var report in commentReports)
+            {
+                report.UserId = AnonymousUserId;
+            }
+            _context.ForumCommentReports.UpdateRange(commentReports);
+
+            // Step 4: Remove Student and Employee Records
+            _logger.LogInformation("Removing student and employee records for user with ID: {UserId}", userId);
             var studentRecord = await _context.Students.SingleOrDefaultAsync(s => s.UserId == userId);
             if (studentRecord != null)
             {
@@ -223,8 +225,13 @@ public class UserManagementService : IUserManagementService
                 _context.Employees.Remove(employeeRecord);
             }
 
-            // Step 4: Delete activity logs
-            _logger.LogInformation("Deleting activity logs for user with ID: {UserId}", userId);
+            // Step 5: Remove Enrollment Records
+            _logger.LogInformation("Removing enrollment records for user with ID: {UserId}", userId);
+            var enrollments = await _context.Enrollments.Where(e => e.UserId == userId).ToListAsync();
+            _context.Enrollments.RemoveRange(enrollments);
+
+            // Step 6: Remove Activity Logs
+            _logger.LogInformation("Removing activity logs for user with ID: {UserId}", userId);
             var activityLogs = await _context.ActivityLogs.Where(log => log.AdminUser == user.UserName).ToListAsync();
             if (activityLogs.Any())
             {
@@ -234,7 +241,7 @@ public class UserManagementService : IUserManagementService
             // Save changes to the database
             await _context.SaveChangesAsync();
 
-            // Step 5: Delete the user
+            // Step 7: Delete the user
             _logger.LogInformation("Removing user from the database with ID: {UserId}", userId);
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
@@ -244,7 +251,7 @@ public class UserManagementService : IUserManagementService
                 return false;
             }
 
-            // Step 6: Log the deletion action
+            // Step 8: Log the deletion action
             _logger.LogInformation("Logging the deletion action for user with ID: {UserId}", userId);
             var log = new ActivityLog
             {
