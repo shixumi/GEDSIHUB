@@ -12,6 +12,9 @@ namespace GedsiHub.ViewModels
         public string UserId { get; set; }
         public string Flair { get; set; }
         public string ModuleTitle { get; set; }
+        public int LikesCount { get; set; }
+        public bool HasLiked { get; set; }
+
 
     }
 }
