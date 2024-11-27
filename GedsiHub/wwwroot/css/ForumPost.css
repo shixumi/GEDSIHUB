@@ -662,11 +662,54 @@ body {
 
 
     .select-flair {
-        overflow: hidden; 
-        max-width: 100%; 
+        overflow: hidden;
+        max-width: 100%;
         box-sizing: border-box;
     }
 
     .form-check-flair {
         padding-left: 1.5rem !important;
+    }
+
+    /* Default Neutral Color */
+    .blended-eye-pleasing-rainbow {
+        color: #464040; /* Neutral gray for inactive state */
+        transition: color 0.3s ease, background 0.3s ease; /* Smooth transition for color and gradient */
+    }
+
+    /* Active State with Vibrant Gradient */
+    .blended-eye-pleasing-rainbow.active {
+        background: linear-gradient(180deg, 
+            #FF6B6B 0%,   /* Warm Red */
+            #FFA36C 25%,  /* Soft Orange */
+            #FFD93D 50%,  /* Golden Yellow */
+            #6BCB77 75%,  /* Fresh Green */
+            #4D96FF 100%  /* Sky Blue */
+        );
+        background-clip: text;
+        -webkit-background-clip: text;s
+        -webkit-text-fill-color: transparent; /* Makes the text (heart icon) show the gradient */
+        color: transparent; /* Ensures the fallback neutral color is hidden */
+    }
+
+    /* Hover Effect for Default State */
+    .blended-eye-pleasing-rainbow:hover {
+        background: linear-gradient(180deg, 
+            #FF6B6B 0%,   /* Warm Red */
+            #FFA36C 25%,  /* Soft Orange */
+            #FFD93D 50%,  /* Golden Yellow */
+            #6BCB77 75%,  /* Fresh Green */
+            #4D96FF 100%  /* Sky Blue */
+        );
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent; /* Show gradient on hover */
+        color: transparent; /* Hide the fallback color */
+        transition: background 0.3s ease; /* Smooth transition for hover */
+    }
+
+    /* Hover Effect for Active State */
+    .blended-eye-pleasing-rainbow.active:hover {
+        filter: brightness(1.2); /* Slightly brighten the gradient */
+        transition: filter 0.2s ease; /* Smooth transition for hover */
     }
