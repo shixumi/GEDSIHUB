@@ -30,20 +30,22 @@ namespace GedsiHub.Models
 
         public DateTime? LastModifiedDate { get; set; }
 
-        // New Status Property
         [Required]
         public ModuleStatus Status { get; set; } = ModuleStatus.Unpublished;
 
-        // New Color Property
         [Required]
         [StringLength(7, MinimumLength = 7, ErrorMessage = "Color must be a valid hex code.")]
-        public string Color { get; set; } = "#000000"; // Default to black
+        public string Color { get; set; } = "#000000";
+
+        // New Property
+        public bool IsCertificateEnabled { get; set; } = true; // Default is enabled
 
         // Navigation Properties
-        public Exam? Exam { get; set; } // One-to-one relationship
+        public Exam? Exam { get; set; }
         public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
         public virtual ICollection<UserProgress> UserProgresses { get; set; } = new List<UserProgress>();
         public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
         public virtual ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
+
 }

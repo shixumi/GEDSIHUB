@@ -6,24 +6,6 @@
     ViewData["Title"] = "Assessment Result";
 }
 
-<h2>Assessment Result</h2>
-<p>Total Questions: @Model.TotalQuestions</p>
-<p>Correct Answers: @Model.CorrectAnswers</p>
-<p>Your Score: @Model.Score %</p>
-
-@if (Model.Passed)
-{
-    <p>Congratulations, you passed the assessment!</p>
-    <a href="https://gedsihub.tech/api/certificate/@User.FindFirstValue(ClaimTypes.NameIdentifier)/@Model.ModuleId" class="btn btn-primary">Download Certificate</a>
-
-
-}
-else
-{
-    <p>Unfortunately, you did not pass. Please review the material and try again.</p>
-    <a asp-controller="Module" asp-action="Details" asp-route-id="@Model.ExamID" class="btn btn-secondary">Back to Lessons</a>
-}
-
 <style>
     .parent-container {
         display: flex;
@@ -85,7 +67,21 @@ else
         <span class="assessment-result-text">Assessment Result</span>
         <div><span>Total Questions</span><span>@Model.TotalQuestions</span></div>
         <div><span>Correct Answers</span><span>@Model.CorrectAnswers</span></div>
-        <div class="your-score"><span>Your Score</span><span>@Model.Score %</span></div>
+        <div class="your-score"><span>Your Score</span><span>@Model.Score.ToString("F2")</span></div>
+        <div class="your-score">
+            <span>
+                @if (Model.Passed)
+                {
+                    <p>Congratulations, you passed the assessment!</p>
+                    <a asp-controller="Certificate" asp-action="GetCertificate" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary">Download Certificate</a>
+                }
+                else
+                {
+                    <p>Unfortunately, you did not pass. Please review the material and try again.</p>
+                    <a asp-controller="Module" asp-action="Details" asp-route-id="@Model.ModuleId" class="btn btn-secondary">Back to Lessons</a>
+                }
+            </span>
+        </div>
     </div>
 </div>
 

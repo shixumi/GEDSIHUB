@@ -288,10 +288,29 @@ namespace GedsiHub.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Get the module's lessons
-            var moduleLessons = await _context.Lessons.Where(l => l.ModuleId == exam.ModuleId).ToListAsync();
+            // Check for previous results for this exam
+            var previousResults = await _resultService.Search(r =>
+                r.UserId == userId && r.ExamID == id
+            ).ToListAsync();
 
-            // Check user progress
+            if (previousResults.Any())
+            {
+                // Calculate the user's previous score
+                int totalQuestions = previousResults.GroupBy(r => r.QuestionID).Count();
+                int correctAnswers = previousResults.Count(r => r.IsCorrect);
+
+                // Determine if the user already passed
+                double previousScore = totalQuestions > 0 ? ((double)correctAnswers / totalQuestions) * 100 : 0;
+
+                if (previousScore >= 60)
+                {
+                    TempData["ErrorMessage"] = "You have already passed this assessment. You cannot retake it.";
+                    return RedirectToAction("Details", "Module", new { id = exam.ModuleId });
+                }
+            }
+
+            // Check if all module lessons are completed
+            var moduleLessons = await _context.Lessons.Where(l => l.ModuleId == exam.ModuleId).ToListAsync();
             var completedLessons = await _context.UserLessonProgresses
                 .Where(up => up.UserId == userId && moduleLessons.Select(ml => ml.LessonId).Contains(up.LessonId))
                 .ToListAsync();
@@ -302,42 +321,32 @@ namespace GedsiHub.Controllers
                 return RedirectToAction("Details", "Module", new { id = exam.ModuleId });
             }
 
-            // Fetch all questions for the exam
+            // Fetch and prepare questions for the assessment
             var allQuestions = await _questionService.GetQuestionsByExamId(exam.ExamID);
+            var selectedQuestions = exam.ShuffleQuestions
+                ? allQuestions.OrderBy(_ => Guid.NewGuid()).Take(exam.NumberOfQuestions).ToList()
+                : allQuestions.Take(exam.NumberOfQuestions).ToList();
 
-            // Shuffle and limit questions if needed
-            var selectedQuestions = allQuestions.ToList();
-            if (exam.ShuffleQuestions)
-            {
-                selectedQuestions = selectedQuestions.OrderBy(_ => Guid.NewGuid()).ToList();
-            }
-
-            // Take only the specified number of questions
-            selectedQuestions = selectedQuestions.Take(exam.NumberOfQuestions).ToList();
-
-            // Convert to view model and shuffle choices if needed
             var qna = new QnA
             {
                 ExamID = exam.ExamID,
                 Exam = exam.Name,
-                H5PEmbedCode = exam.H5PEmbedCode, // Pass the embed code
+                H5PEmbedCode = exam.H5PEmbedCode,
                 questions = selectedQuestions.Select(q => new QuestionDetails
                 {
                     QuestionID = q.QuestionID,
                     QuestionText = q.DisplayText,
                     QuestionType = (int)q.QuestionType,
-                    options = _choiceService.GetChoicesByQuestion(q.QuestionID).Result
-                              .Select(c => new OptionDetails
-                              {
-                                  OptionID = c.ChoiceID,
-                                  Option = c.DisplayText
-                              }).ToList()
+                    options = _choiceService.GetChoicesByQuestion(q.QuestionID).Result.Select(c => new OptionDetails
+                    {
+                        OptionID = c.ChoiceID,
+                        Option = c.DisplayText
+                    }).ToList()
                 }).ToList()
             };
 
             return View(qna);
         }
-
 
         // POST: Assessment/Submit
         [HttpPost]
@@ -350,9 +359,7 @@ namespace GedsiHub.Controllers
                 return View("Error");
             }
 
-            var results = new List<QuizResult>();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            int correctAnswers = 0;
 
             // Retrieve the ExamID from the first response
             int examId = responses.First().ExamID;
@@ -365,58 +372,80 @@ namespace GedsiHub.Controllers
                 return View("Error");
             }
 
+            // Check if the user already passed
+            var previousResults = await _resultService.Search(r =>
+                r.UserId == userId && r.ExamID == examId
+            ).ToListAsync();
+
+            if (previousResults.Any())
+            {
+                // Calculate the user's previous score
+                int totalQuestions = previousResults.GroupBy(r => r.QuestionID).Count();
+                int correctAnswers = previousResults.Count(r => r.IsCorrect);
+
+                // Determine if the user already passed
+                double previousScore = totalQuestions > 0 ? ((double)correctAnswers / totalQuestions) * 100 : 0;
+                if (previousScore >= 60)
+                {
+                    TempData["ErrorMessage"] = "You have already passed this assessment.";
+                    return RedirectToAction("Details", "Module", new { id = exam.ModuleId });
+                }
+            }
+
+            // Process new responses
+            var results = new List<QuizResult>();
+            int correctAnswersNow = 0;
+
             foreach (var response in responses)
             {
-                // Fetch the correct answer for the question
                 var correctAnswer = await _answerService.GetCorrectAnswerByQuestionId(response.QuestionID);
-
-                // Determine if the selected option is correct
                 var isCorrect = correctAnswer != null && correctAnswer.ChoiceID == response.SelectedOption;
 
                 if (isCorrect)
                 {
-                    correctAnswers++;
+                    correctAnswersNow++;
                 }
 
-                var result = new QuizResult
+                results.Add(new QuizResult
                 {
                     SessionID = HttpContext.Session.Id,
                     UserId = userId,
                     ExamID = response.ExamID,
                     QuestionID = response.QuestionID,
-                    AnswerID = correctAnswer != null ? correctAnswer.Sl_No : (int?)null, // Assign the correct AnswerID
+                    AnswerID = correctAnswer?.Sl_No,
                     SelectedOptionID = response.SelectedOption,
                     IsCorrect = isCorrect,
                     CreatedOn = DateTime.Now,
                     CreatedBy = User.Identity.Name,
                     ModifiedBy = User.Identity.Name
-                };
-
-                results.Add(result);
+                });
             }
-
 
             await _resultService.AddResult(results);
 
-            // Calculate the user's score
-            var totalQuestions = results.Count;
-            var score = totalQuestions > 0 ? ((double)correctAnswers / totalQuestions) * 100 : 0;
-            bool passed = score >= 60;
+            // Calculate the user's new score
+            var totalQuestionsNow = results.Count;
+            var scoreNow = totalQuestionsNow > 0 ? ((double)correctAnswersNow / totalQuestionsNow) * 100 : 0;
+            bool passedNow = scoreNow >= 60;
 
-            if (passed)
+            if (passedNow)
             {
-                // Now passing the correct ModuleId from the exam object
                 await MarkProgressAndGenerateCertificate(userId, exam.ModuleId);
-                return RedirectToAction("Result", new { sessionId = HttpContext.Session.Id, passed });
             }
-            else
-            {
-                return RedirectToAction("Details", "Module", new { id = exam.ModuleId }); // Redirect using the correct ModuleId
-            }
+
+            return RedirectToAction("Result", new { sessionId = HttpContext.Session.Id, passed = passedNow });
         }
 
         private async Task MarkProgressAndGenerateCertificate(string userId, int moduleId)
         {
+            // Check if certificate generation is enabled
+            var module = await _context.Modules.FindAsync(moduleId);
+            if (module == null || !module.IsCertificateEnabled)
+            {
+                _logger.LogInformation($"Certificate generation is disabled for ModuleID: {moduleId}");
+                return; // Skip certificate generation
+            }
+
             // Update UserProgress as complete
             var userProgress = await _context.UserProgresses
                 .FirstOrDefaultAsync(up => up.UserId == userId && up.ModuleId == moduleId);
@@ -465,11 +494,9 @@ namespace GedsiHub.Controllers
             await _context.SaveChangesAsync();
 
             // Generate and store certificate
-            _logger.LogInformation($"Generating certificate for UserID: {userId}, ModuleID: {moduleId}");
             var pdfBytes = await _certificateService.GenerateAndStoreCertificateAsync(userId, moduleId);
-
-            // Optionally, send an email with the certificate to the user
             var user = await _userManager.FindByIdAsync(userId);
+
             if (user != null && !string.IsNullOrEmpty(user.Email))
             {
                 await _certificateService.SendCertificateEmail(user.Email, "Your Certificate of Completion", pdfBytes, "certificate.pdf");
@@ -489,33 +516,34 @@ namespace GedsiHub.Controllers
             var firstResult = results.FirstOrDefault();
             if (firstResult == null)
             {
-                return NotFound("No results found for this session."); // Handle case where there are no results
+                return NotFound("No results found for this session.");
             }
 
-            int examId = firstResult.ExamID; // Use ExamID from the first result
+            int examId = firstResult.ExamID;
 
-            // Retrieve the exam to get the associated ModuleId
-            var exam = await _examService.GetExam(examId); // Make sure to await the method
+            // Fetch the exam to get the associated ModuleId
+            var exam = await _examService.GetExam(examId);
             if (exam == null)
             {
                 ModelState.AddModelError("", "Exam not found.");
-                return View("Error"); // Handle the error appropriately
+                return View("Error");
             }
 
             // Get the ModuleId from the exam
-            int moduleId = exam.ModuleId; // Use the correct property to get ModuleId
+            int moduleId = exam.ModuleId;
 
             var model = new QuizResultViewModel
             {
                 TotalQuestions = totalQuestions,
                 CorrectAnswers = correctAnswers,
                 Score = totalQuestions > 0 ? ((double)correctAnswers / totalQuestions) * 100 : 0,
-                Passed = passed,  // Pass/fail status
-                ModuleId = moduleId // Set the correct ModuleId here
+                Passed = passed,
+                ModuleId = moduleId
             };
 
             return View(model);
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -553,7 +581,6 @@ namespace GedsiHub.Controllers
                 return RedirectToAction("CreateOrEdit", new { moduleId });
             }
         }
-
 
 
         // GET: Assessment/Delete/5

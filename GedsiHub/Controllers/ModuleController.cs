@@ -187,7 +187,7 @@ namespace GedsiHub.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Title,Description,Status,Color")] Module module)
+        public async Task<IActionResult> Create([Bind("Title,Description,Status,Color,IsCertificateEnabled")] Module module)
         {
             if (!ModelState.IsValid)
             {
@@ -196,21 +196,19 @@ namespace GedsiHub.Controllers
 
             try
             {
-                // Set creation and modification timestamps
                 module.CreatedDate = DateTime.UtcNow;
                 module.LastModifiedDate = DateTime.UtcNow;
 
-                // Determine the next available PositionInt
                 var lastPosition = await _context.Modules
                     .OrderByDescending(m => m.PositionInt)
                     .Select(m => m.PositionInt)
                     .FirstOrDefaultAsync();
 
-                module.PositionInt = lastPosition + 1; // Assign the next position
-
+                module.PositionInt = lastPosition + 1;
                 _context.Add(module);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index)); // Redirect to index after success
+
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -218,7 +216,7 @@ namespace GedsiHub.Controllers
                 ModelState.AddModelError("", "An error occurred while creating the module.");
             }
 
-            return View(module); // Return the view if an exception occurs
+            return View(module);
         }
 
         // ******************* MODULE EDITING *******************
@@ -246,7 +244,7 @@ namespace GedsiHub.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ModuleId,Title,Description,Status,Color,PositionInt")] Module module)
+        public async Task<IActionResult> Edit(int id, [Bind("ModuleId,Title,Description,Status,Color,PositionInt,IsCertificateEnabled")] Module module)
         {
             if (id != module.ModuleId)
             {
@@ -260,6 +258,7 @@ namespace GedsiHub.Controllers
                     module.LastModifiedDate = DateTime.UtcNow;
                     _context.Update(module);
                     await _context.SaveChangesAsync();
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
@@ -279,7 +278,6 @@ namespace GedsiHub.Controllers
 
             return View(module);
         }
-
 
         // ******************* MODULE DELETION *******************
 

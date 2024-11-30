@@ -64,7 +64,7 @@ namespace GedsiHub.Services
                 .Select(score => new
                 {
                     score.UserId,
-                    TotalScore = score.TotalQuestions > 0 ? ((double)score.CorrectAnswers / score.TotalQuestions) * 100 : 0 // Score as percentage
+                    TotalScore = score.TotalQuestions > 0 ? Math.Round(((double)score.CorrectAnswers / score.TotalQuestions) * 100, 2) : 0 // Round to 2 decimals
                 });
 
             // Step 3: Join with the Users table to get usernames and construct the LeaderboardViewModel
@@ -76,7 +76,7 @@ namespace GedsiHub.Services
                       {
                           UserId = score.UserId,
                           UserName = user.UserName,
-                          TotalScore = score.TotalScore // Score as a percentage
+                          TotalScore = score.TotalScore // Score as a percentage (already rounded)
                       })
                 .OrderByDescending(l => l.TotalScore)
                 .Take(10) // Top 10 leaderboard entries

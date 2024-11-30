@@ -26,17 +26,11 @@ public class CertificateController : ControllerBase
     {
         // Validate that the user exists
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
-        {
-            return NotFound("User not found.");
-        }
+        if (user == null) return NotFound("User not found.");
 
-        // Check if the module exists
+        // Validate the module exists
         var module = await _context.Modules.FindAsync(moduleId);
-        if (module == null)
-        {
-            return NotFound("Module not found.");
-        }
+        if (module == null) return NotFound("Module not found.");
 
         // Check for existing certificate
         var existingCertificate = await _context.Certificates
@@ -44,17 +38,14 @@ public class CertificateController : ControllerBase
 
         if (existingCertificate == null)
         {
-            return BadRequest("No certificate issued for this module."); // Change this to your logic
+            return BadRequest("No certificate issued for this module.");
         }
 
-        // If an existing certificate is found, retrieve its PDF bytes
+        // Retrieve certificate PDF bytes
         var pdfBytes = await _certificateService.GetCertificateBytesAsync(userId, moduleId);
-        if (pdfBytes == null)
-        {
-            return NotFound("Certificate not found.");
-        }
+        if (pdfBytes == null) return NotFound("Certificate not found.");
 
-        // Return the PDF to download
+        // Return the certificate as a downloadable file
         return File(pdfBytes, "application/pdf", "certificate.pdf");
     }
 

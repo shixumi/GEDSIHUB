@@ -4,6 +4,13 @@
     ViewData["Title"] = "Module Details";
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <!-- Module Details -->
 <div class="container-lesson">
     <!-- Breadcrumb -->
