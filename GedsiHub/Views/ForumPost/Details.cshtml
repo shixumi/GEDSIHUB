@@ -93,10 +93,11 @@
         <!-- Card Footer Buttons -->
         <div class="d-flex align-items-center card-footer">
             <button id="likeButton"
-            class="card-link d-flex align-items-center like-btn"
-            data-post-id="@Model.ForumPost.PostId"
-            data-has-liked="@Model.HasLiked">
-                <i id="likeIcon" class="f-icon la @(Model.HasLiked ? "la-heart" : "la-heart-o")"></i>
+                class="card-link d-flex align-items-center like-btn"
+                data-post-id="@Model.ForumPost.PostId"
+                data-has-liked="@Model.HasLiked"
+                onclick="toggleRainbowHeart(this)">
+                <i id="likeIcon" class="f-icon la @(Model.HasLiked ? "la-heart blended-eye-pleasing-rainbow active" : "la-heart-o blended-eye-pleasing-rainbow")"></i>
                 <span id="likeCount">@Model.LikesCount</span>
             </button>
 
@@ -325,11 +326,14 @@
     </div>
 }
 
+<!-- Confetti sfx -->
+<audio id="cheerSound" src="~/audio/confetti-sfx.mp3"></audio>
 
 
 <!-- JavaScript for image preview -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         function previewCommentImage(event) {
             const [file] = event.target.files;
@@ -343,6 +347,42 @@
         function removeImagePreview() {
             document.getElementById("ImageFile").value = "";
             document.getElementById("commentImagePreviewContainer").style.display = "none";
+        }
+
+        function toggleRainbowHeart(button) {
+            const heartIcon = button.querySelector('i');
+            const likeCountSpan = button.querySelector('span');
+            // const cheerSound = document.getElementById('cheerSound');
+
+            if (heartIcon) {
+                // Toggle like state and active class
+                const isLiked = heartIcon.classList.contains('active');
+                heartIcon.classList.toggle('active');
+
+
+                // Add confetti effect for every clicked
+                // Temporary disabled
+                
+                /*
+                if (!isLiked) {
+                    // Create a full-screen confetti effect
+                    const confettiSettings = confetti.create(null, {
+                        resize: true, // Automatically resize to fit the screen
+                        useWorker: true // Use a worker for better performance
+                    });
+
+                    confettiSettings({
+                        particleCount: 300,
+                        spread: 160,
+                        startVelocity: 50,
+                        origin: { x: 0.5, y: 0.5 } // Center of the screen
+                    });
+
+                    // Play cheer sound
+                    cheerSound.play();
+                }
+                */
+            }
         }
     </script>
     <script src="~/js/ForumPost.js"></script>

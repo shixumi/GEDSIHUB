@@ -62,22 +62,22 @@
                         </div>
 
                         <!-- Flair Selection -->
-                        <div class="mb-3">
+                        <div class="mb-3 select-flair">
                             <label for="flair" class="form-label d-flex justify-content-start input-lbl">Select Flair</label>
                             <div class="flair-options d-flex flex-wrap">
-                                <div class="form-check me-3 mb-2">
+                                <div class="form-check me-3 mb-2 form-check-flair">
                                     <input class="form-check-input" type="radio" asp-for="Flair" value="Discussion" checked="@(Model.Flair == "Discussion")" />
                                     <label class="form-check-label" for="flair1">Discussion</label>
                                 </div>
-                                <div class="form-check me-3 mb-2">
+                                <div class="form-check me-3 mb-2 form-check-flair">
                                     <input class="form-check-input" type="radio" asp-for="Flair" value="Need Advice" checked="@(Model.Flair == "Need Advice")" />
                                     <label class="form-check-label" for="flair2">Need Advice</label>
                                 </div>
-                                <div class="form-check me-3 mb-2">
+                                <div class="form-check me-3 mb-2 form-check-flair">
                                     <input class="form-check-input" type="radio" asp-for="Flair" value="Unsolicited Advice" checked="@(Model.Flair == "Unsolicited Advice")" />
                                     <label class="form-check-label" for="flair3">Unsolicited Advice</label>
                                 </div>
-                                <div class="form-check me-3 mb-2">
+                                <div class="form-check me-3 mb-2 form-check-flair">
                                     <input class="form-check-input" type="radio" asp-for="Flair" value="Meme" checked="@(Model.Flair == "Meme")" />
                                     <label class="form-check-label" for="flair4">Meme</label>
                                 </div>

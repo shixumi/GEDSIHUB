@@ -31,7 +31,7 @@
                 }
             </select>
             @if (ViewData["ModuleId"] != null)
-            {
+            { 
                 <input type="hidden" name="moduleId" value="@ViewData["ModuleId"]" />
             }
         </form>  *@
@@ -178,10 +178,14 @@
 
                 <button class="card-link d-flex align-items-center like-btn"
                         data-post-id="@post.PostId"
-                        data-has-liked="@post.HasLiked">
-                    <i class="f-icon la @(post.HasLiked ? "la-heart" : "la-heart-o")"></i>
+                        data-has-liked="@post.HasLiked"
+                        onclick="toggleRainbowHeart(this)">
+                    <i id="heartIcon-@post.PostId"
+                       class="f-icon la @(post.HasLiked ? "la-heart blended-eye-pleasing-rainbow active" : "la-heart-o blended-eye-pleasing-rainbow")">
+                    </i>
                     <span id="likeCount-@post.PostId">@post.LikesCount</span>
                 </button>
+
                 
 
                 <a asp-action="Details" asp-route-id="@post.PostId" class="card-link d-flex align-items-center">
@@ -254,6 +258,8 @@
     </div>
 </div>
 
+<!-- Confetti sfx -->
+<audio id="cheerSound" src="~/audio/confetti-sfx.mp3"></audio>
 @foreach (var post in Model)
 {
     <div class="modal fade" id="reportPostModal-@post.PostId" tabindex="-1" aria-labelledby="reportPostModalLabel-@post.PostId" aria-hidden="true">
@@ -286,6 +292,8 @@
 @section Scripts {
     <script src="~/js/ForumPost.js"></script>
     <script src="~/js/ForumPostLikes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <script>
         function updateSortBy(value) {
             // Update the hidden input field
@@ -293,5 +301,43 @@
             // Submit the form
             document.querySelector('form').submit();
         }
+
+        function toggleRainbowHeart(button) {
+            const heartIcon = button.querySelector('i');
+            const likeCountSpan = button.querySelector('span');
+            // const cheerSound = document.getElementById('cheerSound');
+
+            if (heartIcon) {
+                // Toggle like state and active class
+                const isLiked = heartIcon.classList.contains('active');
+                heartIcon.classList.toggle('active');
+
+
+                // Add confetti effect for every clicked
+                // Temporary disabled
+                
+                @*
+                if (!isLiked) {
+                    // Create a full-screen confetti effect
+                    const confettiSettings = confetti.create(null, {
+                        resize: true, // Automatically resize to fit the screen
+                        useWorker: true // Use a worker for better performance
+                    });
+
+                    confettiSettings({
+                        particleCount: 300,
+                        spread: 160,
+                        startVelocity: 50,
+                        origin: { x: 0.5, y: 0.5 } // Center of the screen
+                    });
+
+                    // Play cheer sound
+                    cheerSound.play();
+                }
+                *@
+            }
+        }
+
+
     </script>
 }

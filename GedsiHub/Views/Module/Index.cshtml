@@ -311,7 +311,7 @@
                                             <img src="~/images/Edit.png" /> Edit
                                         </a>
 
-                                        <a id="list-deleteModuleButton" data-bs-toggle="modal" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
+                                        <a id="list-deleteModuleButton" data-bs-toggle="modal" data-bs-placement="bottom" data-bs-title="Delete Module" data-bs-target="#moduleConfirmDeleteModal-@module.ModuleId">
                                             <img src="~/images/Delete.png" /> Delete
                                         </a>
 
@@ -319,7 +319,7 @@
                                         @if (module.Status == ModuleStatus.Published)
                                         {
                                             <!-- Unpublish Button -->
-                                            <button type="button" id="list-unpublishModuleButton" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId">
+                                            <button type="button" id="list-unpublishModuleButton" class="btn btn-warning" data-bs-placement="bottom" data-bs-title="Unpublish Module" data-bs-toggle="modal" data-bs-target="#unpublishModal-@module.ModuleId">
                                                 <img src="~/images/Unpublish.png" alt="Unpublish Icon" />
                                                 Unpublish
                                             </button>
@@ -327,7 +327,7 @@
                                         else
                                         {
                                             <!-- Publish Button -->
-                                            <button type="button" id="list-publishModuleButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId">
+                                            <button type="button" id="list-publishModuleButton" class="btn btn-success" data-bs-placement="bottom" data-bs-title="Publish Module" data-bs-toggle="modal" data-bs-target="#publishModal-@module.ModuleId">
                                                 <img src="~/images/Publish.png" alt="Publish Icon" />
                                                 Publish
                                             </button>
