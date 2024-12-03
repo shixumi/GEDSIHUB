@@ -171,8 +171,12 @@
         // Collect selected user IDs for bulk delete modal
         document.getElementById('deleteSelectedUM').addEventListener('click', function () {
             const selectedUserIds = Array.from(document.querySelectorAll('input[name="UserIds"]:checked'))
-                .map(checkbox => checkbox.value);
-            document.getElementById('bulkDeleteUserIds').value = selectedUserIds.join(',');
+                .map(checkbox => checkbox.value)
+                .filter(id => id); // Ensure no null or undefined values
+            const hiddenInput = document.getElementById('bulkDeleteUserIds');
+            if (hiddenInput) {
+                hiddenInput.value = selectedUserIds.join(',');
+            }
         });
     </script>
 

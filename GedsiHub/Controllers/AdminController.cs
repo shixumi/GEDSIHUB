@@ -53,6 +53,14 @@ namespace GedsiHub.Controllers
             try
             {
                 var users = await _userManagementService.GetUsersAsync(search, isActive, page, pageSize);
+
+                // Ensure users are not null before proceeding
+                if (users == null)
+                {
+                    TempData["ErrorMessage"] = "Unable to retrieve users. Please try again later.";
+                    return View("Error");
+                }
+
                 var userViewModels = users.Select(u => new UserViewModel
                 {
                     Id = u.Id,
@@ -77,7 +85,7 @@ namespace GedsiHub.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while loading user management.");
+                TempData["ErrorMessage"] = "An unexpected error occurred. Please try again later.";
                 return View("Error");
             }
         }
@@ -88,17 +96,22 @@ namespace GedsiHub.Controllers
         // This action allows the Admin to load a specific user for editing, showing their details such as admin status and activity state.
         public async Task<IActionResult> EditUser(string id)
         {
-            _logger.LogInformation("Admin attempting to edit user with ID: {UserId}", id);
+            // Log only high-level action for traceability
+            _logger.LogDebug("Accessing EditUser for user ID: {UserId}", id);
 
+            // Fetch the user from the database
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                _logger.LogWarning("User with ID {UserId} not found.", id);
+                // Log a warning if the user is not found
+                _logger.LogWarning("User with ID {UserId} not found during EditUser access.", id);
                 return NotFound();
             }
 
+            // Check if the user has an Admin role
             var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
+            // Map user details to the view model
             var viewModel = new EditUserViewModel
             {
                 Id = user.Id,
@@ -114,20 +127,17 @@ namespace GedsiHub.Controllers
 
         // POST: Admin/EditUser
         // This action updates the user details in the system, including toggling admin status or active state.
+        // POST: Admin/EditUser
+        // This action updates the user details in the system, including toggling admin status or active state.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
-            _logger.LogInformation("EditUser POST action called for user ID: {UserId}", model.Id);
-
-            // Log submitted values for debugging
-            _logger.LogInformation("Submitted values: IsAdmin={IsAdmin}, IsActive={IsActive}, Email={Email}, FirstName={FirstName}, LastName={LastName}",
-                model.IsAdmin, model.IsActive, model.Email, model.FirstName, model.LastName);
+            // Log a high-level trace of the action
+            _logger.LogDebug("EditUser POST called for user ID: {UserId}", model.Id);
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("ModelState is invalid. Errors: {Errors}",
-                    string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
                 TempData["ErrorMessage"] = "Please correct the errors and try again.";
                 return View(model);
             }
@@ -135,7 +145,6 @@ namespace GedsiHub.Controllers
             var user = await _userManager.FindByIdAsync(model.Id);
             if (user == null)
             {
-                _logger.LogWarning("User not found with ID: {UserId}", model.Id);
                 TempData["ErrorMessage"] = "User not found.";
                 return RedirectToAction(nameof(UserManagement));
             }
@@ -148,105 +157,71 @@ namespace GedsiHub.Controllers
             var isFirstNameChanged = user.FirstName != model.FirstName;
             var isLastNameChanged = user.LastName != model.LastName;
             var isActiveChanged = user.IsActive != model.IsActive;
-
-            // Compare the current Admin role
             var currentAdminRole = await _userManager.IsInRoleAsync(user, "Admin");
-            _logger.LogInformation("User ID: {UserId} current Admin role: {CurrentAdminRole}, model.IsAdmin: {ModelIsAdmin}",
-                model.Id, currentAdminRole, model.IsAdmin);
-
             var isAdminRoleChanged = currentAdminRole != model.IsAdmin;
 
-            // Debug-level logging for field change detection
-            _logger.LogDebug("Changes detected: EmailChanged={EmailChanged}, FirstNameChanged={FirstNameChanged}, LastNameChanged={LastNameChanged}, IsActiveChanged={IsActiveChanged}, IsAdminRoleChanged={IsAdminRoleChanged}",
-                isEmailChanged, isFirstNameChanged, isLastNameChanged, isActiveChanged, isAdminRoleChanged);
-
-            // Self-deactivation guard
-            if (isCurrentUser)
+            // Self-deactivation or admin role change guard
+            if (isCurrentUser && (isAdminRoleChanged || isActiveChanged))
             {
-                if (isAdminRoleChanged)
-                {
-                    _logger.LogWarning("Self-admin role change attempted by user ID: {UserId}", model.Id);
-                    TempData["ErrorMessage"] = "You cannot change your own Admin status.";
-                    return View(model);
-                }
-
-                if (isActiveChanged)
-                {
-                    _logger.LogWarning("Self-deactivation attempted by user ID: {UserId}", model.Id);
-                    TempData["ErrorMessage"] = "You cannot deactivate your own account.";
-                    return View(model);
-                }
+                TempData["ErrorMessage"] = "You cannot modify your own admin status or deactivate your account.";
+                return View(model);
             }
 
-            // Prevent unnecessary updates
+            // Skip update if no changes detected
             if (!isEmailChanged && !isFirstNameChanged && !isLastNameChanged && !isActiveChanged && !isAdminRoleChanged)
             {
-                _logger.LogInformation("No changes detected for user ID: {UserId}", model.Id);
                 TempData["InfoMessage"] = "No changes were made.";
                 return RedirectToAction(nameof(UserManagement));
             }
 
             try
             {
-                // Log updates to basic information
-                _logger.LogInformation("Updating user details for user ID: {UserId}. New values: Email={Email}, FirstName={FirstName}, LastName={LastName}, IsActive={IsActive}",
-                    model.Id, model.Email, model.FirstName, model.LastName, model.IsActive);
-
                 // Update user details
-                if (user.UserName != user.Email)
-                {
-                    user.UserName = user.Email; // Default Username to Email
-                }
                 if (isEmailChanged) user.Email = model.Email;
                 if (isFirstNameChanged) user.FirstName = model.FirstName;
                 if (isLastNameChanged) user.LastName = model.LastName;
                 if (isActiveChanged) user.IsActive = model.IsActive;
+                if (user.UserName != user.Email) user.UserName = user.Email; // Sync username with email
 
-                // Handle admin role assignment (toggle Admin status)
+                // Handle admin role toggling
                 if (!isCurrentUser)
                 {
                     if (model.IsAdmin && !currentAdminRole)
                     {
-                        _logger.LogInformation("Adding Admin role to user ID: {UserId}", model.Id);
                         await _userManager.AddToRoleAsync(user, "Admin");
                     }
                     else if (!model.IsAdmin && currentAdminRole)
                     {
-                        _logger.LogInformation("Removing Admin role from user ID: {UserId}", model.Id);
                         await _userManager.RemoveFromRoleAsync(user, "Admin");
                     }
                 }
 
-                // Save updates
+                // Persist changes
                 var result = await _userManager.UpdateAsync(user);
                 if (!result.Succeeded)
                 {
-                    var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
-                    _logger.LogWarning("Failed to update user with ID: {UserId}. Errors: {Errors}", model.Id, errorMessages);
-                    TempData["ErrorMessage"] = $"Failed to update the user: {errorMessages}";
+                    TempData["ErrorMessage"] = $"Failed to update the user: {string.Join(", ", result.Errors.Select(e => e.Description))}";
                     return View(model);
                 }
 
-                // Log the activity
+                // Log the action in activity logs
                 var adminDetails = await _userManager.FindByNameAsync(User.Identity?.Name);
                 var adminName = adminDetails != null ? $"{adminDetails.FirstName} {adminDetails.LastName}" : "System";
 
-                var log = new ActivityLog
+                _context.ActivityLogs.Add(new ActivityLog
                 {
-                    AdminUser = adminName, // Use admin's name
-                    Action = $"Edited user {user.FirstName} {user.LastName} (Admin status: {model.IsAdmin}, Active status: {model.IsActive})",
+                    AdminUser = adminName,
+                    Action = $"Edited user {user.FirstName} {user.LastName} (Admin: {model.IsAdmin}, Active: {model.IsActive})",
                     Timestamp = DateTime.UtcNow
-                };
-                _context.ActivityLogs.Add(log);
+                });
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("User with ID: {UserId} edited successfully.", model.Id);
                 TempData["SuccessMessage"] = "User updated successfully.";
                 return RedirectToAction(nameof(UserManagement));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while editing user with ID: {UserId}", model.Id);
+                _logger.LogError(ex, "Error editing user ID: {UserId}", model.Id);
                 TempData["ErrorMessage"] = "An unexpected error occurred. Please try again.";
                 return View("Error");
             }
@@ -316,52 +291,41 @@ namespace GedsiHub.Controllers
         {
             if (userIds == null || !userIds.Any())
             {
-                _logger.LogWarning("Bulk delete attempted with no user IDs selected.");
                 TempData["ErrorMessage"] = "No users selected for deletion.";
                 return RedirectToAction(nameof(UserManagement));
             }
 
             try
             {
-                // Log raw userIds for debugging
-                _logger.LogInformation("Raw user IDs passed: {UserIds}", string.Join(", ", userIds));
-
-                // Ensure IDs are processed correctly as an array
+                // Process user IDs for deletion
                 var idsToProcess = userIds
                     .SelectMany(id => id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                     .Select(id => id.Trim())
                     .ToArray();
 
-                _logger.LogInformation("Processed user IDs for deletion: {IdsToProcess}", string.Join(", ", idsToProcess));
-
-                // Get admin username from the current authenticated user
+                // Verify admin username
                 var adminUserName = User.Identity?.Name;
-                _logger.LogInformation("Admin Username from HttpContext: {AdminUserName}", adminUserName);
-
                 if (string.IsNullOrEmpty(adminUserName))
                 {
-                    _logger.LogWarning("Admin username could not be determined.");
                     TempData["ErrorMessage"] = "Unable to identify admin for logging the action.";
                     return RedirectToAction(nameof(UserManagement));
                 }
 
-                // Call the service to perform bulk deletion
+                // Perform bulk deletion
                 var failedDeletions = await _userManagementService.BulkDeleteUsersAsync(idsToProcess, adminUserName);
 
+                // Handle results of deletion
                 if (failedDeletions.Any())
                 {
-                    _logger.LogWarning("Some users failed to delete: {FailedIds}", string.Join(", ", failedDeletions));
                     TempData["WarningMessage"] = $"Failed to delete the following users: {string.Join(", ", failedDeletions)}.";
                 }
                 else
                 {
-                    _logger.LogInformation("All selected users deleted successfully.");
                     TempData["SuccessMessage"] = "All selected users deleted successfully.";
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred during the bulk deletion process.");
                 TempData["ErrorMessage"] = "An error occurred while deleting selected users. Please try again.";
             }
 
@@ -373,8 +337,6 @@ namespace GedsiHub.Controllers
         // GET: View all reports (Posts and Comments)
         public async Task<IActionResult> ViewReports()
         {
-            _logger.LogInformation("ViewReports called");
-
             try
             {
                 var postReports = await _reportManagementService.GetPostReportsAsync();
@@ -385,9 +347,6 @@ namespace GedsiHub.Controllers
                     ReportedPosts = postReports,
                     ReportedComments = commentReports
                 };
-
-                _logger.LogInformation("ViewReports loaded successfully with {PostReportsCount} post reports and {CommentReportsCount} comment reports",
-                    postReports.Count, commentReports.Count);
 
                 return View(viewModel);
             }
