@@ -68,7 +68,9 @@
 
             @if (!string.IsNullOrEmpty(Model.ModuleTitle))
             {
-                <a href="@Url.Action("Index", "ForumPost", new { moduleId = Model.ForumPost.ModuleId })" class="badge rounded-pill module-badge">
+                <a href="@Url.Action("Index", "ForumPost", new { moduleId = Model.ForumPost.ModuleId })" 
+                class="badge rounded-pill module-badge" 
+                style="background-color: @Model.ModuleColor; color: white;">
                     @Model.ModuleTitle
                 </a>
             }

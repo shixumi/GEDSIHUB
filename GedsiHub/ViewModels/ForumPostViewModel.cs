@@ -40,6 +40,7 @@ namespace GedsiHub.ViewModels
         [Required(ErrorMessage = "Please select a module.")]
         public int? ModuleId { get; set; }
         public string? ModuleTitle { get; set; }
+        public string ModuleColor { get; set; }
         public List<Module>? Modules { get; set; }
         public string? UserId { get; set; }
 

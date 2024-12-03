@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using GedsiHub.Migrations;
 
 namespace GedsiHub.Controllers
 {
@@ -64,6 +65,7 @@ namespace GedsiHub.Controllers
                             Flair = post.Flair,
                             ModuleId = post.ModuleId,
                             ModuleTitle = post.Module?.Title,
+                            ModuleColor = post.Module != null && !string.IsNullOrEmpty(post.Module.Color) ? post.Module.Color : "#000000",
                             UserFirstName = post.User.FirstName,
                             UserLastName = post.User.LastName,
                             UserId = post.UserId,
@@ -77,7 +79,7 @@ namespace GedsiHub.Controllers
                         .ToList();
                     break;
 
-                default: // Latest
+                default:
                     posts = await baseQuery
                         .OrderByDescending(post => post.CreatedAt)
                         .Select(post => new ForumPostViewModel
@@ -89,6 +91,7 @@ namespace GedsiHub.Controllers
                             Flair = post.Flair,
                             ModuleId = post.ModuleId,
                             ModuleTitle = post.Module != null ? post.Module.Title : null,
+                            ModuleColor = post.Module != null && !string.IsNullOrEmpty(post.Module.Color) ? post.Module.Color : "#000000",
                             UserFirstName = post.User.FirstName,
                             UserLastName = post.User.LastName,
                             UserId = post.UserId,
@@ -202,6 +205,7 @@ namespace GedsiHub.Controllers
                 UserId = post.UserId,
                 Flair = post.Flair,
                 ModuleTitle = post.Module?.Title,
+                ModuleColor = post.Module?.Color ?? "#00000",
                 LikesCount = post.LikesCount,
                 HasLiked = userId != null && post.ForumPostLikes.Any(like => like.UserId == userId)
             };
