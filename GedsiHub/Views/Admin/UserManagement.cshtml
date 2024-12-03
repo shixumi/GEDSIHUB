@@ -60,6 +60,7 @@
         @if (Model.Users != null && Model.Users.Any())
         {
             <form asp-action="BulkDeleteUsers" method="post" id="bulkDeleteForm">
+                @Html.AntiForgeryToken()
                 <table class="table">
                     <thead>
                         <tr class="feedback-table-label">
@@ -159,10 +160,18 @@
 
 @section Scripts {
     <script>
+        // Toggle all checkboxes when the "Select All" checkbox is clicked
         function toggleAllCheckboxes(source) {
             const checkboxes = document.querySelectorAll('input[name="UserIds"]');
             checkboxes.forEach(checkbox => checkbox.checked = source.checked);
         }
+
+        // Collect selected user IDs for bulk delete modal
+        document.getElementById('deleteSelectedUM').addEventListener('click', function () {
+            const selectedUserIds = Array.from(document.querySelectorAll('input[name="UserIds"]:checked'))
+                .map(checkbox => checkbox.value);
+            document.getElementById('bulkDeleteUserIds').value = selectedUserIds.join(',');
+        });
     </script>
 
     @* <script>

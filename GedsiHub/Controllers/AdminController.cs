@@ -313,19 +313,42 @@ namespace GedsiHub.Controllers
         {
             if (userIds == null || !userIds.Any())
             {
+                _logger.LogWarning("Bulk delete attempted with no user IDs selected.");
                 TempData["ErrorMessage"] = "No users selected for deletion.";
                 return RedirectToAction(nameof(UserManagement));
             }
 
             try
             {
-                await _userManagementService.BulkDeleteUsersAsync(userIds);
-                TempData["SuccessMessage"] = "Selected users deleted successfully.";
+                // Log raw userIds for debugging
+                _logger.LogInformation("Raw user IDs passed: {UserIds}", string.Join(", ", userIds));
+
+                // Ensure IDs are processed correctly as an array
+                var idsToProcess = userIds
+                    .SelectMany(id => id.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Select(id => id.Trim())
+                    .ToArray();
+
+                _logger.LogInformation("Processed user IDs for deletion: {IdsToProcess}", string.Join(", ", idsToProcess));
+
+                // Call the service to perform bulk deletion
+                var failedDeletions = await _userManagementService.BulkDeleteUsersAsync(idsToProcess);
+
+                if (failedDeletions.Any())
+                {
+                    _logger.LogWarning("Some users failed to delete: {FailedIds}", string.Join(", ", failedDeletions));
+                    TempData["WarningMessage"] = $"Failed to delete the following users: {string.Join(", ", failedDeletions)}.";
+                }
+                else
+                {
+                    _logger.LogInformation("All selected users deleted successfully.");
+                    TempData["SuccessMessage"] = "All selected users deleted successfully.";
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while bulk deleting users.");
-                TempData["ErrorMessage"] = "An error occurred while deleting selected users.";
+                _logger.LogError(ex, "An error occurred during the bulk deletion process.");
+                TempData["ErrorMessage"] = "An error occurred while deleting selected users. Please try again.";
             }
 
             return RedirectToAction(nameof(UserManagement));

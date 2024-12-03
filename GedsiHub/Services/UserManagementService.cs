@@ -140,23 +140,97 @@ public class UserManagementService : IUserManagementService
             throw new InvalidOperationException($"Failed to delete user with ID {id}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
         }
     }
-
-    public async Task BulkDeleteUsersAsync(IEnumerable<string> ids)
+    public async Task<List<string>> BulkDeleteUsersAsync(IEnumerable<string> ids)
     {
-        foreach (var id in ids)
+        var failedDeletions = new List<string>();
+
+        _logger.LogInformation("Bulk deletion initiated for user IDs: {Ids}", string.Join(", ", ids));
+
+        // Normalize the incoming IDs
+        var normalizedIds = ids.Select(id => id.Trim().ToLowerInvariant()).ToList();
+        _logger.LogInformation("Normalized IDs for deletion: {NormalizedIds}", string.Join(", ", normalizedIds));
+
+        // Fetch all users and their normalized IDs from the database
+        var allUsers = await _context.Users
+            .AsNoTracking()
+            .Select(u => new { u.Id, NormalizedId = u.Id.Trim().ToLowerInvariant() })
+            .ToListAsync();
+        _logger.LogInformation("All user IDs in the database (normalized): {AllNormalizedIds}",
+            string.Join(", ", allUsers.Select(u => u.NormalizedId)));
+
+        // Explicitly log each matching condition for individual IDs
+        foreach (var id in normalizedIds)
         {
-            var success = await DeleteUserWithDependenciesAsync(id, null);
-            if (!success)
-            {
-                _logger.LogWarning("Failed to delete user with ID: {UserId} during bulk deletion.", id);
-            }
+            var isMatched = allUsers.Any(u => u.NormalizedId == id);
+            _logger.LogInformation("Checking ID: {Id} - Match Found: {IsMatched}", id, isMatched);
         }
+
+        // Find matching users using case-insensitive comparison
+        var usersToDelete = allUsers
+            .Where(u => normalizedIds.Contains(u.NormalizedId, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+
+        if (!usersToDelete.Any())
+        {
+            _logger.LogWarning("No matching users found for the provided IDs: {Ids}", string.Join(", ", normalizedIds));
+            return ids.ToList(); // Return all IDs as failed deletions
+        }
+
+        _logger.LogInformation("Users found for deletion: {Users}", string.Join(", ", usersToDelete.Select(u => u.Id)));
+
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        _logger.LogInformation("Transaction started for bulk deletion.");
+
+        try
+        {
+            foreach (var user in usersToDelete)
+            {
+                try
+                {
+                    _logger.LogInformation("Attempting to delete user with ID: {UserId}", user.Id);
+
+                    // Call DeleteUserWithDependenciesAsync without initiating a new transaction
+                    var success = await DeleteUserWithDependenciesAsync(user.Id, null, useTransaction: false);
+                    if (!success)
+                    {
+                        _logger.LogWarning("Failed to delete user dependencies for ID: {UserId}", user.Id);
+                        failedDeletions.Add(user.Id);
+                        continue;
+                    }
+
+                    _logger.LogInformation("User successfully deleted for ID: {UserId}", user.Id);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while deleting user ID: {UserId}", user.Id);
+                    failedDeletions.Add(user.Id);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            _logger.LogInformation("Bulk deletion transaction committed. Failed deletions: {FailedIds}",
+                string.Join(", ", failedDeletions));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred during the bulk deletion transaction. Rolling back...");
+            await transaction.RollbackAsync();
+            throw; // Rethrow to allow higher-level error handling
+        }
+
+        return failedDeletions;
     }
 
-    public async Task<bool> DeleteUserWithDependenciesAsync(string userId, string? adminUserName)
+
+    public async Task<bool> DeleteUserWithDependenciesAsync(string userId, string? adminUserName, bool useTransaction = true)
     {
+        // Log the initiation of the deletion process
+        _logger.LogInformation("Initiating deletion process for user with ID: {UserId}", userId);
+
         // Start a database transaction for atomicity
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        using var transaction = useTransaction ? await _context.Database.BeginTransactionAsync() : null;
 
         try
         {
@@ -165,6 +239,7 @@ public class UserManagementService : IUserManagementService
             if (user == null)
             {
                 _logger.LogWarning("User with ID {UserId} not found for deletion.", userId);
+                if (useTransaction) await transaction.RollbackAsync(); // Explicit rollback in case of early return
                 return false;
             }
 
@@ -248,6 +323,7 @@ public class UserManagementService : IUserManagementService
             {
                 _logger.LogError("Failed to delete user with ID: {UserId}. Errors: {Errors}", userId,
                     string.Join(", ", result.Errors.Select(e => e.Description)));
+                if (useTransaction) await transaction.RollbackAsync(); // Rollback if user deletion fails
                 return false;
             }
 
@@ -255,7 +331,7 @@ public class UserManagementService : IUserManagementService
             _logger.LogInformation("Logging the deletion action for user with ID: {UserId}", userId);
             var log = new ActivityLog
             {
-                AdminUser = adminUserName,
+                AdminUser = adminUserName ?? "System",
                 Action = $"Deleted user with ID {userId}",
                 Timestamp = DateTime.UtcNow
             };
@@ -263,7 +339,7 @@ public class UserManagementService : IUserManagementService
 
             // Save changes and commit transaction
             await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
+            if (useTransaction) await transaction.CommitAsync();
 
             _logger.LogInformation("Successfully deleted user with ID: {UserId}", userId);
             return true;
@@ -271,8 +347,8 @@ public class UserManagementService : IUserManagementService
         catch (Exception ex)
         {
             // Rollback transaction on error
-            await transaction.RollbackAsync();
             _logger.LogError(ex, "Error occurred while deleting user with ID: {UserId}", userId);
+            if (useTransaction) await transaction.RollbackAsync();
             return false;
         }
     }
