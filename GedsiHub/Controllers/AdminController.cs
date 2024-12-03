@@ -56,12 +56,11 @@ namespace GedsiHub.Controllers
                 var userViewModels = users.Select(u => new UserViewModel
                 {
                     Id = u.Id,
-                    UserName = u.UserName,
                     Email = u.Email,
-                    IsAdmin = _userManagementService.IsUserAdmin(u),
-                    IsActive = u.IsActive,
                     FirstName = u.FirstName,
-                    LastName = u.LastName
+                    LastName = u.LastName,
+                    IsAdmin = _userManagementService.IsUserAdmin(u),
+                    IsActive = u.IsActive
                 }).ToList();
 
                 var model = new UserManagementViewModel
@@ -103,10 +102,11 @@ namespace GedsiHub.Controllers
             var viewModel = new EditUserViewModel
             {
                 Id = user.Id,
-                UserName = user.UserName,
                 Email = user.Email,
                 IsAdmin = isAdmin,
-                IsActive = user.IsActive
+                IsActive = user.IsActive,
+                FirstName = user.FirstName,
+                LastName = user.LastName
             };
 
             return View(viewModel);
@@ -115,59 +115,136 @@ namespace GedsiHub.Controllers
         // POST: Admin/EditUser
         // This action updates the user details in the system, including toggling admin status or active state.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
-            _logger.LogInformation("Admin submitted edit for user with ID: {UserId}", model.Id);
+            _logger.LogInformation("EditUser POST action called for user ID: {UserId}", model.Id);
+
+            // Log submitted values for debugging
+            _logger.LogInformation("Submitted values: IsAdmin={IsAdmin}, IsActive={IsActive}, Email={Email}, FirstName={FirstName}, LastName={LastName}",
+                model.IsAdmin, model.IsActive, model.Email, model.FirstName, model.LastName);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("ModelState is invalid. Errors: {Errors}",
+                    string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+                TempData["ErrorMessage"] = "Please correct the errors and try again.";
+                return View(model);
+            }
 
             var user = await _userManager.FindByIdAsync(model.Id);
             if (user == null)
             {
-                _logger.LogWarning("User with ID {UserId} not found during edit submission.", model.Id);
-                return NotFound();
+                _logger.LogWarning("User not found with ID: {UserId}", model.Id);
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(UserManagement));
+            }
+
+            var currentUserId = _userManager.GetUserId(User);
+            var isCurrentUser = model.Id == currentUserId;
+
+            // Detect changes to fields
+            var isEmailChanged = user.Email != model.Email;
+            var isFirstNameChanged = user.FirstName != model.FirstName;
+            var isLastNameChanged = user.LastName != model.LastName;
+            var isActiveChanged = user.IsActive != model.IsActive;
+
+            // Compare the current Admin role
+            var currentAdminRole = await _userManager.IsInRoleAsync(user, "Admin");
+            _logger.LogInformation("User ID: {UserId} current Admin role: {CurrentAdminRole}, model.IsAdmin: {ModelIsAdmin}",
+                model.Id, currentAdminRole, model.IsAdmin);
+
+            var isAdminRoleChanged = currentAdminRole != model.IsAdmin;
+
+            // Debug-level logging for field change detection
+            _logger.LogDebug("Changes detected: EmailChanged={EmailChanged}, FirstNameChanged={FirstNameChanged}, LastNameChanged={LastNameChanged}, IsActiveChanged={IsActiveChanged}, IsAdminRoleChanged={IsAdminRoleChanged}",
+                isEmailChanged, isFirstNameChanged, isLastNameChanged, isActiveChanged, isAdminRoleChanged);
+
+            // Self-deactivation guard
+            if (isCurrentUser)
+            {
+                if (isAdminRoleChanged)
+                {
+                    _logger.LogWarning("Self-admin role change attempted by user ID: {UserId}", model.Id);
+                    TempData["ErrorMessage"] = "You cannot change your own Admin status.";
+                    return View(model);
+                }
+
+                if (isActiveChanged)
+                {
+                    _logger.LogWarning("Self-deactivation attempted by user ID: {UserId}", model.Id);
+                    TempData["ErrorMessage"] = "You cannot deactivate your own account.";
+                    return View(model);
+                }
+            }
+
+            // Prevent unnecessary updates
+            if (!isEmailChanged && !isFirstNameChanged && !isLastNameChanged && !isActiveChanged && !isAdminRoleChanged)
+            {
+                _logger.LogInformation("No changes detected for user ID: {UserId}", model.Id);
+                TempData["InfoMessage"] = "No changes were made.";
+                return RedirectToAction(nameof(UserManagement));
             }
 
             try
             {
-                // Update basic information
-                user.UserName = model.UserName;
-                user.Email = model.Email;
-                user.IsActive = model.IsActive;
+                // Log updates to basic information
+                _logger.LogInformation("Updating user details for user ID: {UserId}. New values: Email={Email}, FirstName={FirstName}, LastName={LastName}, IsActive={IsActive}",
+                    model.Id, model.Email, model.FirstName, model.LastName, model.IsActive);
+
+                // Update user details
+                if (user.UserName != user.Email)
+                {
+                    user.UserName = user.Email; // Default Username to Email
+                }
+                if (isEmailChanged) user.Email = model.Email;
+                if (isFirstNameChanged) user.FirstName = model.FirstName;
+                if (isLastNameChanged) user.LastName = model.LastName;
+                if (isActiveChanged) user.IsActive = model.IsActive;
 
                 // Handle admin role assignment (toggle Admin status)
-                if (model.IsAdmin)
+                if (!isCurrentUser)
                 {
-                    if (!await _userManager.IsInRoleAsync(user, "Admin"))
+                    if (model.IsAdmin && !currentAdminRole)
                     {
+                        _logger.LogInformation("Adding Admin role to user ID: {UserId}", model.Id);
                         await _userManager.AddToRoleAsync(user, "Admin");
                     }
-                }
-                else
-                {
-                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    else if (!model.IsAdmin && currentAdminRole)
                     {
+                        _logger.LogInformation("Removing Admin role from user ID: {UserId}", model.Id);
                         await _userManager.RemoveFromRoleAsync(user, "Admin");
                     }
                 }
 
                 // Save updates
-                await _userManager.UpdateAsync(user);
+                var result = await _userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
+                    _logger.LogWarning("Failed to update user with ID: {UserId}. Errors: {Errors}", model.Id, errorMessages);
+                    TempData["ErrorMessage"] = $"Failed to update the user: {errorMessages}";
+                    return View(model);
+                }
 
                 // Log the activity
                 var log = new ActivityLog
                 {
                     AdminUser = User.Identity.Name,
-                    Action = $"Edited user {user.UserName} (Admin status: {model.IsAdmin}, Active status: {model.IsActive})",
+                    Action = $"Edited user {user.Email} (Admin status: {model.IsAdmin}, Active status: {model.IsActive})",
                     Timestamp = DateTime.UtcNow
                 };
                 _context.ActivityLogs.Add(log);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("User with ID: {UserId} edited successfully.", model.Id);
+                TempData["SuccessMessage"] = "User updated successfully.";
                 return RedirectToAction(nameof(UserManagement));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while editing user with ID: {UserId}", model.Id);
+                TempData["ErrorMessage"] = "An unexpected error occurred. Please try again.";
                 return View("Error");
             }
         }
@@ -190,8 +267,9 @@ namespace GedsiHub.Controllers
             var viewModel = new DeleteUserViewModel
             {
                 Id = user.Id,
-                UserName = user.UserName
-            };
+                FullName = $"{user.FirstName} {user.LastName}",
+                Email = user.Email
+            };  
 
             return View(viewModel);
         }

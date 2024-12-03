@@ -10,7 +10,7 @@
         <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">User Management</h1>
 
         <div class="um-search-con">
-            <input id="userManagementSearch" type="search" name="search" value="@Model.SearchTerm" placeholder="Search by username or email" />
+            <input id="userManagementSearch" type="search" name="search" value="@Model.SearchTerm" placeholder="Search by name or email" />
             <button type="submit" class="search-icon-um">
                 <img id="userManagementSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
             </button>
@@ -64,7 +64,7 @@
                     <thead>
                         <tr class="feedback-table-label">
                             <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bss-tooltip="" data-bs-title="Select All Users"><input type="checkbox" id="selectAllCheckbox" onclick="toggleAllCheckboxes(this)" /></th>
-                            <th class="um-header-label">Username</th>
+                            <th class="um-header-label">Name</th>
                             <th class="um-header-label">Email</th>
                             <th class="um-header-label">Admin</th>
                             <th class="um-header-label">Status</th>

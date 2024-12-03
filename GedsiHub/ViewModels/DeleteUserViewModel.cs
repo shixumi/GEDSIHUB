@@ -2,7 +2,8 @@
 {
     public class DeleteUserViewModel
     {
-        public string Id { get; set; }      // Must match the property used in asp-for="Id"
-        public string UserName { get; set; } // For display in the heading
+        public string Id { get; set; }       // User ID
+        public string FullName { get; set; } // Full Name (First Name + Last Name)
+        public string Email { get; set; }    // Email Address
     }
 }

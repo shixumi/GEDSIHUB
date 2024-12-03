@@ -1,52 +1,84 @@
 ﻿@model GedsiHub.ViewModels.EditUserViewModel
+@using System.Security.Claims
 
 @{
     Layout = "_LayoutApp";
     ViewData["Title"] = "Edit User";
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
-
 
 <div>
     <div class="feedback-title-searcbar-con">
         <div id="edit-user-w-name">
             <h1 id="feedback-responses-title" class="modules_title" style="color: #464040;">Edit User</h1>
-            <h1 class="modules_title" style="color: #464040;">@Model.UserName</h1>
         </div>
     </div>
     <hr class="custom-hr">
 
     <form asp-action="EditUser" method="post">
-    <input type="hidden" asp-for="Id" />
-    <div id="edit-user-container" class="container feedback-container">
-        <div id="username-email-con-eu">
-            <div id="username-eu-con">
-                    <label asp-for="UserName">Username</label>
-                    <input input asp-for="UserName" class="input-edit-user-dashboard" type="text" />
-            </div>
+        @Html.AntiForgeryToken()
 
-            <div id="email-eu-con">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div id="edit-user-container" class="container feedback-container">
+            <div id="username-email-con-eu">
+                <!-- First Name Field -->
+                <div id="username-eu-con">
+                    <label asp-for="FirstName">First Name</label>
+                    <input asp-for="FirstName" class="input-edit-user-dashboard" type="text" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <!-- Last Name Field -->
+                <div id="username-eu-con">
+                    <label asp-for="LastName">Last Name</label>
+                    <input asp-for="LastName" class="input-edit-user-dashboard" type="text" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <!-- Email Field -->
+                <div id="email-eu-con">
                     <label asp-for="Email">Email</label>
-                    <input input asp-for="Email"  class="input-edit-user-dashboard" type="text" />
+                    <input asp-for="Email" class="input-edit-user-dashboard" type="text" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
             </div>
-        </div>
 
-        <div id="isadmin-isactive-con">
+            <!-- Is Admin Checkbox -->
             <div>
-                    <label asp-for="IsAdmin">Is Admin</label>
+                <label asp-for="IsAdmin">Is Admin</label>
+                @if (Model.Id == currentUserId)
+                {
+                    <input type="hidden" name="IsAdmin" value="true" />
+                    <input asp-for="IsAdmin" type="checkbox" class="disabled-input" disabled="disabled" />
+                    <span class="text-muted small">You cannot change your own Admin status.</span>
+                }
+                else
+                {
                     <input asp-for="IsAdmin" type="checkbox" />
+                }
             </div>
 
+            <!-- Is Active Checkbox -->
             <div>
-                    <label asp-for="IsActive">Is Active</label>
+                <label asp-for="IsActive">Is Active</label>
+                @if (Model.Id == currentUserId)
+                {
+                    <input type="hidden" name="IsActive" value="true" />
+                    <input asp-for="IsActive" type="checkbox" class="disabled-input" disabled="disabled" />
+                    <span class="text-muted small">You cannot deactivate your own account.</span>
+                }
+                else
+                {
                     <input asp-for="IsActive" type="checkbox" />
+                }
+            </div>
+
+            <div id="edit-user-button-con">
+                <a id="userEditBackButton" href="@Url.Action("UserManagement", "Admin")">Back</a>
+                <button id="userEditSaveButton" type="submit">Save Changes</button>
             </div>
         </div>
-        <div id="edit-user-button-con">
-            <form asp-action="UserManagement" asp-controller="Admin" method="get" style="display: inline;">
-            <button id="userEditBackButton" type="submit">Back</button>
-            </form>
-                <button id="userEditSaveButton" type="submit">Save Changes</button>
-        </div>
-    </div>
     </form>
 </div>
