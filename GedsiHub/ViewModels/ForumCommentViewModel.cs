@@ -10,8 +10,8 @@ namespace GedsiHub.ViewModels
         [StringLength(1000, ErrorMessage = "Comment cannot exceed 1000 characters.")]
         public string Content { get; set; } = string.Empty;
 
-        public IFormFile? ImageFile { get; set; }  // Optional image for the comment
+        public IFormFile? ImageFile { get; set; }
 
-        public int PostId { get; set; }  // The ID of the post being commented on
+        public int PostId { get; set; }
     }
 }

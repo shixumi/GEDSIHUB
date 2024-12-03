@@ -80,12 +80,6 @@
     <!-- Iterate through each lesson and display lesson details -->
     @foreach (var lesson in Model.Lessons.OrderBy(l => l.PositionInt))
     {
-        // Ensure unpublished lessons are visible only to Admins
-        if (!lesson.IsPublished && !User.IsInRole("Admin"))
-        {
-            continue; // Skip unpublished lessons for non-admin users
-        }
-
         <div id="edit_new_lesson_container" class="container d-xxl-flex EditLessonContainer">
             <div class="lessonNo_title_container">
                 <span>Lesson</span>
@@ -119,25 +113,6 @@
                             <span>Edit</span>
                         </div>
                     </a>
-
-                    <!-- Toggle button for publish/unpublish lesson -->
-                    <form asp-action="TogglePublish" asp-controller="Lesson" asp-route-id="@lesson.LessonId" method="post" class="d-inline">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn lesson-ftr-btn">
-                            <div id="toggleButtonPublishUnpublishLesson">
-                                @if (lesson.IsPublished)
-                                {
-                                    <img class="PublishIcon" src="~/images/Unpublish.png" alt="Unpublish Icon" />
-                                    <span>Unpublish</span>
-                                }
-                                else
-                                {
-                                    <img class="PublishIcon" src="~/images/Publish.png" alt="Publish Icon" />
-                                    <span>Publish</span>
-                                }
-                            </div>
-                        </button>
-                    </form>
 
                     <!-- Direct Admin Access to Lesson -->
                     <a asp-action="GoToLesson" asp-controller="LessonContent" asp-route-lessonId="@lesson.LessonId" asp-route-moduleId="@Model.ModuleId" class="btn btn-primary go_to_button">

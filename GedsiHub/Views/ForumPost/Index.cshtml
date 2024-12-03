@@ -157,9 +157,12 @@
                     @(post.Content.Length > 200 ? post.Content.Substring(0, 100) + "..." : post.Content)
                 </p>
 
-                @if (ViewData["SortBy"]?.ToString() == "Trending")
+                @if (User.IsInRole("Admin"))
                 {
-                <p class="text-muted">Trending Score: @post.TrendingScore</p> <!-- DELETE THIS AFTER TESTING -->
+                    if (ViewData["SortBy"]?.ToString() == "Trending")
+                    {
+                        <p class="text-muted">Trending Score: @((Convert.ToDouble(post.TrendingScore)).ToString("F4"))</p>
+                    }
                 }
 
                 <!-- Image Preview -->

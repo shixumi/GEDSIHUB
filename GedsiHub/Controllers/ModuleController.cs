@@ -87,7 +87,6 @@ namespace GedsiHub.Controllers
 
         // ******************* MODULE DETAILS *******************
 
-        // GET: Display detailed information about a module including its lessons and assessments
         public async Task<IActionResult> Details(int id)
         {
             var module = await _context.Modules
@@ -106,20 +105,17 @@ namespace GedsiHub.Controllers
             // Check if module is unlocked for the user
             if (!isAdmin)
             {
-                // Fetch user progress to determine access
                 var userProgresses = await _context.UserProgresses
                     .Where(up => up.UserId == userId)
                     .Include(up => up.Module)
                     .ToListAsync();
 
-                // Determine the highest completed module position
                 var highestCompletedPosition = userProgresses
                     .Where(up => up.IsCompleted)
                     .Select(up => up.Module.PositionInt)
                     .DefaultIfEmpty(0)
                     .Max();
 
-                // Restrict access if the module's position exceeds the user's access level
                 if (module.PositionInt > highestCompletedPosition + 1)
                 {
                     TempData["Error"] = "This module is locked. Complete previous modules to access it.";
@@ -132,7 +128,6 @@ namespace GedsiHub.Controllers
 
             if (!isAdmin)
             {
-                // Fetch completed lessons for this module
                 var completedLessons = await _context.UserLessonProgresses
                     .Where(ulp => ulp.UserId == userId && ulp.Lesson.ModuleId == id)
                     .Select(ulp => ulp.LessonId)
@@ -142,20 +137,11 @@ namespace GedsiHub.Controllers
                 foreach (var lesson in module.Lessons.OrderBy(l => l.PositionInt))
                 {
                     bool isAccessible = previousLessonCompleted;
-
-                    if (lesson.IsPublished)
-                    {
-                        lessonStatuses[lesson.LessonId] = isAccessible;
-                        previousLessonCompleted = isAccessible && completedLessons.Contains(lesson.LessonId);
-                    }
-                    else
-                    {
-                        lessonStatuses[lesson.LessonId] = false;
-                    }
+                    lessonStatuses[lesson.LessonId] = isAccessible;
+                    previousLessonCompleted = isAccessible && completedLessons.Contains(lesson.LessonId);
                 }
 
                 areAllLessonsCompleted = module.Lessons
-                    .Where(l => l.IsPublished)
                     .All(l => completedLessons.Contains(l.LessonId));
             }
             else
@@ -172,7 +158,6 @@ namespace GedsiHub.Controllers
 
             return View(module);
         }
-
 
         // ******************* MODULE CREATION *******************
 

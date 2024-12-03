@@ -230,31 +230,6 @@ namespace GedsiHub.Controllers
             return View(lessonContent);
         }
 
-
-
-
-        // ****************************** TOGGLE PUBLISH STATUS ******************************
-
-        // POST: Toggle Published status of a Lesson
-        // Toggles the "IsPublished" status of the lesson.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> TogglePublish(int id)
-        {
-            var lesson = await _context.Lessons.FindAsync(id);
-            if (lesson == null)
-            {
-                return NotFound();
-            }
-
-            lesson.IsPublished = !lesson.IsPublished; // Toggle publish status
-            _context.Update(lesson);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Details", "Module", new { id = lesson.ModuleId });
-        }
-
         // ****************************** UPDATE USER PROGRESS ******************************
 
         // POST: Update User Progress

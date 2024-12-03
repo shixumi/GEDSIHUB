@@ -23,8 +23,6 @@ namespace GedsiHub.Models
         [Required]
         public int ModuleId { get; set; } // Foreign Key to Module
 
-        public bool IsPublished { get; set; } = false;
-
         [NotMapped]
         public bool HasContent { get; set; }
 
