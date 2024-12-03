@@ -228,10 +228,13 @@ namespace GedsiHub.Controllers
                 }
 
                 // Log the activity
+                var adminDetails = await _userManager.FindByNameAsync(User.Identity?.Name);
+                var adminName = adminDetails != null ? $"{adminDetails.FirstName} {adminDetails.LastName}" : "System";
+
                 var log = new ActivityLog
                 {
-                    AdminUser = User.Identity.Name,
-                    Action = $"Edited user {user.Email} (Admin status: {model.IsAdmin}, Active status: {model.IsActive})",
+                    AdminUser = adminName, // Use admin's name
+                    Action = $"Edited user {user.FirstName} {user.LastName} (Admin status: {model.IsAdmin}, Active status: {model.IsActive})",
                     Timestamp = DateTime.UtcNow
                 };
                 _context.ActivityLogs.Add(log);
@@ -331,8 +334,19 @@ namespace GedsiHub.Controllers
 
                 _logger.LogInformation("Processed user IDs for deletion: {IdsToProcess}", string.Join(", ", idsToProcess));
 
+                // Get admin username from the current authenticated user
+                var adminUserName = User.Identity?.Name;
+                _logger.LogInformation("Admin Username from HttpContext: {AdminUserName}", adminUserName);
+
+                if (string.IsNullOrEmpty(adminUserName))
+                {
+                    _logger.LogWarning("Admin username could not be determined.");
+                    TempData["ErrorMessage"] = "Unable to identify admin for logging the action.";
+                    return RedirectToAction(nameof(UserManagement));
+                }
+
                 // Call the service to perform bulk deletion
-                var failedDeletions = await _userManagementService.BulkDeleteUsersAsync(idsToProcess);
+                var failedDeletions = await _userManagementService.BulkDeleteUsersAsync(idsToProcess, adminUserName);
 
                 if (failedDeletions.Any())
                 {

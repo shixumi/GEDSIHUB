@@ -140,7 +140,7 @@ public class UserManagementService : IUserManagementService
             throw new InvalidOperationException($"Failed to delete user with ID {id}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
         }
     }
-    public async Task<List<string>> BulkDeleteUsersAsync(IEnumerable<string> ids)
+    public async Task<List<string>> BulkDeleteUsersAsync(IEnumerable<string> ids, string adminUserName)
     {
         var failedDeletions = new List<string>();
 
@@ -157,6 +157,13 @@ public class UserManagementService : IUserManagementService
             .ToListAsync();
         _logger.LogInformation("All user IDs in the database (normalized): {AllNormalizedIds}",
             string.Join(", ", allUsers.Select(u => u.NormalizedId)));
+
+        // Check if adminUserName is available
+        if (string.IsNullOrEmpty(adminUserName))
+        {
+            _logger.LogWarning("Admin username is null or empty, falling back to 'System'.");
+            adminUserName = "System"; // Fallback if the admin username is unavailable
+        }
 
         // Explicitly log each matching condition for individual IDs
         foreach (var id in normalizedIds)
@@ -190,7 +197,7 @@ public class UserManagementService : IUserManagementService
                     _logger.LogInformation("Attempting to delete user with ID: {UserId}", user.Id);
 
                     // Call DeleteUserWithDependenciesAsync without initiating a new transaction
-                    var success = await DeleteUserWithDependenciesAsync(user.Id, null, useTransaction: false);
+                    var success = await DeleteUserWithDependenciesAsync(user.Id, adminUserName, useTransaction: false);
                     if (!success)
                     {
                         _logger.LogWarning("Failed to delete user dependencies for ID: {UserId}", user.Id);
@@ -222,7 +229,6 @@ public class UserManagementService : IUserManagementService
 
         return failedDeletions;
     }
-
 
     public async Task<bool> DeleteUserWithDependenciesAsync(string userId, string? adminUserName, bool useTransaction = true)
     {
@@ -329,10 +335,17 @@ public class UserManagementService : IUserManagementService
 
             // Step 8: Log the deletion action
             _logger.LogInformation("Logging the deletion action for user with ID: {UserId}", userId);
+            var adminDetails = adminUserName != null ? await _userManager.FindByNameAsync(adminUserName) : null;
+            var adminName = adminDetails != null ? $"{adminDetails.FirstName} {adminDetails.LastName}" : "System";
+
+            // Retrieve admin status and active status from the user object
+            var adminStatus = await _userManager.IsInRoleAsync(user, "Admin") ? "Admin" : "Non-Admin";
+            var activeStatus = user.IsActive ? "Active" : "Inactive";
+
             var log = new ActivityLog
             {
-                AdminUser = adminUserName ?? "System",
-                Action = $"Deleted user with ID {userId}",
+                AdminUser = adminName,
+                Action = $"Deleted user {user.FirstName} {user.LastName} (Admin status: {adminStatus}, Active status: {activeStatus})",
                 Timestamp = DateTime.UtcNow
             };
             _context.ActivityLogs.Add(log);
