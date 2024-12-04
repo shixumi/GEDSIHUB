@@ -24,15 +24,15 @@ public class CertificateController : ControllerBase
     [HttpGet("{userId}/{moduleId}")]
     public async Task<IActionResult> GetCertificate(string userId, int moduleId)
     {
-        // Validate that the user exists
+        // Validate the user
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null) return NotFound("User not found.");
 
-        // Validate the module exists
+        // Validate the module
         var module = await _context.Modules.FindAsync(moduleId);
         if (module == null) return NotFound("Module not found.");
 
-        // Check for existing certificate
+        // Check for an existing certificate
         var existingCertificate = await _context.Certificates
             .FirstOrDefaultAsync(c => c.UserId == userId && c.ModuleId == moduleId);
 
@@ -45,8 +45,7 @@ public class CertificateController : ControllerBase
         var pdfBytes = await _certificateService.GetCertificateBytesAsync(userId, moduleId);
         if (pdfBytes == null) return NotFound("Certificate not found.");
 
-        // Return the certificate as a downloadable file
-        return File(pdfBytes, "application/pdf", "certificate.pdf");
+        // Return the certificate file
+        return File(pdfBytes, "application/pdf", $"{module.Title}-Certificate.pdf");
     }
-
 }

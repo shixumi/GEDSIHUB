@@ -142,6 +142,31 @@
         document.addEventListener("DOMContentLoaded", function () {
             let questionIndex = @Model.Questions.Count;
 
+            // Function to validate questions before submission
+            function validateQuestions() {
+                const questions = document.querySelectorAll('.question-section');
+                let isValid = true;
+
+                questions.forEach((question, index) => {
+                    const correctChoice = question.querySelector(`input[name="Questions[${index}].CorrectChoice"]:checked`);
+                    if (!correctChoice) {
+                        isValid = false;
+                        alert(`Please mark a correct choice for Question ${index + 1}.`);
+                        question.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+
+                return isValid;
+            }
+
+            // Attach validation to form submission
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function (event) {
+                if (!validateQuestions()) {
+                    event.preventDefault(); // Stop form submission
+                }
+            });
+
             window.addQuestion = function () {
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-section';

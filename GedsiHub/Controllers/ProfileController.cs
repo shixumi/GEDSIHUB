@@ -64,7 +64,18 @@ namespace GedsiHub.Controllers
                 College = user.Student?.CollegeDepartment?.DepartmentName ?? "N/A",
                 IsMemberOfIndigenousCommunity = user.IsMemberOfIndigenousCommunity,
                 IsDisabled = user.IsDisabled,
-                CreatedDate = user.CreatedDate
+                CreatedDate = user.CreatedDate,
+                // Fetch Certificates
+                Certificates = await _context.Certificates
+                    .Where(c => c.UserId == user.Id)
+                    .Select(c => new CertificateDto
+                    {
+                        ModuleId = c.ModuleId,
+                        ModuleTitle = c.Module.Title,
+                        Status = "Completed",
+                        CertificateImagePath = $"/api/certificate/{c.UserId}/{c.ModuleId}" // Use API endpoint
+                    })
+                    .ToListAsync()
             };
 
             if (string.IsNullOrWhiteSpace(profileViewModel.LivedName))

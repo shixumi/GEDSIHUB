@@ -147,34 +147,117 @@
         </div>
 
         </div>
-        <div id="certificates-con" class="container">
-            <h1 class="your-cert-label">
-                Your Certificates 
-                <img src="~/images/Certificate.png" alt="Certificate Icon" />
-            </h1>
-            <span>View your earned certificates for completed modules. Click on any certificate to view or download.</span>
+    <div id="certificates-con" class="container">
+        <h1 class="your-cert-label">
+            Your Certificates 
+            <img src="~/images/Certificate.png" alt="Certificate Icon" />
+        </h1>
+        <span>View your earned certificates for completed modules. Click on any certificate to preview or download.</span>
+        <div class="certificates-scroll-container">
             <div class="certificates-container">
-                <div class="certificate-item">
-                    <div class="cert-mod-no-con">
-                        <h1>Module</h1>
-                        <h1>1</h1>
-                    </div>
-                    <span class="status-completed">Completed</span>
-                    <div class="certificate-placeholder"></div>
-                </div>
-                <div class="certificate-item">
-                    <div class="cert-mod-no-con">
-                        <h1>Module</h1>
-                        <h1>1</h1>
-                    </div>
-                    <span class="status-completed">Completed</span>
-                    <div class="certificate-placeholder"></div>
-                </div>
+                @if (Model.Certificates != null && Model.Certificates.Any())
+                {
+                    @foreach (var certificate in Model.Certificates)
+                    {
+                        <div class="certificate-item">
+                            <a href="@certificate.CertificateImagePath" target="_blank" class="certificate-link">
+                                <div class="certificate-preview">
+                                    <img src="~/images/Certificate-Placeholder.png" class="certificate-image" />
+                                </div>
+                                <div class="certificate-details">
+                                    <h4 class="module-title" title="@certificate.ModuleTitle">
+                                        Module @certificate.ModuleId: @certificate.ModuleTitle
+                                    </h4>
+                                    <span class="status-completed">@certificate.Status</span>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>You haven't earned any certificates yet. Complete a module to earn one!</p>
+                }
             </div>
         </div>
+    </div>
+
 </div>
 
-                                
+<style>
+
+    .certificate-item {
+        width: 45%; /* Fixed width for two items per row */
+        max-width: 350px; /* Prevent excessive stretching */
+        min-width: 300px; /* Prevent shrinking too much */
+        aspect-ratio: 4 / 3; /* Maintain consistent card aspect ratio */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .certificate-item:hover {
+            transform: scale(1.02); /* Slight zoom on hover for interactivity */
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    .certificate-link {
+        text-decoration: none;
+        color: inherit; /* Maintain text color */
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .certificate-preview {
+        flex: 1 1 auto;
+        background-color: #f9f9f9; /* Subtle background for preview area */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .certificate-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensure proper scaling of preview images */
+        object-position: center;
+    }
+
+    .certificate-details {
+        padding: 15px;
+        text-align: center;
+        flex: 0 0 auto; /* Prevent stretching */
+    }
+
+    .module-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0 0 5px 0;
+        line-height: 1.2; /* Maintain proper line spacing */
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Graceful truncation */
+    }
+
+    .status-completed {
+        color: green;
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+</style>             
 
 
 

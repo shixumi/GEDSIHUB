@@ -58,17 +58,16 @@
     <!-- Form to capture and submit answers -->
     <form asp-action="Submit" asp-controller="Assessment" method="post">
         <input type="hidden" asp-for="ExamID" />
+        <div class="container assessment-container">
+            <div class="num-delete-con">
+            <span class="assessment-count" id="question-counter">1/@Model.questions.Count</span>
+        </div>
   
          @for (int i = 0; i < Model.questions.Count; i++)
          {
             <!-- Assessment Section -->
 
-            <div class="container assessment-container" style="display:@(i == 0 ? "block" : "none");" id="question-@i">
-
-                <!-- Question Counter -->
-                <div class="num-delete-con">
-                    <span class="assessment-count">1/4</span>
-                </div>
+            <div style="display:@(i == 0 ? "block" : "none");" id="question-@i">
                     
                 <!-- Question Content -->
                 <div class="question-container user-question-container">
@@ -109,6 +108,8 @@
             </div>
   
          }
+        </div>
+        
          
             @* <!-- Final Message Section -->
             <div class="container assessment-container footnote-message">
@@ -132,80 +133,58 @@
     </form>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
 @section Scripts {
     <script>
         let currentQuestion = 0;
         const totalQuestions = @Model.questions.Count; // Make sure this is correctly embedded in the view
 
         function showQuestion(index) {
-            console.log("Navigating to question index:", index);
-
             // Hide the current question
             const currentElement = document.getElementById(`question-${currentQuestion}`);
             if (currentElement) {
-                console.log(`Hiding question-${currentQuestion}`);
                 currentElement.style.display = "none";
-            } else {
-                console.error(`Current question element not found: question-${currentQuestion}`);
             }
 
             // Show the new question
             const nextElement = document.getElementById(`question-${index}`);
             if (nextElement) {
-                console.log(`Showing question-${index}`);
                 nextElement.style.display = "block";
-            } else {
-                console.error(`Next question element not found: question-${index}`);
             }
 
-            currentQuestion = index;
+            // Update the global question counter
+            const questionCounter = document.getElementById("question-counter");
+            if (questionCounter) {
+                questionCounter.textContent = `${index + 1}/${totalQuestions}`;
+            }
 
             // Update navigation buttons
-            document.getElementById("prevButton").style.display = currentQuestion > 0 ? "inline" : "none";
-            document.getElementById("nextButton").style.display = currentQuestion < totalQuestions - 1 ? "inline" : "none";
-            document.getElementById("submitButton").style.display = currentQuestion === totalQuestions - 1 ? "inline" : "none";
-        }
+            document.getElementById("prevButton").style.display = index > 0 ? "inline" : "none";
+            document.getElementById("nextButton").style.display = index < totalQuestions - 1 ? "inline" : "none";
+            document.getElementById("submitButton").style.display = index === totalQuestions - 1 ? "inline" : "none";
 
+            currentQuestion = index; // Update the current question index
+        }
 
 
         function showNext() {
             const options = document.querySelectorAll(`#question-${currentQuestion} input[type="radio"]`);
             const isSelected = Array.from(options).some(option => option.checked);
 
-            console.log("Options for currentQuestion:", options); // Verify options are found
-            console.log("Is any option selected?", isSelected); // Verify selection status
-
             if (!isSelected) {
                 alert("Please select an answer before moving to the next question.");
                 return; // Stop execution if nothing is selected
             }
-
-            console.log(`Proceeding to the next question: currentQuestion=${currentQuestion}, totalQuestions=${totalQuestions}`);
 
             if (currentQuestion < totalQuestions - 1) {
                 showQuestion(currentQuestion + 1);
             }
         }
 
-
         function showPrevious() {
             if (currentQuestion > 0) {
                 showQuestion(currentQuestion - 1);
             }
         }
-
 
 
         // Add event listeners to radio buttons to highlight selected option
