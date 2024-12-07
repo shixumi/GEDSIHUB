@@ -75,6 +75,12 @@
                 </a>
             }
 
+            <!-- Announcement -->
+            @if (Model.ForumPost.IsAnnouncement)
+            {
+                <span class="badge rounded-pill module-badge" style="background-color: #ff5733; color: white;">Announcement</span>
+            }
+
             <!-- Card Title -->
             <h4 class="card-title">@Model.ForumPost.Title</h4>
 

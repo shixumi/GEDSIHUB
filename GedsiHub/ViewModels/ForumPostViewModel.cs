@@ -45,11 +45,16 @@ namespace GedsiHub.ViewModels
         public string? UserId { get; set; }
 
         // Add LikesCount and ViewsCount
-        public int LikesCount { get; set; } // Default to 0
-        public int ViewsCount { get; set; } // Default to 0
+        public int LikesCount { get; set; }
+        public int ViewsCount { get; set; }
         public bool HasLiked { get; set; }
 
         // Trending score for sorting in the Trending view
         public double? TrendingScore { get; set; }
+
+        // Announcement
+        public bool IsAnnouncement { get; set; }
+        public DateTime? ExpiryDate { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

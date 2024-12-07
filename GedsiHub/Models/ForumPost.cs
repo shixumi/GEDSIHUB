@@ -50,14 +50,21 @@ namespace GedsiHub.Models
         [Column("created_at", TypeName = "DATETIME2")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        // Trending Score
+
         [Column("trending_score", TypeName = "FLOAT")]
         public double? TrendingScore { get; set; }
 
         [Column("likes_count", TypeName = "int")]
-        public int LikesCount { get; set; } = 0; // Default to 0
+        public int LikesCount { get; set; } = 0;
 
         [Column("views_count", TypeName = "int")]
-        public int ViewsCount { get; set; } = 0; // Default to 0    
+        public int ViewsCount { get; set; } = 0;
+
+        // Announcement
+        public bool IsAnnouncement { get; set; } = false;
+        public DateTime? ExpiryDate { get; set; }
+        public bool IsArchived { get; set; } = false;
 
         public virtual ICollection<ForumComment> ForumComments { get; set; } = new List<ForumComment>();
         public virtual ICollection<ForumPostReport> PostReports { get; set; } = new List<ForumPostReport>();

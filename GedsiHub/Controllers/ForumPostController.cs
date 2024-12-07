@@ -31,6 +31,24 @@ namespace GedsiHub.Controllers
         {
             const int PageSize = 10;
 
+            // Fetch announcements (filtered by expiry date and archived status)
+            var announcements = await _context.ForumPosts
+                .Where(post => post.IsAnnouncement &&
+                               !post.IsArchived &&
+                               (post.ExpiryDate == null || post.ExpiryDate > DateTime.UtcNow))
+                .OrderByDescending(post => post.CreatedAt)
+                .Select(post => new ForumPostViewModel
+                {
+                    PostId = post.PostId,
+                    Title = post.Title,
+                    Content = post.Content,
+                    CreatedAt = post.CreatedAt,
+                    UserFirstName = post.User.FirstName,
+                    UserLastName = post.User.LastName,
+                    ExpiryDate = post.ExpiryDate
+                })
+                .ToListAsync();
+
             // Get the currently logged-in user's ID
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -40,6 +58,7 @@ namespace GedsiHub.Controllers
                 .Include(post => post.Module)
                 .Include(post => post.ForumComments)
                 .Include(post => post.ForumPostLikes)
+                .Where(post => !post.IsAnnouncement)
                 .AsQueryable();
 
             // Filter by module
@@ -105,6 +124,9 @@ namespace GedsiHub.Controllers
 
             // Pagination
             var paginatedPosts = posts.Skip((page - 1) * PageSize).Take(PageSize);
+
+            // ViewData for announcements
+            ViewData["Announcements"] = announcements;
 
             // ViewData for sorting and filtering
             ViewData["SortBy"] = sortBy;
@@ -261,7 +283,10 @@ namespace GedsiHub.Controllers
                 Flair = viewModel.Flair,
                 ModuleId = viewModel.ModuleId,
                 PollOptions = string.IsNullOrWhiteSpace(viewModel.PollOptions) ? null : viewModel.PollOptions,
-                UserId = userId
+                UserId = userId,
+                IsAnnouncement = User.IsInRole("Admin") && viewModel.IsAnnouncement,
+                ExpiryDate = User.IsInRole("Admin") ? viewModel.ExpiryDate : null,
+                IsArchived = false
             };
 
             if (viewModel.ImageFile != null)
@@ -469,6 +494,23 @@ namespace GedsiHub.Controllers
             TempData["SuccessMessage"] = "Comment reported successfully.";
             return RedirectToAction("Details", new { id = comment.PostId });
         }
+
+        // ****************************** FORUM POSTS: ARCHIVING ******************************
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ArchiveAnnouncement(int postId)
+        {
+            var post = await _context.ForumPosts.FindAsync(postId);
+            if (post == null || !post.IsAnnouncement) return NotFound();
+
+            post.IsArchived = true; // Mark as archived
+            _context.ForumPosts.Update(post);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Announcement archived successfully!";
+            return RedirectToAction(nameof(Index));
+        }
+
 
         // ****************************** HELPER METHODS FOR RBAC ******************************
 

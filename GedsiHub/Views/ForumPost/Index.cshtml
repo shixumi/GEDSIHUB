@@ -104,6 +104,59 @@
         
     </div>
 
+    <div class="announcements">
+        <h2>Announcements</h2>
+        @if (ViewData["Announcements"] is List<GedsiHub.ViewModels.ForumPostViewModel> announcements && announcements.Any())
+        {
+            @foreach (var announcement in announcements)
+            {
+                <div class="announcement-item alert alert-warning">
+                    <!-- Make Title Clickable -->
+                    <h3>
+                        <a asp-action="Details" asp-route-id="@announcement.PostId" class="announcement-title">
+                            @announcement.Title
+                        </a>
+                    </h3>
+
+                    <!-- Truncated Content -->
+                    <p>
+                        @(announcement.Content.Length > 50
+                            ? announcement.Content.Substring(0, 50) + "..."
+                            : announcement.Content)
+                    </p>
+
+                    <!-- Author and Relative Expiry -->
+                    <small>
+                        Posted by @announcement.UserFirstName @announcement.UserLastName
+                        on @announcement.CreatedAt.ToString("g")
+                        @if (announcement.ExpiryDate.HasValue)
+                        {
+                            <span class="text-muted">
+                                |
+                                @(DateTime.UtcNow < announcement.ExpiryDate.Value
+                                    ? $"Expires {GedsiHub.Helpers.DateTimeHelper.GetRelativeTime(announcement.ExpiryDate.Value)}"
+                                    : $"Expired {GedsiHub.Helpers.DateTimeHelper.GetRelativeTime(announcement.ExpiryDate.Value)}")
+                            </span>
+                        }
+                    </small>
+
+                    <!-- Admin Archive Option -->
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-action="ArchiveAnnouncement" method="post">
+                            <input type="hidden" name="postId" value="@announcement.PostId" />
+                            <button type="submit" class="btn btn-warning">Archive</button>
+                        </form>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <p></p> <!-- Placeholder removed for no announcements -->
+        }
+    </div
+
     <!-- Loop to display each post available in the database -->
     @foreach (var post in Model)
     {
