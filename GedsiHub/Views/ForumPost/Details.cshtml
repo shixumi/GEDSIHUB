@@ -217,14 +217,15 @@
         <!-- Comment Form -->
         <div class="comment-footer">
             <h6>Leave a Comment</h6>
-            <form asp-action="Create" asp-controller="ForumComment" method="post" enctype="multipart/form-data" class="comment-form">
+            <form asp-action="Create" asp-controller="ForumComment" method="post" enctype="multipart/form-data" class="comment-form needs-validation" novalidate>
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="PostId" value="@Model.CommentViewModel.PostId" />
 
                 <!-- Textarea for comment content -->
                 <div class="form-group">
-                    <textarea name="Content" class="form-control comment-input-ta" rows="3" placeholder="Write your comment here"></textarea>
+                    <textarea name="Content" class="form-control comment-input-ta" rows="3" placeholder="Write your comment here" required></textarea>
                     <span asp-validation-for="CommentViewModel.Content" class="text-danger"></span>
+                    <div class="invalid-feedback">Please write a comment.</div>
                 </div>
 
                 <!-- Camera icon and image preview -->
@@ -235,7 +236,7 @@
                             <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12"></path>
                         </svg>
                     </label>
-                    <input type="file" name="ImageFile" class="form-control visually-hidden" id="ImageFile" accept=".jpg, .jpeg, .png, .gif" onchange="previewCommentImage(event)" />
+                    <input type="file" name="ImageFile" class="form-control visually-hidden" id="ImageFile" accept=".jpg, .jpeg, .png, .gif" onchange="previewCommentImage(event)" required/>
                     <span asp-validation-for="CommentViewModel.ImageFile" class="text-danger"></span>
 
                     <!-- Image preview -->
@@ -334,11 +335,51 @@
     </div>
 }
 
+<!-- Modal for Empty Comment Error -->
+<div class="modal fade" id="emptyCommentModal" tabindex="-1" aria-labelledby="emptyCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="emptyCommentModalLabel">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Please enter a comment before submitting.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+
+
+
+<!-- Modal for Error Message -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="errorModalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Confetti sfx -->
 <audio id="cheerSound" src="~/audio/confetti-sfx.mp3"></audio>
 
 
-<!-- JavaScript for image preview -->
+<!-- JavaScript for image preview  and comment validation -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -392,6 +433,23 @@
                 */
             }
         }
+        
+        // Validation for the comment section
+        document.addEventListener("DOMContentLoaded", function () {
+            const commentForm = document.querySelector(".comment-form");
+            const commentTextarea = document.querySelector(".comment-input-ta");
+            const emptyCommentModal = new bootstrap.Modal(document.getElementById("emptyCommentModal"));
+
+            commentForm.addEventListener("submit", function (e) {
+                if (!commentTextarea.value.trim()) {
+                    e.preventDefault(); // Prevent form submission
+                    emptyCommentModal.show(); // Show the error modal
+                }
+            });
+        });
+        
+
+
     </script>
     <script src="~/js/ForumPost.js"></script>
     <script src="~/js/ForumPostDetailsLikes.js"></script>

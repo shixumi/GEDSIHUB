@@ -50,6 +50,7 @@
 
             <div class="card-body">
                 <div class="tab-content" id="myTabContent">
+                    <!-- Text Tab Content -->
                     <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                         <!-- Title -->
                         <div class="mb-3">
@@ -57,7 +58,7 @@
                                 Title
                                 <span style="color: #dd3025; margin-left: 5px;">*</span>
                             </label>
-                            <input asp-for="Title" class="form-control create-input" placeholder="Enter your title here..." />
+                            <input asp-for="Title" class="form-control create-input" placeholder="Enter your title here..." required/>
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 
@@ -65,21 +66,27 @@
                         {
                             <!-- Mark as Announcement -->
                             <div class="d-flex align-items-center mb-3">
-                                <input class="form-check-input me-2" type="checkbox" asp-for="IsAnnouncement" />
+                                <input class="form-check-input me-2" type="checkbox" asp-for="IsAnnouncement"/>
                                 <label asp-for="IsAnnouncement" class="form-check-label">Mark as Announcement</label>
                             </div>
 
                             <!-- Expiry Date -->
                             <div class="form-group mb-3">
-                                <label asp-for="ExpiryDate" class="form-label d-flex justify-content-start input-lbl">Expiry Date</label>
-                                <input asp-for="ExpiryDate" type="datetime-local" class="form-control" />
+                                <label asp-for="ExpiryDate" class="form-label d-flex justify-content-start input-lbl">
+                                    Expiry Date
+                                    <span style="color: #dd3025; margin-left: 5px;">*</span>
+                                </label>
+                                <input asp-for="ExpiryDate" type="datetime-local" class="form-control" required/>
                                 <span asp-validation-for="ExpiryDate" class="text-danger"></span>
                             </div>
                         }
 
                         <!-- Flair Selection -->
                         <div class="mb-3 select-flair">
-                            <label for="flair" class="form-label d-flex justify-content-start input-lbl">Select Flair</label>
+                            <label for="flair" class="form-label d-flex justify-content-start input-lbl">
+                                Select Flair
+                                <span style="color: #dd3025; margin-left: 5px;">*</span>
+                            </label>
                             <div class="flair-options d-flex flex-wrap">
                                 <div class="form-check me-3 mb-2 form-check-flair">
                                     <input class="form-check-input" type="radio" name="Flair" id="flair1" value="Discussion" asp-for="Flair">
@@ -103,8 +110,11 @@
 
                         <!-- Module Selection -->
                         <div class="mb-3">
-                            <label for="ModuleId" class="form-label d-flex justify-content-start input-lbl">Select Module (Tag)</label>
-                            <select asp-for="ModuleId" class="form-control create-input-select" asp-items="@(new SelectList(Model.Modules, "ModuleId", "Title"))">
+                            <label for="ModuleId" class="form-label d-flex justify-content-start input-lbl">
+                                Select Module (Tag)
+                                <span style="color: #dd3025; margin-left: 5px;">*</span>
+                            </label>
+                            <select asp-for="ModuleId" class="form-control create-input-select" asp-items="@(new SelectList(Model.Modules, "ModuleId", "Title"))" required>
                                 <option value="">Select a Module</option>
                             </select>
                             <span asp-validation-for="ModuleId" class="text-danger"></span>
@@ -116,7 +126,7 @@
                                 Content
                                 <span style="color: #dd3025; margin-left: 5px;">*</span>
                             </label>
-                            <textarea asp-for="Content" class="form-control create-input-ta" rows="3" placeholder="Enter your content here..."></textarea>
+                            <textarea asp-for="Content" class="form-control create-input-ta" rows="3" placeholder="Enter your content here..." required></textarea>
                             <span asp-validation-for="Content" class="text-danger"></span>
                         </div>
 

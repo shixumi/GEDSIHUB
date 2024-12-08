@@ -4,151 +4,6 @@
     Layout = "_LayoutApp";
 }
 
-<!-- Embedded CSS -->
-<style>
-#notification-container {
-    overflow-y: auto;
-}
-
-.notif-toggle-con {
-    display: inline-flex;
-    border-radius: 20px;
-    background: none;
-    
-}
-
-.toggle-option {
-    width: 8rem;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-family: Arial, sans-serif;
-    color: #333;
-    transition: color 0.3s;
-    font-size: 1.2rem;
-    font-family: 'Poppins';
-    font-weight: 500;
-    margin-right: 0.8rem;
-}
-
-    .toggle-option.selected {
-        background-color: #660000;
-        color: #fff;
-        border-radius: 20px;
-    }
-
-    .toggle-option:not(.selected):hover {
-        background-color: #f0f0f0;
-        border-radius: 20px;
-    }
-
-    .toggle-option.selected {
-        background-color: #660000;
-        color: #fff;
-        border-radius: 20px;
-    }
-
-/* Style the table and ensure it takes up full width */
-
-.important-notif-table table, .less-important-notif-table table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    color: #464040;
-}
-
-/* Table header styling */
-
-.important-text {
-    margin-top: 2rem;
-    text-align: left;
-    font-weight: 500;
-    font-size: 1.5rem;
-    color: #464040;
-}
-
-/* First cell (icon) styling */
-
-.important-notif-table td, .less-important-notif-table td, .less-important-notif-table tr, .important-notif-table tr {
-    padding-bottom: 1.3rem;
-    background-color: white;
-}
-
-    .important-notif-table td:first-child, .less-important-notif-table td:first-child {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        padding-right: 1rem;
-    }
-
-    /* Notification message styling */
-
-    .important-notif-table td:nth-child(2), .less-important-notif-table td:nth-child(2) {
-        width: 100%;
-        padding-right: 3rem;
-    }
-
-    /* Time cell styling */
-
-    .important-notif-table td:last-child, .less-important-notif-table td:last-child {
-        text-align: right;
-        white-space: nowrap;
-        color: #9c9c9c;
-        vertical-align: top;
-        padding: 0;
-    }
-
-/* Circle styling */
-
-.notif-circle {
-    width: 3rem;
-    height: 3rem;
-    background-color: #FF6663;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-    .notif-circle img {
-        width: 2rem;
-        height: auto;
-        margin-top: -0.2rem;
-    }
-
-    .admin-create-notification-button {
-        background: none;
-        color: white;
-        background-color: #660000;
-        border: none;
-        border-radius: 3rem;
-        width: 14rem;
-        height: 2.734375rem;
-        font-weight: 500;
-        transition: background-color 0.2s ease, color 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.3rem;
-    }
-
-    .admin-create-notification-button:hover {
-        background-color: #920000;
-        color: #ffffff;
-    }
-
-
-
-    .admin-create-notification-button:active {
-        transform: scale(0.95);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        color: #ffffff;
-        border-style: none;
-    }
-
-</style>
 
 <div>
     <div class="feedback-title-searcbar-con">
@@ -190,13 +45,13 @@
                             var notification = notificationUser.Notification;
                             <tr class="notification-item @(notificationUser.IsRead ? "read" : "unread")" data-id="@notification.Id">
                                 <td>
-                                    <div class="notif-circle">
+                                    <div class="notif-circle @notification.Category">
                                         <i class="@notification.IconClass"></i>
                                     </div>
                                 </td>
                                 <td>
-                                    <strong>@notification.Title</strong><br />
-                                    <span>@(notification.Message.Length > 100 ? notification.Message.Substring(0, 100) + "..." : notification.Message)</span>
+                                    <span class="notif-title">@notification.Title</span><br />
+                                    <span class="notif-msg">@(notification.Message.Length > 100 ? notification.Message.Substring(0, 100) + "..." : notification.Message)</span>
                                 </td>
                                 <td class="timestamp">@notification.CreatedAt.ToString("g")</td>
                             </tr>
@@ -216,13 +71,13 @@
                             var notification = notificationUser.Notification;
                             <tr class="notification-item @(notificationUser.IsRead ? "read" : "unread")" data-id="@notification.Id">
                                 <td>
-                                    <div class="notif-circle">
+                                    <div class="notif-circle @notification.Category">
                                         <i class="@notification.IconClass"></i>
                                     </div>
                                 </td>
                                 <td>
-                                    <strong>@notification.Title</strong><br />
-                                    <span>@(notification.Message.Length > 100 ? notification.Message.Substring(0, 100) + "..." : notification.Message)</span>
+                                    <span class="notif-title">@notification.Title</span><br />
+                                    <span class="notif-msg">@(notification.Message.Length > 100 ? notification.Message.Substring(0, 100) + "..." : notification.Message)</span>
                                 </td>
                                 <td class="timestamp">@notification.CreatedAt.ToString("g")</td>
                             </tr>

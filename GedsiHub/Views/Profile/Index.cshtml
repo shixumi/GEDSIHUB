@@ -147,40 +147,44 @@
         </div>
 
         </div>
-    <div id="certificates-con" class="container">
-        <h1 class="your-cert-label">
-            Your Certificates 
-            <img src="~/images/Certificate.png" alt="Certificate Icon" />
-        </h1>
-        <span>View your earned certificates for completed modules. Click on any certificate to preview or download.</span>
-        <div class="certificates-scroll-container">
-            <div class="certificates-container">
-                @if (Model.Certificates != null && Model.Certificates.Any())
-                {
-                    @foreach (var certificate in Model.Certificates)
+
+    @if (User.IsInRole("Student") || User.IsInRole("Employee"))
+    {
+        <div id="certificates-con" class="container">
+            <h1 class="your-cert-label">
+                Your Certificates 
+                <img src="~/images/Certificate.png" alt="Certificate Icon" />
+            </h1>
+            <span>View your earned certificates for completed modules. Click on any certificate to preview or download.</span>
+            <div class="certificates-scroll-container">
+                <div class="certificates-container">
+                    @if (Model.Certificates != null && Model.Certificates.Any())
                     {
-                        <div class="certificate-item">
-                            <a href="@certificate.CertificateImagePath" target="_blank" class="certificate-link">
-                                <div class="certificate-preview">
-                                    <img src="~/images/Certificate-Placeholder.png" class="certificate-image" />
-                                </div>
-                                <div class="certificate-details">
-                                    <h4 class="module-title" title="@certificate.ModuleTitle">
-                                        Module @certificate.ModuleId: @certificate.ModuleTitle
-                                    </h4>
-                                    <span class="status-completed">@certificate.Status</span>
-                                </div>
-                            </a>
-                        </div>
+                        @foreach (var certificate in Model.Certificates)
+                        {
+                            <div class="certificate-item">
+                                <a href="@certificate.CertificateImagePath" target="_blank" class="certificate-link">
+                                    <div class="certificate-preview">
+                                        <img src="~/images/Certificate-Placeholder.png" class="certificate-image" />
+                                    </div>
+                                    <div class="certificate-details">
+                                        <h4 class="module-title" title="@certificate.ModuleTitle">
+                                            Module @certificate.ModuleId: @certificate.ModuleTitle
+                                        </h4>
+                                        <span class="status-completed">@certificate.Status</span>
+                                    </div>
+                                </a>
+                            </div>
+                        }
                     }
-                }
-                else
-                {
-                    <p>You haven't earned any certificates yet. Complete a module to earn one!</p>
-                }
+                    else
+                    {
+                        <p>You haven't earned any certificates yet. Complete a module to earn one!</p>
+                    }
+                </div>
             </div>
         </div>
-    </div>
+    }
 
 </div>
 

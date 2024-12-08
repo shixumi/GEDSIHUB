@@ -13,7 +13,7 @@ else
             <div class="d-flex align-items-center">
                 <i class="@notification.IconClass me-2" aria-hidden="true" style="font-size: 24px;"></i>
                 <div>
-                    <strong>@notification.Title</strong><br />
+                    <span class="notif-title">@notification.Title</span><br />
                     <small class="text-muted">@((notification.Message.Length > 50 ? notification.Message.Substring(0, 50) + "..." : notification.Message))</small><br />
                     <small class="text-muted">@notification.CreatedAt.ToString("g")</small>
                 </div>
