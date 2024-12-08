@@ -63,12 +63,12 @@
 
             @if (Model.FeedbackType == "Complaint")
             {
-                <div class="area-evidence-container">
-                    <div class="text-input-container-affected-area">
+                
+                    <div class="text-input-container-affected-area" style="width: 100%;">
                         <span>3. @affectedAreaLabel</span>
                         <input id="affected-area-holder" class="holder" type="text" disabled value="@Model.AffectedArea" />
                     </div>
-                </div>
+                
             }
 
             <div class="input-text-evidence">
