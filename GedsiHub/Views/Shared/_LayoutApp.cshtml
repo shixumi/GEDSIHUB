@@ -43,11 +43,14 @@
     <link rel="stylesheet" href="~/css/errors.css" />
     <link rel="stylesheet" href="~/css/viewReports.css" />
     <link rel="stylesheet" href="~/css/spinner.css" />
-    <link rel="stylesheet" href="~/css/createNotification.css" />
     <link rel="stylesheet" href="~/css/createAssessment.css" />
     <link rel="stylesheet" href="~/css/assessments.css" />
+    <link rel="stylesheet" href="~/css/createNotification.css" />
     <link rel="stylesheet" href="~/css/notificationDropdown.css" />
+    <link rel="stylesheet" href="~/css/viewAllNotification.css" />
     <link rel="stylesheet" href="~/css/tooltip.css" />
+    
+
 
 
     
@@ -110,10 +113,12 @@
                                 <div id="notificationsList" class="list-group">
                                     <a href="/Notifications/Details/1" class="list-group-item list-group-item-action unread-notification">
                                         <div class="d-flex align-items-center notif-list">
-                                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                                            <div class="notif-circle">
+                                                <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                                            </div>
                                             <div>
-                                                <strong>Notification Title</strong><br>
-                                                <small class="text-muted">This is a notification preview...</small><br>
+                                                <span class="notif-title">Notification Title</span><br>
+                                                <span class="notif-msg">This is a notification preview...</span><br>
                                                 <small class="text-muted">06/11/2024 1:33 PM</small>
                                             </div>
                                         </div>
@@ -138,12 +143,12 @@
 
 
     </header>
-    <!-- Global Spinner -->
+    @* <!-- Global Spinner -->
     <div id="globalSpinner" class="d-flex justify-content-center align-items-center" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999;">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
-    </div>
+    </div> *@
 
     <!-- Spinner -->
     <div id="spinner" class="flex-column justify-content-center align-items-center" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999;">

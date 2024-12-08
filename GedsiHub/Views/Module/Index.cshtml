@@ -275,7 +275,7 @@
                     <tbody>
                         @foreach (var module in Model)
                         {
-                            <tr class="module-table-rows">
+                            <tr class="module-table-rows @(module.IsUnlocked ? "" : "locked-list-module")">
                                 <!-- Module Title -->
                                 <td class="module-content text-start">
                                     <a asp-action="Details" asp-route-id="@module.ModuleId" class="module-title-link text-decoration-none @(module.IsUnlocked ? "" : "disabled-link")">
@@ -283,7 +283,7 @@
                                     </a>
                                     @if (!module.IsUnlocked)
                                     {
-                                        <span class="locked-badge text-danger ms-2">Locked</span>
+                                        <span class="locked-list-badge text-danger ms-2">Locked</span>
                                     }
                                 </td>
 
@@ -547,27 +547,3 @@
         });
     </script>
 }
-
-<style>
-    .locked-module {
-    filter: grayscale(100%); /* Makes the module look inactive */
-    position: relative;
-    pointer-events: none; /* Prevent interaction */
-    border: 2px dashed #ff0000; /* Add dashed border for locked modules */
-}
-
-.locked-badge {
-    background-color: #ff4d4d; /* Bright red for the badge */
-    color: #ffffff; /* White text */
-    font-weight: bold;
-    font-size: 0.85rem;
-    padding: 0.3rem 0.6rem;
-    border-radius: 20px;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 10;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-</style>
