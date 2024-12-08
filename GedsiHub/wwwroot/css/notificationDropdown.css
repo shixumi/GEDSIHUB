@@ -82,6 +82,7 @@
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25) !important;
 }
 
+/* Notification List Item (for truncating text) */
 .notif-list {
     overflow: hidden; /* Prevent content from overflowing */
     text-overflow: ellipsis; /* Add ellipsis if the content overflows */
@@ -95,18 +96,28 @@
         white-space: nowrap; /* Prevent text wrapping */
     }
 
-    /* Ensure consistent padding */
+/* Ensure consistent padding */
 .notif-list {
     padding-right: 0.7rem;
     box-sizing: border-box; /* Ensure padding is included in total width */
 }
 
+.notif-date {
+    span .notif-msg
 
+{
+    color: #464040 !important;
+    opacity: 0.7; /* Adjust the opacity value (0.0 to 1.0) for desired effect */
+}
+
+}
+
+/* Notification Item Border Radius */
 .list-group-item {
     border-radius: 0 !important;
 }
 
-
+/* Unread Notification Styling */
 .unread-notification {
     background-color: #e7f3ff; /* Light blue background */
     border-left: 4px solid #007bff; /* Blue left border */
@@ -117,3 +128,106 @@
         background-color: #d6e9ff;
         text-decoration: none;
     }
+
+/* Circle Styling for Icon */
+.circle-dropdown {
+    margin-left: 0.2rem !important;
+    margin-right: 0.8rem !important;
+}
+
+/* Read Notification Styling */
+.read-notification {
+    background-color: #f7f7f7; /* Light gray background */
+    color: #9c9c9c;
+    opacity: 0.7;
+    transition: background-color 0.3s ease;
+}
+
+    .read-notification:hover {
+        background-color: #eaeaea;
+        text-decoration: none;
+    }
+
+/* Notification Icon Styling */
+.notif-circle.General {
+    background-color: #FFEBCC !important; /* Pastel Orange for General */
+}
+
+.notif-circle.Event {
+    background-color: #CCE5FF !important; /* Pastel Blue for Event */
+}
+
+.notif-circle.Update {
+    background-color: #DFF5CC !important; /* Pastel Green for Update */
+}
+
+.notif-circle.Alert {
+    background-color: #FFD6D6 !important; /* Pastel Red for Alert */
+}
+
+.notif-circle {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .notif-circle i {
+        font-size: 1.2rem;
+    }
+
+/* Title, Message, and Date Text Styling */
+.notif-title {
+    font-weight: 600;
+    color: #464040;
+    opacity: 0.8;
+}
+
+.notif-msg {
+    font-size: 0.9rem;
+    color: #464040;
+    opacity: 0.7;
+}
+
+.notif-date {
+    font-size: 0.8rem;
+    color: #9c9c9c;
+    opacity: 0.6;
+    white-space: nowrap;
+    margin-top: 5px;
+}
+
+/* Hover Effect for Notification Items */
+.notif-item-dropdown.unread span.notif-title {
+    font-weight: 600 !important; /* Ensure bold text for title */
+    opacity: 1 !important; /* Ensure full opacity for title text */
+}
+
+.notif-item-dropdown.unread span.notif-msg {
+    font-weight: normal !important; /* Ensure message text isn't bold unless needed */
+    opacity: 1 !important; /* Ensure full opacity for unread messages */
+    color: #464040 !important; /* Text color for clarity */
+}
+
+.notif-item-dropdown.unread span.notif-date {
+    font-weight: 400 !important; /* Ensure message text isn't bold unless needed */
+    opacity: 1 !important; /* Ensure full opacity for unread messages */
+    color: #464040 !important; /* Text color for clarity */
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .notif-item-dropdown {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .notif-circle {
+        margin-bottom: 10px;
+    }
+
+    .notif-title, .notif-msg {
+        font-size: 0.9rem;
+    }
+}

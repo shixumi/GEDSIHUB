@@ -10,12 +10,16 @@ else
     {
         var notification = notificationUser.Notification;
         <a href="@Url.Action("Details", "Notifications", new { id = notification.Id })" class="list-group-item list-group-item-action">
-            <div class="d-flex align-items-center">
-                <i class="@notification.IconClass me-2" aria-hidden="true" style="font-size: 24px;"></i>
-                <div>
+            <div class="notif-item-dropdown d-flex align-items-center @(notificationUser.IsRead ? "read" : "unread")" data-id="@notification.Id">
+                <div class="notif-circle @notification.Category circle-dropdown">
+                    <i class="@notification.IconClass me-2" aria-hidden="true" style="font-size: 24px;"></i>
+                </div>
+                <div class="notif-content">
                     <span class="notif-title">@notification.Title</span><br />
-                    <small class="text-muted">@((notification.Message.Length > 50 ? notification.Message.Substring(0, 50) + "..." : notification.Message))</small><br />
-                    <small class="text-muted">@notification.CreatedAt.ToString("g")</small>
+                    <span class="notif-msg">
+                        @((notification.Message.Length > 50 ? notification.Message.Substring(0, 50) + "..." : notification.Message))
+                    </span><br />
+                    <span class="notif-date">@notification.CreatedAt.ToString("g")</span>
                 </div>
             </div>
         </a>
