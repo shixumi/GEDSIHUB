@@ -45,7 +45,10 @@
     color: #464040;
 }
 
-
+first-next-button {
+    display: flex;
+    justify-content: end;
+}
 /* Buttons for navigation */
 .next-question-button {
     width: 16rem !important;

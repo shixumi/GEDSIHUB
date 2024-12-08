@@ -12,10 +12,10 @@
     </div>
     <hr class="custom-hr">
     <div class="container feedback-container edit-profile-con-of-con">
-        
+
         <form asp-action="Edit" asp-controller="Profile" enctype="multipart/form-data" method="post" class="edit-profile-form">
             <div class="edit-profile-container">
-                 <div class="profile-picture-upload">
+                <div class="profile-picture-upload">
                     <div class="edit-profile-pic-container">
                         <img id="editCroppedImage" src="@(Model.ProfilePicturePath ?? Url.Content("~/images/User.png"))" alt="User Profile Image" />
                     </div>
@@ -40,30 +40,34 @@
                     </div>
                 </div>
 
-                <div class="row-edit-profile">    
-                    <div class="lived-name-con"><span>Lived Name</span>
+                <div class="row-edit-profile">
+                    <div class="lived-name-con">
+                        <span>Lived Name</span>
                         <input asp-for="LivedName" type="text" />
                         <span asp-validation-for="LivedName" class="text-danger"></span>
                     </div>
-                    <div class="phone-num-con"><span>Phone Number</span>
+                    <div class="phone-num-con">
+                        <span>Phone Number</span>
                         <input asp-for="PhoneNumber" type="text" />
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                    </div>          
-                    <div class="birthday-con"><span>Birthday</span>
-                        <input asp-for="DateOfBirth" type="date" />   
+                    </div>
+                    <div class="birthday-con">
+                        <span>Birthday</span>
+                        <input asp-for="DateOfBirth" type="date" disabled />
                         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row-edit-profile">
                     <div class="sex-con">
                         <span>Sex</span>
-                        <select asp-for="Sex">
-                            <option value="" disabled selected>Select Sex</option>
+                        <select asp-for="Sex" readonly>
+                            <option value="" disabled>Select Sex</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
                         <span asp-validation-for="Sex" class="text-danger"></span>
                     </div>
+
                     <div class="gender-con">
                         <span>Gender Identity</span>
                         <select asp-for="GenderIdentity">
@@ -83,14 +87,14 @@
                     </div>
                     <div class="honorifics-con">
                         <span>Honorifics</span>
-                        <input asp-for="Honorifics" type="text" />                        
+                        <input asp-for="Honorifics" type="text" />
                         <span asp-validation-for="Honorifics" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row-edit-profile">
                     <div class="indigenous-con">
                         <span>Are you a member of any Indigenous cultural community?</span>
-                        <select asp-for="IsMemberOfIndigenousCommunity">
+                        <select asp-for="IsMemberOfIndigenousCommunity" disabled>
                             <option value="" disabled>Select an option</option>
                             <option value="true">Yes</option>
                             <option value="false">No</option>
@@ -99,14 +103,14 @@
 
                     <div class="diff-abled-con">
                         <span>Do you identify yourself as a differently abled person?</span>
-                        <select asp-for="IsDisabled">
+                        <select asp-for="IsDisabled" disabled>
                             <option value="" disabled>Select an option</option>
                             <option value="true">Yes</option>
                             <option value="false">No</option>
                         </select>
                     </div>
                 </div>
-             </div>   
+            </div>
 
             <div class="edit-profile-button-container">
                 <a asp-action="Index" class="edit-profile-back-button" type="button">Cancel</a>

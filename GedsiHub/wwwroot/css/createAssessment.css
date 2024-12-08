@@ -331,8 +331,11 @@
 .create-assessment-button-con {
     width: 75%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Distribute space evenly */
+    align-items: center; /* Vertically align the buttons in the middle */
+    flex-wrap: nowrap;
 }
+
 
 .cancel-assesssment, .create-assessment {
     border: none;
