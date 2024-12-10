@@ -6,6 +6,16 @@
 }
 
 
+
+<!-- Spinner -->
+<div id="spinner" class="flex-column justify-content-center align-items-center" style="display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 9999;">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <span class="mt-2">Let’s see how you did... One moment!</span>
+</div
+
+
 <!-- Breadcrumbs -->
 <ol class="breadcrumb" id="breadcrumb">
     <li class="breadcrumb-item">
@@ -32,7 +42,7 @@
     <div class="container assessment-container headnote-message">
         <img src="~/images/Party_Popper.png" alt="Celebration Icon" />
         <div class="congratulatory-message footnote-message">
-            <span>Congratulations on completing Module 1: Introduction to the Office (GADO)!</span>
+            <span>Congratulations on completing this Module!</span>
             <span>
                 To help reinforce what you've learned, please take a few moments to answer the following questions.
                 This test is designed to assess your understanding of the material covered. Select or input your answers,
@@ -56,7 +66,7 @@
     }
 
     <!-- Form to capture and submit answers -->
-    <form asp-action="Submit" asp-controller="Assessment" method="post">
+    <form asp-action="Submit" asp-controller="Assessment" method="post" onsubmit="showSpinner()" >
         <input type="hidden" asp-for="ExamID" />
         <div class="container assessment-container">
             <div class="num-delete-con">
@@ -211,5 +221,10 @@
                 });
             });
         });
+
+        
+        function showSpinner() {
+            document.getElementById('spinner').style.display = 'flex'; // Show the spinner
+        }
     </script>
 }

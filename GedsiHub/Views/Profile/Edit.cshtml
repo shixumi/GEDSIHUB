@@ -43,12 +43,12 @@
                 <div class="row-edit-profile">
                     <div class="lived-name-con">
                         <span>Lived Name</span>
-                        <input asp-for="LivedName" type="text" />
+                        <input asp-for="LivedName" type="text" required/>
                         <span asp-validation-for="LivedName" class="text-danger"></span>
                     </div>
                     <div class="phone-num-con">
                         <span>Phone Number</span>
-                        <input asp-for="PhoneNumber" type="text" />
+                        <input asp-for="PhoneNumber" type="text" required/>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                     <div class="birthday-con">
@@ -60,7 +60,7 @@
                 <div class="row-edit-profile">
                     <div class="sex-con">
                         <span>Sex</span>
-                        <select asp-for="Sex" readonly>
+                        <select asp-for="Sex" readonly required>
                             <option value="" disabled>Select Sex</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
