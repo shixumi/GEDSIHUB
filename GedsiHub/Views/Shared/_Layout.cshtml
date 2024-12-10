@@ -99,6 +99,17 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/global.js"></script>
     <script src="~/js/spinner.js"></script>
+    <script>
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    delay: { show: 500, hide: 100 } // Delay in milliseconds (500ms to show, 100ms to hide)
+                });
+            });
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
