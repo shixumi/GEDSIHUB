@@ -18,19 +18,19 @@
         <div class="create-notification-container">
             <div>
                 <label asp-for="Title">Title</label>
-                <input asp-for="Title" type="text" />
+                <input asp-for="Title" type="text" required/>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
             <div>
                <label asp-for="Message"></label>
-               <textarea asp-for="Message" class="notif-message"></textarea>
+               <textarea asp-for="Message" class="notif-message" required></textarea>
                <span asp-validation-for="Message" class="text-danger"></span>
            </div>
 
             <div>
                 <label asp-for="Category"></label>
-                    <select asp-for="Category" asp-items="@(new SelectList((List<string>)ViewData["Categories"]))">
+                    <select asp-for="Category" asp-items="@(new SelectList((List<string>)ViewData["Categories"]))" required>
                         <option value="">Select Category</option>
                     </select>
                     <span asp-validation-for="Category" class="text-danger"></span>
@@ -48,7 +48,7 @@
 
             <div>
                 <label asp-for="TargetAudience"></label>
-                <select asp-for="TargetAudience" asp-items="@(new SelectList((List<string>)ViewData["TargetAudiences"]))">                    
+                <select asp-for="TargetAudience" asp-items="@(new SelectList((List<string>)ViewData["TargetAudiences"]))" required>                    
                      <option value="">Select Audience</option>
                 </select>
                 <span asp-validation-for="TargetAudience" class="text-danger"></span>
