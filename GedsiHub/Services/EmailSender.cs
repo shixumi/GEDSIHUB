@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
-using System.Net;
-using System.Net.Mail;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace GedsiHub.Services
@@ -11,40 +11,47 @@ namespace GedsiHub.Services
     public class EmailSender : IEmailSender
     {
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
-        public EmailSender(IConfiguration configuration)
+        public EmailSender(IConfiguration configuration, HttpClient httpClient)
         {
             _configuration = configuration;
+            _httpClient = httpClient;
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             try
             {
-                // Initialize SMTP client with settings from appsettings.json
-                var smtpClient = new SmtpClient
+                var apiKey = _configuration["EmailSettings:APIKey"];
+                var fromEmail = _configuration["EmailSettings:FromEmail"];
+                var fromName = _configuration["EmailSettings:FromName"];
+
+                // Prepare the email payload
+                var emailPayload = new
                 {
-                    Host = _configuration["EmailSettings:SMTPHost"],
-                    Port = int.Parse(_configuration["EmailSettings:SMTPPort"]),
-                    EnableSsl = _configuration.GetValue<bool>("EmailSettings:EnableSsl"),
-                    Credentials = new NetworkCredential(
-                        _configuration["EmailSettings:SMTPEmail"], // SMTP email for authentication
-                        _configuration["EmailSettings:SMTPPassword"] // SMTP password (API key) for authentication
-                    )
+                    sender = new { email = fromEmail, name = fromName },
+                    to = new[] { new { email, name = "Recipient" } },
+                    subject,
+                    htmlContent = htmlMessage
                 };
 
-                // Prepare the email
-                using (var mailMessage = new MailMessage(
-                    _configuration["EmailSettings:FromEmail"], // The validated sender email
-                    email,                                     // The recipient email
-                    subject,                                   // The email subject
-                    htmlMessage))                              // The email body
-                {
-                    mailMessage.IsBodyHtml = true;
+                // Add API key to the request headers
+                _httpClient.DefaultRequestHeaders.Clear();
+                _httpClient.DefaultRequestHeaders.Add("api-key", apiKey);
 
-                    // Send the email
-                    await smtpClient.SendMailAsync(mailMessage);
-                    Console.WriteLine($"Email sent to {email}");
+                // Send the email via Brevo API
+                var response = await _httpClient.PostAsJsonAsync("https://api.brevo.com/v3/smtp/email", emailPayload);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Email sent successfully to {email}.");
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to send email. Status: {response.StatusCode}, Error: {errorContent}");
+                    throw new Exception($"Failed to send email: {errorContent}");
                 }
             }
             catch (Exception ex)
@@ -58,34 +65,43 @@ namespace GedsiHub.Services
         {
             try
             {
-                // Initialize SMTP client with settings from appsettings.json
-                var smtpClient = new SmtpClient
+                var apiKey = _configuration["EmailSettings:APIKey"];
+                var fromEmail = _configuration["EmailSettings:FromEmail"];
+                var fromName = _configuration["EmailSettings:FromName"];
+
+                // Prepare the email payload with attachment
+                var emailPayload = new
                 {
-                    Host = _configuration["EmailSettings:SMTPHost"],
-                    Port = int.Parse(_configuration["EmailSettings:SMTPPort"]),
-                    EnableSsl = _configuration.GetValue<bool>("EmailSettings:EnableSsl"),
-                    Credentials = new NetworkCredential(
-                        _configuration["EmailSettings:SMTPEmail"], // SMTP email for authentication
-                        _configuration["EmailSettings:SMTPPassword"] // SMTP password (API key) for authentication
-                    )
+                    sender = new { email = fromEmail, name = fromName },
+                    to = new[] { new { email, name = "Recipient" } },
+                    subject,
+                    htmlContent = htmlMessage,
+                    attachment = new[]
+                    {
+                        new
+                        {
+                            content = Convert.ToBase64String(pdfBytes),
+                            name = fileName
+                        }
+                    }
                 };
 
-                // Prepare the email with attachment
-                using (var mailMessage = new MailMessage(
-                    _configuration["EmailSettings:FromEmail"], // The validated sender email
-                    email,                                     // The recipient email
-                    subject,                                   // The email subject
-                    htmlMessage))                              // The email body
+                // Add API key to the request headers
+                _httpClient.DefaultRequestHeaders.Clear();
+                _httpClient.DefaultRequestHeaders.Add("api-key", apiKey);
+
+                // Send the email via Brevo API
+                var response = await _httpClient.PostAsJsonAsync("https://api.brevo.com/v3/smtp/email", emailPayload);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    mailMessage.IsBodyHtml = true;
-
-                    // Attach the PDF file
-                    var attachment = new Attachment(new MemoryStream(pdfBytes), fileName, "application/pdf");
-                    mailMessage.Attachments.Add(attachment);
-
-                    // Send the email
-                    await smtpClient.SendMailAsync(mailMessage);
-                    Console.WriteLine($"Email with attachment sent to {email}");
+                    Console.WriteLine($"Email with attachment sent successfully to {email}.");
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to send email with attachment. Status: {response.StatusCode}, Error: {errorContent}");
+                    throw new Exception($"Failed to send email with attachment: {errorContent}");
                 }
             }
             catch (Exception ex)
