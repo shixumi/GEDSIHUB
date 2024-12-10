@@ -26,7 +26,7 @@ namespace GedsiHub.Services
                 {
                     Host = _configuration["EmailSettings:SMTPHost"],
                     Port = int.Parse(_configuration["EmailSettings:SMTPPort"]),
-                    EnableSsl = bool.Parse(_configuration["EmailSettings:EnableSsl"]),
+                    EnableSsl = _configuration.GetValue<bool>("EmailSettings:EnableSsl"),
                     Credentials = new NetworkCredential(
                         _configuration["EmailSettings:SMTPEmail"], // SMTP email for authentication
                         _configuration["EmailSettings:SMTPPassword"] // SMTP password (API key) for authentication
@@ -63,7 +63,7 @@ namespace GedsiHub.Services
                 {
                     Host = _configuration["EmailSettings:SMTPHost"],
                     Port = int.Parse(_configuration["EmailSettings:SMTPPort"]),
-                    EnableSsl = bool.Parse(_configuration["EmailSettings:EnableSsl"]),
+                    EnableSsl = _configuration.GetValue<bool>("EmailSettings:EnableSsl"),
                     Credentials = new NetworkCredential(
                         _configuration["EmailSettings:SMTPEmail"], // SMTP email for authentication
                         _configuration["EmailSettings:SMTPPassword"] // SMTP password (API key) for authentication
