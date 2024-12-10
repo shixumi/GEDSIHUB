@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -10,12 +8,10 @@ namespace GedsiHub.Services
 {
     public class EmailSender : IEmailSender
     {
-        private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
 
-        public EmailSender(IConfiguration configuration, HttpClient httpClient)
+        public EmailSender(HttpClient httpClient)
         {
-            _configuration = configuration;
             _httpClient = httpClient;
         }
 
@@ -23,9 +19,10 @@ namespace GedsiHub.Services
         {
             try
             {
-                var apiKey = _configuration["EmailSettings:APIKey"];
-                var fromEmail = _configuration["EmailSettings:FromEmail"];
-                var fromName = _configuration["EmailSettings:FromName"];
+                // Retrieve API key and email settings from environment variables (Azure App Settings)
+                var apiKey = Environment.GetEnvironmentVariable("BREVO_API_KEY");
+                var fromEmail = Environment.GetEnvironmentVariable("FROM_EMAIL");
+                var fromName = Environment.GetEnvironmentVariable("FROM_NAME");
 
                 // Prepare the email payload
                 var emailPayload = new
@@ -65,9 +62,10 @@ namespace GedsiHub.Services
         {
             try
             {
-                var apiKey = _configuration["EmailSettings:APIKey"];
-                var fromEmail = _configuration["EmailSettings:FromEmail"];
-                var fromName = _configuration["EmailSettings:FromName"];
+                // Retrieve API key and email settings from environment variables (Azure App Settings)
+                var apiKey = Environment.GetEnvironmentVariable("BREVO_API_KEY");
+                var fromEmail = Environment.GetEnvironmentVariable("FROM_EMAIL");
+                var fromName = Environment.GetEnvironmentVariable("FROM_NAME");
 
                 // Prepare the email payload with attachment
                 var emailPayload = new
