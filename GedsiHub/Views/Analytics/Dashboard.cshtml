@@ -125,20 +125,21 @@
     </div>
 
     <!-- Row 4: Post Count by Module and Keywords -->
-    <div class="container analytics_graph_container post-count-container">
-        <h6>Post Count by Module</h6>
-        <div class="chart-container">
-            <canvas id="postCountByModuleChart"></canvas>
+    <div class="analytics">
+        <div class="container analytics_graph_container post-count-container">
+            <h6>Post Count by Module</h6>
+            <div class="chart-container" style="width: 100%; height: 100%; position: relative;">
+                <canvas id="postCountByModuleChart" style="width: 100%; height: 100%;"></canvas>
+            </div>
+            <span class="insight">Insight: Module activity trends visualized as a horizontal bar chart.</span>
         </div>
-        <span class="insight">Insight: Module activity trends visualized as a horizontal bar chart.</span>
-    </div>
 
-    <div class="container analytics_graph_container">
-        <h6>Common Keywords</h6>
-        <canvas id="commonKeywordsCloud" width="800" height="400"></canvas>
-        <span class="insight">Insight: Frequently discussed topics visualized as a word cloud.</span>
+        <div class="container analytics_graph_container">
+            <h6>Common Keywords</h6>
+            <canvas id="commonKeywordsCloud" width="800" height="400"></canvas>
+            <span class="insight">Insight: Frequently discussed topics visualized as a word cloud.</span>
+        </div>
     </div>
-
 </div>
 
 
@@ -400,7 +401,7 @@
                                 backgroundColor: '#660000', // Primary color
                                 borderColor: '#920000', // Slightly darker shade
                                 borderWidth: 1,
-                                hoverBackgroundColor: '#920000', // Hover color
+                                hoverBackgroundColor: '#920000', // Hover color                           
                             }],
                         },
                         options: {
