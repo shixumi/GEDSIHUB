@@ -45,34 +45,36 @@
                 </div>
             </div>
 
-            <!-- Is Admin Checkbox -->
-            <div>
-                <label asp-for="IsAdmin">Is Admin</label>
-                @if (Model.Id == currentUserId)
-                {
-                    <input type="hidden" name="IsAdmin" value="true" />
-                    <input asp-for="IsAdmin" type="checkbox" class="disabled-input" disabled="disabled" />
-                    <span class="text-muted small">You cannot change your own Admin status.</span>
-                }
-                else
-                {
-                    <input asp-for="IsAdmin" type="checkbox" />
-                }
-            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <!-- Is Admin Checkbox -->
+                <div>        
+                    @if (Model.Id == currentUserId)
+                    {
+                        <input type="hidden" name="IsAdmin" value="true" />
+                        <input asp-for="IsAdmin" type="checkbox" class="disabled-input" disabled="disabled" />
+                        <span class="text-muted small">You cannot change your own Admin status.</span>
+                    }
+                    else
+                    {
+                        <input asp-for="IsAdmin" type="checkbox" />
+                    }
+                    <label asp-for="IsAdmin">Is Admin</label>
+                </div>
 
-            <!-- Is Active Checkbox -->
-            <div>
-                <label asp-for="IsActive">Is Active</label>
-                @if (Model.Id == currentUserId)
-                {
-                    <input type="hidden" name="IsActive" value="true" />
-                    <input asp-for="IsActive" type="checkbox" class="disabled-input" disabled="disabled" />
-                    <span class="text-muted small">You cannot deactivate your own account.</span>
-                }
-                else
-                {
-                    <input asp-for="IsActive" type="checkbox" />
-                }
+                <!-- Is Active Checkbox -->
+                <div>                   
+                    @if (Model.Id == currentUserId)
+                    {
+                        <input type="hidden" name="IsActive" value="true" />
+                        <input asp-for="IsActive" type="checkbox" class="disabled-input" disabled="disabled" />
+                        <span class="text-muted small">You cannot deactivate your own account.</span>
+                    }
+                    else
+                    {
+                        <input asp-for="IsActive" type="checkbox" />
+                    }
+                    <label asp-for="IsActive">Is Active</label>
+                </div>
             </div>
 
             <div id="edit-user-button-con">
