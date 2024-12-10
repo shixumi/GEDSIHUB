@@ -93,11 +93,11 @@
                     <label class="form-label d-flex justify-content-start input-lbl">Gender</label>
                     <select asp-for="Input.GenderIdentity" class="form-control form-select s-form" required>
                         <option value="" disabled selected>Select</option>
-                        <option value="Cisgender">Cisgender</option>
-                        <option value="Transgender">Transgender</option>
-                        <option value="Agender">Agender</option>
-                        <option value="Gender Fluid">Gender Fluid</option>
-                        <option value="Gender Queer">Gender Queer</option>
+                        <option value="Cisgender" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Gender matches sex at birth.">Cisgender (Gender matches sex at birth)</option>
+                        <option value="Transgender" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Gender differs from sex at birth.">Transgender (Gender differs from sex at birth)</option>
+                        <option value="Agender" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="No gender identity.">Agender (No gender identity)</option>
+                        <option value="Gender Fluid" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Gender changes over time.">Gender Fluid (Gender changes over time)</option>
+                        <option value="Gender Queer" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="A mix of, between, or beyond masculine and feminine.">Gender Queer (A mix of, between, or beyond masculine and feminine)</option>
                     </select>
                     <span asp-validation-for="Input.GenderIdentity" class="text-danger"></span>
                 </div>
@@ -298,4 +298,15 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/CompleteProfile.js"></script>
+    <script>
+        // Initialize tooltips on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    delay: { show: 500, hide: 100 }
+                });
+            });
+        });
+    </script>
 }
