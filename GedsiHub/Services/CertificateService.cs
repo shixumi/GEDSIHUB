@@ -84,12 +84,19 @@ namespace GedsiHub.Services
             _context.CertificateFiles.Add(certificateFile);
             await _context.SaveChangesAsync();
 
-            // Optionally, send the certificate email
+            // Generate the email attachment file name dynamically
+            var emailFileName = $"{module.Title} - Certificate.pdf";
+
+            // Optionally, send the certificate email with a personalized message
             if (!string.IsNullOrEmpty(user.Email))
             {
-                await SendCertificateEmail(user.Email, "Your Certificate of Completion", pdfBytes, "certificate.pdf");
-            }
+                var emailBody = $"Dear {certificateData.FullName},<br><br>" +
+                                $"Congratulations on completing the <b>{certificateData.CourseTitle}</b> module! " +
+                                $"Your certificate is attached to this email.<br><br>" +
+                                $"Best regards,<br>The Team.";
 
+                await SendCertificateEmail(user.Email, "Your Certificate of Completion", pdfBytes, emailFileName, emailBody);
+            }
             return pdfBytes;
         }
 
@@ -245,7 +252,7 @@ namespace GedsiHub.Services
         }
 
         // Method to send certificate via email
-        public async Task SendCertificateEmail(string email, string subject, byte[] pdfBytes, string fileName)
+        public async Task SendCertificateEmail(string email, string subject, byte[] pdfBytes, string fileName, string emailBody)
         {
             if (_emailSender != null)
             {
@@ -253,7 +260,7 @@ namespace GedsiHub.Services
 
                 try
                 {
-                    await _emailSender.SendEmailWithAttachmentAsync(email, subject, "Here is your certificate.", pdfBytes, fileName);
+                    await _emailSender.SendEmailWithAttachmentAsync(email, subject, emailBody, pdfBytes, fileName);
                     Console.WriteLine("Email sent successfully.");
                 }
                 catch (Exception ex)

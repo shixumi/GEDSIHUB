@@ -102,7 +102,85 @@ namespace GedsiHub.Controllers
             return View(viewModel);
         }
 
+        // ****************************** KEYWORD AND MODULE COUNT ******************************
 
+        // GET: Analytics/GetCommonKeywords
+        // Fetches the most common keywords from posts and comments
+        [HttpGet("GetCommonKeywords")]
+        public async Task<IActionResult> GetCommonKeywords()
+        {
+            try
+            {
+                // Define a set of common stop words to exclude
+                var stopWords = new HashSet<string>(new[]
+                {
+            "the", "and", "is", "to", "of", "in", "a", "for", "it", "on", "this",
+            "with", "that", "at", "by", "an", "or", "as", "be", "was", "are", "but",
+            "if", "not", "from", "then", "than", "so", "we", "you", "i", "me", "my",
+            "your", "our"
+        }, StringComparer.OrdinalIgnoreCase);
+
+                // Step 1: Fetch tags from ForumPosts
+                var postKeywords = await _context.ForumPosts
+                    .Where(p => !string.IsNullOrEmpty(p.Tag))
+                    .Select(p => p.Tag.ToLowerInvariant()) // Normalize to lowercase
+                    .ToListAsync();
+
+                // Step 2: Fetch comments from ForumComments and split into words
+                var commentContents = await _context.ForumComments
+                    .Where(c => !string.IsNullOrEmpty(c.Content))
+                    .Select(c => c.Content.ToLowerInvariant()) // Normalize to lowercase
+                    .ToListAsync();
+
+                // Process comments: Split, clean punctuation, filter stop words and short words
+                var commentKeywords = commentContents
+                    .SelectMany(content => content
+                        .Split(' ', StringSplitOptions.RemoveEmptyEntries) // Split comments into words
+                        .Select(word => new string(word.Where(char.IsLetterOrDigit).ToArray())) // Remove punctuation
+                        .Where(cleanedWord => !string.IsNullOrWhiteSpace(cleanedWord) // Exclude null/whitespace
+                                              && !stopWords.Contains(cleanedWord) // Exclude stop words
+                                              && cleanedWord.Length > 2) // Exclude short words
+                    )
+                    .ToList();
+
+                // Step 3: Combine tags and processed keywords, then group and count
+                var allKeywords = postKeywords
+                    .Concat(commentKeywords) // Merge post tags and comment words
+                    .GroupBy(keyword => keyword) // Group by keyword
+                    .Select(g => new { Keyword = g.Key, Count = g.Count() }) // Calculate frequency
+                    .OrderByDescending(k => k.Count) // Order by count descending
+                    .Take(50) // Limit to top 50 keywords
+                    .ToList();
+
+                // Return the result as JSON
+                return Ok(allKeywords);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (replace with proper logging in production)
+                Console.WriteLine($"Error in GetCommonKeywords: {ex.Message}");
+
+                // Return a 500 Internal Server Error response
+                return StatusCode(500, "An error occurred while processing the request.");
+            }
+        }
+
+        [HttpGet("GetPostCountByModule")]
+        public async Task<IActionResult> GetPostCountByModule()
+        {
+            var postCounts = await _context.ForumPosts
+                .Where(p => p.ModuleId != null)
+                .GroupBy(p => p.ModuleId)
+                .Select(g => new
+                {
+                    ModuleTitle = g.First().Module.Title,
+                    Count = g.Count()
+                })
+                .OrderByDescending(m => m.Count)
+                .ToListAsync();
+
+            return Ok(postCounts);
+        }
 
         // ****************************** USER DEMOGRAPHICS API ******************************
 
@@ -207,6 +285,11 @@ namespace GedsiHub.Controllers
             return Json(courseAssociations);
         }
     }
+
+    // ****************************** COURSE ASSOCIATIONS API ******************************
+
+    // GET: Analytics/GetCourseAssociations
+    // API endpoint that returns the associations between users and their enrolled courses.
 
     // DTO for tracking time spent on a module
     public class ModuleTimeDto
