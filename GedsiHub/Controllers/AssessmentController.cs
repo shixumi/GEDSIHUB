@@ -499,7 +499,8 @@ namespace GedsiHub.Controllers
 
             if (user != null && !string.IsNullOrEmpty(user.Email))
             {
-                await _certificateService.SendCertificateEmail(user.Email, "Your Certificate of Completion", pdfBytes, "certificate.pdf");
+                string emailBody = $"Dear {user.FirstName},<br><br>Congratulations on completing the <b>{module.Title}</b> module! Your certificate is attached to this email.<br><br>Best regards,<br>The Team.";
+                await _certificateService.SendCertificateEmail(user.Email, "Your Certificate of Completion", pdfBytes, "certificate.pdf", emailBody);
             }
         }
 
