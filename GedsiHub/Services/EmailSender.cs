@@ -21,35 +21,40 @@ namespace GedsiHub.Services
         {
             try
             {
-                // Initialize SMTP client with settings from appsettings.json
+                Console.WriteLine("Initializing SMTP client...");
                 var smtpClient = new SmtpClient
                 {
                     Host = _configuration["EmailSettings:SMTPHost"],
                     Port = int.Parse(_configuration["EmailSettings:SMTPPort"]),
                     EnableSsl = bool.Parse(_configuration["EmailSettings:EnableSsl"]),
                     Credentials = new NetworkCredential(
-                        _configuration["EmailSettings:SMTPEmail"], // SMTP email for authentication
-                        _configuration["EmailSettings:SMTPPassword"] // SMTP password (API key) for authentication
+                        _configuration["EmailSettings:SMTPEmail"],
+                        _configuration["EmailSettings:SMTPPassword"]
                     )
                 };
 
-                // Prepare the email
+                Console.WriteLine($"SMTP Configuration: Host={smtpClient.Host}, Port={smtpClient.Port}, EnableSsl={smtpClient.EnableSsl}");
+
                 using (var mailMessage = new MailMessage(
-                    _configuration["EmailSettings:FromEmail"], // The validated sender email
-                    email,                                     // The recipient email
-                    subject,                                   // The email subject
-                    htmlMessage))                              // The email body
+                    _configuration["EmailSettings:FromEmail"],
+                    email,
+                    subject,
+                    htmlMessage))
                 {
                     mailMessage.IsBodyHtml = true;
+                    Console.WriteLine($"Preparing email to {email} with subject: {subject}");
 
-                    // Send the email
                     await smtpClient.SendMailAsync(mailMessage);
-                    Console.WriteLine($"Email sent to {email}");
+                    Console.WriteLine($"Email successfully sent to {email}");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error sending email to {email}: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
                 throw;
             }
         }
