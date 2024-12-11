@@ -115,14 +115,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 // ========================================
 // 5. Configure DinkToPdf for PDF Generation
 // ========================================
-var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "wkhtmltox", "bin");
+var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "wwwroot", "lib", "wkhtmltox", "bin");
 
-if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-{
-    var libPath = Path.Combine(builder.Environment.ContentRootPath, "lib", "wkhtmltox", "bin");
-    Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", libPath);
-}
-else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 {
     SetDllDirectory(wkhtmltoxPath);
 }
