@@ -62,21 +62,21 @@
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 
+                        <!-- Mark as Announcement (Admin Only) -->
                         @if (User.IsInRole("Admin"))
                         {
-                            <!-- Mark as Announcement -->
                             <div class="d-flex align-items-center mb-3">
-                                <input class="form-check-input me-2" type="checkbox" asp-for="IsAnnouncement"/>
+                                <input class="form-check-input me-2" type="checkbox" asp-for="IsAnnouncement" id="IsAnnouncementCheckbox" />
                                 <label asp-for="IsAnnouncement" class="form-check-label">Mark as Announcement</label>
                             </div>
 
                             <!-- Expiry Date -->
-                            <div class="form-group mb-3">
+                            <div class="form-group mb-3" id="ExpiryDateGroup" style="display: none;">
                                 <label asp-for="ExpiryDate" class="form-label d-flex justify-content-start input-lbl">
                                     Expiry Date
                                     <span style="color: #dd3025; margin-left: 5px;">*</span>
                                 </label>
-                                <input asp-for="ExpiryDate" type="datetime-local" class="form-control" required/>
+                                <input asp-for="ExpiryDate" type="datetime-local" class="form-control" id="ExpiryDateInput" />
                                 <span asp-validation-for="ExpiryDate" class="text-danger"></span>
                             </div>
                         }
@@ -178,6 +178,37 @@
                 document.getElementById("imagePreviewContainer").style.display = "none";
             }
                 });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const isAnnouncementCheckbox = document.getElementById("IsAnnouncementCheckbox");
+            const expiryDateGroup = document.getElementById("ExpiryDateGroup");
+            const expiryDateInput = document.getElementById("ExpiryDateInput");
+
+            if (isAnnouncementCheckbox) {
+                // Toggle visibility and required attribute based on checkbox state
+                isAnnouncementCheckbox.addEventListener("change", function () {
+                    if (isAnnouncementCheckbox.checked) {
+                        expiryDateGroup.style.display = "block";
+                        expiryDateInput.setAttribute("required", "required");
+                    } else {
+                        expiryDateGroup.style.display = "none";
+                        expiryDateInput.removeAttribute("required");
+                    }
+                });
+
+                // Initialize based on current state
+                if (isAnnouncementCheckbox.checked) {
+                    expiryDateGroup.style.display = "block";
+                    expiryDateInput.setAttribute("required", "required");
+                } else {
+                    expiryDateGroup.style.display = "none";
+                    expiryDateInput.removeAttribute("required");
+                }
+            } else {
+                console.error("IsAnnouncementCheckbox not found.");
+            }
+        });
     </script>
     <script src="~/js/ForumPost.js"></script>
 }

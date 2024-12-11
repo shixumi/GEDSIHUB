@@ -45,10 +45,12 @@
     <link rel="stylesheet" href="~/css/spinner.css" />
     <link rel="stylesheet" href="~/css/createAssessment.css" />
     <link rel="stylesheet" href="~/css/assessments.css" />
+    <link rel="stylesheet" href="~/css/assessmentResults.css" />
     <link rel="stylesheet" href="~/css/createNotification.css" />
     <link rel="stylesheet" href="~/css/notificationDropdown.css" />
     <link rel="stylesheet" href="~/css/viewAllNotification.css" />
     <link rel="stylesheet" href="~/css/tooltip.css" />
+    
     
 
 
@@ -101,7 +103,7 @@
                 </button>
                 <div class="collapse navbar-collapse d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-end justify-content-lg-end justify-content-xl-end justify-content-xxl-end" id="navcol-3">
                     <img class="search_icon" src="~/images/Search.png" alt="Search Icon" />
-                    <input type="search" class="navbar_search" placeholder="Search for anything" style="font-family: 'Poppins', sans-serif;" />
+                    <input type="search" class="navbar_search" placeholder="Search for anything (working soon)" style="font-family: 'Poppins', sans-serif;" />
                     <!-- Notifications Dropdown -->
                     <span class="navbar-text notification_icon_span " style="margin-right: 4px; position: relative;">
                         <a href="#" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -353,7 +355,7 @@
     <script src="~/js/UnderlineToggling.js"></script>
     <script src="~/js/ProfileViewMoreFunction.js"></script>
     <script src="~/js/ToggleUserFieldsReports.js"></script>
-    <script src="~/js/spinner.js"></script>
+    @*<script src="~/js/spinner.js"></script> Temporary Removed to Fix issue with endlessly loop*@
     
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -415,7 +417,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                return new bootstrap.sear(tooltipTriggerEl, {
                     delay: { show: 500, hide: 100 } // Delay in milliseconds (500ms to show, 100ms to hide)
                 });
             });
