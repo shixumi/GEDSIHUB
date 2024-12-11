@@ -236,7 +236,7 @@ namespace GedsiHub.Services
                     ColorMode = ColorMode.Color,
                     Orientation = Orientation.Landscape,
                     PaperSize = PaperKind.Letter,
-                    
+
                 },
                 Objects = {
                     new ObjectSettings
