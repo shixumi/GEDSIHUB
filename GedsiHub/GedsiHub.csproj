@@ -5,14 +5,19 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-GedsiHub-2ab68b56-27fa-4211-83de-59c2c0729ee0</UserSecretsId>
+		<EnableDefaultContentItems>false</EnableDefaultContentItems>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Remove="Models\Forum.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Remove="appsettings.Development.json" />
+		<Content Remove="appsettings.Development.json" />
 	</ItemGroup>
 
 	<ItemGroup>
