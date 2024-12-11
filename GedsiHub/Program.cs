@@ -112,19 +112,27 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Error/403";
 });
 
-// ========================================
-// 5. Configure DinkToPdf for PDF Generation
-// ========================================
-var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "wkhtmltox", "bin");
+var rootPath = builder.Environment.WebRootPath;
 
+// Check if the WebRootPath already includes "wwwroot"
+if (rootPath.Contains("wwwroot/wwwroot"))
+{
+    rootPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
+}
+
+// Construct the correct wkhtmltox path
+var wkhtmltoxPath = Path.Combine(rootPath, "lib", "wkhtmltox", "bin");
+
+// Set the appropriate library path for the runtime environment
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 {
-    var libPath = Path.Combine(builder.Environment.ContentRootPath, "lib", "wkhtmltox", "bin");
-    Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", libPath);
+    // Set environment variable for Linux
+    Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", wkhtmltoxPath);
 }
 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 {
-    SetDllDirectory(wkhtmltoxPath); // Retain this for Windows environments if needed
+    // Use SetDllDirectory for Windows
+    SetDllDirectory(wkhtmltoxPath);
 }
 
 var converter = new SynchronizedConverter(new PdfTools());
