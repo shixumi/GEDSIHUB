@@ -117,7 +117,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 // ========================================
 var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "wwwroot", "wwwroot", "lib", "wkhtmltox", "bin");
 
-_logger.LogInformation($"wkhtmltox path: {wkhtmltoxPath}");
+Console.WriteLine($"wkhtmltox path: {wkhtmltoxPath}");
 
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 {
