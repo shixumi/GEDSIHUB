@@ -117,9 +117,14 @@ builder.Services.ConfigureApplicationCookie(options =>
 // ========================================
 var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "wkhtmltox", "bin");
 
-if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 {
-    SetDllDirectory(wkhtmltoxPath);
+    var libPath = Path.Combine(builder.Environment.ContentRootPath, "lib", "wkhtmltox", "bin");
+    Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", libPath);
+}
+else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+    SetDllDirectory(wkhtmltoxPath); // Retain this for Windows environments if needed
 }
 
 var converter = new SynchronizedConverter(new PdfTools());
