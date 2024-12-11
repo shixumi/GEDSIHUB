@@ -84,6 +84,12 @@ namespace GedsiHub.Services
             _context.CertificateFiles.Add(certificateFile);
             await _context.SaveChangesAsync();
 
+            // Optionally, send the certificate email
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                await SendCertificateEmail(user.Email, "Your Certificate of Completion", pdfBytes, "certificate.pdf");
+            }
+
             return pdfBytes;
         }
 
@@ -238,6 +244,29 @@ namespace GedsiHub.Services
             return _converter.Convert(doc);
         }
 
+        // Method to send certificate via email
+        public async Task SendCertificateEmail(string email, string subject, byte[] pdfBytes, string fileName)
+        {
+            if (_emailSender != null)
+            {
+                Console.WriteLine($"Sending email to {email} with subject {subject}");
+
+                try
+                {
+                    await _emailSender.SendEmailWithAttachmentAsync(email, subject, "Here is your certificate.", pdfBytes, fileName);
+                    Console.WriteLine("Email sent successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sending email: {ex.Message}");
+                    throw;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Email sender service is not available.");
+            }
+        }
         public async Task<byte[]> GetCertificateBytesAsync(string userId, int moduleId)
         {
             // Check if a certificate exists for the user and module
