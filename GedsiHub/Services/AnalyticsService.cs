@@ -469,27 +469,38 @@ namespace GedsiHub.Services
         "your", "our"
     }, StringComparer.OrdinalIgnoreCase);
 
-            var postKeywords = await _context.ForumPosts
-                .Where(p => !string.IsNullOrEmpty(p.Tag))
-                .Select(p => p.Tag.ToLowerInvariant())
+            var postRawData = await _context.ForumPosts
+                .Where(p => !string.IsNullOrEmpty(p.Title) || !string.IsNullOrEmpty(p.Content))
+                .Select(p => new { p.Title, p.Content })
                 .ToListAsync();
 
-            var commentContents = await _context.ForumComments
+            var postContent = postRawData
+                .SelectMany(p => new[]
+                {
+            !string.IsNullOrEmpty(p.Title) ? p.Title.ToLowerInvariant() : null,
+            !string.IsNullOrEmpty(p.Content) ? p.Content.ToLowerInvariant() : null
+                })
+                .Where(text => !string.IsNullOrEmpty(text))
+                .ToList();
+
+            var commentContent = await _context.ForumComments
                 .Where(c => !string.IsNullOrEmpty(c.Content))
                 .Select(c => c.Content.ToLowerInvariant())
                 .ToListAsync();
 
-            var commentKeywords = commentContents
+            var allContent = postContent.Concat(commentContent);
+
+            var processedKeywords = allContent
                 .SelectMany(content => content
                     .Split(' ', StringSplitOptions.RemoveEmptyEntries)
                     .Select(word => new string(word.Where(char.IsLetterOrDigit).ToArray()))
                     .Where(cleanedWord => !string.IsNullOrWhiteSpace(cleanedWord)
                                           && !stopWords.Contains(cleanedWord)
-                                          && cleanedWord.Length > 2))
+                                          && cleanedWord.Length > 2)
+                )
                 .ToList();
 
-            var allKeywords = postKeywords
-                .Concat(commentKeywords)
+            var groupedKeywords = processedKeywords
                 .GroupBy(keyword => keyword)
                 .Select(g => new CommonKeywordDto
                 {
@@ -500,8 +511,9 @@ namespace GedsiHub.Services
                 .Take(50)
                 .ToList();
 
-            return allKeywords;
+            return groupedKeywords;
         }
+
         public async Task<Dictionary<string, object>> ConsolidateChartDataAsync(int? moduleId = null)
         {
             var chartData = new Dictionary<string, object>();
