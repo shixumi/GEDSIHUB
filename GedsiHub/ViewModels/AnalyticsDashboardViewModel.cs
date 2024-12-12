@@ -15,8 +15,6 @@ namespace GedsiHub.ViewModels
         public int StudentLearners { get; set; }
         public int EmployeeLearners { get; set; }
         public int TotalModules { get; set; }
-        public int? SelectedModuleId { get; set; }
+        public Dictionary<string, string> AIInsights { get; set; } = new Dictionary<string, string>();
     }
-
-
 }

@@ -7,6 +7,9 @@ using GedsiHub.Models; // Ensure this using directive is present
 using Microsoft.EntityFrameworkCore;
 using GedsiHub.ViewModels;
 using GedsiHub.Models.Quiz;
+using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using System.Text.Json;
 
 namespace GedsiHub.Services
 {
@@ -18,11 +21,20 @@ namespace GedsiHub.Services
         private readonly string _lrsEndpoint;
         private readonly string _lrsUsername;
         private readonly string _lrsPassword;
+        private readonly string _azureMlEndpoint;
+        private readonly string _azureMlApiKey;
 
         public AnalyticsService(ApplicationDbContext context, ILogger<AnalyticsService> logger, IConfiguration configuration)
         {
             _context = context;
             _logger = logger;
+            _azureMlEndpoint = configuration["AzureML:Endpoint"];
+            _azureMlApiKey = configuration["AzureML:ApiKey"];
+
+            if (string.IsNullOrEmpty(_azureMlEndpoint) || string.IsNullOrEmpty(_azureMlApiKey))
+            {
+                _logger.LogError("Azure ML Endpoint or API Key is not configured properly.");
+            }
 
             _lrsEndpoint = configuration["LRS:Endpoint"]; // e.g., https://your-lrs-endpoint.com/xapi/statements
             _lrsUsername = configuration["LRS:Username"];
@@ -433,6 +445,253 @@ namespace GedsiHub.Services
                 .OrderBy(m => m.PositionInt)
                 .ToListAsync();
         }
+        public async Task<List<PostCountByModuleDto>> GetPostCountByModuleAsync()
+        {
+            return await _context.ForumPosts
+                .Where(p => p.ModuleId != null)
+                .GroupBy(p => p.ModuleId)
+                .Select(g => new PostCountByModuleDto
+                {
+                    ModuleTitle = g.First().Module.Title,
+                    Count = g.Count()
+                })
+                .OrderByDescending(m => m.Count)
+                .ToListAsync();
+        }
+
+        public async Task<List<CommonKeywordDto>> GetCommonKeywordsAsync()
+        {
+            var stopWords = new HashSet<string>(new[]
+            {
+        "the", "and", "is", "to", "of", "in", "a", "for", "it", "on", "this",
+        "with", "that", "at", "by", "an", "or", "as", "be", "was", "are", "but",
+        "if", "not", "from", "then", "than", "so", "we", "you", "i", "me", "my",
+        "your", "our"
+    }, StringComparer.OrdinalIgnoreCase);
+
+            var postKeywords = await _context.ForumPosts
+                .Where(p => !string.IsNullOrEmpty(p.Tag))
+                .Select(p => p.Tag.ToLowerInvariant())
+                .ToListAsync();
+
+            var commentContents = await _context.ForumComments
+                .Where(c => !string.IsNullOrEmpty(c.Content))
+                .Select(c => c.Content.ToLowerInvariant())
+                .ToListAsync();
+
+            var commentKeywords = commentContents
+                .SelectMany(content => content
+                    .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(word => new string(word.Where(char.IsLetterOrDigit).ToArray()))
+                    .Where(cleanedWord => !string.IsNullOrWhiteSpace(cleanedWord)
+                                          && !stopWords.Contains(cleanedWord)
+                                          && cleanedWord.Length > 2))
+                .ToList();
+
+            var allKeywords = postKeywords
+                .Concat(commentKeywords)
+                .GroupBy(keyword => keyword)
+                .Select(g => new CommonKeywordDto
+                {
+                    Keyword = g.Key,
+                    Count = g.Count()
+                })
+                .OrderByDescending(k => k.Count)
+                .Take(50)
+                .ToList();
+
+            return allKeywords;
+        }
+        public async Task<Dictionary<string, object>> ConsolidateChartDataAsync(int? moduleId = null)
+        {
+            var chartData = new Dictionary<string, object>();
+
+            // Fetch demographics-related data
+            var demographics = await GetUserDemographicsAsync();
+            chartData["AgeDistribution"] = demographics.AgeDistribution;
+            chartData["GenderIdentity"] = demographics.GenderIdentity;
+            chartData["IndigenousMembership"] = demographics.IndigenousMembership;
+            chartData["EmploymentStatus"] = demographics.EmploymentStatus;
+            chartData["CourseAssociations"] = demographics.CourseAssociations;
+
+            var moduleMetrics = new List<ModuleMetricsViewModel>();
+
+            if (moduleId.HasValue)
+            {
+                var modules = await _context.Modules.ToListAsync();
+                var module = modules.FirstOrDefault(m => m.ModuleId == moduleId.Value);
+
+                if (module != null)
+                {
+                    var completionRate = await GetModuleCompletionRateAsync(module.ModuleId);
+                    var certificatesIssued = await GetCertificateIssuanceRateAsync(module.ModuleId);
+                    var averageQuizScore = await GetAverageQuizScoreAsync(module.ModuleId);
+
+                    moduleMetrics.Add(new ModuleMetricsViewModel
+                    {
+                        ModuleId = module.ModuleId,
+                        ModuleName = module.Title,
+                        CompletionRate = completionRate,
+                        CertificatesIssued = certificatesIssued,
+                        AverageQuizScore = averageQuizScore
+                    });
+                }
+            }
+            else
+            {
+                // Fetch metrics for all modules
+                foreach (var module in await _context.Modules.ToListAsync())
+                {
+                    var completionRate = await GetModuleCompletionRateAsync(module.ModuleId);
+                    var certificatesIssued = await GetCertificateIssuanceRateAsync(module.ModuleId);
+                    var averageQuizScore = await GetAverageQuizScoreAsync(module.ModuleId);
+
+                    moduleMetrics.Add(new ModuleMetricsViewModel
+                    {
+                        ModuleId = module.ModuleId,
+                        ModuleName = module.Title,
+                        CompletionRate = completionRate,
+                        CertificatesIssued = certificatesIssued,
+                        AverageQuizScore = averageQuizScore
+                    });
+                }
+            }
+
+            // Add to chart data
+            chartData["ModulePerformance"] = moduleMetrics;
+
+            // Fetch post count by module
+            chartData["PostCountByModule"] = await GetPostCountByModuleAsync();
+
+            // Fetch common keywords
+            chartData["CommonKeywords"] = await GetCommonKeywordsAsync();
+
+            return chartData;
+        }
+
+        private string ExtractInsight(string output, string chartKey)
+        {
+            if (string.IsNullOrEmpty(output))
+                return $"The AI did not provide insights for {chartKey}. Please check the data or prompt.";
+
+            // We instructed the model to start with "Section: {chartKey}"
+            var sections = output.Split(new[] { "Section:" }, StringSplitOptions.RemoveEmptyEntries);
+
+            var matchingSection = sections.FirstOrDefault(section =>
+                section.TrimStart().StartsWith(chartKey, StringComparison.OrdinalIgnoreCase));
+
+            if (string.IsNullOrWhiteSpace(matchingSection))
+                return $"No specific insights found for {chartKey}.";
+
+            // Extract and clean up the insight by removing the chartKey line
+            var cleaned = matchingSection.Replace(chartKey, "").Trim();
+            return string.IsNullOrEmpty(cleaned)
+                ? $"No specific insights found for {chartKey}."
+                : cleaned;
+        }
+
+        /// <summary>
+        /// Instructs the model to return insights in a structured format.
+        /// </summary>
+        private string PreparePrompt(string dataType, string dataJson, string context = "")
+        {
+            return $@"
+You are an analyst that will review the following dataset for a section called {dataType}.
+Please follow this exact response format:
+
+Section: {dataType}
+Write exactly one sentence identifying trends, anomalies, or insights. If the data is sparse, still hypothesize plausible trends or insights. Keep it simple and concise
+
+Here is the data: {dataJson}
+{context}";
+        }
+
+        private async Task<string> CallAzureMLApiAsync(string prompt)
+        {
+            try
+            {
+                var input = new
+                {
+                    input_data = new
+                    {
+                        input_string = new[]
+                        {
+                        new { role = "user", content = prompt }
+                    },
+                        parameters = new { temperature = 0.9, max_tokens = 500 }
+                    }
+                };
+
+                var jsonPayload = JsonSerializer.Serialize(input);
+                _logger.LogInformation("Payload sent to Azure ML: {Payload}", jsonPayload);
+
+                var request = new HttpRequestMessage(HttpMethod.Post, _azureMlEndpoint)
+                {
+                    Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
+                };
+                request.Headers.Add("Authorization", $"Bearer {_azureMlApiKey}");
+
+                var response = await _httpClient.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogInformation("Azure ML API Response: {Response}", responseContent);
+
+                    var responseObject = JsonSerializer.Deserialize<Dictionary<string, string>>(responseContent);
+                    if (responseObject != null && responseObject.ContainsKey("output"))
+                    {
+                        return responseObject["output"];
+                    }
+                    else
+                    {
+                        _logger.LogError("Azure ML response does not contain 'output' field.");
+                    }
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"Azure ML API Error: {response.StatusCode} - {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in CallAzureMLApiAsync: {ex.Message}");
+            }
+
+            return string.Empty;
+        }
+
+        public async Task<Dictionary<string, string>> GenerateAIInsightsAsync(Dictionary<string, object> chartData)
+        {
+            var insights = new Dictionary<string, string>();
+
+            foreach (var kvp in chartData)
+            {
+                var key = kvp.Key;
+                var value = kvp.Value;
+
+                bool isEmpty = (value is IEnumerable<object> values && !values.Any());
+                var dataJson = isEmpty ? "[]" : JsonSerializer.Serialize(value);
+                var context = isEmpty
+                    ? $"The data for {key} is empty. Please hypothesize insights."
+                    : "This dataset contains sparse data. Hypothesize plausible trends.";
+
+                var prompt = PreparePrompt(key, dataJson, context);
+
+                var output = await CallAzureMLApiAsync(prompt);
+                if (!string.IsNullOrEmpty(output))
+                {
+                    insights[key] = ExtractInsight(output, key);
+                }
+                else
+                {
+                    insights[key] = $"No AI-generated insights for {key}. Hypothetically, this chart could reveal patterns such as X, Y, or Z based on typical data.";
+                }
+            }
+
+            return insights;
+        }
+
     }
 
     // DTO Classes
@@ -503,4 +762,16 @@ namespace GedsiHub.Services
     {
         public double CorrelationCoefficient { get; set; }
     }
+    public class PostCountByModuleDto
+    {
+        public string ModuleTitle { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class CommonKeywordDto
+    {
+        public string Keyword { get; set; }
+        public int Count { get; set; }
+    }
+
 }

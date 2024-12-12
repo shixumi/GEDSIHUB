@@ -36,163 +36,32 @@ namespace GedsiHub.Controllers
         [HttpGet("Dashboard")]
         public async Task<IActionResult> Dashboard(int? moduleId)
         {
-            var modules = await _context.Modules.ToListAsync();
+            var chartData = await _analyticsService.ConsolidateChartDataAsync(moduleId);
 
-            // Compute new metrics
-            var totalLearners = await _analyticsService.GetTotalLearnersAsync();
-            var studentLearners = await _analyticsService.GetStudentLearnersAsync();
-            var employeeLearners = await _analyticsService.GetEmployeeLearnersAsync();
-            var totalModules = await _analyticsService.GetTotalModulesAsync();
+            // Generate AI insights
+            var aiInsights = await _analyticsService.GenerateAIInsightsAsync(chartData);
 
-            // Fetch module-specific metrics
-            var moduleMetrics = new List<ModuleMetricsViewModel>();
-
-            if (moduleId.HasValue)
+            // Ensure all keys are present in AIInsights
+            if (!aiInsights.ContainsKey("ModulePerformance"))
             {
-                // Fetch metrics only for the selected module
-                var module = modules.FirstOrDefault(m => m.ModuleId == moduleId.Value);
-
-                if (module != null)
-                {
-                    var completionRate = await _analyticsService.GetModuleCompletionRateAsync(module.ModuleId);
-                    var certificatesIssued = await _analyticsService.GetCertificateIssuanceRateAsync(module.ModuleId);
-                    var averageQuizScore = await _analyticsService.GetAverageQuizScoreAsync(module.ModuleId);
-
-                    moduleMetrics.Add(new ModuleMetricsViewModel
-                    {
-                        ModuleId = module.ModuleId,
-                        ModuleName = module.Title,
-                        CompletionRate = completionRate,
-                        CertificatesIssued = certificatesIssued,
-                        AverageQuizScore = averageQuizScore
-                    });
-                }
-            }
-            else
-            {
-                // Fetch metrics for all modules
-                foreach (var module in modules)
-                {
-                    var completionRate = await _analyticsService.GetModuleCompletionRateAsync(module.ModuleId);
-                    var certificatesIssued = await _analyticsService.GetCertificateIssuanceRateAsync(module.ModuleId);
-                    var averageQuizScore = await _analyticsService.GetAverageQuizScoreAsync(module.ModuleId);
-
-                    moduleMetrics.Add(new ModuleMetricsViewModel
-                    {
-                        ModuleId = module.ModuleId,
-                        ModuleName = module.Title,
-                        CompletionRate = completionRate,
-                        CertificatesIssued = certificatesIssued,
-                        AverageQuizScore = averageQuizScore
-                    });
-                }
+                aiInsights["ModulePerformance"] = "No insights available for module performance.";
             }
 
+            // Prepare view model
             var viewModel = new AnalyticsDashboardViewModel
             {
-                Modules = modules,
-                ModuleMetrics = moduleMetrics,
-                TotalLearners = totalLearners,
-                StudentLearners = studentLearners,
-                EmployeeLearners = employeeLearners,
-                TotalModules = totalModules,
-                SelectedModuleId = moduleId // Add this property
+                Modules = await _context.Modules.ToListAsync(),
+                TotalLearners = await _analyticsService.GetTotalLearnersAsync(),
+                StudentLearners = await _analyticsService.GetStudentLearnersAsync(),
+                EmployeeLearners = await _analyticsService.GetEmployeeLearnersAsync(),
+                TotalModules = await _analyticsService.GetTotalModulesAsync(),
+                AIInsights = aiInsights
             };
+
 
             return View(viewModel);
         }
 
-        // ****************************** KEYWORD AND MODULE COUNT ******************************
-
-        // GET: Analytics/GetCommonKeywords
-        // Fetches the most common keywords from posts and comments
-        [HttpGet("GetCommonKeywords")]
-        public async Task<IActionResult> GetCommonKeywords()
-        {
-            try
-            {
-                // Step 1: Define stop words to exclude
-                var stopWords = new HashSet<string>(new[]
-                {
-            "the", "and", "is", "to", "of", "in", "a", "for", "it", "on", "this",
-            "with", "that", "at", "by", "an", "or", "as", "be", "was", "are", "but",
-            "if", "not", "from", "then", "than", "so", "we", "you", "i", "me", "my",
-            "your", "our"
-        }, StringComparer.OrdinalIgnoreCase);
-
-                // Step 2: Fetch raw ForumPosts data (titles and content) from the database
-                var postRawData = await _context.ForumPosts
-                    .Where(p => !string.IsNullOrEmpty(p.Title) || !string.IsNullOrEmpty(p.Content))
-                    .Select(p => new { p.Title, p.Content }) // Fetch both fields as raw data
-                    .ToListAsync();
-
-                // Process titles and content after fetching
-                var postContent = postRawData
-                    .SelectMany(p => new[]
-                    {
-                !string.IsNullOrEmpty(p.Title) ? p.Title.ToLowerInvariant() : null,
-                !string.IsNullOrEmpty(p.Content) ? p.Content.ToLowerInvariant() : null
-                    })
-                    .Where(text => !string.IsNullOrEmpty(text)) // Exclude null or empty strings
-                    .ToList();
-
-                // Step 3: Fetch raw ForumComments content from the database
-                var commentContent = await _context.ForumComments
-                    .Where(c => !string.IsNullOrEmpty(c.Content))
-                    .Select(c => c.Content.ToLowerInvariant()) // Normalize content to lowercase
-                    .ToListAsync();
-
-                // Combine all content (posts and comments)
-                var allContent = postContent.Concat(commentContent);
-
-                // Step 4: Process combined content to extract keywords
-                var processedKeywords = allContent
-                    .SelectMany(content => content
-                        .Split(' ', StringSplitOptions.RemoveEmptyEntries) // Split text into words
-                        .Select(word => new string(word.Where(char.IsLetterOrDigit).ToArray())) // Remove punctuation
-                        .Where(cleanedWord => !string.IsNullOrWhiteSpace(cleanedWord) // Exclude empty words
-                                              && !stopWords.Contains(cleanedWord) // Exclude stop words
-                                              && cleanedWord.Length > 2) // Exclude short words
-                    )
-                    .ToList();
-
-                // Step 5: Group keywords, count occurrences, and sort by frequency
-                var groupedKeywords = processedKeywords
-                    .GroupBy(keyword => keyword)
-                    .Select(g => new { Keyword = g.Key, Count = g.Count() })
-                    .OrderByDescending(k => k.Count) // Sort by most frequent
-                    .Take(50) // Limit to top 50 keywords
-                    .ToList();
-
-                // Return the grouped keywords as a JSON response
-                return Ok(groupedKeywords);
-            }
-            catch (Exception ex)
-            {
-                // Log the error for debugging or monitoring (use a proper logger in production)
-                Console.WriteLine($"Error in GetCommonKeywords: {ex.Message}");
-
-                // Return a generic 500 Internal Server Error response
-                return StatusCode(500, "An error occurred while processing the request.");
-            }
-        }
-
-        [HttpGet("GetPostCountByModule")]
-        public async Task<IActionResult> GetPostCountByModule()
-        {
-            var postCounts = await _context.ForumPosts
-                .Where(p => p.ModuleId != null)
-                .GroupBy(p => p.ModuleId)
-                .Select(g => new
-                {
-                    ModuleTitle = g.First().Module.Title,
-                    Count = g.Count()
-                })
-                .OrderByDescending(m => m.Count)
-                .ToListAsync();
-
-            return Ok(postCounts);
-        }
 
         // ****************************** USER DEMOGRAPHICS API ******************************
 
