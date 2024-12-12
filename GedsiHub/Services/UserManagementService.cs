@@ -42,6 +42,23 @@ public class UserManagementService : IUserManagementService
     {
         return await _userManager.FindByIdAsync(id);
     }
+    public async Task<int> GetTotalUsersAsync(string search, bool? isActive)
+    {
+        var query = _userManager.Users.AsNoTracking();
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(u => u.UserName.Contains(search) || u.Email.Contains(search));
+        }
+
+        if (isActive.HasValue)
+        {
+            query = query.Where(u => u.IsActive == isActive.Value);
+        }
+
+        return await query.CountAsync();
+    }
+
 
     public async Task UpdateUserAsync(ApplicationUser user, bool isAdmin)
     {

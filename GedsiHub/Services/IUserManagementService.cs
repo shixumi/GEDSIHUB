@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 public interface IUserManagementService
 {
     Task<IList<ApplicationUser>> GetUsersAsync(string search, bool? isActive, int page, int pageSize);
+    Task<int> GetTotalUsersAsync(string search, bool? isActive);
     Task<ApplicationUser> GetUserByIdAsync(string id);
     Task UpdateUserAsync(ApplicationUser user, bool isAdmin);
     Task DeleteUserAsync(string id);

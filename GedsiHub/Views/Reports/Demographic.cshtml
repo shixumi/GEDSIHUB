@@ -32,14 +32,6 @@
     <hr class="custom-hr">
     <span>Select the desired filters and options to generate your report.<br /></span>
 
-
-
-    
-
-        <div id="loading-spinner" style="display: none;">
-            <img src="~/images/spinner.gif" alt="Loading..." />
-        </div>
-
         <div class="container generate-report-container">
 
             <div class="report-toggle-container">
@@ -59,10 +51,6 @@
                     </li>
                 </ul>
             </div>
-                
-
-
-
           
             <!-- Tab Content -->
             <div class="tab-content" id="reportTabsContent">
@@ -267,53 +255,6 @@
                                     <input type="checkbox" class="checkbox-item" /><span>Time Spent</span>
                                 </div>
                             </div>
-                            <div id="col-2-include-in-report-module" class="col-include-in-report">
-                                <div class="include-checkbox-label">
-                                    <input type="checkbox" class="checkbox-item" /><span>Engagement Levels</span>
-                                </div>
-                                <div class="include-checkbox-label">
-                                    <input type="checkbox" class="checkbox-item" /><span>Pass/Fail Rates</span>
-                                </div>
-                                <div class="include-checkbox-label">
-                                    <input type="checkbox" class="checkbox-item" /><span>Score Distribution</span>
-                                </div>
-                                <div class="include-checkbox-label">
-                                    <input type="checkbox" class="checkbox-item" /><span>Item Analysis</span>
-                                </div>
-                            </div>
-                            <div id="col-3-include-in-report" class="col-include-in-report">
-                                <div id="studentCheckboxField">
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Department</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Course</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Year of Study</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Section</span>
-                                    </div>
-                                </div>
-                                <div id="employeeCheckboxField">
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Employee Type</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Employee Status</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Sector</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Branch/Office/Section/Unit</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" class="checkbox-item" /><span>Position/Designation</span>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <h1>Reports Options</h1>
@@ -360,13 +301,41 @@
 
 @await Html.PartialAsync("_ValidationScriptsPartial")
 
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Function to validate that start date isn't after end date
+            function validateDates() {
+                const startDate = document.querySelector('[name="CustomStartDate"]');
+                const endDate = document.querySelector('[name="CustomEndDate"]');
 
+                if (startDate && endDate) {
+                    startDate.addEventListener("change", checkDates);
+                    endDate.addEventListener("change", checkDates);
+                }
 
+                function checkDates() {
+                    const start = new Date(startDate.value);
+                    const end = new Date(endDate.value);
+                    const today = new Date();
 
+                    if (start > end) {
+                        alert("Start date cannot be later than end date.");
+                        endDate.value = ""; // Clear end date
+                    }
+                    if (end > today) {
+                        alert("End date cannot be in the future.");
+                        endDate.value = ""; // Clear end date
+                    }
+                }
+            }
 
-
-
-
+            validateDates();
+        });
+    </script>
+}
+    <script src="~/js/selectAllCheckbox.js"></script>
+    <script src="~/js/reportsButtonToggle.js"></script>
 
 
 
@@ -389,7 +358,7 @@
                                     <option value="28days">Last 28 days</option>
                                     <option value="60days">Last 60 days</option>
                                     <option value="custom">Custom</option> <!-- Custom option triggers the calendar -->
-                              
+
                             </select>
                         </div>
 
@@ -576,7 +545,7 @@
                         </div>
                         <div class="filter-label-number">
                             <span>Year of Study:</span>
-                            <input type="number" id="numberInput" name="quantity" min="0" placeholder="Enter Year of Study">                       
+                            <input type="number" id="numberInput" name="quantity" min="0" placeholder="Enter Year of Study">
                         </div>
                         <div class="filter-label-text">
                             <span>Section:</span>
@@ -850,59 +819,3 @@
     </div>
 
  *@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Function to validate that start date isn't after end date
-            function validateDates() {
-                const startDate = document.querySelector('[name="CustomStartDate"]');
-                const endDate = document.querySelector('[name="CustomEndDate"]');
-
-                if (startDate && endDate) {
-                    startDate.addEventListener("change", checkDates);
-                    endDate.addEventListener("change", checkDates);
-                }
-
-                function checkDates() {
-                    const start = new Date(startDate.value);
-                    const end = new Date(endDate.value);
-                    const today = new Date();
-
-                    if (start > end) {
-                        alert("Start date cannot be later than end date.");
-                        endDate.value = ""; // Clear end date
-                    }
-                    if (end > today) {
-                        alert("End date cannot be in the future.");
-                        endDate.value = ""; // Clear end date
-                    }
-                }
-            }
-
-            validateDates();
-
-            // Show loading spinner on form submit
-            document.querySelector("form").addEventListener("submit", function () {
-                document.getElementById("loading-spinner").style.display = "block";
-            });
-        });
-    </script>
-}
-    <script src="~/js/selectAllCheckbox.js"></script>
-    <script src="~/js/reportsButtonToggle.js"></script>
-

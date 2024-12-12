@@ -111,7 +111,7 @@ namespace GedsiHub.Controllers
         {
             try
             {
-                // Define a set of common stop words to exclude
+                // Step 1: Define stop words to exclude
                 var stopWords = new HashSet<string>(new[]
                 {
             "the", "and", "is", "to", "of", "in", "a", "for", "it", "on", "this",
@@ -120,47 +120,59 @@ namespace GedsiHub.Controllers
             "your", "our"
         }, StringComparer.OrdinalIgnoreCase);
 
-                // Step 1: Fetch tags from ForumPosts
-                var postKeywords = await _context.ForumPosts
-                    .Where(p => !string.IsNullOrEmpty(p.Tag))
-                    .Select(p => p.Tag.ToLowerInvariant()) // Normalize to lowercase
+                // Step 2: Fetch raw ForumPosts data (titles and content) from the database
+                var postRawData = await _context.ForumPosts
+                    .Where(p => !string.IsNullOrEmpty(p.Title) || !string.IsNullOrEmpty(p.Content))
+                    .Select(p => new { p.Title, p.Content }) // Fetch both fields as raw data
                     .ToListAsync();
 
-                // Step 2: Fetch comments from ForumComments and split into words
-                var commentContents = await _context.ForumComments
+                // Process titles and content after fetching
+                var postContent = postRawData
+                    .SelectMany(p => new[]
+                    {
+                !string.IsNullOrEmpty(p.Title) ? p.Title.ToLowerInvariant() : null,
+                !string.IsNullOrEmpty(p.Content) ? p.Content.ToLowerInvariant() : null
+                    })
+                    .Where(text => !string.IsNullOrEmpty(text)) // Exclude null or empty strings
+                    .ToList();
+
+                // Step 3: Fetch raw ForumComments content from the database
+                var commentContent = await _context.ForumComments
                     .Where(c => !string.IsNullOrEmpty(c.Content))
-                    .Select(c => c.Content.ToLowerInvariant()) // Normalize to lowercase
+                    .Select(c => c.Content.ToLowerInvariant()) // Normalize content to lowercase
                     .ToListAsync();
 
-                // Process comments: Split, clean punctuation, filter stop words and short words
-                var commentKeywords = commentContents
+                // Combine all content (posts and comments)
+                var allContent = postContent.Concat(commentContent);
+
+                // Step 4: Process combined content to extract keywords
+                var processedKeywords = allContent
                     .SelectMany(content => content
-                        .Split(' ', StringSplitOptions.RemoveEmptyEntries) // Split comments into words
+                        .Split(' ', StringSplitOptions.RemoveEmptyEntries) // Split text into words
                         .Select(word => new string(word.Where(char.IsLetterOrDigit).ToArray())) // Remove punctuation
-                        .Where(cleanedWord => !string.IsNullOrWhiteSpace(cleanedWord) // Exclude null/whitespace
+                        .Where(cleanedWord => !string.IsNullOrWhiteSpace(cleanedWord) // Exclude empty words
                                               && !stopWords.Contains(cleanedWord) // Exclude stop words
                                               && cleanedWord.Length > 2) // Exclude short words
                     )
                     .ToList();
 
-                // Step 3: Combine tags and processed keywords, then group and count
-                var allKeywords = postKeywords
-                    .Concat(commentKeywords) // Merge post tags and comment words
-                    .GroupBy(keyword => keyword) // Group by keyword
-                    .Select(g => new { Keyword = g.Key, Count = g.Count() }) // Calculate frequency
-                    .OrderByDescending(k => k.Count) // Order by count descending
+                // Step 5: Group keywords, count occurrences, and sort by frequency
+                var groupedKeywords = processedKeywords
+                    .GroupBy(keyword => keyword)
+                    .Select(g => new { Keyword = g.Key, Count = g.Count() })
+                    .OrderByDescending(k => k.Count) // Sort by most frequent
                     .Take(50) // Limit to top 50 keywords
                     .ToList();
 
-                // Return the result as JSON
-                return Ok(allKeywords);
+                // Return the grouped keywords as a JSON response
+                return Ok(groupedKeywords);
             }
             catch (Exception ex)
             {
-                // Log the error (replace with proper logging in production)
+                // Log the error for debugging or monitoring (use a proper logger in production)
                 Console.WriteLine($"Error in GetCommonKeywords: {ex.Message}");
 
-                // Return a 500 Internal Server Error response
+                // Return a generic 500 Internal Server Error response
                 return StatusCode(500, "An error occurred while processing the request.");
             }
         }

@@ -241,3 +241,45 @@
         padding-bottom: 4px !important;
     }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* Space between pagination elements */
+    margin-top: 20px; /* Space above the pagination */
+    font-size: 16px; /* Standard font size */
+}
+
+    .pagination a {
+        text-decoration: none;
+        padding: 8px 12px;
+        border: 1px solid #7A0019; /* Maroon border */
+        border-radius: 4px;
+        color: #7A0019; /* Maroon text */
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .pagination a:hover {
+            background-color: #F7F7F7; /* Light gray background on hover */
+            color: #7A0019; /* Maroon text on hover */
+        }
+
+        .pagination a.active {
+            background-color: #7A0019; /* Maroon background for active page */
+            color: white; /* White text for contrast */
+            pointer-events: none; /* Disable clicking on the active page */
+        }
+
+        .pagination a.prev-button,
+        .pagination a.next-button {
+            font-weight: normal;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+
+    .pagination span {
+        display: inline-block;
+        padding: 8px 12px;
+        color: #7A0019; /* Maroon for ellipses */
+        font-size: 14px;
+    }

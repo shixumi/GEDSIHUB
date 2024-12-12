@@ -52,6 +52,10 @@ namespace GedsiHub.Controllers
         {
             try
             {
+                // Fetch total user count matching the search/filter criteria
+                var totalUsers = await _userManagementService.GetTotalUsersAsync(search, isActive);
+
+                // Fetch users for the current page
                 var users = await _userManagementService.GetUsersAsync(search, isActive, page, pageSize);
 
                 // Ensure users are not null before proceeding
@@ -76,7 +80,7 @@ namespace GedsiHub.Controllers
                     Users = userViewModels,
                     SearchTerm = search,
                     IsActive = isActive,
-                    TotalUsers = userViewModels.Count(),
+                    TotalUsers = totalUsers, // Use the correct total count
                     CurrentPage = page,
                     PageSize = pageSize
                 };
