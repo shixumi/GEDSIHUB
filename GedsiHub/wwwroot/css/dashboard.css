@@ -1,4 +1,22 @@
-﻿.dashboard-con-of-con {
+﻿@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 3.6px 9px rgba(0, 0, 0, 0.3);
+    }
+
+    50% {
+        transform: scale(1.072);
+        box-shadow: 0 5.4px 13.5px rgba(0, 0, 0, 0.4);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 3.6px 9px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* General Styling */
+.dashboard-con-of-con {
     display: flex;
     flex-direction: column;
     gap: 1.8rem;
@@ -69,6 +87,7 @@
     flex-direction: column;
     padding-left: 2.25rem;
     padding-right: 2.25rem;
+    overflow: hidden;
 }
 
 #streakDaysCon {
@@ -83,6 +102,8 @@
 #streakDaysCon {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
 }
 
 .days-streak-text, .your-streak-label {
@@ -93,68 +114,78 @@
     margin-top: 0.45rem;
 }
 
+/* Streak Container */
 .streak {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
     margin-bottom: 0.9rem;
     margin-top: 0.9rem;
+    width: 100%; /* Occupy the full width of your container */
 }
 
 .streak-week {
-    display: flex;
-    gap: 25px;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(3.2rem, 1fr)); /* Automatically adjust circles to fit */
+    gap: 0.4rem; /* Uniform spacing between circles */
+    width: 100%; /* Stretch to fill the streak container */
+    overflow-x: hidden; /* Prevent horizontal overflow */
 }
+
+    .streak-week::-webkit-scrollbar {
+        height: 8px; /* Height of the scrollbar for horizontal scrolling */
+    }
+
+    .streak-week::-webkit-scrollbar-thumb {
+        background-color: #e0e0e0;
+        border-radius: 4px;
+    }
+
+    .streak-week::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
 .streak-item {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-shrink: 0; /* Prevent items from shrinking */
 }
 
+/* Streak Circle */
 .streak-circle {
-    width: 3.6rem;
-    height: 3.6rem;
+    width: 80%; /* Adjust width dynamically based on grid */
+    height: auto;
+    aspect-ratio: 1 / 1; /* Maintain circular shape */
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #e0e0e0;
     transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    box-sizing: border-box;
 }
 
 .days-label-your-streak {
-    font-size: 1.17rem;
+    font-size: 0.85rem; /* Smaller font for labels */
     font-weight: 500;
     color: #464040;
     margin-top: 0.72rem;
 }
 
-.days-streak-con {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 4.5rem;
-    padding: 0.9rem;
-}
-
-.streak-circle i {
-    color: transparent;
-    font-size: 1.8rem;
-    transition: color 0.3s;
-}
-
+/* Filled State */
 .streak-circle.filled {
     color: white;
     background: radial-gradient(circle, rgb(73,177,77) 20%, rgb(64,135,67) 100%);
     transform: scale(1.045);
 }
 
+/* Bolt Icon */
 .bolt-icon {
     color: white;
-    width: 45%;
-    height: 45%;
+    width: 40%;
+    height: 40%;
 }
 
 .streak-circle:hover {
@@ -165,19 +196,73 @@
     transform: scale(1.035);
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 3.6px 9px rgba(0, 0, 0, 0.3);
+.streak-explanation {
+    margin-top: 0.4rem;
+    font-size: 0.9rem; /* Adjust font size */
+    color: #660000; /* Match the existing color scheme */
+    text-align: center; /* Center the text */
+    font-weight: 400; /* Slightly lighter text */
+    line-height: 1.4; /* Improve readability */
+}
+
+/* Responsive Adjustments */
+
+/* Large Screens */
+@media screen and (min-width: 1920px) {
+    .streak-circle {
+        width: 3.2rem;
+        height: 3.2rem;
     }
 
-    50% {
-        transform: scale(1.072);
-        box-shadow: 0 5.4px 13.5px rgba(0, 0, 0, 0.4);
+    .days-label-your-streak {
+        font-size: 0.95rem;
+    }
+}
+
+/* Medium Screens */
+@media screen and (max-width: 1440px) {
+    .streak-circle {
+        width: 2.8rem;
+        height: auto;
     }
 
-    100% {
-        transform: scale(1);
-        box-shadow: 0 3.6px 9px rgba(0, 0, 0, 0.3);
+    .streak-week {
+        gap: 0.4rem;
+    }
+
+    .days-label-your-streak {
+        font-size: 0.85rem;
+    }
+}
+
+/* Small Screens */
+@media screen and (max-width: 1024px) {
+    .streak-circle {
+        width: 2.4rem;
+        height: auto;
+    }
+
+    .streak-week {
+        gap: 0.3rem;
+    }
+
+    .days-label-your-streak {
+        font-size: 0.8rem;
+    }
+}
+
+/* Extra Small Screens */
+@media screen and (max-width: 768px) {
+    .streak-circle {
+        width: 2rem;
+        height: auto;
+    }
+
+    .streak-week {
+        gap: 0.3rem;
+    }
+
+    .days-label-your-streak {
+        font-size: 0.7rem;
     }
 }
