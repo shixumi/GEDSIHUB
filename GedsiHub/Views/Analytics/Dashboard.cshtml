@@ -85,7 +85,16 @@
                     <p id="certificateIssuance">Loading...</p>
                 </div>
             </div>
-            <span class="insight">Insight: Key performance metrics per module.</span>
+            <span class="insight">
+                @if (Model.AIInsights.ContainsKey("ModulePerformance"))
+                {
+                    @Model.AIInsights["ModulePerformance"]
+                }
+                else
+                {
+                    <span>No insights available for module performance.</span>
+                }
+            </span>
         </div>
     </div>
 
@@ -94,17 +103,44 @@
         <div id="age-distribution-container" class="container analytics_graph_container age-dist-wide">
             <h6>Age Distribution</h6>
             <canvas id="ageDistributionChart" class="full-width-canvas"></canvas>
-            <span class="insight">Insight: Age distribution trends over time.</span>
+            <span class="insight">
+                @if (Model.AIInsights.ContainsKey("AgeDistribution"))
+                {
+                    @Model.AIInsights["AgeDistribution"]
+                }
+                else
+                {
+                    <span>No insights available for age distribution.</span>
+                }
+            </span>
         </div>
         <div class="container analytics_graph_container gender-identity-narrow">
             <h6>Gender Identity</h6>
             <canvas id="genderIdentityChart"></canvas>
-            <span class="insight">Insight: Gender identity breakdown analysis.</span>
+            <span class="insight">
+                @if (Model.AIInsights.ContainsKey("GenderIdentity"))
+                {
+                    @Model.AIInsights["GenderIdentity"]
+                }
+                else
+                {
+                    <span>No insights available for gender identity.</span>
+                }
+            </span>
         </div>
         <div class="container analytics_graph_container indigenous-membership-narrow">
             <h6>Indigenous Membership</h6>
             <canvas id="indigenousMembershipChart"></canvas>
-            <span class="insight">Insight: Indigenous membership data insights.</span>
+            <span class="insight">
+                @if (Model.AIInsights.ContainsKey("IndigenousMembership"))
+                {
+                    @Model.AIInsights["IndigenousMembership"]
+                }
+                else
+                {
+                    <span>No insights available for indigenous membership.</span>
+                }
+            </span>
         </div>
     </div>
 
@@ -115,7 +151,16 @@
         <div class="container analytics_graph_container employment-status-container">
             <h6>Employment Status Breakdown</h6>
             <canvas id="employmentStatusChart"></canvas>
-            <span class="insight">Insight: Employment status distribution.</span>
+            <span class="insight">
+                @if (Model.AIInsights.ContainsKey("EmploymentStatus"))
+                {
+                    @Model.AIInsights["EmploymentStatus"]
+                }
+                else
+                {
+                    <span>No insights available for employment status.</span>
+                }
+            </span>
         </div>
         <div class="container analytics_graph_container course-associations-container">
             <h6>Course Associations</h6>
@@ -131,13 +176,31 @@
             <div class="chart-container" style="width: 100%; height: 100%; position: relative;">
                 <canvas id="postCountByModuleChart" style="width: 100%; height: 100%;"></canvas>
             </div>
-            <span class="insight">Insight: Module activity trends visualized as a horizontal bar chart.</span>
+            <span class="insight">
+                @if (Model.AIInsights.ContainsKey("PostCountByModule"))
+                {
+                    @Model.AIInsights["PostCountByModule"]
+                }
+                else
+                {
+                    <span>No insights available for post count by module.</span>
+                }
+            </span>
         </div>
 
         <div class="container analytics_graph_container">
             <h6>Common Keywords</h6>
             <canvas id="commonKeywordsCloud" width="800" height="400"></canvas>
-            <span class="insight">Insight: Frequently discussed topics visualized as a word cloud.</span>
+            <span class="insight">
+                @if (Model.AIInsights.ContainsKey("CommonKeywords"))
+                {
+                    @Model.AIInsights["CommonKeywords"]
+                }
+                else
+                {
+                    <span>No insights available for common keywords.</span>
+                }
+            </span>
         </div>
     </div>
 </div>
