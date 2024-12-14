@@ -254,26 +254,29 @@ namespace GedsiHub.Services
         // Method to send certificate via email
         public async Task SendCertificateEmail(string email, string subject, byte[] pdfBytes, string fileName, string emailBody)
         {
-            if (_emailSender != null)
-            {
-                Console.WriteLine($"Sending email to {email} with subject {subject}");
+            Console.WriteLine($"Email sending is temporarily disabled. Would have sent email to {email} with subject {subject}");
+            // Uncomment below when ready to re-enable email sending:
+            // if (_emailSender != null)
+            // {
+            //     Console.WriteLine($"Sending email to {email} with subject {subject}");
 
-                try
-                {
-                    await _emailSender.SendEmailWithAttachmentAsync(email, subject, emailBody, pdfBytes, fileName);
-                    Console.WriteLine("Email sent successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error sending email: {ex.Message}");
-                    throw;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Email sender service is not available.");
-            }
+            //     try
+            //     {
+            //         await _emailSender.SendEmailWithAttachmentAsync(email, subject, emailBody, pdfBytes, fileName);
+            //         Console.WriteLine("Email sent successfully.");
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         Console.WriteLine($"Error sending email: {ex.Message}");
+            //         throw;
+            //     }
+            // }
+            // else
+            // {
+            //     Console.WriteLine("Email sender service is not available.");
+            // }
         }
+
         public async Task<byte[]> GetCertificateBytesAsync(string userId, int moduleId)
         {
             // Check if a certificate exists for the user and module
