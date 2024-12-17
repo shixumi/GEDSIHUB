@@ -61,14 +61,16 @@
                         <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                     </div>
                 </div>
-        
+                
+                <!-- Next button -->
+                <div class="container nav-button d-flex justify-content-end ">
+                    <button class="next-btn" type="button" onclick="nextStep(2)">Next</button>
+                </div>
             </div>
 
 
-            <!-- Next button -->
-            <div class="container d-flex justify-content-end nav-button">
-                <button class="next-btn" type="button" onclick="nextStep(2)">Next</button>
-            </div>
+            
+            
         </section>
 
         <!-- Step 2 Page -->
@@ -89,8 +91,27 @@
 
                 <!-- Gender -->
                 <!-- Need to verify in the back end -->
+                @*
                 <div class="mb-3">
                     <label class="form-label d-flex justify-content-start input-lbl">Gender</label>
+                    <select asp-for="Input.GenderIdentity" class="form-control form-select s-form" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="Cisgender" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Gender matches sex at birth.">Cisgender (Gender matches sex at birth)</option>
+                        <option value="Transgender" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Gender differs from sex at birth.">Transgender (Gender differs from sex at birth)</option>
+                        <option value="Agender" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="No gender identity.">Agender (No gender identity)</option>
+                        <option value="Gender Fluid" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Gender changes over time.">Gender Fluid (Gender changes over time)</option>
+                        <option value="Gender Queer" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="A mix of, between, or beyond masculine and feminine.">Gender Queer (A mix of, between, or beyond masculine and feminine)</option>
+                    </select>
+                    <span asp-validation-for="Input.GenderIdentity" class="text-danger"></span>
+                </div>
+                *@
+
+                <div class="mb-3">
+                    <label class="form-label d-flex justify-content-start input-lbl">
+                        Gender
+                        <!-- Font Awesome Icon for Tooltip -->
+                        <i class="fas fa-info-circle ms-2" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Select your gender identity"></i>
+                    </label>
                     <select asp-for="Input.GenderIdentity" class="form-control form-select s-form" required>
                         <option value="" disabled selected>Select</option>
                         <option value="Cisgender" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Gender matches sex at birth.">Cisgender (Gender matches sex at birth)</option>
@@ -131,11 +152,13 @@
                     <!-- <input asp-for="Input.ProfilePicturePath" class="form-control" type="file" /> -->
                 </div> *@
 
+                <!-- Navigation Button-->
+                <div class="container d-flex justify-content-between nav-button">
+                    <button class="back-btn" type="button" onclick="prevStep(1)">Back</button>
+                    <button class="next-btn" type="button" onclick="nextStep(3)">Next</button>
+                </div>
             </div>
-            <div class="container d-flex justify-content-between nav-button">
-                <button class="back-btn" type="button" onclick="prevStep(1)">Back</button>
-                <button class="next-btn" type="button" onclick="nextStep(3)">Next</button>
-            </div>
+            
         </section>
 
         <!-- Step 3 Page -->
@@ -163,12 +186,15 @@
                     </select>
                     <span asp-validation-for="Input.IsDisabled" class="text-danger"></span>
                 </div>
+
+                <!-- Navigation Button-->
+                <div class="container d-flex justify-content-between nav-button">
+                    <button class="back-btn" type="button" onclick="prevStep(2)">Back</button>
+                    <button class="next-btn" type="button" onclick="nextStep(4)">Next</button>
+                </div>
             </div>
 
-            <div class="container d-flex justify-content-between nav-button">
-                <button class="back-btn" type="button" onclick="prevStep(2)">Back</button>
-                <button class="next-btn" type="button" onclick="nextStep(4)">Next</button>
-            </div>
+            
 
         </section>
 
@@ -281,13 +307,13 @@
                     </div>
                 }
 
+                <!-- Buttons -->
+                <div class="container d-flex justify-content-between nav-button">
+                    <button class="back-btn" type="button" onclick="prevStep(3)">Back</button>
+                    <button class="next-btn" type="submit" onclick="submitForm">Save Profile</button>
+                </div>
             </div>
-            <!-- Buttons -->
-            <div class="container d-flex justify-content-between nav-button">
-                <button class="back-btn" type="button" onclick="prevStep(3)">Back</button>
-                <button class="next-btn" type="submit" onclick="submitForm">Save Profile</button>
-                
-            </div>
+            
         </section>
 
     </section>
@@ -299,14 +325,28 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/CompleteProfile.js"></script>
     <script>
-        // Initialize tooltips on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', function () {
+            // Initialize tooltips for elements with data-bs-toggle="tooltip"
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl, {
-                    delay: { show: 500, hide: 100 }
+                    delay: { show: 500, hide: 100 },
+                    boundary: 'viewport',  // Ensures tooltips don't get cut off when near the edge of the screen
+                    placement: 'right',  // You can change this to 'top', 'left', etc.
+                    trigger: 'hover focus'  // Makes sure the tooltip shows on hover and focus
                 });
             });
+
+            // Optional: Auto-close tooltips when the user clicks outside of the tooltip area
+            document.body.addEventListener('click', function (event) {
+                if (!event.target.closest('[data-bs-toggle="tooltip"]')) {
+                    tooltipTriggerList.forEach(function (tooltip) {
+                        tooltip.hide();
+                    });
+                }
+            });
         });
+
+
     </script>
 }
