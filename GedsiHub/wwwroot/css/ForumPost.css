@@ -488,6 +488,11 @@ body {
             padding-right: 20px;
         }
 
+    .archive-btn {
+        margin-left: 1rem !important;
+        border-radius: 10px !important;
+    }
+
     /* Modal Styling */
     .modal-content {
         background-color: #ffffff;
