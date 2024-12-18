@@ -45,7 +45,10 @@ namespace GedsiHub.Controllers
                     CreatedAt = post.CreatedAt,
                     UserFirstName = post.User.FirstName,
                     UserLastName = post.User.LastName,
-                    ExpiryDate = post.ExpiryDate
+                    ExpiryDate = post.ExpiryDate,
+                    Flair = post.Flair,
+                    ModuleTitle = post.Module != null ? post.Module.Title : null,
+                    ModuleColor = post.Module != null && !string.IsNullOrEmpty(post.Module.Color) ? post.Module.Color : "#000000"
                 })
                 .ToListAsync();
 

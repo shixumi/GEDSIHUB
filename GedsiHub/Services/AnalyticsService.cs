@@ -453,10 +453,16 @@ namespace GedsiHub.Services
         {
             return await _context.ForumPosts
                 .Where(p => p.ModuleId != null)
-                .GroupBy(p => p.ModuleId)
+                .Join(
+                    _context.Modules,
+                    post => post.ModuleId,
+                    module => module.ModuleId,
+                    (post, module) => new { post, module }
+                )
+                .GroupBy(x => x.module.ModuleId)
                 .Select(g => new PostCountByModuleDto
                 {
-                    ModuleTitle = g.First().Module.Title,
+                    ModuleTitle = g.Select(x => x.module.Title).FirstOrDefault() ?? "Unknown", // Explicitly handle null
                     Count = g.Count()
                 })
                 .OrderByDescending(m => m.Count)
@@ -496,11 +502,11 @@ namespace GedsiHub.Services
 
             var processedKeywords = allContent
                 .SelectMany(content => content
-                    .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ' ', '.', ',', ';', ':', '!', '?', '-', '\'', '\"', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(word => new string(word.Where(char.IsLetterOrDigit).ToArray()))
                     .Where(cleanedWord => !string.IsNullOrWhiteSpace(cleanedWord)
                                           && !stopWords.Contains(cleanedWord)
-                                          && cleanedWord.Length > 2)
+                                          && cleanedWord.Length > 1) // Allow 2-character words
                 )
                 .ToList();
 

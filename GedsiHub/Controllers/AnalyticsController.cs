@@ -165,6 +165,40 @@ namespace GedsiHub.Controllers
             var courseAssociations = await _analyticsService.GetCourseAssociationsAsync();
             return Json(courseAssociations);
         }
+
+        // ***************************** POST COUNT AND KEYWORDS API ****************************
+
+        // GET: Analytics/GetPostCountByModule
+        // API endpoint that returns the count of posts by module.
+        [HttpGet("GetPostCountByModule")]
+        public async Task<IActionResult> GetPostCountByModule()
+        {
+            try
+            {
+                var postCounts = await _analyticsService.GetPostCountByModuleAsync();
+                return Ok(postCounts); // Returns 200 OK with JSON
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        // GET: Analytics/GetCommonKeywords
+        // API endpoint that returns the most common keywords used in posts.
+        [HttpGet("GetCommonKeywords")]
+        public async Task<IActionResult> GetCommonKeywords()
+        {
+            try
+            {
+                var commonKeywords = await _analyticsService.GetCommonKeywordsAsync();
+                return Ok(commonKeywords); // Returns 200 OK with JSON
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
     }
 
     // ****************************** COURSE ASSOCIATIONS API ******************************
