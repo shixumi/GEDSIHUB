@@ -25,7 +25,7 @@
 
 .report-inside-container {
     background: #fdfcfc;
-    max-height: 55rem;
+    height: 100%;
     padding: 20px 35px;
     margin-left: 0px;
     border-radius: 0.5rem;
@@ -35,9 +35,6 @@
     display: flex;
 }
 
-.filter-label-select {
-    display: flex;
-}
 
 .col-1-filter {
     display: flex;
@@ -47,9 +44,9 @@
 }
 
 .col-2-filter {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
     height: 15%;
 }
 
@@ -66,6 +63,10 @@
     position: relative;
     margin-bottom: 20px;
 }
+
+    .filter-label-select label, .filter-label-number label, .filter-label-text label {
+        margin-right: 1.5rem;
+    }
 
     .filter-label-select span, .filter-label-number span, .filter-label-text span {
         margin-right: 0.5rem;
@@ -103,7 +104,6 @@
     background-size: 12px;
     border: 1px solid #939393;
 }
-
 
 .col-1-filter select {
     width: 24rem;
@@ -191,8 +191,6 @@
     display: none; /* Hidden by default */
     position: absolute; /* Ensure it appears over other content without affecting layout */
     z-index: 1000; /* Make sure it appears on top of other content */
-
-
 }
 
 .filter-label-select {
@@ -204,7 +202,6 @@
     width: 300px; /* Adjust the size of the calendar */
     margin-left: 6.7rem;
     margin-top: -1rem;
-    
 }
 
 

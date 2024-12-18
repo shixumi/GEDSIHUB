@@ -16,22 +16,22 @@
         <div class="con-of-cols-include-report">
             <div id="col-1-include-in-report-module" class="col-include-in-report">
                 <!-- Select All Checkbox for Module Report -->
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="selectAllGroup2" />
+                <div class="form-check include-checkbox-label">
+                    <input type="checkbox" class="checkbox-item-group2" id="selectAllGroup2" />
                     <label class="form-check-label" for="selectAllGroup2">Select All</label>
                 </div>
 
                 <!-- Individual Metric Checkboxes -->
-                <div class="form-check">
-                    @Html.CheckBoxFor(m => m.IncludeCompletionRate, new { @class = "form-check-input checkbox-item-group2", id = "IncludeCompletionRate" })
+                <div class="form-check include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeCompletionRate, new { @class = "checkbox-item-group2", id = "IncludeCompletionRate" })
                     <label class="form-check-label" for="IncludeCompletionRate">Completion Rate</label>
                 </div>
-                <div class="form-check">
-                    @Html.CheckBoxFor(m => m.IncludeAverageQuizScore, new { @class = "form-check-input checkbox-item-group2", id = "IncludeAverageQuizScore" })
+                <div class="form-check include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeAverageQuizScore, new { @class = "checkbox-item-group2", id = "IncludeAverageQuizScore" })
                     <label class="form-check-label" for="IncludeAverageQuizScore">Average Quiz Score</label>
                 </div>
-                <div class="form-check">
-                    @Html.CheckBoxFor(m => m.IncludeCertificatesIssued, new { @class = "form-check-input checkbox-item-group2", id = "IncludeCertificatesIssued" })
+                <div class="form-check include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeCertificatesIssued, new { @class = "checkbox-item-group2", id = "IncludeCertificatesIssued" })
                     <label class="form-check-label" for="IncludeCertificatesIssued">Certificates Issued</label>
                 </div>
             </div>
@@ -44,8 +44,8 @@
     <div class="report-inside-container report-options-container">
         <div class="col-1-filter">
             <div class="filter-label-select">
-                <label asp-for="FileFormat" class="form-label">File Format:</label>
-                <select asp-for="FileFormat" class="form-control" required>
+                <label asp-for="FileFormat">File Format:</label>
+                <select asp-for="FileFormat" required>
                     <option value="" disabled selected>Select File Format</option>
                     <option value="CSV">CSV</option>
                     <option value="PDF">PDF</option>
