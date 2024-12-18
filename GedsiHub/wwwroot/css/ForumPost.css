@@ -491,6 +491,7 @@ body {
     .archive-btn {
         margin-left: 1rem !important;
         border-radius: 10px !important;
+
     }
 
     /* Modal Styling */
@@ -717,4 +718,13 @@ body {
     .blended-eye-pleasing-rainbow.active:hover {
         filter: brightness(1.2); /* Slightly brighten the gradient */
         transition: filter 0.2s ease; /* Smooth transition for hover */
+    }
+
+    .announcement-div {
+        margin-bottom: 1.5rem;
+    }
+
+    .custom-checkbox:checked {
+        background-image: none !important;
+
     }

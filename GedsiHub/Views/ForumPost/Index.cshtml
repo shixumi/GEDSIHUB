@@ -113,7 +113,7 @@
             <h2>Announcements</h2>
             @foreach (var announcement in announcements)
             {
-                <div class="card gedf-card">
+                <div class="card gedf-card announcement-div">
 
                     <!-- Card Header -->
                     <div class="card-header">
@@ -146,6 +146,10 @@
                             </a>
                         }
 
+                        <!-- Announcement -->
+                        <span class="badge rounded-pill module-badge" style="background-color: #ff5733; color: white;">Announcement</span>
+                        
+
                         <!-- Card Title -->
                         <a asp-action="Details" asp-route-id="@announcement.PostId">
                             <h4 class="card-title">@announcement.Title</h4>
@@ -160,7 +164,6 @@
                         @if (announcement.ExpiryDate.HasValue)
                         {
                             <span class="text-muted">
-                                |
                                 @(DateTime.UtcNow < announcement.ExpiryDate.Value
                                     ? $"Expires {GedsiHub.Helpers.DateTimeHelper.GetRelativeTime(announcement.ExpiryDate.Value)}"
                                     : $"Expired {GedsiHub.Helpers.DateTimeHelper.GetRelativeTime(announcement.ExpiryDate.Value)}")
@@ -168,8 +171,21 @@
                         }
                     </div>
 
-                    <!-- Card Footer Buttons -->
+                    
+
                     <div class="d-flex align-items-center card-footer">
+
+                        <!-- Card Footer Buttons -->
+                        <button class="card-link d-flex align-items-center like-btn"
+                                data-post-id="@announcement.PostId"
+                                data-has-liked="@announcement.HasLiked"
+                                onclick="toggleRainbowHeart(this)">
+                            <i id="heartIcon-@announcement.PostId"
+                               class="f-icon la @(announcement.HasLiked ? "la-heart blended-eye-pleasing-rainbow active" : "la-heart-o blended-eye-pleasing-rainbow")">
+                            </i>
+                            <span id="likeCount-@announcement.PostId">@announcement.LikesCount</span>
+                        </button>
+
                         <a asp-action="Details" asp-route-id="@announcement.PostId" class="card-link d-flex align-items-center">
                             <i class="f-icon la la-comment"></i> @announcement.CommentCount
                         </a>
@@ -195,12 +211,11 @@
                     </div>
                 </div>
             }
-        }
-        else
-        {
-            <p>No announcements available.</p>
+            <hr class="custom-hr" />
         }
     </div>
+
+    
     @*
     <div class="announcements">
         <h2>Announcements</h2>
