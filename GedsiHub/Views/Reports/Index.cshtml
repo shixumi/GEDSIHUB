@@ -1,13 +1,13 @@
-﻿@model GedsiHub.ViewModels.DemographicReportViewModel
+﻿@model GedsiHub.ViewModels.CombinedReportViewModel
 
 @{
     Layout = "_LayoutApp";
-    ViewData["Title"] = "Generate Demographic Report";
+    ViewData["Title"] = "Generate Reports";
 }
 
-<!-- GENERATE DEMOGRAPHIC REPORT -->
+<!-- GENERATE REPORTS -->
 <div>
-    <div class="feedback-title-searcbar-con">
+    <div class="feedback-title-searchbar-con">
         <h1 id="feedback-responses-title" class="modules_title" style="color: #464040; padding-bottom: 0.5rem;">
             Generate Report
         </h1>
@@ -32,271 +32,42 @@
     <hr class="custom-hr">
     <span>Select the desired filters and options to generate your report.<br /></span>
 
-        <div class="container generate-report-container">
+    <div class="container generate-report-container">
 
-            <div class="report-toggle-container">
-                <!-- Nav Pills for Tabs -->
-                <ul class="nav nav-pills mb-3" id="reportTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
+        <div class="report-toggle-container">
+            <!-- Nav Pills for Tabs -->
+            <ul class="nav nav-pills mb-3" id="reportTabs" role="tablist">
+                <li class="nav-item" role="presentation">
                     <button class="nav-link report-toggle-button active" id="demographic-tab" data-bs-toggle="pill" data-bs-target="#demographic" type="button" role="tab" aria-controls="demographic" aria-selected="true">
-                            <img src="~/images/Demographics.png" />
-                            Generate Demographic Report
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
+                        <img src="~/images/Demographics.png" alt="Demographics Icon" />
+                        Generate Demographic Report
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link report-toggle-button" id="module-tab" data-bs-toggle="pill" data-bs-target="#module" type="button" role="tab" aria-controls="module" aria-selected="false">
-                            <img src="~/images/Book.png" />
-                            Generate Module Report
-                        </button>
-                    </li>
-                </ul>
-            </div>
-          
-            <!-- Tab Content -->
-            <div class="tab-content" id="reportTabsContent">
-
-                <!-- Content for Demographic Report -->
-                <div class="tab-pane fade show active" id="demographic" role="tabpanel" aria-labelledby="demographic-tab">
-                    <form asp-action="Demographic" method="post">
-                        @Html.AntiForgeryToken()
-                        <h1>Filters</h1>
-                        <div class="report-inside-container">
-                            <div class="container-of-cols">
-                                <div class="col-1-filter">
-                                <div class="filter-label-date">
-                                    <span>Date Range:</span>
-                                    @Html.TextBoxFor(model => model.CustomStartDate, new { type = "date", @class = "form-control", placeholder = "Start Date" })
-                                    @Html.ValidationMessageFor(model => model.CustomStartDate, "", new { @class = "text-danger" })
-
-                                    <span>to</span>
-
-                                    @Html.TextBoxFor(model => model.CustomEndDate, new { type = "date", @class = "form-control", placeholder = "End Date" })
-                                    @Html.ValidationMessageFor(model => model.CustomEndDate, "", new { @class = "text-danger" })
-                                </div>
-                                    <div class="filter-label-select">
-                                        <span>Campus:</span>
-                                        <select name="Campus">
-                                            <option value="" disabled selected>Select a PUP Campus</option>
-                                            @foreach (var campus in Model.CampusOptions)
-                                            {
-                                                <option value="@campus.Value">@campus.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-
-                                    <div class="filter-label-select">
-                                        <span>Age Group:</span>
-                                        <select name="AgeGroup">
-                                            <option value="" disabled selected>Select Age Group</option>
-                                            @foreach (var age in Model.AgeGroupOptions)
-                                            {
-                                                <option value="@age.Value">@age.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-2-filter">
-                                    <div class="filter-label-select">
-                                        <span>Sex:</span>
-                                        <select name="Sex">
-                                            <option value="" disabled selected>Select Sex</option>
-                                            @foreach (var sex in Model.SexOptions)
-                                            {
-                                                <option value="@sex.Value">@sex.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-
-                                    <div class="filter-label-select">
-                                        <span>Gender Identity:</span>
-                                        <select name="GenderIdentity">
-                                            <option value="" disabled selected>Select Gender Identity</option>
-                                            @foreach (var gender in Model.GenderIdentityOptions)
-                                            {
-                                                <option value="@gender.Value">@gender.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-
-                                    <div class="filter-label-select">
-                                        <span>Type of User:</span>
-                                        <select name="UserType" id="userType" onchange="toggleUserFields()">
-                                            <option value="select" disabled selected>Select User Type</option>
-                                            @foreach (var userType in Model.UserTypeOptions)
-                                            {
-                                                <option value="@userType.Value">@userType.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h1>Include in Report</h1>
-                        <div class="report-inside-container">
-                            <div class="con-of-cols-include-report">
-                                <div id="col-1-include-in-report" class="col-include-in-report">
-                                    <div class="include-checkbox-label">
-                                        <input type="checkbox" id="selectAllGroup1" />
-                                        <span>Select All</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBoxFor(m => m.IncludeIdNumber, new { @class = "checkbox-item-group1" })
-                                        <span>ID Number</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBoxFor(m => m.IncludeName, new { @class = "checkbox-item-group1" })
-                                        <span>Name</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBoxFor(m => m.IncludeWebmail, new { @class = "checkbox-item-group1" })
-                                        <span>Webmail</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBoxFor(m => m.IncludePhoneNumber, new { @class = "checkbox-item-group1" })
-                                        <span>Phone Number</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBoxFor(m => m.IncludeDateOfBirth, new { @class = "checkbox-item-group1" })
-                                        <span>Date of Birth</span>
-                                    </div>
-                                </div>
-                                <div id="col-2-include-in-report" class="col-include-in-report">
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBoxFor(m => m.IncludeAge, new { @class = "checkbox-item-group1" })
-                                        <span>Age</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBoxFor(m => m.IncludeSex, new { @class = "checkbox-item-group1" })
-                                        <span>Sex</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBoxFor(m => m.IncludeGender, new { @class = "checkbox-item-group1" })
-                                        <span>Gender</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBox("IncludeIndigenousCommunity", false, new { @class = "checkbox-item-group1" })
-                                        <span>Indigenous Community</span>
-                                    </div>
-                                    <div class="include-checkbox-label">
-                                        @Html.CheckBox("IncludeDifferentlyAbled", false, new { @class = "checkbox-item-group1" })
-                                        <span>Differently Abled</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h1>Report Options</h1>
-                        <div class="report-inside-container report-options-container">
-                            <div class="col-1-filter">
-                                <div class="filter-label-select">
-                                    <span>Group By:</span>
-                                    <select name="GroupBy">
-                                        <option value="none" selected>None</option>
-                                        <option value="age">Age</option>
-                                        <option value="sex">Sex</option>
-                                        <option value="gender">Gender Identity</option>
-                                    </select>
-                                </div>
-                                <div class="filter-label-select">
-                                    <span>Sort By:</span>
-                                    <select name="SortBy">
-                                        <option value="name" selected>Name</option>
-                                        <option value="age">Age</option>
-                                        <option value="date">Date</option>
-                                    </select>
-                                </div>
-                                <div class="filter-label-select">
-                                    <span>File Format:</span>
-                                    <select name="FileFormat" required>
-                                        <option value="CSV">CSV</option>
-                                        <option value="PDF">PDF</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="gen-report-button-container">
-                            <button class="generate-report-button" type="submit">Generate Report</button>
-                        </div>
-                    </form>
-                </div>
-
-
-                <!-- Content for Module Report -->
-                <div class="tab-pane fade" id="module" role="tabpanel" aria-labelledby="module-tab">
-                    <h1>Select Module</h1>
-                    <div class="report-inside-container report-gen-module-container">
-                        <span>Choose a module to generate the report:</span>
-                        <select class="report-gen-select-module">
-                            <optgroup label="This is a group">
-                                <option value="12" selected>This is item 1</option>
-                                <option value="13">This is item 2</option>
-                                <option value="14">This is item 3</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <h1>Select Metrics to Include</h1>
-
-                    <div class="report-inside-container">
-                        <div class="con-of-cols-include-report">
-                            <div id="col-1-include-in-report-module" class="col-include-in-report">
-                                <div class="include-checkbox-label metrics-include-checkbox-label">
-                                    <input type="checkbox" id="selectAll" /><span>Select All</span>
-                                </div>
-                                <div class="include-checkbox-label metrics-include-checkbox-label">
-                                    <input type="checkbox" class="checkbox-item" /><span>Completion Rates</span>
-                                </div>
-                                <div class="include-checkbox-label">
-                                    <input type="checkbox" class="checkbox-item" /><span>Average Scores</span>
-                                </div>
-                                <div class="include-checkbox-label">
-                                    <input type="checkbox" class="checkbox-item" /><span>Time Spent</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <h1>Reports Options</h1>
-                    <div class="report-inside-container report-options-container">
-                        <div class="col-1-filter">
-                            <div class="filter-label-select">
-                                <span>Group By:</span><select>
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected>This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-                            <div class="filter-label-select">
-                                <span>Sort By:</span><select>
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected>This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-                            <div class="filter-label-select">
-                                <span>File Format:</span><select>
-                                    <optgroup label="This is a group">
-                                        <option value="12" selected>This is item 1</option>
-                                        <option value="13">This is item 2</option>
-                                        <option value="14">This is item 3</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gen-report-button-container">
-                        <button class="generate-report-button" type="button">Generate Report</button>
-                    </div>
-                </div>
-             </div>        
-            
+                        <img src="~/images/Book.png" alt="Module Icon" />
+                        Generate Module Report
+                    </button>
+                </li>
+            </ul>
         </div>
-    
+
+        <div class="tab-content" id="reportTabsContent">
+
+            <!-- Content for Demographic Report -->
+            <div class="tab-pane fade show active" id="demographic" role="tabpanel" aria-labelledby="demographic-tab">
+                @Html.Partial("_DemographicReportPartial", Model.DemographicReport)
+            </div>
+
+            <!-- Content for Module Report -->
+            <div class="tab-pane fade" id="module" role="tabpanel" aria-labelledby="module-tab">
+                @Html.Partial("_ModuleReportPartial", Model.ModuleReport)
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 @await Html.PartialAsync("_ValidationScriptsPartial")
@@ -306,8 +77,8 @@
         document.addEventListener("DOMContentLoaded", function () {
             // Function to validate that start date isn't after end date
             function validateDates() {
-                const startDate = document.querySelector('[name="CustomStartDate"]');
-                const endDate = document.querySelector('[name="CustomEndDate"]');
+                const startDate = document.querySelector('[name="DemographicReport.CustomStartDate"]');
+                const endDate = document.querySelector('[name="DemographicReport.CustomEndDate"]');
 
                 if (startDate && endDate) {
                     startDate.addEventListener("change", checkDates);
@@ -333,9 +104,35 @@
             validateDates();
         });
     </script>
-}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Module Report Form Validation
+            const form = document.getElementById('moduleReportForm');
+            if (form) {
+                const generateButton = document.getElementById('generateModReportButton');
+                const metricCheckboxes = document.querySelectorAll('input[type="checkbox"][name^="ModuleReport.Include"]');
+                const metricsValidation = document.getElementById('metricsValidationModule');
+
+                function toggleGenerateButton() {
+                    const anyMetricSelected = Array.from(metricCheckboxes).some(cb => cb.checked);
+                    generateButton.disabled = !anyMetricSelected;
+                    metricsValidation.style.display = anyMetricSelected ? 'none' : 'block';
+                }
+
+                metricCheckboxes.forEach(cb => {
+                    cb.addEventListener('change', toggleGenerateButton);
+                });
+
+                // Initial check
+                toggleGenerateButton();
+            }
+        });
+    </script>
+
     <script src="~/js/selectAllCheckbox.js"></script>
     <script src="~/js/reportsButtonToggle.js"></script>
+}
 
 
 

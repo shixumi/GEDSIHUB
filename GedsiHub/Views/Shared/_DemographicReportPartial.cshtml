@@ -1,0 +1,146 @@
+﻿@model GedsiHub.ViewModels.DemographicReportViewModel
+
+<form asp-action="Demographic" method="post" id="demographicReportForm">
+    @Html.AntiForgeryToken()
+    <h1>Filters</h1>
+    <div class="report-inside-container">
+        <div class="container-of-cols">
+            <div class="col-1-filter">
+                <div class="filter-label-date">
+                    <label asp-for="CustomStartDate" class="form-label">Start Date:</label>
+                    <input asp-for="CustomStartDate" class="form-control" type="date" />
+                    @Html.ValidationMessageFor(model => model.CustomStartDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="filter-label-date">
+                    <label asp-for="CustomEndDate" class="form-label">End Date:</label>
+                    <input asp-for="CustomEndDate" class="form-control" type="date" />
+                    @Html.ValidationMessageFor(model => model.CustomEndDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="filter-label-select">
+                    <label asp-for="Campus" class="form-label">Campus:</label>
+                    <select asp-for="Campus" class="form-control" asp-items="Model.CampusOptions">
+                    </select>
+                    @Html.ValidationMessageFor(model => model.Campus, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="filter-label-select">
+                    <label asp-for="AgeGroup" class="form-label">Age Group:</label>
+                    <select asp-for="AgeGroup" class="form-control" asp-items="Model.AgeGroupOptions">
+                    </select>
+                    @Html.ValidationMessageFor(model => model.AgeGroup, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-2-filter">
+                <div class="filter-label-select">
+                    <label asp-for="Sex" class="form-label">Sex:</label>
+                    <select asp-for="Sex" class="form-control" asp-items="Model.SexOptions">
+                    </select>
+                    @Html.ValidationMessageFor(model => model.Sex, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="filter-label-select">
+                    <label asp-for="GenderIdentity" class="form-label">Gender Identity:</label>
+                    <select asp-for="GenderIdentity" class="form-control" asp-items="Model.GenderIdentityOptions">
+                    </select>
+                    @Html.ValidationMessageFor(model => model.GenderIdentity, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="filter-label-select">
+                    <label asp-for="UserType" class="form-label">Type of User:</label>
+                    <select asp-for="UserType" id="userType" onchange="toggleUserFields()" class="form-control" asp-items="Model.UserTypeOptions">
+                    </select>
+                    @Html.ValidationMessageFor(model => model.UserType, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1>Include in Report</h1>
+    <div class="report-inside-container">
+        <div class="con-of-cols-include-report">
+            <div id="col-1-include-in-report" class="col-include-in-report">
+                <div class="include-checkbox-label">
+                    <input type="checkbox" id="selectAllGroup1" class="form-check-input" />
+                    <label for="selectAllGroup1" class="form-check-label">Select All</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeIdNumber, new { @class = "form-check-input checkbox-item-group1", id = "IncludeIdNumber" })
+                    <label for="IncludeIdNumber" class="form-check-label">ID Number</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeName, new { @class = "form-check-input checkbox-item-group1", id = "IncludeName" })
+                    <label for="IncludeName" class="form-check-label">Name</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeWebmail, new { @class = "form-check-input checkbox-item-group1", id = "IncludeWebmail" })
+                    <label for="IncludeWebmail" class="form-check-label">Webmail</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludePhoneNumber, new { @class = "form-check-input checkbox-item-group1", id = "IncludePhoneNumber" })
+                    <label for="IncludePhoneNumber" class="form-check-label">Phone Number</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeDateOfBirth, new { @class = "form-check-input checkbox-item-group1", id = "IncludeDateOfBirth" })
+                    <label for="IncludeDateOfBirth" class="form-check-label">Date of Birth</label>
+                </div>
+            </div>
+            <div id="col-2-include-in-report" class="col-include-in-report">
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeAge, new { @class = "form-check-input checkbox-item-group1", id = "IncludeAge" })
+                    <label for="IncludeAge" class="form-check-label">Age</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeSex, new { @class = "form-check-input checkbox-item-group1", id = "IncludeSex" })
+                    <label for="IncludeSex" class="form-check-label">Sex</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeGender, new { @class = "form-check-input checkbox-item-group1", id = "IncludeGender" })
+                    <label for="IncludeGender" class="form-check-label">Gender</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeIndigenousCommunity, new { @class = "form-check-input checkbox-item-group1", id = "IncludeIndigenousCommunity" })
+                    <label for="IncludeIndigenousCommunity" class="form-check-label">Indigenous Community</label>
+                </div>
+                <div class="include-checkbox-label">
+                    @Html.CheckBoxFor(m => m.IncludeDifferentlyAbled, new { @class = "form-check-input checkbox-item-group1", id = "IncludeDifferentlyAbled" })
+                    <label for="IncludeDifferentlyAbled" class="form-check-label">Differently Abled</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1>Report Options</h1>
+    <div class="report-inside-container report-options-container">
+        <div class="col-1-filter">
+            <div class="filter-label-select">
+                <label asp-for="GroupBy" class="form-label">Group By:</label>
+                <select asp-for="GroupBy" class="form-control" asp-items="Model.GroupByOptions">
+                </select>
+                @Html.ValidationMessageFor(model => model.GroupBy, "", new { @class = "text-danger" })
+            </div>
+            <div class="filter-label-select">
+                <label asp-for="SortBy" class="form-label">Sort By:</label>
+                <select asp-for="SortBy" class="form-control" asp-items="Model.SortByOptions">
+                </select>
+                @Html.ValidationMessageFor(model => model.SortBy, "", new { @class = "text-danger" })
+            </div>
+            <div class="filter-label-select">
+                <label asp-for="FileFormat" class="form-label">File Format:</label>
+                <select asp-for="FileFormat" class="form-control" required>
+                    <option value="" disabled selected>Select File Format</option>
+                    <option value="CSV">CSV</option>
+                    <option value="PDF">PDF</option>
+                </select>
+                @Html.ValidationMessageFor(model => model.FileFormat, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <!-- Validation Summary for General Errors -->
+    @Html.ValidationSummary(false, "", new { @class = "text-danger", id = "metricsValidationDemographic" })
+
+    <div class="gen-report-button-container">
+        <button id="generateDemoReportButton" class="generate-report-button" type="submit">Generate Report</button>
+    </div>
+</form>

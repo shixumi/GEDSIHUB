@@ -1,41 +1,113 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
-    // Functionality for the first group (original group)
-    const selectAllCheckboxGroup1 = document.getElementById('selectAllGroup1');
+﻿// selectAllCheckbox.js
+document.addEventListener('DOMContentLoaded', function () {
+    // **Group 1: Demographic Report**
+    const selectAllGroup1 = document.getElementById('selectAllGroup1');
     const checkboxesGroup1 = document.querySelectorAll('.checkbox-item-group1');
 
     // Add event listener to "Select All" for Group 1
-    selectAllCheckboxGroup1.addEventListener('change', function () {
+    if (selectAllGroup1 && checkboxesGroup1.length > 0) {
+        selectAllGroup1.addEventListener('change', function () {
+            console.log('Select All Group 1 changed:', this.checked);
+            checkboxesGroup1.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            toggleGenerateButton('demographicReportForm', 'metricsValidationDemographic');
+        });
+
+        // Uncheck "Select All" for Group 1 if any individual checkbox is manually unchecked
         checkboxesGroup1.forEach(checkbox => {
-            checkbox.checked = this.checked;
+            checkbox.addEventListener('change', function () {
+                console.log('Checkbox in Group 1 changed:', this.checked);
+                if (!this.checked) {
+                    selectAllGroup1.checked = false;
+                } else {
+                    // If all checkboxes are checked, set "Select All" to checked
+                    const allChecked = Array.from(checkboxesGroup1).every(cb => cb.checked);
+                    if (allChecked) {
+                        selectAllGroup1.checked = true;
+                    }
+                }
+                toggleGenerateButton('demographicReportForm', 'metricsValidationDemographic');
+            });
         });
-    });
+    }
 
-    // Uncheck "Select All" for Group 1 if any individual checkbox is manually unchecked
-    checkboxesGroup1.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            if (!this.checked) {
-                selectAllCheckboxGroup1.checked = false;
+    // **Group 2: Module Report**
+    const selectAllGroup2 = document.getElementById('selectAllGroup2');
+    const checkboxesGroup2 = document.querySelectorAll('.checkbox-item-group2');
+
+    // Add event listener to "Select All" for Group 2
+    if (selectAllGroup2 && checkboxesGroup2.length > 0) {
+        selectAllGroup2.addEventListener('change', function () {
+            console.log('Select All Group 2 changed:', this.checked);
+            checkboxesGroup2.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            toggleGenerateButton('moduleReportForm', 'metricsValidationModule');
+        });
+
+        // Uncheck "Select All" for Group 2 if any individual checkbox is manually unchecked
+        checkboxesGroup2.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                console.log('Checkbox in Group 2 changed:', this.checked);
+                if (!this.checked) {
+                    selectAllGroup2.checked = false;
+                } else {
+                    // If all checkboxes are checked, set "Select All" to checked
+                    const allChecked = Array.from(checkboxesGroup2).every(cb => cb.checked);
+                    if (allChecked) {
+                        selectAllGroup2.checked = true;
+                    }
+                }
+                toggleGenerateButton('moduleReportForm', 'metricsValidationModule');
+            });
+        });
+    }
+
+    // **Function to Toggle Generate Button and Validation Summary**
+    function toggleGenerateButton(formId, validationSummaryId) {
+        const form = document.getElementById(formId);
+        if (!form) {
+            console.warn(`Form with ID '${formId}' not found.`);
+            return;
+        }
+
+        let generateButton, metricCheckboxes, validationSummary;
+        if (formId === 'demographicReportForm') {
+            generateButton = form.querySelector('.generate-report-button');
+            metricCheckboxes = form.querySelectorAll('.checkbox-item-group1');
+            validationSummary = document.getElementById(validationSummaryId);
+        } else if (formId === 'moduleReportForm') {
+            generateButton = form.querySelector('.generate-report-button');
+            metricCheckboxes = form.querySelectorAll('.checkbox-item-group2');
+            validationSummary = document.getElementById(validationSummaryId);
+        }
+
+            if (!generateButton) {
+                console.warn(`Generate button not found in form '${formId}'.`);
+                return;
             }
-        });
-    });
 
-    // Add functionality for the previous set (if it exists, replace "group1" with your previous group selectors)
-    const selectAllPreviousGroup = document.getElementById('selectAll'); // ID from previous group
-    const checkboxesPreviousGroup = document.querySelectorAll('.checkbox-item'); // Class from previous group
-
-    // Add event listener to "Select All" for the previous group
-    selectAllPreviousGroup.addEventListener('change', function () {
-        checkboxesPreviousGroup.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-    });
-
-    // Uncheck "Select All" for the previous group if any individual checkbox is manually unchecked
-    checkboxesPreviousGroup.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            if (!this.checked) {
-                selectAllPreviousGroup.checked = false;
+            if (metricCheckboxes.length === 0) {
+                console.warn(`No checkboxes found for form '${formId}'.`);
+                return;
             }
-        });
-    });
+
+        const anyChecked = Array.from(metricCheckboxes).some(cb => cb.checked);
+        generateButton.disabled = !anyChecked;
+
+        if (validationSummary) {
+            if (!anyChecked) {
+                validationSummary.style.display = 'block';
+            } else {
+                validationSummary.style.display = 'none';
+            }
+        }
+    }
+
+    // **Initial Check for Demographic Report**
+    toggleGenerateButton('demographicReportForm', 'metricsValidationDemographic');
+
+    // **Initial Check for Module Report**
+    toggleGenerateButton('moduleReportForm', 'metricsValidationModule');
 });

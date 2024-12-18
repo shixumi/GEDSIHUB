@@ -1,0 +1,61 @@
+﻿@model GedsiHub.ViewModels.ModuleReportViewModel
+
+<form asp-action="ModuleReport" method="post" id="moduleReportForm">
+    @Html.AntiForgeryToken()
+
+    <h1>Select Module</h1>
+    <div class="report-inside-container report-gen-module-container">
+        <span>Choose a module to generate the report:</span>
+        <select asp-for="SelectedModuleId" class="form-control report-gen-select-module" asp-items="Model.ModuleOptions" required>
+        </select>
+        @Html.ValidationMessageFor(m => m.SelectedModuleId, "", new { @class = "text-danger" })
+    </div>
+
+    <h1>Select Metrics to Include</h1>
+    <div class="report-inside-container">
+        <div class="con-of-cols-include-report">
+            <div id="col-1-include-in-report-module" class="col-include-in-report">
+                <!-- Select All Checkbox for Module Report -->
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="selectAllGroup2" />
+                    <label class="form-check-label" for="selectAllGroup2">Select All</label>
+                </div>
+
+                <!-- Individual Metric Checkboxes -->
+                <div class="form-check">
+                    @Html.CheckBoxFor(m => m.IncludeCompletionRate, new { @class = "form-check-input checkbox-item-group2", id = "IncludeCompletionRate" })
+                    <label class="form-check-label" for="IncludeCompletionRate">Completion Rate</label>
+                </div>
+                <div class="form-check">
+                    @Html.CheckBoxFor(m => m.IncludeAverageQuizScore, new { @class = "form-check-input checkbox-item-group2", id = "IncludeAverageQuizScore" })
+                    <label class="form-check-label" for="IncludeAverageQuizScore">Average Quiz Score</label>
+                </div>
+                <div class="form-check">
+                    @Html.CheckBoxFor(m => m.IncludeCertificatesIssued, new { @class = "form-check-input checkbox-item-group2", id = "IncludeCertificatesIssued" })
+                    <label class="form-check-label" for="IncludeCertificatesIssued">Certificates Issued</label>
+                </div>
+            </div>
+        </div>
+        <!-- Validation Summary for General Errors -->
+        @Html.ValidationSummary(false, "", new { @class = "text-danger", id = "metricsValidationModule" })
+    </div>
+
+    <h1>Report Options</h1>
+    <div class="report-inside-container report-options-container">
+        <div class="col-1-filter">
+            <div class="filter-label-select">
+                <label asp-for="FileFormat" class="form-label">File Format:</label>
+                <select asp-for="FileFormat" class="form-control" required>
+                    <option value="" disabled selected>Select File Format</option>
+                    <option value="CSV">CSV</option>
+                    <option value="PDF">PDF</option>
+                </select>
+                @Html.ValidationMessageFor(m => m.FileFormat, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="gen-report-button-container">
+        <button class="generate-report-button" type="submit" id="generateModReportButton">Generate Report</button>
+    </div>
+</form>

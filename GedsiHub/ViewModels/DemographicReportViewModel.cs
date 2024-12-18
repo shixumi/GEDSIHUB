@@ -1,114 +1,89 @@
-﻿using System;
+﻿// GedsiHub.ViewModels.DemographicReportViewModel.cs
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GedsiHub.ViewModels
 {
-    public class DemographicReportViewModel : IValidatableObject
+    public class DemographicReportViewModel
     {
-        // Filters
+        // Custom Date Range
         [DataType(DataType.Date)]
-        [Display(Name = "Custom Start Date")]
+        [Display(Name = "Start Date")]
         [Required(ErrorMessage = "Please enter a start date.")]
         public DateTime? CustomStartDate { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Custom End Date")]
+        [Display(Name = "End Date")]
         [Required(ErrorMessage = "Please enter an end date.")]
         public DateTime? CustomEndDate { get; set; }
 
+        // Filters
         [Display(Name = "Campus")]
+        [Required(ErrorMessage = "The Campus field is required.")]
         public string Campus { get; set; }
 
         [Display(Name = "Age Group")]
+        [Required(ErrorMessage = "The Age Group field is required.")]
         public string AgeGroup { get; set; }
 
         [Display(Name = "Sex")]
+        [Required(ErrorMessage = "The Sex field is required.")]
         public string Sex { get; set; }
 
         [Display(Name = "Gender Identity")]
+        [Required(ErrorMessage = "The Gender Identity field is required.")]
         public string GenderIdentity { get; set; }
 
         [Display(Name = "Type of User")]
-        public string UserType { get; set; } // "student" or "employee"
+        [Required(ErrorMessage = "The Type of User field is required.")]
+        public string UserType { get; set; }
 
-        // Include in Report
-        [Display(Name = "Include ID Number")]
+        // Metrics to Include
         public bool IncludeIdNumber { get; set; }
-
-        [Display(Name = "Include Name")]
         public bool IncludeName { get; set; }
-
-        [Display(Name = "Include Webmail")]
         public bool IncludeWebmail { get; set; }
-
-        [Display(Name = "Include Phone Number")]
         public bool IncludePhoneNumber { get; set; }
-
-        [Display(Name = "Include Date of Birth")]
         public bool IncludeDateOfBirth { get; set; }
-
-        [Display(Name = "Include Age")]
         public bool IncludeAge { get; set; }
-
-        [Display(Name = "Include Sex")]
         public bool IncludeSex { get; set; }
-
-        [Display(Name = "Include Gender Identity")]
         public bool IncludeGender { get; set; }
-
-        [Display(Name = "Include Indigenous Community")]
-        public bool IncludeIndigenousCommunity { get; set; } = false;
-
-        [Display(Name = "Include Differently Abled")]
-        public bool IncludeDifferentlyAbled { get; set; } = false;
+        public bool IncludeIndigenousCommunity { get; set; }
+        public bool IncludeDifferentlyAbled { get; set; }
 
         // Report Options
-        [Required(ErrorMessage = "Please select a file format.")]
-        [Display(Name = "File Format")]
-        public string FileFormat { get; set; }
-
         [Display(Name = "Group By")]
-        public string GroupBy { get; set; } = "None"; // Default value
+        public string GroupBy { get; set; }
 
         [Display(Name = "Sort By")]
-        public string SortBy { get; set; } = "Name"; // Default value
+        public string SortBy { get; set; }
 
-        // Dropdown Lists
-        public List<SelectListItem> DateRangeOptions { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> CampusOptions { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> AgeGroupOptions { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> SexOptions { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> GenderIdentityOptions { get; set; } = new List<SelectListItem>();
-        public List<SelectListItem> UserTypeOptions { get; set; } = new List<SelectListItem>();
+        [Display(Name = "File Format")]
+        [Required(ErrorMessage = "Please select a file format.")]
+        public string FileFormat { get; set; }
 
-        [ValidateNever]
-        public byte[] ReportFile { get; set; } = Array.Empty<byte>();
+        // Dropdown Options
+        public List<SelectListItem> CampusOptions { get; set; }
+        public List<SelectListItem> AgeGroupOptions { get; set; }
+        public List<SelectListItem> SexOptions { get; set; }
+        public List<SelectListItem> GenderIdentityOptions { get; set; }
+        public List<SelectListItem> UserTypeOptions { get; set; }
 
-        [ValidateNever]
-        public string ReportFileName { get; set; } = string.Empty;
+        // New Dropdown Options for Group By and Sort By
+        public List<SelectListItem> GroupByOptions { get; set; }
+        public List<SelectListItem> SortByOptions { get; set; }
 
-        // Custom Validation Logic
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public DemographicReportViewModel()
         {
-            if (CustomStartDate.HasValue && CustomEndDate.HasValue)
-            {
-                if (CustomStartDate.Value > CustomEndDate.Value)
-                {
-                    yield return new ValidationResult(
-                        "Start date cannot be later than the end date.",
-                        new[] { nameof(CustomStartDate), nameof(CustomEndDate) });
-                }
-
-                if (CustomEndDate.Value > DateTime.UtcNow)
-                {
-                    yield return new ValidationResult(
-                        "End date cannot be in the future.",
-                        new[] { nameof(CustomEndDate) });
-                }
-            }
+            // Initialize lists to prevent null references
+            CampusOptions = new List<SelectListItem>();
+            AgeGroupOptions = new List<SelectListItem>();
+            SexOptions = new List<SelectListItem>();
+            GenderIdentityOptions = new List<SelectListItem>();
+            UserTypeOptions = new List<SelectListItem>();
+            GroupByOptions = new List<SelectListItem>();
+            SortByOptions = new List<SelectListItem>();
         }
     }
 }

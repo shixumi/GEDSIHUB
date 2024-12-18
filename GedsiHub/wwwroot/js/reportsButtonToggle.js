@@ -1,4 +1,6 @@
-﻿// Select both toggle buttons
+﻿// reportsButtonToggle.js
+
+// Select both toggle buttons
 const demoReportButton = document.getElementById('generateDemoReportButton');
 const modReportButton = document.getElementById('generateModReportButton');
 
@@ -8,11 +10,21 @@ function toggleActive(buttonToActivate, buttonToDeactivate) {
     buttonToDeactivate.classList.remove('active');
 }
 
-// Add click event listeners to each button
-demoReportButton.addEventListener('click', () => {
-    toggleActive(demoReportButton, modReportButton);
-});
+// Add click event listeners to each button only if they exist
+if (demoReportButton && modReportButton) {
+    demoReportButton.addEventListener('click', () => {
+        toggleActive(demoReportButton, modReportButton);
+        // Show Demographic Report Form and hide Module Report Form
+        document.getElementById('demographicReportForm').style.display = 'block';
+        document.getElementById('moduleReportForm').style.display = 'none';
+    });
 
-modReportButton.addEventListener('click', () => {
-    toggleActive(modReportButton, demoReportButton);
-});
+    modReportButton.addEventListener('click', () => {
+        toggleActive(modReportButton, demoReportButton);
+        // Show Module Report Form and hide Demographic Report Form
+        document.getElementById('moduleReportForm').style.display = 'block';
+        document.getElementById('demographicReportForm').style.display = 'none';
+    });
+} else {
+    console.warn('Toggle buttons not found in the DOM.');
+}

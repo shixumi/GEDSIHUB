@@ -1,19 +1,22 @@
-﻿using System;
+﻿// GedsiHub.Controllers.ReportsController.cs
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GedsiHub.Data;
 using GedsiHub.Models;
 using GedsiHub.Repositories;
+using GedsiHub.Services;
 using GedsiHub.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QuestPDF.Fluent;
-using QuestPDF.Infrastructure;
 using QuestPDF.Helpers;
-using System.IO;
+using QuestPDF.Infrastructure;
 
 namespace GedsiHub.Controllers
 {
@@ -22,71 +25,76 @@ namespace GedsiHub.Controllers
     {
         private readonly IReportRepository _reportRepository;
         private readonly ILogger<ReportsController> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly AnalyticsService _analyticsService;
+        private readonly IReportGenerationService _reportGenerationService;
 
-        public ReportsController(IReportRepository reportRepository, ILogger<ReportsController> logger)
+        public ReportsController(
+            IReportRepository reportRepository,
+            ILogger<ReportsController> logger,
+            ApplicationDbContext context,
+            AnalyticsService analyticsService,
+            IReportGenerationService reportGenerationService) // Inject the service
         {
             _reportRepository = reportRepository;
             _logger = logger;
+            _context = context;
+            _analyticsService = analyticsService;
+            _reportGenerationService = reportGenerationService;
         }
 
+        // GET: Reports/Index
         [HttpGet]
-        public IActionResult Demographic()
+        public async Task<IActionResult> Index()
         {
-            var model = new DemographicReportViewModel
+            var model = new CombinedReportViewModel
             {
-                DateRangeOptions = GetDateRangeOptions(),
-                CampusOptions = GetCampusOptions(),
-                AgeGroupOptions = GetAgeGroupOptions(),
-                SexOptions = GetSexOptions(),
-                GenderIdentityOptions = GetGenderIdentityOptions(),
-                UserTypeOptions = GetUserTypeOptions(),
-                SortBy = "Name",
-                GroupBy = "None",
-
-                IncludeIdNumber = false,
-                IncludeName = false,
-                IncludeWebmail = false,
-                IncludePhoneNumber = false,
-                IncludeDateOfBirth = false,
-                IncludeAge = false,
-                IncludeSex = false,
-                IncludeGender = false,
-                IncludeIndigenousCommunity = false,
-                IncludeDifferentlyAbled = false
+                DemographicReport = new DemographicReportViewModel
+                {
+                    CampusOptions = GetCampusOptions(),
+                    AgeGroupOptions = GetAgeGroupOptions(),
+                    SexOptions = GetSexOptions(),
+                    GenderIdentityOptions = GetGenderIdentityOptions(),
+                    UserTypeOptions = GetUserTypeOptions(),
+                    GroupByOptions = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "", Text = "Select Group By", Disabled = true, Selected = true },
+                        new SelectListItem { Value = "none", Text = "None" },
+                        new SelectListItem { Value = "age", Text = "Age" },
+                        new SelectListItem { Value = "sex", Text = "Sex" },
+                        new SelectListItem { Value = "gender", Text = "Gender Identity" }
+                    },
+                    SortByOptions = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "", Text = "Select Sort By", Disabled = true, Selected = true },
+                        new SelectListItem { Value = "name", Text = "Name" },
+                        new SelectListItem { Value = "age", Text = "Age" },
+                        new SelectListItem { Value = "date", Text = "Date" }
+                    }
+                },
+                ModuleReport = new ModuleReportViewModel
+                {
+                    ModuleOptions = await GetModuleOptionsAsync()
+                }
             };
 
             return View(model);
         }
 
+        // POST: Reports/Demographic
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Demographic(DemographicReportViewModel model)
         {
-            // Custom validation for required custom date fields
-            if (!model.CustomStartDate.HasValue)
+            // Validate that at least one metric is selected
+            if (!model.IncludeIdNumber && !model.IncludeName && !model.IncludeWebmail &&
+                !model.IncludePhoneNumber && !model.IncludeDateOfBirth && !model.IncludeAge &&
+                !model.IncludeSex && !model.IncludeGender && !model.IncludeIndigenousCommunity &&
+                !model.IncludeDifferentlyAbled)
             {
-                ModelState.AddModelError(nameof(model.CustomStartDate), "Please enter a start date.");
+                ModelState.AddModelError("", "Please select at least one metric.");
             }
 
-            if (!model.CustomEndDate.HasValue)
-            {
-                ModelState.AddModelError(nameof(model.CustomEndDate), "Please enter an end date.");
-            }
-
-            // Validate that CustomStartDate is not later than CustomEndDate
-            if (model.CustomStartDate.HasValue && model.CustomEndDate.HasValue)
-            {
-                if (model.CustomStartDate.Value > model.CustomEndDate.Value)
-                {
-                    ModelState.AddModelError(string.Empty, "The start date cannot be later than the end date.");
-                }
-                if (model.CustomEndDate.Value > DateTime.UtcNow)
-                {
-                    ModelState.AddModelError(nameof(model.CustomEndDate), "The end date cannot be in the future.");
-                }
-            }
-
-            // If model state is invalid, log issues and return to view
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Please check your input and try again.";
@@ -99,13 +107,53 @@ namespace GedsiHub.Controllers
                 }
 
                 // Re-populate dropdown options for the view
-                PopulateDropdownOptions(model);
-                return View(model);
+                model.CampusOptions = GetCampusOptions();
+                model.AgeGroupOptions = GetAgeGroupOptions();
+                model.SexOptions = GetSexOptions();
+                model.GenderIdentityOptions = GetGenderIdentityOptions();
+                model.UserTypeOptions = GetUserTypeOptions();
+
+                var combinedModel = new CombinedReportViewModel
+                {
+                    DemographicReport = model,
+                    ModuleReport = new ModuleReportViewModel
+                    {
+                        ModuleOptions = await GetModuleOptionsAsync()
+                    }
+                };
+
+                return View("Index", combinedModel);
             }
 
             try
             {
-                // Fetch users based on the provided filters
+                // **Logging Each Filter Value**
+                _logger.LogInformation("Demographic Report Generation Initiated with the following filters:");
+                _logger.LogInformation($"CustomStartDate: {model.CustomStartDate?.ToString("yyyy-MM-dd") ?? "Not Provided"}");
+                _logger.LogInformation($"CustomEndDate: {model.CustomEndDate?.ToString("yyyy-MM-dd") ?? "Not Provided"}");
+                _logger.LogInformation($"Campus: {model.Campus}");
+                _logger.LogInformation($"AgeGroup: {model.AgeGroup}");
+                _logger.LogInformation($"Sex: {model.Sex}");
+                _logger.LogInformation($"GenderIdentity: {model.GenderIdentity}");
+                _logger.LogInformation($"UserType: {model.UserType}");
+                _logger.LogInformation($"GroupBy: {model.GroupBy}");
+                _logger.LogInformation($"SortBy: {model.SortBy}");
+                _logger.LogInformation($"FileFormat: {model.FileFormat}");
+
+                // **Logging Selected Metrics**
+                _logger.LogInformation("Selected Metrics to Include:");
+                _logger.LogInformation($"IncludeIdNumber: {model.IncludeIdNumber}");
+                _logger.LogInformation($"IncludeName: {model.IncludeName}");
+                _logger.LogInformation($"IncludeWebmail: {model.IncludeWebmail}");
+                _logger.LogInformation($"IncludePhoneNumber: {model.IncludePhoneNumber}");
+                _logger.LogInformation($"IncludeDateOfBirth: {model.IncludeDateOfBirth}");
+                _logger.LogInformation($"IncludeAge: {model.IncludeAge}");
+                _logger.LogInformation($"IncludeSex: {model.IncludeSex}");
+                _logger.LogInformation($"IncludeGender: {model.IncludeGender}");
+                _logger.LogInformation($"IncludeIndigenousCommunity: {model.IncludeIndigenousCommunity}");
+                _logger.LogInformation($"IncludeDifferentlyAbled: {model.IncludeDifferentlyAbled}");
+
+                // **Fetching Users Based on Filters**
                 _logger.LogInformation("Fetching users based on the provided filters.");
                 var users = await _reportRepository.GetUsersAsync(model);
 
@@ -114,11 +162,27 @@ namespace GedsiHub.Controllers
                 {
                     _logger.LogInformation("No users found for the selected filters.");
                     TempData["NoDataMessage"] = "No users found for the selected filters.";
-                    PopulateDropdownOptions(model);
-                    return View(model);
+
+                    // Re-populate dropdown options for the view
+                    model.CampusOptions = GetCampusOptions();
+                    model.AgeGroupOptions = GetAgeGroupOptions();
+                    model.SexOptions = GetSexOptions();
+                    model.GenderIdentityOptions = GetGenderIdentityOptions();
+                    model.UserTypeOptions = GetUserTypeOptions();
+
+                    var combinedModel = new CombinedReportViewModel
+                    {
+                        DemographicReport = model,
+                        ModuleReport = new ModuleReportViewModel
+                        {
+                            ModuleOptions = await GetModuleOptionsAsync()
+                        }
+                    };
+
+                    return View("Index", combinedModel);
                 }
 
-                // Log user details for debugging
+                // **Logging User Details for Debugging**
                 foreach (var user in users)
                 {
                     int age = CalculateAge(user.DateOfBirth);
@@ -126,7 +190,7 @@ namespace GedsiHub.Controllers
                     _logger.LogInformation($"User: {user.FirstName} {user.LastName}, Age: {age}, Age Group: {ageGroup}");
                 }
 
-                // Log the report generation format
+                // **Log the report generation format**
                 _logger.LogInformation($"Generating report in {model.FileFormat} format.");
 
                 // Generate report based on selected file format
@@ -146,46 +210,192 @@ namespace GedsiHub.Controllers
                 // Handle invalid file format selection
                 _logger.LogWarning("Invalid file format selected.");
                 TempData["Error"] = "Please select a valid file format.";
-                PopulateDropdownOptions(model);
-                return View(model);
+
+                // Re-populate dropdown options for the view
+                model.CampusOptions = GetCampusOptions();
+                model.AgeGroupOptions = GetAgeGroupOptions();
+                model.SexOptions = GetSexOptions();
+                model.GenderIdentityOptions = GetGenderIdentityOptions();
+                model.UserTypeOptions = GetUserTypeOptions();
+
+                var combinedModelInvalidFormat = new CombinedReportViewModel
+                {
+                    DemographicReport = model,
+                    ModuleReport = new ModuleReportViewModel
+                    {
+                        ModuleOptions = await GetModuleOptionsAsync()
+                    }
+                };
+
+                return View("Index", combinedModelInvalidFormat);
             }
             catch (Exception ex)
             {
                 // Log the error and return an error message
                 _logger.LogError(ex, "An error occurred while generating the report.");
                 TempData["ErrorMessage"] = "An error occurred: " + ex.Message;
-                PopulateDropdownOptions(model);
-                return View(model);
+
+                // Re-populate dropdown options for the view
+                model.CampusOptions = GetCampusOptions();
+                model.AgeGroupOptions = GetAgeGroupOptions();
+                model.SexOptions = GetSexOptions();
+                model.GenderIdentityOptions = GetGenderIdentityOptions();
+                model.UserTypeOptions = GetUserTypeOptions();
+
+                var combinedModelException = new CombinedReportViewModel
+                {
+                    DemographicReport = model,
+                    ModuleReport = new ModuleReportViewModel
+                    {
+                        ModuleOptions = await GetModuleOptionsAsync()
+                    }
+                };
+                return View("Index", combinedModelException);
             }
         }
 
-        // Helper method to populate dropdown options
-        private void PopulateDropdownOptions(DemographicReportViewModel model)
+        // POST: Reports/ModuleReport
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ModuleReport(ModuleReportViewModel model)
         {
-            model.CampusOptions = GetCampusOptions();
-            model.AgeGroupOptions = GetAgeGroupOptions();
-            model.SexOptions = GetSexOptions();
-            model.GenderIdentityOptions = GetGenderIdentityOptions();
-            model.UserTypeOptions = GetUserTypeOptions();
-        }
+            _logger.LogInformation("Module Report Generation Initiated.");
+            _logger.LogDebug($"ModuleOptions is {(model.ModuleOptions == null ? "null" : "not null")} on POST.");
+            ModelState.Remove(nameof(ModuleReportViewModel.ModuleOptions));
 
-        // Helper Methods for Options
-        private List<SelectListItem> GetDateRangeOptions()
-        {
-            return new List<SelectListItem>
+            // Validate that at least one metric is selected
+            if (!model.IncludeCompletionRate && !model.IncludeAverageQuizScore && !model.IncludeCertificatesIssued)
             {
-                new SelectListItem { Value = "7days", Text = "Last 7 days" },
-                new SelectListItem { Value = "28days", Text = "Last 28 days" },
-                new SelectListItem { Value = "60days", Text = "Last 60 days" },
-                new SelectListItem { Value = "custom", Text = "Custom" }
-            };
+                ModelState.AddModelError("", "Please select at least one metric to include in the report.");
+                _logger.LogWarning("No metrics selected for Module Report.");
+            }
+
+            // Validate file format
+            if (string.IsNullOrEmpty(model.FileFormat))
+            {
+                ModelState.AddModelError(nameof(model.FileFormat), "Please select a file format.");
+                _logger.LogWarning("No file format selected for Module Report.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please check your input and try again.";
+                _logger.LogWarning("Model state is invalid for Module Report.");
+
+                // Log validation errors for debugging
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    _logger.LogWarning($"Validation error: {error.ErrorMessage}");
+                }
+
+                // Re-populate ModuleOptions for the view
+                model.ModuleOptions = await GetModuleOptionsAsync();
+
+                var combinedModel = new CombinedReportViewModel
+                {
+                    DemographicReport = new DemographicReportViewModel
+                    {
+                        CampusOptions = GetCampusOptions(),
+                        AgeGroupOptions = GetAgeGroupOptions(),
+                        SexOptions = GetSexOptions(),
+                        GenderIdentityOptions = GetGenderIdentityOptions(),
+                        UserTypeOptions = GetUserTypeOptions(),
+                    },
+                    ModuleReport = model
+                };
+                return View("Index", combinedModel);
+            }
+
+            try
+            {
+                _logger.LogInformation($"Selected Module ID: {model.SelectedModuleId}");
+
+                var module = await _context.Modules.FirstOrDefaultAsync(m => m.ModuleId == model.SelectedModuleId);
+                if (module == null)
+                {
+                    TempData["ErrorMessage"] = "Selected module not found.";
+                    _logger.LogWarning($"Module with ID {model.SelectedModuleId} not found.");
+                    return RedirectToAction("Index");
+                }
+
+                byte[] reportBytes;
+                string mimeType;
+                string fileName;
+
+                var userName = User.Identity.Name; // Assuming user is authenticated
+                _logger.LogInformation($"Generating Module Report for Module: {module.Title}, User: {userName}, Format: {model.FileFormat}");
+
+                if (model.FileFormat == "CSV")
+                {
+                    reportBytes = await _reportGenerationService.GenerateModuleCsvAsync(module, model, userName);
+                    mimeType = "text/csv";
+                    fileName = "ModuleReport.csv";
+                    _logger.LogInformation("Module CSV report generated successfully.");
+                }
+                else if (model.FileFormat == "PDF")
+                {
+                    reportBytes = await _reportGenerationService.GenerateModulePdfAsync(module, model, userName);
+                    mimeType = "application/pdf";
+                    fileName = "ModuleReport.pdf";
+                    _logger.LogInformation("Module PDF report generated successfully.");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Invalid file format selected.";
+                    _logger.LogWarning($"Invalid file format selected: {model.FileFormat}");
+
+                    // Re-populate dropdown options for the view
+                    model.ModuleOptions = await GetModuleOptionsAsync();
+
+                    var combinedModelInvalidFormat = new CombinedReportViewModel
+                    {
+                        DemographicReport = new DemographicReportViewModel
+                        {
+                            CampusOptions = GetCampusOptions(),
+                            AgeGroupOptions = GetAgeGroupOptions(),
+                            SexOptions = GetSexOptions(),
+                            GenderIdentityOptions = GetGenderIdentityOptions(),
+                            UserTypeOptions = GetUserTypeOptions(),
+                        },
+                        ModuleReport = model
+                    };
+                    return View("Index", combinedModelInvalidFormat);
+                }
+
+                _logger.LogInformation($"Module report generated successfully for Module ID: {module.ModuleId}, Format: {model.FileFormat}");
+                return File(reportBytes, mimeType, fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while generating the module report.");
+                TempData["ErrorMessage"] = "An error occurred while generating the report. Please try again later.";
+
+                // Re-populate dropdown options for the view
+                model.ModuleOptions = await GetModuleOptionsAsync();
+
+                var combinedModelException = new CombinedReportViewModel
+                {
+                    DemographicReport = new DemographicReportViewModel
+                    {
+                        CampusOptions = GetCampusOptions(),
+                        AgeGroupOptions = GetAgeGroupOptions(),
+                        SexOptions = GetSexOptions(),
+                        GenderIdentityOptions = GetGenderIdentityOptions(),
+                        UserTypeOptions = GetUserTypeOptions(),
+                    },
+                    ModuleReport = model
+                };
+                return View("Index", combinedModelException);
+            }
         }
 
+        // **Helper Methods for Dropdown Options**
         private List<SelectListItem> GetCampusOptions()
         {
             return new List<SelectListItem>
             {
                 new SelectListItem { Value = "sta-mesa", Text = "Sta. Mesa, Manila (Main Campus)" }
+                // Add more campuses as needed
             };
         }
 
@@ -208,6 +418,7 @@ namespace GedsiHub.Controllers
             {
                 new SelectListItem { Value = "male", Text = "Male" },
                 new SelectListItem { Value = "female", Text = "Female" }
+                // Add more sex options if necessary
             };
         }
 
@@ -220,6 +431,7 @@ namespace GedsiHub.Controllers
                 new SelectListItem { Value = "Agender", Text = "Agender" },
                 new SelectListItem { Value = "Gender Fluid", Text = "Gender Fluid" },
                 new SelectListItem { Value = "Gender Queer", Text = "Gender Queer" }
+                // Add more gender identities as needed
             };
         }
 
@@ -229,10 +441,29 @@ namespace GedsiHub.Controllers
             {
                 new SelectListItem { Value = "student", Text = "Student" },
                 new SelectListItem { Value = "employee", Text = "Employee" }
+                // Add more user types if necessary
             };
         }
 
-        // Generate CSV Method
+        private async Task<List<SelectListItem>> GetModuleOptionsAsync()
+        {
+            var modules = await _context.Modules
+                .Where(m => m.Status == ModuleStatus.Published)
+                .Select(m => new SelectListItem
+                {
+                    Value = m.ModuleId.ToString(),
+                    Text = m.Title
+                })
+                .ToListAsync();
+
+            // Insert default option at the beginning
+            modules.Insert(0, new SelectListItem { Value = "", Text = "Select a Module", Disabled = true, Selected = true });
+
+            return modules;
+        }
+
+
+        // **Generate CSV Method for Demographic Report**
         private byte[] GenerateCsv(List<ApplicationUser> users, DemographicReportViewModel model)
         {
             var csvBuilder = new StringBuilder();
@@ -270,28 +501,29 @@ namespace GedsiHub.Controllers
                 csvBuilder.AppendLine(string.Join(",", row));
             }
 
-            return Encoding.UTF8.GetBytes(csvBuilder.ToString());
+            return System.Text.Encoding.UTF8.GetBytes(csvBuilder.ToString());
         }
 
-        // Generate PDF Method
+        // **Generate PDF Method for Demographic Report**
         private byte[] GeneratePdf(List<ApplicationUser> users, DemographicReportViewModel model)
         {
             // Configure QuestPDF license
             QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
-            using var ms = new MemoryStream();
+            using var ms = new System.IO.MemoryStream();
             var document = QuestPDF.Fluent.Document.Create(container =>
             {
                 container.Page(page =>
                 {
-                    page.Size(210, 297, QuestPDF.Infrastructure.Unit.Millimetre);
-                    page.Margin(2, QuestPDF.Infrastructure.Unit.Centimetre);
+                    page.Size(PageSizes.A4);
+                    page.Margin(2, Unit.Centimetre);
                     page.DefaultTextStyle(x => x.FontSize(12));
 
                     page.Content().Column(column =>
                     {
                         column.Item().Text("Demographic Report").FontSize(16).Bold();
                         column.Item().LineHorizontal(1);
+                        column.Item().Height(10); // Replaces Spacing(10)
 
                         // Create a table for user data
                         column.Item().Table(table =>
@@ -343,10 +575,10 @@ namespace GedsiHub.Controllers
             return ms.ToArray();
 
             // Helper method to style table cells
-            static IContainer CellStyle(IContainer container) => container.Padding(5);
+            static QuestPDF.Infrastructure.IContainer CellStyle(QuestPDF.Infrastructure.IContainer container) => container.Padding(5);
         }
 
-        // Helper Method to Calculate Age
+        // **Helper Method to Calculate Age**
         private int CalculateAge(DateTime birthDate)
         {
             var today = DateTime.Today;
@@ -355,7 +587,7 @@ namespace GedsiHub.Controllers
             return age;
         }
 
-        // Helper Method to Determine Age Group
+        // **Helper Method to Determine Age Group**
         private string DetermineAgeGroup(int age)
         {
             if (age >= 15 && age <= 19) return "15-19";

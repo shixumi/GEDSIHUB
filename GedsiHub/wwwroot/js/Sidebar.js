@@ -29,7 +29,7 @@ function setupSidebarButtonActions() {
         'SidebarButton_Modules': '/Module',
         'SidebarButton_Leaderboard': '/Leaderboard',
         'SidebarButton_Forum': '/ForumPost',
-        'SidebarButton_Reports': '/Reports/Demographic',
+        'SidebarButton_Reports': '/Reports',
         'SidebarButton_Feedback': '/Feedback'
     };
 
