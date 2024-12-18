@@ -31,7 +31,6 @@
 
 .um-search-con {
     margin-top: 2rem;
-    display: flex;
     align-items: center;
     position: relative;
 }
@@ -44,8 +43,8 @@
 .search-icon-um {
     border: none;
     background: none;
-    margin-left: -3rem; /* Position button over the padded space */
     margin-bottom: 1rem;
+    margin-left: -42px;
     cursor: pointer;
 }
 

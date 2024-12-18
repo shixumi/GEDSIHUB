@@ -50,6 +50,13 @@
 
 <hr class="custom-hr" style="margin-top: 1.5rem;">
 
+<div id="insightModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span id="modalClose" class="close-btn">&times;</span>
+        <p id="modalText"></p>
+    </div>
+</div>
+
 <div class="all-analytics-container">
 
     <!-- Row 2: Active Users, Module Performance -->
@@ -88,7 +95,13 @@
             <span class="insight">
                 @if (Model.AIInsights.ContainsKey("ModulePerformance"))
                 {
-                    @Model.AIInsights["ModulePerformance"]
+                    var insightText = Model.AIInsights["ModulePerformance"];
+                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
+                    <span class="truncated-text" id="insightModulePerformance">@truncatedText</span>
+                    @if (insightText.Length > 75)
+                    {
+                        <a href="javascript:void(0);" class="read-more" onclick="showModal('ModulePerformance', '@insightText')">Read More</a>
+                    }
                 }
                 else
                 {
@@ -106,7 +119,13 @@
             <span class="insight">
                 @if (Model.AIInsights.ContainsKey("AgeDistribution"))
                 {
-                    @Model.AIInsights["AgeDistribution"]
+                    var insightText = @Model.AIInsights["AgeDistribution"];
+                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
+                    <span class="truncated-text" id="insightAgeDistribution">@truncatedText</span>
+                    @if (insightText.Length > 75)
+                    {
+                        <a href="javascript:void(0);" class="read-more" onclick="showModal('AgeDistribution', '@insightText')">Read More</a>
+                    }
                 }
                 else
                 {
@@ -120,7 +139,13 @@
             <span class="insight">
                 @if (Model.AIInsights.ContainsKey("GenderIdentity"))
                 {
-                    @Model.AIInsights["GenderIdentity"]
+                    var insightText = @Model.AIInsights["GenderIdentity"];
+                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
+                    <span class="truncated-text" id="insightGenderIdentity">@truncatedText</span>
+                    @if (insightText.Length > 75)
+                    {
+                        <a href="javascript:void(0);" class="read-more" onclick="showModal('GenderIdentity', '@insightText')">Read More</a>
+                    }
                 }
                 else
                 {
@@ -134,7 +159,13 @@
             <span class="insight">
                 @if (Model.AIInsights.ContainsKey("IndigenousMembership"))
                 {
-                    @Model.AIInsights["IndigenousMembership"]
+                    var insightText = @Model.AIInsights["IndigenousMembership"];
+                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
+                    <span class="truncated-text" id="insightIndigenousMembership">@truncatedText</span>
+                    @if (insightText.Length > 75)
+                    {
+                        <a href="javascript:void(0);" class="read-more" onclick="showModal('IndigenousMembership', '@insightText')">Read More</a>
+                    }
                 }
                 else
                 {
@@ -154,7 +185,13 @@
             <span class="insight">
                 @if (Model.AIInsights.ContainsKey("EmploymentStatus"))
                 {
-                    @Model.AIInsights["EmploymentStatus"]
+                    var insightText = @Model.AIInsights["EmploymentStatus"];
+                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
+                    <span class="truncated-text" id="insightEmploymentStatus">@truncatedText</span>
+                    @if (insightText.Length > 75)
+                    {
+                        <a href="javascript:void(0);" class="read-more" onclick="showModal('EmploymentStatus', '@insightText')">Read More</a>
+                    }
                 }
                 else
                 {
@@ -179,7 +216,13 @@
             <span class="insight">
                 @if (Model.AIInsights.ContainsKey("PostCountByModule"))
                 {
-                    @Model.AIInsights["PostCountByModule"]
+                    var insightText = @Model.AIInsights["PostCountByModule"];
+                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
+                    <span class="truncated-text" id="insightPostCountByModule">@truncatedText</span>
+                    @if (insightText.Length > 75)
+                    {
+                        <a href="javascript:void(0);" class="read-more" onclick="showModal('PostCountByModule', '@insightText')">Read More</a>
+                    }
                 }
                 else
                 {
@@ -194,7 +237,13 @@
             <span class="insight">
                 @if (Model.AIInsights.ContainsKey("CommonKeywords"))
                 {
-                    @Model.AIInsights["CommonKeywords"]
+                    var insightText = @Model.AIInsights["CommonKeywords"];
+                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
+                    <span class="truncated-text" id="insightCommonKeywords">@truncatedText</span>
+                    @if (insightText.Length > 75)
+                    {
+                        <a href="javascript:void(0);" class="read-more" onclick="showModal('CommonKeywords', '@insightText')">Read More</a>
+                    }
                 }
                 else
                 {
@@ -205,9 +254,79 @@
     </div>
 </div>
 
+<style>
+    /* Modal Styles */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fff;
+        margin: 15% auto; /* Center the modal */
+        padding: 20px;
+        width: 80%; /* You can adjust the width */
+        max-width: 600px; /* Max width for large screens */
+        border-radius: 10px;
+    }
+
+    /* Close Button (X) */
+    .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+
 
 <!-- Charts Initialization Script -->
 @section Scripts {
+    <script>
+        // Function to open the modal with the full text
+        function showModal(key, fullText) {
+            // Get the modal and the modal text element
+            var modal = document.getElementById("insightModal");
+            var modalText = document.getElementById("modalText");
+
+            // Set the full text in the modal
+            modalText.textContent = fullText;
+
+            // Display the modal
+            modal.style.display = "block";
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            var modal = document.getElementById("insightModal");
+            modal.style.display = "none";
+        }
+
+        // Close the modal when clicking the close button (X)
+        document.getElementById("modalClose").addEventListener("click", closeModal);
+
+        // Close the modal if clicked outside of the modal content
+        window.addEventListener("click", function (event) {
+            var modal = document.getElementById("insightModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {

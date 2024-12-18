@@ -131,6 +131,8 @@
     gap: 0.4rem; /* Uniform spacing between circles */
     width: 100%; /* Stretch to fill the streak container */
     overflow-x: hidden; /* Prevent horizontal overflow */
+    padding-top: 0.5rem !important;
+    margin-top: -0.5rem !important;
 }
 
     .streak-week::-webkit-scrollbar {

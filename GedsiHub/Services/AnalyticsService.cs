@@ -10,6 +10,9 @@ using GedsiHub.Models.Quiz;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Collections;
+using System.Text.Json.Nodes;
 
 namespace GedsiHub.Services
 {
@@ -43,6 +46,7 @@ namespace GedsiHub.Services
             _httpClient = new HttpClient();
             var byteArray = System.Text.Encoding.ASCII.GetBytes($"{_lrsUsername}:{_lrsPassword}");
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            _httpClient.Timeout = TimeSpan.FromSeconds(120);
         }
 
         // Leaderboard
@@ -580,26 +584,12 @@ namespace GedsiHub.Services
 
             return chartData;
         }
-
         private string ExtractInsight(string output, string chartKey)
         {
             if (string.IsNullOrEmpty(output))
                 return $"The AI did not provide insights for {chartKey}. Please check the data or prompt.";
 
-            // We instructed the model to start with "Section: {chartKey}"
-            var sections = output.Split(new[] { "Section:" }, StringSplitOptions.RemoveEmptyEntries);
-
-            var matchingSection = sections.FirstOrDefault(section =>
-                section.TrimStart().StartsWith(chartKey, StringComparison.OrdinalIgnoreCase));
-
-            if (string.IsNullOrWhiteSpace(matchingSection))
-                return $"No specific insights found for {chartKey}.";
-
-            // Extract and clean up the insight by removing the chartKey line
-            var cleaned = matchingSection.Replace(chartKey, "").Trim();
-            return string.IsNullOrEmpty(cleaned)
-                ? $"No specific insights found for {chartKey}."
-                : cleaned;
+            return output;
         }
 
         /// <summary>
@@ -608,14 +598,10 @@ namespace GedsiHub.Services
         private string PreparePrompt(string dataType, string dataJson, string context = "")
         {
             return $@"
-You are an analyst that will review the following dataset for a section called {dataType}.
-Please follow this exact response format:
+Please provide a concise, one-sentence analysis of the following dataset for {dataType} with no extra details.
 
-Section: {dataType}
-Write exactly one sentence identifying trends, anomalies, or insights. If the data is sparse, still hypothesize plausible trends or insights. Keep it simple and concise
-
-Here is the data: {dataJson}
-{context}";
+Dataset: {dataJson}
+Context: {context}";
         }
 
         private async Task<string> CallAzureMLApiAsync(string prompt)
@@ -624,14 +610,11 @@ Here is the data: {dataJson}
             {
                 var input = new
                 {
-                    input_data = new
+                    messages = new[]
                     {
-                        input_string = new[]
-                        {
-                        new { role = "user", content = prompt }
-                    },
-                        parameters = new { temperature = 0.9, max_tokens = 500 }
-                    }
+                new { role = "user", content = prompt }
+            },
+                    parameters = new { temperature = 0.9, max_tokens = 100 }
                 };
 
                 var jsonPayload = JsonSerializer.Serialize(input);
@@ -644,25 +627,40 @@ Here is the data: {dataJson}
                 request.Headers.Add("Authorization", $"Bearer {_azureMlApiKey}");
 
                 var response = await _httpClient.SendAsync(request);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseContent = await response.Content.ReadAsStringAsync();
                     _logger.LogInformation("Azure ML API Response: {Response}", responseContent);
 
-                    var responseObject = JsonSerializer.Deserialize<Dictionary<string, string>>(responseContent);
-                    if (responseObject != null && responseObject.ContainsKey("output"))
+                    // Deserialize the response as a JsonObject
+                    var responseObject = JsonSerializer.Deserialize<JsonObject>(responseContent);
+
+                    // Ensure 'choices' exists and is a JsonNode (which may be a JsonArray)
+                    if (responseObject?.TryGetPropertyValue("choices", out JsonNode? choicesNode) == true)
                     {
-                        return responseObject["output"];
-                    }
-                    else
-                    {
-                        _logger.LogError("Azure ML response does not contain 'output' field.");
+                        // Cast JsonNode? to JsonArray (because we expect it to be an array)
+                        var choicesArray = choicesNode as JsonArray;
+                        if (choicesArray != null && choicesArray.Count > 0)
+                        {
+                            // Assuming we want the first item in the 'choices' array
+                            var firstChoice = choicesArray[0].AsObject();  // Get the first item as a JsonObject
+
+                            // Now, extract the 'message' property and then 'content'
+                            if (firstChoice.TryGetPropertyValue("message", out JsonNode? messageNode))
+                            {
+                                var messageObject = messageNode as JsonObject;
+                                if (messageObject != null && messageObject.TryGetPropertyValue("content", out JsonNode? contentNode))
+                                {
+                                    return contentNode?.ToString() ?? string.Empty;  // Return content or empty if not found
+                                }
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogError($"Azure ML API Error: {response.StatusCode} - {errorContent}");
+                    _logger.LogError($"Azure ML API Error: {response.StatusCode} - {responseContent}");
                 }
             }
             catch (Exception ex)
@@ -672,7 +670,6 @@ Here is the data: {dataJson}
 
             return string.Empty;
         }
-
         public async Task<Dictionary<string, string>> GenerateAIInsightsAsync(Dictionary<string, object> chartData)
         {
             var insights = new Dictionary<string, string>();
@@ -682,7 +679,7 @@ Here is the data: {dataJson}
                 var key = kvp.Key;
                 var value = kvp.Value;
 
-                bool isEmpty = (value is IEnumerable<object> values && !values.Any());
+                bool isEmpty = value == null || (value is IEnumerable enumerable && !enumerable.Cast<object>().Any());
                 var dataJson = isEmpty ? "[]" : JsonSerializer.Serialize(value);
                 var context = isEmpty
                     ? $"The data for {key} is empty. Please hypothesize insights."
@@ -691,14 +688,11 @@ Here is the data: {dataJson}
                 var prompt = PreparePrompt(key, dataJson, context);
 
                 var output = await CallAzureMLApiAsync(prompt);
-                if (!string.IsNullOrEmpty(output))
-                {
-                    insights[key] = ExtractInsight(output, key);
-                }
-                else
-                {
-                    insights[key] = $"No AI-generated insights for {key}. Hypothetically, this chart could reveal patterns such as X, Y, or Z based on typical data.";
-                }
+                var insight = !string.IsNullOrEmpty(output)
+                    ? ExtractInsight(output, key)
+                    : $"No AI-generated insights for {key}. Hypothetically, this chart could reveal patterns such as X, Y, or Z based on typical data.";
+
+                insights[key] = insight;
             }
 
             return insights;

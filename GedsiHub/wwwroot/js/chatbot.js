@@ -175,6 +175,7 @@ async function loadFAQs() {
             button.classList.add('option-message-bubble');
             button.textContent = faq.question;
             button.addEventListener('click', function () {
+                displayUserMessageLabel(faq.question);
                 displayMessageBubble(faq.answer);
             });
 
@@ -212,7 +213,10 @@ async function loadModules() {
             moduleButton.textContent = module.title;
 
             // Add click event listener to display the module description
-            moduleButton.addEventListener('click', function () {
+            moduleButton.addEventListener('click', function ()
+            {
+                displayUserMessageLabel(module.title); // This is the change: Display the module title as a user message
+
                 displayMessageBubble(module.description); // Display the description
             });
 

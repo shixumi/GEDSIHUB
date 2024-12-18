@@ -19,9 +19,6 @@
   }
 }
 
-.nav-button {
-  max-width: 596px;
-}
 
 .next-btn {
   padding: 15px 45px;
@@ -33,18 +30,20 @@
 }
 
 .back-btn {
-  padding: 10px 45px;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #464040;
-  font-size: 18px;
-  border: 1px solid #464040;
-  text-decoration: none;
+    padding: 10px 45px;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #464040;
+    font-size: 18px;
+    border: 1px solid #464040;
+    text-decoration: none;
 }
 
 .nav-button {
-  margin-top: 20px;
-  padding: 0px;
+    max-width: 596px;
+    margin-top: 20px;
+    padding: 0px;
+    max-width: 600px !important;
 }
 
 .full-leg-name {
@@ -58,6 +57,17 @@
 .s-form {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+
+.s-form-con {
+    width: 40%; /* Adjust this percentage as needed */
+    max-width: 600px;
+    background: #ffffff;
+    padding-top: 50px;
+    padding-left: 40px;
+    padding-bottom: 50px;
+    padding-right: 40px;
 }
 
 @media (max-width: 500px) {

@@ -12,9 +12,9 @@
         <div class="um-search-con">
             <form asp-action="UserManagement" method="get" >
                 <input id="userManagementSearch" class="um-search-con" type="search" name="search" value="@Model.SearchTerm" placeholder="Search by name or email" />
-            <button type="submit" class="search-icon-um">
-                <img id="userManagementSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
-            </button>
+                <button type="submit" class="search-icon-um" style="position: absolute; margin-top: 2.4rem;">
+                    <img id="userManagementSearchButton" src="~/images/Search_Small.png" width="20" height="29" alt="Search" />
+                </button>
             </form>
         </div>
     </div>
