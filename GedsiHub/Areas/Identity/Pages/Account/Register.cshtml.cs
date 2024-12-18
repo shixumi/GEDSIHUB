@@ -225,7 +225,7 @@ namespace GedsiHub.Areas.Identity.Pages.Account
                     </html>";
 
                     // Send the confirmation email
-                    // await _emailSender.SendEmailAsync(Input.Email, "Welcome to GEDSI Hub! Confirm Your Email", emailBody);
+                     await _emailSender.SendEmailAsync(Input.Email, "Welcome to GEDSI Hub! Confirm Your Email", emailBody);
 
                     return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                 }
