@@ -595,6 +595,26 @@ namespace GedsiHub.Services
             if (string.IsNullOrEmpty(output))
                 return $"The AI did not provide insights for {chartKey}. Please check the data or prompt.";
 
+            // If expecting structured data, parse accordingly
+            // Example for JSON response:
+            // {
+            //     "insight": "Sales increased by 20% in Q4.",
+            //     "keyFigure": "20%"
+            // }
+
+            try
+            {
+                var insightObject = JsonSerializer.Deserialize<JsonObject>(output);
+                if (insightObject != null && insightObject.TryGetPropertyValue("insight", out JsonNode? insightNode))
+                {
+                    return insightNode?.ToString() ?? $"No valid insight found for {chartKey}.";
+                }
+            }
+            catch (JsonException)
+            {
+                // If not JSON, return as is
+            }
+
             return output;
         }
 
@@ -604,11 +624,13 @@ namespace GedsiHub.Services
         private string PreparePrompt(string dataType, string dataJson, string context = "")
         {
             return $@"
-Please provide a concise, one-sentence analysis of the following dataset for {dataType} with no extra details.
+Please provide a concise, analytical insight for the following dataset related to {dataType}. 
+Your insight should include key figures or values from the data to support the analysis.
 
 Dataset: {dataJson}
 Context: {context}";
         }
+
 
         private async Task<string> CallAzureMLApiAsync(string prompt)
         {
@@ -688,15 +710,15 @@ Context: {context}";
                 bool isEmpty = value == null || (value is IEnumerable enumerable && !enumerable.Cast<object>().Any());
                 var dataJson = isEmpty ? "[]" : JsonSerializer.Serialize(value);
                 var context = isEmpty
-                    ? $"The data for {key} is empty. Please hypothesize insights."
-                    : "This dataset contains sparse data. Hypothesize plausible trends.";
+                    ? $"The data for {key} is empty. Please hypothesize potential insights based on typical trends for this type of data."
+                    : "Analyze the provided data to identify key trends and include relevant figures or values in your insight.";
 
                 var prompt = PreparePrompt(key, dataJson, context);
 
                 var output = await CallAzureMLApiAsync(prompt);
                 var insight = !string.IsNullOrEmpty(output)
                     ? ExtractInsight(output, key)
-                    : $"No AI-generated insights for {key}. Hypothetically, this chart could reveal patterns such as X, Y, or Z based on typical data.";
+                    : $"No AI-generated insights for {key}. Based on typical data, this chart could reveal patterns such as X, Y, or Z.";
 
                 insights[key] = insight;
             }
