@@ -50,10 +50,13 @@
 
 <hr class="custom-hr" style="margin-top: 1.5rem;">
 
+<!-- Modal for displaying full insights -->
 <div id="insightModal" class="modal" style="display:none;">
     <div class="modal-content">
         <span id="modalClose" class="close-btn">&times;</span>
-        <p id="modalText"></p>
+        <h3 id="modalTitle" class="modal-title"></h3>
+        <hr class="modal-divider">
+        <div id="modalText" class="modal-text"></div>
     </div>
 </div>
 
@@ -93,20 +96,7 @@
                 </div>
             </div>
             <span class="insight">
-                @if (Model.AIInsights.ContainsKey("ModulePerformance"))
-                {
-                    var insightText = Model.AIInsights["ModulePerformance"];
-                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
-                    <span class="truncated-text" id="insightModulePerformance">@truncatedText</span>
-                    @if (insightText.Length > 75)
-                    {
-                        <a href="javascript:void(0);" class="read-more" onclick="showModal('ModulePerformance', '@insightText')">Read More</a>
-                    }
-                }
-                else
-                {
-                    <span>No insights available for module performance.</span>
-                }
+                <span class="truncated-text" id="insightModulePerformance">Generating insights...</span>
             </span>
         </div>
     </div>
@@ -117,65 +107,24 @@
             <h6>Age Distribution</h6>
             <canvas id="ageDistributionChart" class="full-width-canvas"></canvas>
             <span class="insight">
-                @if (Model.AIInsights.ContainsKey("AgeDistribution"))
-                {
-                    var insightText = @Model.AIInsights["AgeDistribution"];
-                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
-                    <span class="truncated-text" id="insightAgeDistribution">@truncatedText</span>
-                    @if (insightText.Length > 75)
-                    {
-                        <a href="javascript:void(0);" class="read-more" onclick="showModal('AgeDistribution', '@insightText')">Read More</a>
-                    }
-                }
-                else
-                {
-                    <span>No insights available for age distribution.</span>
-                }
+                <span class="truncated-text" id="insightAgeDistribution">Generating insights...</span>
             </span>
         </div>
         <div class="container analytics_graph_container gender-identity-narrow">
             <h6>Gender Identity</h6>
             <canvas id="genderIdentityChart"></canvas>
             <span class="insight">
-                @if (Model.AIInsights.ContainsKey("GenderIdentity"))
-                {
-                    var insightText = @Model.AIInsights["GenderIdentity"];
-                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
-                    <span class="truncated-text" id="insightGenderIdentity">@truncatedText</span>
-                    @if (insightText.Length > 75)
-                    {
-                        <a href="javascript:void(0);" class="read-more" onclick="showModal('GenderIdentity', '@insightText')">Read More</a>
-                    }
-                }
-                else
-                {
-                    <span>No insights available for gender identity.</span>
-                }
+                <span class="truncated-text" id="insightGenderIdentity">Generating insights...</span>
             </span>
         </div>
         <div class="container analytics_graph_container indigenous-membership-narrow">
             <h6>Indigenous Membership</h6>
             <canvas id="indigenousMembershipChart"></canvas>
             <span class="insight">
-                @if (Model.AIInsights.ContainsKey("IndigenousMembership"))
-                {
-                    var insightText = @Model.AIInsights["IndigenousMembership"];
-                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
-                    <span class="truncated-text" id="insightIndigenousMembership">@truncatedText</span>
-                    @if (insightText.Length > 75)
-                    {
-                        <a href="javascript:void(0);" class="read-more" onclick="showModal('IndigenousMembership', '@insightText')">Read More</a>
-                    }
-                }
-                else
-                {
-                    <span>No insights available for indigenous membership.</span>
-                }
+                <span class="truncated-text" id="insightIndigenousMembership">Generating insights...</span>
             </span>
         </div>
     </div>
-
-   
 
     <!-- Row 3: Employment Status Breakdown, Course Associations -->
     <div class="analytics">
@@ -183,26 +132,15 @@
             <h6>Employment Status Breakdown</h6>
             <canvas id="employmentStatusChart"></canvas>
             <span class="insight">
-                @if (Model.AIInsights.ContainsKey("EmploymentStatus"))
-                {
-                    var insightText = @Model.AIInsights["EmploymentStatus"];
-                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
-                    <span class="truncated-text" id="insightEmploymentStatus">@truncatedText</span>
-                    @if (insightText.Length > 75)
-                    {
-                        <a href="javascript:void(0);" class="read-more" onclick="showModal('EmploymentStatus', '@insightText')">Read More</a>
-                    }
-                }
-                else
-                {
-                    <span>No insights available for employment status.</span>
-                }
+                <span class="truncated-text" id="insightEmploymentStatus">Generating insights...</span>
             </span>
         </div>
         <div class="container analytics_graph_container course-associations-container">
             <h6>Course Associations</h6>
             <canvas id="courseAssociationsChart"></canvas>
-            <span class="insight">Insight: Course association trends and patterns.</span>
+            <span class="insight">
+                <span class="truncated-text" id="insightCourseAssociations">Generating insights...</span>
+            </span>
         </div>
     </div>
 
@@ -214,20 +152,7 @@
                 <canvas id="postCountByModuleChart" style="width: 100%; height: 100%;"></canvas>
             </div>
             <span class="insight">
-                @if (Model.AIInsights.ContainsKey("PostCountByModule"))
-                {
-                    var insightText = @Model.AIInsights["PostCountByModule"];
-                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
-                    <span class="truncated-text" id="insightPostCountByModule">@truncatedText</span>
-                    @if (insightText.Length > 75)
-                    {
-                        <a href="javascript:void(0);" class="read-more" onclick="showModal('PostCountByModule', '@insightText')">Read More</a>
-                    }
-                }
-                else
-                {
-                    <span>No insights available for post count by module.</span>
-                }
+                <span class="truncated-text" id="insightPostCountByModule">Generating insights...</span>
             </span>
         </div>
 
@@ -235,20 +160,7 @@
             <h6>Common Keywords</h6>
             <canvas id="commonKeywordsCloud" width="800" height="400"></canvas>
             <span class="insight">
-                @if (Model.AIInsights.ContainsKey("CommonKeywords"))
-                {
-                    var insightText = @Model.AIInsights["CommonKeywords"];
-                    var truncatedText = insightText.Length > 75 ? insightText.Substring(0, 75) + "..." : insightText;
-                    <span class="truncated-text" id="insightCommonKeywords">@truncatedText</span>
-                    @if (insightText.Length > 75)
-                    {
-                        <a href="javascript:void(0);" class="read-more" onclick="showModal('CommonKeywords', '@insightText')">Read More</a>
-                    }
-                }
-                else
-                {
-                    <span>No insights available for common keywords.</span>
-                }
+                <span class="truncated-text" id="insightCommonKeywords">Generating insights...</span>
             </span>
         </div>
     </div>
@@ -256,78 +168,173 @@
 
 <style>
     /* Modal Styles */
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed;
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
-    }
+ /* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px); /* Adds a blur effect to the background */
+}
 
-    /* Modal Content */
-    .modal-content {
-        background-color: #fff;
-        margin: 15% auto; /* Center the modal */
-        padding: 20px;
-        width: 80%; /* You can adjust the width */
-        max-width: 600px; /* Max width for large screens */
-        border-radius: 10px;
-    }
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
 
-    /* Close Button (X) */
-    .close-btn {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
 
-        .close-btn:hover,
-        .close-btn:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+.modal-divider {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 10px 0;
+}
+
+.modal-text {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.modal-text strong {
+    color: #333;
+    font-weight: bold;
+}
+
+.modal-text ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 10px 0;
+}
+
+.modal-text ul li {
+    margin-bottom: 5px;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+
+
+    .insight .truncated-text {
+        color: #888;
+        font-style: italic;
+    }
 </style>
+
 
 
 <!-- Charts Initialization Script -->
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud"></script>
     <script>
-        // Function to open the modal with the full text
-        function showModal(key, fullText) {
-            // Get the modal and the modal text element
-            var modal = document.getElementById("insightModal");
-            var modalText = document.getElementById("modalText");
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch AI insights after the page has loaded
+            fetch('/Analytics/GenerateAIInsights', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ moduleId: null }) // Pass moduleId if needed
+            })
+                .then(response => response.json())
+                .then(insights => {
+                    // Update the insights on the page
+                    Object.keys(insights).forEach(key => {
+                        const insightElement = document.getElementById(`insight${key}`);
+                        if (insightElement) {
+                            const insightText = insights[key];
+                            const truncatedText = insightText.length > 75 ? insightText.substring(0, 75) + "..." : insightText;
+                            insightElement.innerText = truncatedText;
 
-            // Set the full text in the modal
-            modalText.textContent = fullText;
+                            if (insightText.length > 75) {
+                                const readMoreLink = document.createElement('a');
+                                readMoreLink.href = "javascript:void(0);";
+                                readMoreLink.className = "read-more";
+                                readMoreLink.innerText = "Read More";
+                                readMoreLink.onclick = () => showModal(key, insightText);
+                                insightElement.parentElement.appendChild(readMoreLink);
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching AI insights:', error);
+                    // Display an error message to the user
+                    Object.keys(insights).forEach(key => {
+                        const insightElement = document.getElementById(`insight${key}`);
+                        if (insightElement) {
+                            insightElement.innerText = "Failed to generate insights. Please try again later.";
+                        }
+                    });
+                });
 
-            // Display the modal
-            modal.style.display = "block";
-        }
+            // Function to show modal with full insight text
+            function showModal(key, fullText) {
+                const modal = document.getElementById("insightModal");
+                const modalTitle = document.getElementById("modalTitle");
+                const modalText = document.getElementById("modalText");
 
-        // Function to close the modal
-        function closeModal() {
-            var modal = document.getElementById("insightModal");
-            modal.style.display = "none";
-        }
+                // Set the title and content
+                modalTitle.textContent = `Insight for ${key}`;
+                modalText.innerHTML = formatInsightText(fullText);
 
-        // Close the modal when clicking the close button (X)
-        document.getElementById("modalClose").addEventListener("click", closeModal);
-
-        // Close the modal if clicked outside of the modal content
-        window.addEventListener("click", function (event) {
-            var modal = document.getElementById("insightModal");
-            if (event.target === modal) {
-                closeModal();
+                // Display the modal
+                modal.style.display = "block";
             }
+
+            function formatInsightText(text) {
+                // Replace newlines with <br> for better readability
+                return text.replace(/\n/g, "<br>");
+            }
+
+            function closeModal() {
+                const modal = document.getElementById("insightModal");
+                modal.style.display = "none";
+            }
+
+            // Close modal when clicking the close button or outside the modal
+            document.getElementById("modalClose").addEventListener("click", closeModal);
+            window.addEventListener("click", function (event) {
+                const modal = document.getElementById("insightModal");
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Fetch and render User Demographics
@@ -454,7 +461,6 @@
                     });
             });
 
-
             // Initial load for module performance
             const moduleSelector = document.getElementById('moduleSelector');
             if (moduleSelector && moduleSelector.options.length > 0) {
@@ -559,130 +565,81 @@
                 .catch(error => {
                     console.error('Error fetching current active users:', error);
                 });
-        });
-    </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function renderBarChart(labels, counts) {
-                const canvas = document.getElementById('postCountByModuleChart');
-                if (!canvas) {
-                    console.error('Post Count canvas element not found!');
-                    return;
-                }
+            // Post Count by Module
+            fetch('/Analytics/GetPostCountByModule')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => item.moduleTitle);
+                    const counts = data.map(item => item.count);
 
-                try {
-                    const ctx = canvas.getContext('2d');
-                    new Chart(ctx, {
+                    new Chart(document.getElementById('postCountByModuleChart'), {
                         type: 'bar',
                         data: {
                             labels: labels,
                             datasets: [{
                                 label: 'Post Count',
                                 data: counts,
-                                backgroundColor: '#660000', // Primary color
-                                borderColor: '#920000', // Slightly darker shade
+                                backgroundColor: '#660000',
+                                borderColor: '#920000',
                                 borderWidth: 1,
-                                hoverBackgroundColor: '#920000', // Hover color                           
-                            }],
+                                hoverBackgroundColor: '#920000'
+                            }]
                         },
                         options: {
-                            indexAxis: 'y', // Horizontal bar chart
+                            indexAxis: 'y',
                             responsive: true,
                             plugins: {
                                 legend: {
-                                    display: false, // No legend needed for a single dataset
+                                    display: false
                                 },
                                 title: {
                                     display: true,
-                                    text: 'Post Count by Module',
-                                },
+                                    text: 'Post Count by Module'
+                                }
                             },
                             scales: {
                                 x: {
                                     beginAtZero: true,
                                     title: {
                                         display: true,
-                                        text: 'Number of Posts',
-                                    },
+                                        text: 'Number of Posts'
+                                    }
                                 },
                                 y: {
                                     title: {
                                         display: true,
-                                        text: 'Modules',
-                                    },
-                                },
-                            },
-                        },
+                                        text: 'Modules'
+                                    }
+                                }
+                            }
+                        }
                     });
-                } catch (error) {
-                    console.error('Error rendering horizontal bar chart:', error);
-                }
-            }
-
-            // Fetch data and render horizontal bar chart
-            fetch('/Analytics/GetPostCountByModule')
-                .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    return response.json();
                 })
-                .then(data => {
-                    if (!Array.isArray(data) || data.length === 0) {
-                        console.warn('No post count data found.');
-                        return;
-                    }
-                    const labels = data.map(item => item.moduleTitle);
-                    const counts = data.map(item => item.count);
-                    renderBarChart(labels, counts);
-                })
-                .catch(error => console.error('Error fetching post count by module:', error));
-        });
-    </script>
+                .catch(error => {
+                    console.error('Error fetching post count by module:', error);
+                });
 
-    <script src="https://cdn.jsdelivr.net/npm/wordcloud"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function renderWordCloud(data) {
-                const canvas = document.getElementById('commonKeywordsCloud');
-                if (!canvas) {
-                    console.error('Word Cloud canvas element not found!');
-                    return;
-                }
-
-                const words = data.map(item => [item.keyword, item.count]);
-
-                if (!words.length) {
-                    console.warn('No words to render in Word Cloud.');
-                    return;
-                }
-
-                try {
-                    WordCloud(canvas, {
-                        list: words,
-                        gridSize: Math.round(8 * window.devicePixelRatio), // Smaller grid size for tighter packing
-                        weightFactor: 15, // Larger weight factor for bigger text
-                        fontFamily: 'Arial, sans-serif',
-                        color: 'random-dark',
-                        rotateRatio: 0.3, // Reduce rotation
-                        rotationSteps: 2,
-                        backgroundColor: '#ffffff',
-                    });
-                } catch (error) {
-                    console.error('Error rendering Word Cloud:', error);
-                }
-            }
-
+            // Common Keywords Word Cloud
             fetch('/Analytics/GetCommonKeywords')
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Fetched data:', data);
-                    if (!Array.isArray(data) || data.length === 0) {
-                        console.warn('No keywords found to display.');
-                        return;
-                    }
-                    renderWordCloud(data);
+                    const words = data.map(item => [item.keyword, item.count]);
+
+                    WordCloud(document.getElementById('commonKeywordsCloud'), {
+                        list: words,
+                        gridSize: Math.round(8 * window.devicePixelRatio),
+                        weightFactor: 15,
+                        fontFamily: 'Arial, sans-serif',
+                        color: 'random-dark',
+                        rotateRatio: 0.3,
+                        rotationSteps: 2,
+                        backgroundColor: '#ffffff'
+                    });
                 })
-                .catch(error => console.error('Error fetching common keywords:', error));
+                .catch(error => {
+                    console.error('Error fetching common keywords:', error);
+                });
         });
     </script>
 }

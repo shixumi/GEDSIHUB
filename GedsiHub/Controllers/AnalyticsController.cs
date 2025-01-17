@@ -36,9 +36,24 @@ namespace GedsiHub.Controllers
         [HttpGet("Dashboard")]
         public async Task<IActionResult> Dashboard(int? moduleId)
         {
-            var chartData = await _analyticsService.ConsolidateChartDataAsync(moduleId);
+            // Fetch basic data for the dashboard
+            var viewModel = new AnalyticsDashboardViewModel
+            {
+                Modules = await _context.Modules.ToListAsync(),
+                TotalLearners = await _analyticsService.GetTotalLearnersAsync(),
+                StudentLearners = await _analyticsService.GetStudentLearnersAsync(),
+                EmployeeLearners = await _analyticsService.GetEmployeeLearnersAsync(),
+                TotalModules = await _analyticsService.GetTotalModulesAsync(),
+                AIInsights = new Dictionary<string, string>() // Initially empty
+            };
 
-            // Generate AI insights
+            return View(viewModel);
+        }
+
+        [HttpPost("GenerateAIInsights")]
+        public async Task<IActionResult> GenerateAIInsights(int? moduleId)
+        {
+            var chartData = await _analyticsService.ConsolidateChartDataAsync(moduleId);
             var aiInsights = await _analyticsService.GenerateAIInsightsAsync(chartData);
 
             // Ensure all keys are present in AIInsights
@@ -47,19 +62,7 @@ namespace GedsiHub.Controllers
                 aiInsights["ModulePerformance"] = "No insights available for module performance.";
             }
 
-            // Prepare view model
-            var viewModel = new AnalyticsDashboardViewModel
-            {
-                Modules = await _context.Modules.ToListAsync(),
-                TotalLearners = await _analyticsService.GetTotalLearnersAsync(),
-                StudentLearners = await _analyticsService.GetStudentLearnersAsync(),
-                EmployeeLearners = await _analyticsService.GetEmployeeLearnersAsync(),
-                TotalModules = await _analyticsService.GetTotalModulesAsync(),
-                AIInsights = aiInsights
-            };
-
-
-            return View(viewModel);
+            return Json(aiInsights);
         }
 
 
