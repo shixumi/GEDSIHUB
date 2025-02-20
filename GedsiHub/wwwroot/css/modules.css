@@ -1,3 +1,8 @@
+.searchModule {
+    padding-right: 1rem;
+
+}
+
 #ModulesHeader {
     align-items: center;
     display: grid;
