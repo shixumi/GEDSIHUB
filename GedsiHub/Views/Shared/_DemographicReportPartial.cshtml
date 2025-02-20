@@ -7,15 +7,14 @@
         <div class="container-of-cols">
             <div class="col-1-filter">
                 <div class="filter-label-date">
-                    <label asp-for="CustomStartDate" class="form-label">Start Date:</label>
+                    <label asp-for="CustomStartDate" class="form-label">Date Range:</label>
                     <input asp-for="CustomStartDate" class="form-control" type="date" />
                     @Html.ValidationMessageFor(model => model.CustomStartDate, "", new { @class = "text-danger" })
-                </div>
-                <div class="filter-label-date">
-                    <label asp-for="CustomEndDate" class="form-label">End Date:</label>
+                    <span>to</span>
                     <input asp-for="CustomEndDate" class="form-control" type="date" />
                     @Html.ValidationMessageFor(model => model.CustomEndDate, "", new { @class = "text-danger" })
                 </div>
+               
                 <div class="filter-label-select">
                     <label asp-for="Campus" class="form-label">Campus:</label>
                     <select asp-for="Campus" class="form-control" asp-items="Model.CampusOptions">
